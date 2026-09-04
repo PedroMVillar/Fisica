@@ -1,0 +1,117 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{resumen-teorico}[2026/08/21 v0.1 Estilos para resumenes teoricos (basado en article)]
+
+% ============================================================
+% NOTA: este .sty esta pensado para ser cargado desde una clase
+% que a su vez hace \LoadClass{article}, por ejemplo:
+%
+%   \NeedsTeXFormat{LaTeX2e}
+%   \ProvidesClass{resumen-teorico}[2026/08/21]
+%   \LoadClass[11pt,a4paper]{article}
+%   \RequirePackage{resumen-teorico}
+%
+% Por ahora este paquete solo trae los estilos de TITULOS
+% (section, subsection, subsubsection). Despues vamos a sumar:
+% tablas, header/footer, maketitle y entornos personalizados.
+% ============================================================
+
+% ------------------------------------------------------------
+% PAQUETES NECESARIOS
+% ------------------------------------------------------------
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{xcolor}
+\RequirePackage[explicit]{titlesec}
+\RequirePackage{titletoc}
+\RequirePackage{geometry}
+
+% ------------------------------------------------------------
+% MARGENES ESTRECHOS
+% ------------------------------------------------------------
+\geometry{margin=2cm}
+
+% ============================================================
+% PALETA DE COLORES
+% ============================================================
+% Cada paleta define 6 tonos, de mas claro (1) a mas oscuro (6).
+% Despues sumamos mas paletas (verde, gris, etc.) con el mismo
+% esquema de 6 tonos.
+
+% --- Paleta AZUL (pastel) ---
+\definecolor{rtAzul1}{HTML}{DAF0F7} % mas claro
+\definecolor{rtAzul2}{HTML}{D5E3F0}
+\definecolor{rtAzul3}{HTML}{C8D9F0}
+\definecolor{rtAzul4}{HTML}{C1D5F0}
+\definecolor{rtAzul5}{HTML}{B4CBF0}
+\definecolor{rtAzul6}{HTML}{A8B5E0} % mas oscuro
+
+% --- Alias genericos: paleta ACTIVA del documento ---
+% Para cambiar de paleta (mas adelante) alcanza con reasignar
+% estos 6 alias a otra familia de colores (ej. rtVerde1..6).
+\colorlet{rtColor1}{rtAzul1}
+\colorlet{rtColor2}{rtAzul2}
+\colorlet{rtColor3}{rtAzul3}
+\colorlet{rtColor4}{rtAzul4}
+\colorlet{rtColor5}{rtAzul5}
+\colorlet{rtColor6}{rtAzul6}
+
+% ------------------------------------------------------------
+% SECTION
+% Un unico bloque continuo: borde superior, fondo celeste
+% clarito de la paleta, borde inferior. Sin bordes laterales.
+% Requiere \usepackage[explicit]{titlesec} (activado arriba)
+% para poder usar #1 como el texto del titulo.
+% ------------------------------------------------------------
+\setlength{\fboxsep}{6pt} % padding interno de la caja
+
+\titleformat{\section}[block]
+  {}
+  {}
+  {0pt}
+  {%
+    \hsize=\linewidth
+    \vbox{%
+      \hrule height 1.5pt
+      \vskip0pt
+      \colorbox{rtColor2}{\parbox[t]{\dimexpr\linewidth-2\fboxsep\relax}{\bfseries\Large\thesection\quad #1}}%
+      \vskip0pt
+      \hrule height 1.5pt
+    }%
+  }
+
+\titlespacing{\section}{0pt}{*4}{*4}
+
+% ------------------------------------------------------------
+% SUBSECTION
+% Regla mas fina solo abajo, en negrita, tamano intermedio
+% (en modo explicit no se puede usar \par suelto: hay que
+% armar el titulo con \parbox, que maneja el parrafo por dentro)
+% ------------------------------------------------------------
+\titleformat{\subsection}[block]
+  {}
+  {}
+  {0pt}
+  {%
+    \hsize=\linewidth
+    \vbox{%
+      \parbox[t]{\linewidth}{\bfseries\large\thesubsection\quad #1}
+      \vskip2pt
+      \hrule height 0.8pt
+    }%
+  }
+
+\titlespacing{\subsection}{0pt}{*3}{*2}
+
+% ------------------------------------------------------------
+% SUBSUBSECTION
+% Sin reglas, solo negrita+cursiva, para no recargar mas
+% ------------------------------------------------------------
+\titleformat{\subsubsection}[block]
+  {}
+  {}
+  {0pt}
+  {\parbox[t]{\linewidth}{\bfseries\itshape\normalsize\thesubsubsection\quad #1}}
+
+\titlespacing{\subsubsection}{0pt}{*2}{*1}
+
+\endinput

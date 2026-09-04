@@ -1,0 +1,74 @@
+# ============================================================
+# Física 1 — .gitignore
+#
+# Dos políticas conviven en este repo:
+#
+#   1. Material de parciales (parcial-N/, final/) — igual que en
+#      Lógica: en el repo solo quedan los PDFs finales, no el
+#      material fuente usado para producirlos.
+#
+#   2. Apunte teórico generado con syntheca (sintesis/, plantillas/,
+#      mapas-mentales/) — acá el .tex SÍ se versiona: es el activo
+#      principal del repo y perder su fuente no es recuperable.
+# ============================================================
+
+# --- Claude Code (nunca versionado) ---
+.claude/
+.claude-*
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+
+# --- Fuentes LaTeX del material de parciales ---
+*.tex
+*.cls
+*.sty
+**/input/
+
+# --- Excepciones: el apunte de syntheca y la plantilla compartida ---
+!sintesis/**/*.tex
+!mapas-mentales/**/*.tex
+!examenes-prueba/**/*.tex
+!plantillas/*.cls
+!plantillas/*.sty
+
+# --- Artefactos de compilación LaTeX ---
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.bcf
+*.blg
+*.idx
+*.ilg
+*.ind
+*.nav
+*.snm
+*.vrb
+*.run.xml
+*.xdv
+
+# --- Previews PNG generados al compilar (regenerables) ---
+**/outputs/
+
+# --- syntheca: zona de trabajo temporal para ingestas ---
+_inbox/*
+!_inbox/.gitkeep
+
+# --- Python (scripts de verificación numérica) ---
+__pycache__/
+*.pyc
+.venv/
+
+# --- Sistema operativo / editor ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
