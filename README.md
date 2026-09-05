@@ -1,8 +1,13 @@
 # Física 1 — LCC, FaMAF (UNC)
 
-Repositorio personal de estudio de **Física 1**, cursada 2026. Reúne el material de la cátedra y, sobre todo, **un apunte teórico propio** que se va escribiendo tema por tema a lo largo de la cursada.
+![Materia](https://img.shields.io/badge/F%C3%ADsica_1-LCC_%C2%B7_FaMAF_UNC-1f4e79)
+![Apunte](https://img.shields.io/badge/apunte-3_cap%C3%ADtulos_%C2%B7_54_p%C3%A1ginas-2e7d32)
+![LaTeX](https://img.shields.io/badge/LaTeX-clase_book-008080?logo=latex&logoColor=white)
+![Verificación](https://img.shields.io/badge/ejercicios-verificados_por_c%C3%B3digo-6a1b9a?logo=python&logoColor=white)
+![Flashcards](https://img.shields.io/badge/flashcards-86-e07b39?logo=anki&logoColor=white)
+![Parcial I](https://img.shields.io/badge/Parcial_I-24_sep_2026-b3261e)
 
-A diferencia de mis otros repos de materias, este no se organiza solo alrededor de los parciales: el centro es el apunte. Los parciales son el calendario; el apunte es el producto.
+Material de estudio de **Física 1**, cursada 2026. Reúne la bibliografía y los prácticos de la cátedra, los exámenes de años anteriores, y **un apunte teórico propio** que se escribe tema por tema a lo largo de la cursada.
 
 ---
 
@@ -18,7 +23,7 @@ Vive en [`sintesis/fisica-1/`](./sintesis/fisica-1). Es **un solo documento LaTe
 
 Cada capítulo sigue la misma estructura: motivación · marco teórico en bloques, cada uno con su chequeo de comprensión · ejemplos resueltos con andamiaje decreciente · errores comunes · ejercicios en dos niveles.
 
-**El capítulo 1 construye derivada e integral desde cero**, motivadas por la pregunta física, siguiendo el camino del apunte de la cátedra. Es la parte que más costó y la que más rinde: sin eso, la mitad del Práctico 1 no se puede hacer.
+El capítulo 1 **construye derivada e integral desde cero**, motivadas por la pregunta física, siguiendo el camino del apunte de la cátedra. Es la parte que más rinde: sin eso, la mitad del Práctico 1 no se puede resolver.
 
 ### Los resultados de los ejercicios no están en el PDF
 
@@ -30,7 +35,7 @@ sintesis/fisica-1/verificacion-dinamica-1.py
 sintesis/fisica-1/verificacion-dinamica-2.py
 ```
 
-Corren con `python <archivo>` y no necesitan nada más que `sympy`. Cada uno resuelve los ejercicios de su capítulo de forma independiente e imprime el razonamiento, no solo el número. Tenerlos separados es deliberado: para ver un resultado hay que ir a buscarlo, que es mejor que tenerlo al lado del enunciado.
+Corren con `python <archivo>` y solo necesitan `sympy`. Cada uno resuelve los ejercicios de su capítulo de forma independiente al texto e imprime el razonamiento, no solo el número. Tenerlos separados es deliberado: para ver un resultado hay que ir a buscarlo.
 
 ### Compilar
 
@@ -43,18 +48,18 @@ pdflatex fisica-1.tex && pdflatex fisica-1.tex   # dos pasadas, por el índice
 
 ## Material de la cátedra
 
-| Carpeta | Qué hay |
+| Carpeta | Contenido |
 |---|---|
 | [`bibliografia/apunte-catedra/`](./bibliografia/apunte-catedra) | *Introducción a la Física* — Wolfenson, Trincavelli y Serra (FaMAF, 2ª ed. 2021). El texto de los propios docentes. Cubre toda la cinemática y construye el cálculo desde cero |
 | [`bibliografia/bibliografia-extra/`](./bibliografia/bibliografia-extra) | Serway & Jewett, *Física para Ciencias e Ingeniería* vol. 2 |
-| [`parcial-1/practicos/`](./parcial-1/practicos) | Las 4 guías de prácticos (0 a 3). La 3 es la versión 2025; la de este año todavía no salió |
+| [`parcial-1/practicos/`](./parcial-1/practicos) | Las cuatro guías de prácticos (0 a 3). La 3 es la versión 2025; la de este año todavía no salió |
 | [`examenes-viejos/`](./examenes-viejos) | 17 parciales (2009–2025) y 9 finales (2008–2026) |
-| [`plantillas/`](./plantillas) | La plantilla LaTeX `resumen-teorico`, compartida con mis otros repos |
-| `Cronograma Tentativo Cursado .pdf` | El cronograma oficial de la cursada |
+| [`plantillas/`](./plantillas) | Plantilla LaTeX `resumen-teorico` |
+| `Cronograma Tentativo Cursado .pdf` | Cronograma oficial de la cursada |
 
-### Un detalle del cronograma que conviene saber
+### Un detalle del cronograma
 
-La columna *"Prácticos: Guía N"* del cronograma **no dice qué guía corresponde al tema de esa clase**: dice qué guía se resuelve en la sesión de práctico de ese día, que va **una atrás** de la teórica. Por eso la Clase 2 (Cinemática 1D) figura como "Guía 0" cuando en realidad es la Guía 1, y la Clase 7 (Energía I) figura como "Guía 2" cuando es la 3. El mapeo real sale de los prácticos:
+La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de esa clase**: indica qué guía se resuelve en la sesión de práctico de ese día, que va **una atrás** de la teórica. Por eso la Clase 2 (Cinemática 1D) figura como "Guía 0" cuando en realidad es la Guía 1, y la Clase 7 (Energía I) figura como "Guía 2" cuando es la 3. El mapeo real sale de los prácticos:
 
 | Práctico | Tema |
 |---|---|
@@ -78,16 +83,16 @@ Cobertura del apunte sobre los prácticos:
 | 2 — Dinámica | **11 / 19** | circular con fuerzas, MAS, gravitación |
 | 3 — Trabajo y energía | 0 / 12 | todo |
 
-Un ejercicio del Práctico 2 (el 12, resortes en serie y paralelo) no lo cubre ninguna de las fuentes disponibles.
+El ejercicio 12 del Práctico 2 (resortes en serie y paralelo) no lo cubre ninguna de las fuentes disponibles.
 
 ### Material de repaso
 
-- [`flashcards/fisica-1.tsv`](./flashcards) — 86 tarjetas, importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia: `cinematica-1d`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral`, más el examen al que pertenecen. Las de cálculo se pueden repasar sueltas.
-- [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa de los 33 conceptos ya cubiertos, en dos paneles.
+- [`flashcards/fisica-1.tsv`](./flashcards) — 86 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
+- [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa de los 33 conceptos cubiertos, en dos paneles.
 
 ### Carpetas por examen
 
-`parcial-1/`, `parcial-2/` y `final/` siguen la misma convención:
+`parcial-1/`, `parcial-2/` y `final/` comparten convención:
 
 | | |
 |---|---|
@@ -101,26 +106,11 @@ Un ejercicio del Práctico 2 (el 12, resortes en serie y paralelo) no lo cubre n
 
 ## Cómo se escribe el apunte
 
-Con [**syntheca**](https://github.com/PedroMVillar/syntheca), un plugin propio para Claude Code que orquesta un pipeline de agentes: concilia las fuentes, calibra el nivel contra una ficha de perfil, imita el formato de ejercicios de la cátedra, redacta, verifica los resultados por código de forma independiente, y recién entonces pasa por un control de calidad que puede rechazar el borrador.
+Con [**syntheca**](https://github.com/PedroMVillar/syntheca), un plugin para Claude Code que orquesta un pipeline de agentes especializados: concilia las fuentes bibliográficas, calibra el nivel contra una ficha de perfil académico, imita el formato de ejercicios de la cátedra, redacta, verifica los resultados por código de forma independiente al texto, y recién entonces pasa por un control de calidad que puede rechazar el borrador y devolverlo a redacción.
 
-**La infraestructura de ese pipeline no está versionada acá** — está en el `.gitignore`. Concretamente quedan afuera `skills/` (las fuentes ingeridas, el banco de ejercicios y la ficha de perfil), `scripts/`, `mapa-estudio.json` y `_inbox/`. Lo que sí se versiona es el producto: el apunte, las flashcards, los mapas mentales y los scripts de verificación.
+La infraestructura de ese pipeline **no está versionada**: quedan fuera `skills/` (fuentes ingeridas, banco de ejercicios y ficha de perfil), `scripts/`, `mapa-estudio.json` y `_inbox/`. Se versiona el producto — el apunte, las flashcards, los mapas mentales y los scripts de verificación.
 
-También quedan fuera del repo los dos PDF de bibliografía que superan los 50 MB (Alonso & Finn, y Serway vol. 1). Siguen en disco, pero no se versionan.
-
----
-
-## Política de versionado
-
-Dos reglas conviven, explicadas en [`.gitignore`](./.gitignore):
-
-- **Material de parciales** — solo quedan los PDF finales; el `.tex` que los produjo no se versiona.
-- **El apunte** (`sintesis/`, `mapas-mentales/`) — acá el `.tex` **sí** se versiona. Es el activo principal del repo y su fuente no es recuperable.
-
-Los auxiliares de compilación (`.aux`, `.log`, `.toc`, `.out`) y los `outputs/` de previews están ignorados.
-
----
-
-> **Aviso.** Los exámenes escaneados de `examenes-viejos/` son copias de alumnos y llevan **nombre, DNI y nota** manuscritos en la carátula. Este repositorio está pensado para ser **privado**; no hacerlo público sin antes revisar ese material.
+También quedan fuera los dos PDF de bibliografía que superan los 50 MB (Alonso & Finn, y Serway vol. 1).
 
 ---
 
