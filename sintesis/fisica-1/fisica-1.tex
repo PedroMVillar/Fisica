@@ -1,0 +1,1782 @@
+\documentclass[11pt,openany]{book}
+\input{plantilla-syntheca-preamble.tex}
+
+% TikZ: necesario para los diagramas de cuerpo aislado y el esquema del
+% resorte vertical. Cada figura reemplaza texto que de otro modo habria que
+% escribir; ninguna es decorativa.
+\usepackage{tikz}
+
+% La catedra y el castellano escriben "sen", no "sin". Se sostiene en todo
+% el capitulo.
+\newcommand{\sen}{\operatorname{sen}}
+
+\setMateria{Física 1}
+\renewcommand{\miNombre}{Pedro Villar}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{4cm}
+  {\fontsize{22}{26}\selectfont\bfseries\color{textgray} \materiaActual \par}
+  \vspace{0.5cm}
+  {\large\color{rulegray}\rule{0.85\linewidth}{0.4pt}\par}
+  \vspace{1cm}
+  {\large\color{textgray} Síntesis teórica personal \par}
+  \vspace{0.3cm}
+  {\normalsize\color{rulegray} \miNombre \par}
+\end{titlepage}
+
+\tableofcontents
+
+% ============================================================
+%  CAPITULO 1 de sintesis/fisica-1/fisica-1.tex
+%
+%  FRAGMENTO, no documento completo. Se inserta tal cual DESPUES de
+%  \tableofcontents y ANTES del \temacapitulo{Dinamica I...} actual.
+%
+%  NO redefine \sen ni carga tikz: las dos cosas ya estan en el
+%  preambulo local del archivo (lineas 7 y 11) y volver a declararlas
+%  rompe la integracion. Tampoco lleva \setMateria ni
+%  \renewcommand{\miNombre}: se definen una sola vez por materia.
+%
+%  Al insertarse adelante, los ejercicios de los dos capitulos de
+%  dinamica se renumeran de 1.x/2.x a 2.x/3.x. Es automatico y esperado:
+%  \theejercicionum = \thechapter.\arabic{ejercicionum}.
+%
+%  Este capitulo es 1D y no usa ningun concepto de dinamica: ni fuerza,
+%  ni masa, ni peso, ni diagrama de cuerpo aislado. La caida libre se
+%  justifica por observacion, nunca por el peso.
+%
+%  La unica figura del capitulo son los tres paneles apilados x(t),
+%  v(t), a(t). Reemplaza la descripcion verbal de como se alinean los
+%  tres graficos; no es decorativa. Los signos del dibujo coinciden con
+%  el algebra del bloque: eje positivo hacia arriba, a = -g por debajo
+%  del eje horizontal, v decreciente, maximo de y sobre el cero de v.
+% ============================================================
+
+\temacapitulo{Cinemática en una dimensión}
+
+\section{Motivación}
+
+\begin{motivacion}
+Sabés de memoria que la posición de algo que acelera parejo se escribe $x = x_0 + v_0 t + \tfrac12 a t^2$. La usaste decenas de veces en el secundario, reemplazaste números y te dio bien. Y si alguien te pregunta de dónde sale ese $\tfrac12$, la respuesta sincera es que no sale de ningún lado: estaba escrito en el pizarrón y había que copiarlo.
+\end{motivacion}
+
+Este capítulo es donde ese $\tfrac12$ deja de ser un dato y pasa a ser una consecuencia. Sobre el final vas a poder escribir esa fórmula en tres renglones, sin acordarte de ella, a partir de una sola afirmación física: la aceleración es constante. Y el $\tfrac12$ va a resultar ser un número que ya conocías de otro lado, no una decoración.
+
+El punto de partida no es matemático sino físico, y es bastante concreto. Un auto recorre 120 kilómetros en dos horas: la cuenta dice 60 kilómetros por hora, pero el velocímetro casi nunca marcó 60. Marcó cero en los semáforos, 110 en la autopista, 40 en el pueblo. Hay dos números distintos, los dos legítimos, y hay que decidir cuál es cuál. En la ruta la distinción llega a tener consecuencias: el radar puntual mide lo que marca el velocímetro al pasar por delante de él, el radar de tramo mide la distancia entre dos pórticos dividida por el tiempo que tardaste, y son dos multas distintas porque miden dos magnitudes distintas. La segunda se calcula con una división. La primera no, y ese es el problema que abre todo lo que sigue.
+
+Para resolverlo hace falta una herramienta que probablemente no viste todavía, y este capítulo la construye desde cero: primero la derivada, después la integral. La derivada baja de la posición a la velocidad y de ahí a la aceleración; la integral vuelve a subir. Ese ida y vuelta es el esqueleto del capítulo, y todo lo demás, incluidas las fórmulas del secundario, cuelga de él.
+
+Conviene decir por qué vale la pena hacer este trabajo en vez de seguir usando las fórmulas de memoria. No es porque vayan a fallar en los ejercicios fáciles, porque no fallan. Es que dejan de servir apenas la aceleración no es constante o cambia por tramos, que es la mitad de los problemas de la guía, y que sin ellas quedan tres fórmulas sueltas donde en realidad hay una sola idea. Además está la herramienta en sí: derivar e integrar es con lo que está escrito el resto de la materia, y de acá en adelante nadie la vuelve a explicar. Y hay una razón de calendario que también cuenta: el primer parcial es el 24 de septiembre y la Guía 1 entra entera.
+
+Antes de arrancar, tres preguntas que conviene que te contestes ahora, sin leer más abajo. La primera: tirás una moneda hacia arriba y la seguís con la vista hasta el punto más alto, donde por un instante queda quieta; en ese instante, ¿se sigue acelerando o no? La segunda: un móvil tiene velocidad negativa, ¿está frenando? La tercera: en un gráfico de posición contra tiempo hay un instante en que la curva tiene pendiente cero, ¿el móvil necesariamente cambió de sentido ahí?
+
+Si las tres te salieron sin dudar y sabés justificarlas, tenés la parte conceptual resuelta: leé en diagonal los bloques de coordenadas, desplazamiento y velocidad media, y entrá en serio a partir de la velocidad instantánea. Lo que no conviene saltear es el aparato de cálculo, aunque las tres te hayan salido, porque es justamente lo que este capítulo viene a construir y es de lo que dependen los capítulos que siguen. Si alguna te hizo dudar, o si la contestaste rápido pero sin poder decir por qué, leelo entero y en orden. Las tres están respondidas más abajo, cada una en el bloque que le corresponde.
+
+\section{Marco teórico}
+
+\begin{bloque}{Sistema de coordenadas y función de movimiento}
+Describir un movimiento en línea recta empieza por una decisión que no tiene nada de física y que hay que tomar igual. Un \textbf{sistema de coordenadas} unidimensional es una recta, un punto de esa recta elegido como origen $O$, una unidad de longitud, un sentido tomado como positivo y un nombre para la coordenada. Con eso, cada punto de la recta queda identificado por un número: su distancia al origen, con signo según de qué lado del origen esté.
+
+El origen y el sentido positivo son arbitrarios y son fijos. Arbitrarios porque nadie puede decir que uno esté mal elegido; fijos porque se eligen una sola vez y no se tocan más mientras se describe el mismo movimiento. El kilómetro cero de una ruta está donde alguien decidió ponerlo, y los kilómetros crecen hacia un lado porque alguien eligió ese lado; una vez tomada la decisión, los carteles no se dan vuelta a mitad de camino. Los pisos de un edificio son el mismo mecanismo con otra ropa: la planta baja es el cero, los subsuelos son negativos, y esa numeración es una convención que después nadie discute.
+
+El tiempo funciona igual, con una diferencia. También se elige un instante como $t=0$, y también es arbitrario. Lo que no es elegible es el sentido: $t$ crece hacia el futuro y no hay opción.
+
+Con la recta elegida, la distancia entre dos puntos $A$ y $B$ es
+\[
+d_{AB} = \lvert x_B - x_A \rvert = \lvert x_A - x_B\rvert,
+\]
+siempre positiva por definición, y el valor absoluto no es un adorno: sin él, la distancia entre dos puntos cambiaría de signo según cuál nombres primero.
+
+El otro acuerdo de partida es que el cuerpo se trata como un \textbf{cuerpo puntual}, es decir, se ignora su tamaño y su forma y se lo reduce a un punto sobre la recta. Es una aproximación, y es buena mientras las distancias en juego sean mucho más grandes que el cuerpo.
+
+Con todo eso montado se puede escribir lo único que hace falta para describir el movimiento entero: la \textbf{función de movimiento} $x(t)$, que a cada instante le asigna la coordenada del cuerpo en ese instante. No es cualquier función. Tiene que cumplir dos condiciones, y las dos dicen algo físico:
+\begin{enumerate}[leftmargin=1.6em, itemsep=2pt, topsep=3pt, label=\arabic*.]
+  \item Univaluada, es decir que a cada $t$ le corresponde un solo $x$. Un cuerpo no puede estar en dos lugares a la vez.
+  \item Continua, sin saltos ni tramos sin definir. Un cuerpo no se teletransporta.
+\end{enumerate}
+
+Las dos condiciones sirven como criterio operativo para descartar gráficos. Si le podés trazar una vertical que lo corte dos veces, ese gráfico no describe ningún movimiento posible; si tiene un salto, tampoco. No hace falta saber nada del móvil para descartarlo.
+
+Las tres formas de $x(t)$ que van a aparecer todo el tiempo son las más simples:
+\[
+x(t) = a_0, \qquad x(t) = a_1 t + a_0, \qquad x(t) = a_2t^2 + a_1t + a_0 \ \ (a_2\neq 0),
+\]
+una recta horizontal, una recta oblicua de pendiente $a_1$ y ordenada al origen $a_0$, y una parábola. Los coeficientes llevan subíndice a propósito, y no letras sueltas; el motivo aparece en el bloque de aceleración y es una de las trampas más caras de la guía.
+
+Una costumbre del apunte de la cátedra que conviene ver por lo menos una vez es escribir las unidades pegadas a cada coeficiente:
+\[
+x(t) = \tfrac13\,\tfrac{\mathrm{m}}{\mathrm{s^3}}\,t^3 - 1\,\tfrac{\mathrm{m}}{\mathrm{s}}\,t + \tfrac12\,\mathrm{m}.
+\]
+Escrito así, el chequeo dimensional se hace solo: cada término tiene que dar metros, y si alguno no da, el error está a la vista antes de reemplazar ningún número. Pesa bastante a la hora de escribir, así que de acá en adelante las unidades van en los datos y en los resultados, con el compromiso tácito de que $t$ se mide en segundos y $x$ en metros salvo que se diga otra cosa.
+
+\textit{Antes de seguir: elegí un pasillo de tu casa, poné el origen en una punta y decí cuál es tu coordenada parado en el medio; después mové el origen a la otra punta, repetí la cuenta, y verificá que la distancia entre esos dos lugares no cambió.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un gráfico de posición contra tiempo tiene un tramo vertical. ¿Puede describir un movimiento? Justificá con una de las dos condiciones.
+\item Dos personas describen el mismo viaje eligiendo orígenes distintos sobre la misma ruta. ¿Qué números les dan distinto y qué números les tienen que dar igual?
+\item ¿Por qué la distancia entre dos puntos se define con valor absoluto y no simplemente restando?
+\end{chequeo}
+
+\begin{bloque}{Desplazamiento y longitud del camino recorrido}
+Son dos magnitudes distintas, y confundirlas es el error más frecuente de toda la guía.
+
+El \textbf{desplazamiento} entre dos instantes es la resta de las posiciones,
+\[
+\Delta x = x(t_2) - x(t_1),
+\]
+tiene signo, puede ser negativo, puede ser cero, y solo mira los dos extremos del intervalo. Lo que pasó en el medio no le interesa.
+
+La \textbf{longitud del camino recorrido} $d$ es otra cosa: es la suma de las longitudes de todos los tramos, cada una tomada en valor absoluto. Nunca resta. El modelo mental correcto es el cuentakilómetros del auto, que marca lo mismo si vas y volvés que si hacés todo el camino de ida, porque suma y no tiene manera de descontar.
+
+Un caso concreto alcanza para ver la diferencia. Un móvil arranca en $x=0$, avanza hasta $x=5\,\mathrm{m}$, ahí da la vuelta y termina en $x=2\,\mathrm{m}$. Su desplazamiento es $\Delta x = 2\,\mathrm{m} - 0 = 2\,\mathrm{m}$, mientras que el camino recorrido es $d = 5\,\mathrm{m} + 3\,\mathrm{m} = 8\,\mathrm{m}$. Si en lugar de parar en $2\,\mathrm{m}$ hubiera vuelto al punto de partida, el desplazamiento sería exactamente cero y el camino recorrido $10\,\mathrm{m}$: desplazamiento nulo no significa que no se movió.
+
+De ahí sale una relación que siempre vale y que conviene tener a mano como control:
+\[
+d \ \ge\ \lvert \Delta x\rvert,
+\]
+con igualdad únicamente cuando el móvil no invirtió el sentido de la marcha en todo el intervalo. Si te da $d < \lvert\Delta x\rvert$, hay un error de cuenta, sin excepción.
+
+Calcular $d$ exige, entonces, saber dónde el móvil dio la vuelta, y eso es lo que todavía no sabemos encontrar en general. La herramienta que lo resuelve aparece unos bloques más adelante, y trae una sorpresa: no todos los instantes en que el móvil parece detenerse son instantes en los que da la vuelta.
+
+\textit{Antes de seguir: explicá con tus palabras por qué el cuentakilómetros de un auto no puede bajar nunca, y decí cuál de las dos magnitudes mediría un aparato que sí pudiera bajar.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un móvil recorre $12\,\mathrm{m}$ hacia la derecha y después $12\,\mathrm{m}$ hacia la izquierda. ¿Cuánto vale su desplazamiento y cuánto el camino recorrido?
+\item ¿En qué situación exacta coinciden las dos magnitudes?
+\item Alguien calcula el camino recorrido restando la posición final menos la inicial y obtiene un número negativo. ¿Qué se puede afirmar sobre esa cuenta sin ver los datos?
+\end{chequeo}
+
+\begin{bloque}{Velocidad media y velocidad promedio}
+La \textbf{velocidad media} entre dos instantes es el desplazamiento dividido por el tiempo transcurrido:
+\[
+\bar v(t_1,t_2) = \frac{x(t_2)-x(t_1)}{t_2-t_1} = \frac{\Delta x}{\Delta t}.
+\]
+Hereda el signo del desplazamiento, así que puede ser negativa o cero. Geométricamente es la pendiente de la recta secante al gráfico de $x(t)$ que pasa por los puntos $(t_1,x_1)$ y $(t_2,x_2)$, y esa lectura conviene retenerla, porque es la que después se convierte en la definición de velocidad instantánea.
+
+Hay una segunda magnitud, la \textbf{velocidad promedio}, que usa el camino recorrido en lugar del desplazamiento:
+\[
+\langle V\rangle = \frac{d}{\Delta t}.
+\]
+Como $d$ es siempre positiva, $\langle V\rangle$ también lo es. Con el móvil del bloque anterior, que fue hasta $5\,\mathrm{m}$ y volvió a $2\,\mathrm{m}$ en un total de $5\,\mathrm{s}$, la velocidad media vale $2/5 = 0{,}40\,\mathrm{m/s}$ y la promedio $8/5 = 1{,}6\,\mathrm{m/s}$. Si hubiera vuelto al punto de partida, la primera daría exactamente cero y la segunda $2{,}0\,\mathrm{m/s}$. Son dos preguntas distintas sobre el mismo viaje.
+
+Sobre los nombres conviene una aclaración, porque no todos los textos usan los mismos. Acá se dice velocidad promedio para $d/\Delta t$, que es el término del apunte de la cátedra y el que va a aparecer en el parcial; en otros libros la misma magnitud figura como rapidez media. Es el mismo número con dos nombres, y la notación también se distingue a propósito: barra arriba para la media, angulares para la promedio.
+
+Ahora, la observación que motiva todo lo que sigue. Tomá un movimiento cualquiera y calculá su velocidad media en dos intervalos distintos: en general te van a dar dos números distintos. Eso no es un defecto de la definición, es su naturaleza. La velocidad media es una propiedad del intervalo, no del instante. Hay un solo caso en que el número no depende del intervalo elegido, y es cuando el gráfico de $x(t)$ es una recta, porque todas las secantes de una recta se superponen con ella y tienen su misma pendiente.
+
+Para todo lo demás, preguntar cuál es la velocidad de un móvil sin decir en qué intervalo no tiene respuesta con esta herramienta. Y sin embargo el velocímetro contesta esa pregunta cada décima de segundo, sin que nadie le declare ningún intervalo. Ahí está la insuficiencia, y de ahí sale el bloque que viene.
+
+\textit{Antes de seguir: pensá dos intervalos distintos dentro de un mismo viaje en colectivo para los que la velocidad media te dé números muy distintos, y decí cuál es el único caso en que eso no puede pasar.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un móvil sale de su casa, da una vuelta a la manzana y vuelve, en $10$ minutos. ¿Cuánto vale su velocidad media y cuánto su velocidad promedio?
+\item ¿Qué tiene de particular el gráfico de $x(t)$ de un movimiento en el que la velocidad media da lo mismo en todos los intervalos?
+\item De las dos velocidades, media y promedio, ¿cuál se parece a lo que mide un radar de tramo en la ruta?
+\end{chequeo}
+
+\begin{bloque}{El límite, la derivada y la velocidad instantánea}
+La pregunta pendiente es qué mide el velocímetro. Mide algo que corresponde a un instante y no a un intervalo, y no se puede calcular dividiendo, porque en un instante el desplazamiento es cero y el tiempo transcurrido también, y $0/0$ no es un número.
+
+La salida es acercarse en lugar de llegar. Fijá un instante $t$ y calculá la velocidad media entre $t$ y $t+\Delta t$ para valores de $\Delta t$ cada vez más chicos. Ninguno de esos cálculos es problemático, porque en todos ellos $\Delta t$ es distinto de cero. Lo que se pregunta es si esos números se van amontonando alrededor de un valor, y si lo hacen, ese valor es la respuesta.
+
+Esa operación es el \textbf{límite}, y todo lo que hay que retener de ella cabe en una línea: la expresión $\Delta t \to 0$ significa que $\Delta t$ se hace tan chico como uno quiera pero nunca vale cero. Por eso la división está siempre permitida. Lo interesante es que el numerador también se achica, y el cociente entre dos cantidades que se achican juntas puede perfectamente tender a un número finito y distinto de cero.
+
+Hay una imagen que ayuda. Hacele zoom al gráfico de $x(t)$ alrededor del punto que te interesa, y después más zoom, y más. Si la curva es suave, en algún momento el pedazo que ves en pantalla es indistinguible de una recta. La velocidad instantánea es la pendiente de esa recta.
+
+Antes de seguir, una aclaración de honestidad. El límite tiene una definición formal, con desigualdades y cuantificadores, que acá no se usa. No se usa por costo, no porque haya algo escondido: nada de lo que sigue en este capítulo depende de ella, y todos los límites que vamos a calcular se resuelven simplificando una expresión algebraica y reemplazando.
+
+Con el límite disponible se define la \textbf{derivada} de una función $y(x)$ en un punto:
+\[
+\frac{dy}{dx}(x_0) \equiv \lim_{\Delta x\to 0}\frac{y(x_0+\Delta x)-y(x_0)}{\Delta x},
+\]
+y aplicada a la función de movimiento da la \textbf{velocidad instantánea}:
+\[
+v(t) \equiv \lim_{\Delta t\to 0}\frac{x(t+\Delta t)-x(t)}{\Delta t} = \frac{dx}{dt}.
+\]
+
+Conviene hacer la cuenta completa una vez, con la parábola, porque en esa cuenta se ve el límite haciendo algo en lugar de ser invocado. Sea $x(t) = a_2t^2 + a_1t + a_0$. La velocidad media entre $t$ y $t+\Delta t$ es
+\[
+\bar v = \frac{a_2(t+\Delta t)^2 + a_1(t+\Delta t) + a_0 - a_2t^2 - a_1t - a_0}{\Delta t}
+= \frac{a_2\big(2t\,\Delta t + \Delta t^2\big) + a_1\Delta t}{\Delta t},
+\]
+y como $\Delta t \neq 0$, se puede simplificar:
+\[
+\bar v = a_2\,(2t + \Delta t) + a_1.
+\]
+Mirá ese resultado antes de tomar el límite, porque ya contesta algo. La velocidad media depende de $t$ y también de $\Delta t$, es decir del intervalo, exactamente como decía el bloque anterior. Y ahora, haciendo $\Delta t \to 0$, el único término que contenía a $\Delta t$ desaparece:
+\[
+v(t) = 2a_2\,t + a_1.
+\]
+Esto ya no depende del intervalo. Depende solo del instante, que es justamente lo que se le pedía a la respuesta.
+
+El caso del movimiento rectilíneo uniforme cae solo. Si $a_2 = 0$, la velocidad media vale $a_1$ para cualquier intervalo y la instantánea también vale $a_1$: las dos coinciden, y coinciden porque ya no había ninguna dependencia del intervalo que eliminar. Ese es el único movimiento en el que la distinción entre las dos velocidades no importa.
+
+La lectura geométrica cierra el argumento. Cada velocidad media es la pendiente de una secante; a medida que $\Delta t$ se achica, el segundo punto se desliza sobre la curva hacia el primero y la secante se va apoyando cada vez más sobre la curva. En el límite queda la recta tangente. La velocidad instantánea en $t_1$ es la pendiente de la recta tangente al gráfico de $x(t)$ en $t_1$, y eso permite medirla con una regla sobre un gráfico, sin ninguna cuenta.
+
+\textit{Antes de seguir: explicá con tus palabras por qué la simplificación por $\Delta t$ que hicimos arriba sería ilegal si $\Delta t$ valiera cero, y por qué el límite nos autoriza a hacerla igual.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Qué significa exactamente la expresión $\Delta t \to 0$, y por qué no es lo mismo que $\Delta t = 0$?
+\item En el gráfico de $x(t)$ de un móvil, ¿qué objeto geométrico corresponde a la velocidad media y cuál a la velocidad instantánea?
+\item Para un movimiento con $x(t) = a_1 t + a_0$, ¿cuánto da $\bar v$ entre dos instantes cualesquiera, y por qué en ese caso el límite no cambia nada?
+\end{chequeo}
+
+\begin{bloque}{Reglas de derivación y derivada en un punto}
+Calcular cada derivada desde la definición sería insostenible. Las reglas evitan ese trabajo, y las tres que hacen falta para todo este capítulo salen de la propia definición sin esfuerzo.
+
+La primera es la de la constante por función. Si $y(x) = C f(x)$, el cociente incremental es $C\big(f(x_0+\Delta x)-f(x_0)\big)/\Delta x$, y la constante sale afuera del límite, así que $y'(x) = C f'(x)$. La segunda es la de la suma, con el mismo argumento: el cociente incremental de $f+g$ es la suma de los dos cocientes incrementales, y el límite de una suma es la suma de los límites, de modo que $(f+g)' = f' + g'$.
+
+La tercera es la regla de la potencia, y para el caso $\alpha = 2$ ya está demostrada más arriba: la cuenta de la parábola muestra que la derivada de $t^2$ es $2t$, porque el término $a_2\,\Delta t^2$ dividido por $\Delta t$ deja $a_2\,\Delta t$, que se va con el límite. El caso general,
+\[
+\frac{d}{dx}\,x^{\alpha} = \alpha\,x^{\alpha-1},
+\]
+sale exactamente del mismo cálculo, desarrollando $(x+\Delta x)^\alpha$ con el binomio de Newton: el primer término se cancela, el segundo deja $\alpha x^{\alpha-1}$ y todos los demás quedan multiplicados por alguna potencia de $\Delta x$ y se van con el límite. Acá se enuncia como generalización de lo que ya hicimos, no como un resultado independiente, y eso es lo que efectivamente es.
+
+Con esas tres reglas se deriva cualquier polinomio, y todos los movimientos de la Guía 1 en una dimensión son polinómicos. El resto de la tabla queda como referencia:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+$y(x)$ & $y'(x)$ \\
+\midrule
+$C\,f(x)$ & $C\,f'(x)$ \\
+$f(x)+g(x)$ & $f'(x)+g'(x)$ \\
+$f(x)\,g(x)$ & $f'(x)g(x)+f(x)g'(x)$ \\
+$f(x)/g(x)$ & $\big(f'(x)g(x)-f(x)g'(x)\big)\big/g^2(x)$ \\
+$f(g(x))$ & $f'(g)\,g'(x)$ \\
+$x^{\alpha}$ & $\alpha\,x^{\alpha-1}$ \\
+$\sen(x)$ & $\cos(x)$ \\
+$\cos(x)$ & $-\sen(x)$ \\
+$e^{x}$ & $e^{x}$ \\
+$\ln(x)$ & $1/x$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Ninguna fila de esa tabla es un dato suelto. Todas salen del mismo límite que acabamos de usar para la potencia, aplicado a otra función. Algunas necesitan además un límite auxiliar, la del seno por ejemplo, y el apunte de la cátedra las hace en detalle en su sección 2.3. Acá no las vamos a usar, porque en todo lo que sigue los movimientos son polinómicos, y la regla del producto, la del cociente y la de la cadena tampoco hacen falta ni una vez.
+
+Queda un detalle de notación que parece menor y no lo es. La derivada de $y$ evaluada en un punto $x_0$ se escribe
+\[
+\left.\frac{dy(x)}{dx}\right\rvert_{x=x_0} \qquad\text{o bien}\qquad y'(x_0),
+\]
+y nunca $\dfrac{dy(x_0)}{dx}$. La diferencia es de orden de operaciones: la primera forma dice derivar y después evaluar, que es lo que uno quiere; la segunda dice evaluar primero, lo cual convierte a $y(x_0)$ en un número fijo, y la derivada de un número es cero. Escrita así, la expresión no está mal calculada, está bien calculada y da cero siempre. Es el error típico de quien quiere anotar la velocidad en $t=2\,\mathrm{s}$ y escribe $dx(2)/dt$.
+
+\textit{Antes de seguir: derivá $x(t) = 4t^3 - 7t + 2$ usando solamente las tres reglas de arriba, y anotá al lado de cada paso cuál de las tres usaste.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué la derivada de una constante es cero, argumentando desde el cociente incremental y no de memoria?
+\item Escribí correctamente, con las dos notaciones, la velocidad de un móvil en el instante $t=3\,\mathrm{s}$.
+\item ¿Cuánto vale $\dfrac{dx(3)}{dt}$ y por qué ese valor no depende de cómo sea el movimiento?
+\end{chequeo}
+
+\begin{bloque}{Leer el movimiento en el signo de las derivadas}
+La derivada sirve para calcular, pero sobre todo sirve para leer un gráfico sin hacer cuentas.
+
+El signo de $v(t)$ dice hacia dónde va el móvil respecto del eje que elegiste. Si $v>0$ el móvil se mueve hacia coordenadas crecientes, si $v<0$ hacia coordenadas decrecientes, y si $v=0$ en un instante está instantáneamente quieto en ese instante. El módulo $\lvert v\rvert$ es la rapidez, y es lo que marca el velocímetro, que no tiene signo porque no sabe qué eje elegiste vos.
+
+Los instantes en que $v(t)=0$, o en que $v$ no existe, son los \textbf{puntos críticos} de $x(t)$, y son candidatos a máximo, a mínimo o a ninguna de las dos cosas. Para decidir entre ellos se mira la segunda derivada, que es la que informa la concavidad: si $x''(t_c)<0$ la curva es cóncava hacia abajo y el punto crítico es un máximo local; si $x''(t_c)>0$ es cóncava hacia arriba y es un mínimo local; si $x''(t_c)=0$ todavía no se puede afirmar nada.
+
+Ese último caso es la trampa. Existen puntos donde la derivada se anula y sin embargo no cambia de signo a los costados: la función sigue creciendo antes y después, con una meseta instantánea en el medio. Son los \textbf{puntos de inflexión}, y el ejemplo canónico es $y=x^3$ en $x=0$, donde $y'=3x^2$ vale cero pero es positiva a ambos lados.
+
+Traducido a movimiento, esto significa que un móvil puede tener velocidad nula en un instante sin haber cambiado de sentido: frena hasta detenerse por un instante y arranca de nuevo para el mismo lado. Es la respuesta a la tercera pregunta de la apertura, y tiene una consecuencia práctica inmediata sobre el bloque de desplazamiento: si el móvil nunca invirtió la marcha, el camino recorrido coincide con el módulo del desplazamiento aunque en el medio haya habido un instante con $v=0$. Contar ese instante como una vuelta es el error, y el criterio para no cometerlo es mirar si $v$ cambia de signo, no si se anula.
+
+Cuando $x''(t_c)$ también da cero y hace falta decidir, el criterio general es seguir derivando hasta encontrar la primera derivada que no se anule en ese punto: si el orden de esa derivada es par hay extremo, y si es impar hay inflexión. No lo vamos a usar en ningún ejercicio de esta guía, y queda anotado por completitud.
+
+\textit{Antes de seguir: dibujá a mano una $x(t)$ que tenga un instante con velocidad nula sin cambio de sentido y otra que tenga un instante con velocidad nula con cambio de sentido, y marcá en cada una qué hace la concavidad.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un móvil tiene $v(t)<0$ durante todo un intervalo. ¿Se está alejando o acercando al origen? ¿Alcanza el dato para contestar?
+\item ¿Qué diferencia hay, mirando el gráfico de $x(t)$, entre un mínimo local y un punto de inflexión con tangente horizontal?
+\item Si $x'(t_c)=0$ y $x''(t_c)<0$, ¿qué está haciendo el móvil en $t_c$ y qué hizo justo antes y justo después?
+\end{chequeo}
+
+\begin{bloque}[coeficientes $a_2,a_1,a_0$; la letra $a$ queda para la aceleración]{Aceleración}
+Si la velocidad cambia, la pregunta natural es a qué ritmo cambia, y la respuesta se construye repitiendo el mismo movimiento de manos de antes con otra función adentro. La \textbf{aceleración media} entre dos instantes es
+\[
+\bar a(t_1,t_2) = \frac{v(t_2)-v(t_1)}{t_2-t_1} = \frac{\Delta v}{\Delta t},
+\]
+y la \textbf{aceleración instantánea} es su límite cuando el intervalo se achica:
+\[
+a(t) \equiv \lim_{\Delta t\to 0}\frac{v(t+\Delta t)-v(t)}{\Delta t} = \frac{dv}{dt} = \frac{d^2x}{dt^2}.
+\]
+No hay ninguna idea nueva acá, y eso es una buena noticia: es la misma construcción del bloque anterior aplicada a $v$ en lugar de a $x$. Todo lo que aprendiste a hacer con la derivada sirve tal cual. El apunte parametriza la aceleración media como $\bar a(t_1,\Delta t)$ y la velocidad media como $\bar v(t_1,t_2)$; son la misma cosa escrita de dos maneras, porque $t_2 = t_1 + \Delta t$.
+
+Acá aparece la trampa de notación que se anunció al principio, y conviene verla de frente porque el apunte de la cátedra la tiene servida. En su capítulo 1 el apunte escribe la función cuadrática de movimiento como $x(t)=at^2+bt+c$, y en su capítulo 2 la escribe como $x(t)=a_2t^2+a_1t+a_0$. Después, en el capítulo 3, introduce la aceleración física con la letra $a$. Resultado: la misma letra nombra tres cosas distintas, y dos de ellas no valen lo mismo. En esta síntesis se usa siempre la segunda forma, con subíndices, y la letra $a$ sin subíndice queda reservada exclusivamente para la aceleración. Si leés el apunte en paralelo, tenelo presente: el $a$ del capítulo 1 no es la aceleración, y confundirlos cuesta un factor 2 que se propaga a todo el ejercicio.
+
+Con eso resuelto, se puede leer la aceleración de una parábola directamente. Derivando dos veces $x(t)=a_2t^2+a_1t+a_0$ se obtiene $v(t) = 2a_2t + a_1$ y después $a = 2a_2$, constante. La aceleración es el doble del coeficiente cuadrático, no el coeficiente cuadrático.
+
+Lo último de este bloque es lo que más se cobra en los parciales: la velocidad y la aceleración son independientes entre sí, y saber una no dice nada sobre la otra. Tres situaciones alcanzan para verlo. Un móvil puede tener velocidad constante y no nula, con aceleración cero, que es el caso del movimiento rectilíneo uniforme. Puede tener velocidad nula en un instante y aceleración no nula en ese mismo instante, que es lo que le pasa a la moneda de la apertura en el punto más alto: está quieta por un instante y no se queda ahí, y no se queda justamente porque su velocidad está cambiando. Y puede ir en un sentido mientras acelera en el otro, que es lo que hace cualquier auto que frena.
+
+Ese último caso merece un nombre preciso. Frenar no es tener velocidad negativa. El signo de $v$ dice hacia dónde va el móvil respecto del eje que elegiste, y nada más. Frenar es que la rapidez $\lvert v\rvert$ disminuya, y eso ocurre exactamente cuando $v$ y $a$ tienen signos opuestos, sin importar cuáles sean esos signos. Un móvil con $v<0$ y $a<0$ está yendo hacia atrás cada vez más rápido. Esa es la respuesta a la segunda pregunta de la apertura.
+
+\textit{Antes de seguir: escribí las cuatro combinaciones posibles de signos de $v$ y $a$ y decidí, para cada una, si el móvil acelera o frena y hacia qué lado va.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un móvil tiene en cierto instante $v = -8\,\mathrm{m/s}$ y $a = +2\,\mathrm{m/s^2}$. ¿Está frenando o acelerando? ¿Hacia dónde se mueve?
+\item Para $x(t) = 5t^2 - 3t + 1$, ¿cuánto vale la aceleración, y por qué la respuesta no es $5\,\mathrm{m/s^2}$?
+\item ¿Puede un cuerpo tener velocidad nula y aceleración no nula? Dá una situación concreta y decí qué pasa el instante siguiente.
+\end{chequeo}
+
+\begin{bloque}{Integrar, la operación de vuelta}
+Hasta acá el camino va en una sola dirección: de $x$ se baja a $v$ y de $v$ a $a$, derivando. Pero los problemas de física casi siempre vienen al revés. Lo que se sabe es cómo acelera un cuerpo, y lo que se quiere saber es dónde está. Hace falta la operación inversa.
+
+Dada una función $f(x)$, una \textbf{primitiva} de $f$ es cualquier función $y(x)$ tal que $y'(x)=f(x)$. Encontrarla es \textbf{integrar}, y no hay técnica nueva que aprender para empezar: alcanza con leer al revés la tabla de derivadas. Si la derivada de $x^3$ es $3x^2$, entonces $x^3$ es una primitiva de $3x^2$, y listo.
+
+La primitiva no es única, y esto no es un detalle técnico. Si $y(x)$ es primitiva de $f$, también lo es $y(x)+C$ para cualquier constante $C$, porque la derivada de una constante es cero. El conjunto de todas las primitivas es la \textbf{integral indefinida}:
+\[
+\int f(x)\,dx = y(x) + C.
+\]
+Dos primitivas de la misma función difieren siempre en una constante, ni más ni menos.
+
+Esa constante es la bisagra entre la matemática y la física de todo el capítulo, así que vale la pena decirlo con todas las letras: la constante de integración tiene significado físico, y se determina con un dato del movimiento, no con un paso algebraico. Cuando integres una aceleración vas a obtener una velocidad más una constante, y esa constante va a resultar ser la velocidad en el instante que elijas como referencia. Cuando integres esa velocidad vas a obtener una posición más otra constante, y esa va a ser la posición inicial.
+
+De ahí sale una consecuencia que conviene tener clara antes de empezar a hacer cuentas: saber cómo se mueve un cuerpo no alcanza para saber dónde está. Que un cuerpo vaya con velocidad constante de $3\,\mathrm{m/s}$ determina $v(t)$ por completo y no determina $x(t)$ en absoluto, porque falta decir dónde estaba en algún instante. Sin un dato de posición, la integral queda con una constante libre y el problema no cierra.
+
+La tabla de integrales inmediatas es la de derivadas leída al revés, y va acá como referencia. Solo las dos primeras filas se usan en esta guía:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+$f(x)$ & $\int f(x)\,dx$ \\
+\midrule
+$C$ (constante) & $Cx + K$ \\
+$x^{\alpha}$, con $\alpha\neq -1$ & $\dfrac{x^{\alpha+1}}{\alpha+1} + K$ \\
+$1/x$ & $\ln(x) + K$ \\
+$\cos(Ax)$ & $(1/A)\,\sen(Ax) + K$ \\
+$\sen(Ax)$ & $-(1/A)\,\cos(Ax) + K$ \\
+$e^{Ax}$ & $(1/A)\,e^{Ax} + K$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La integral es lineal, es decir que $\int C f\,dx = C\int f\,dx$ y $\int (f+g)\,dx = \int f\,dx + \int g\,dx$. Al integrar una suma alcanza con una sola constante al final: si escribís una por término, después vas a poder juntarlas todas en una, porque la suma de constantes es una constante.
+
+Falta la lectura geométrica, que es la que le da a la integral el mismo poder de lectura de gráficos que tiene la derivada. La \textbf{regla de Barrow} dice que, si $y$ es cualquier primitiva de $f$,
+\[
+\int_{x_a}^{x_b} f(x)\,dx \equiv y(x_b) - y(x_a),
+\]
+y el resultado no depende de cuál primitiva se elija, porque la constante se cancela en la resta. Aplicada al movimiento queda
+\[
+v(t) = v_0 + \int_{t_0}^{t} a(t')\,dt', \qquad x(t) = x_0 + \int_{t_0}^{t} v(t')\,dt'.
+\]
+Y esa integral definida es el área encerrada entre la curva y el eje horizontal, contada con signo: positiva donde la curva está por encima del eje, negativa donde está por debajo. El área bajo el gráfico de $a(t)$ entre dos instantes es el cambio de velocidad; el área bajo el gráfico de $v(t)$ es el desplazamiento.
+
+Eso tiene retorno inmediato cuando el dato viene en forma de gráfico y no de fórmula: si $v(t)$ es una recta, el área es un triángulo o un trapecio, y se calcula con geometría de la escuela sin integrar nada. El área bajo una curva se define formalmente aproximándola por rectángulos cada vez más finos; esa construcción no se usa acá y no hace falta para calcular ninguna de las áreas de esta guía, que son todas de figuras elementales.
+
+Con esto el capítulo queda simétrico. Para bajar de $x$ a $v$ y de $v$ a $a$ se leen pendientes; para subir de $a$ a $v$ y de $v$ a $x$ se leen áreas.
+
+\textit{Antes de seguir: explicá por qué dos personas que eligen primitivas distintas de la misma $v(t)$ obtienen igual el mismo desplazamiento entre dos instantes.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué toda integral indefinida lleva una constante, y qué información física guarda esa constante?
+\item Un cuerpo se mueve con $v = 4\,\mathrm{m/s}$ constante. ¿Qué dato adicional hace falta para escribir $x(t)$, y por qué sin él el problema no cierra?
+\item En un gráfico de $v(t)$ que es un triángulo de base $6\,\mathrm{s}$ y altura $10\,\mathrm{m/s}$, ¿cuánto vale el desplazamiento en esos $6\,\mathrm{s}$?
+\end{chequeo}
+
+\begin{bloque}{Movimiento rectilíneo uniforme y uniformemente variado}
+Este es el bloque al que apuntaba todo lo anterior. Las fórmulas que siguen son las que ya sabías de memoria; lo que cambia es que ahora van a aparecer deducidas, en tres renglones, a partir de una sola afirmación física.
+
+La afirmación es que la aceleración es constante, $a(t)=a$. Integrando una vez,
+\[
+v(t) = \int a\,dt = a\,t + C_1,
+\]
+y para determinar $C_1$ hace falta un dato del movimiento. Si en el instante $t=0$ la velocidad vale $v_0$, evaluar da $v(0)=C_1=v_0$, así que
+\[
+v(t) = v_0 + a\,t.
+\]
+La constante de integración resultó ser la velocidad inicial, por lectura directa. Integrando otra vez,
+\[
+x(t) = \int (v_0 + a t)\,dt = v_0\,t + a\,\frac{t^2}{2} + C_2,
+\]
+y con $x(0)=x_0$ queda $C_2 = x_0$, de manera que
+\[
+x(t) = x_0 + v_0\,t + \tfrac12\,a\,t^2.
+\]
+
+Ahí está el $\tfrac12$ de la motivación, y no es un capricho. Es el $\tfrac{1}{\alpha+1}$ de la primitiva de la potencia, con $\alpha=1$: integrar $t$ da $t^2/2$ igual que integrar $t^2$ daría $t^3/3$. No hay nada que memorizar; hay una tabla que se lee al revés.
+
+El movimiento rectilíneo uniforme es el mismo cálculo con $a=0$, y ni siquiera hace falta rehacerlo: poniendo $a=0$ arriba queda $v(t)=v_0$ constante y $x(t)=x_0+v_0t$. Y con $v_0=0$ además, queda el reposo. Los tres casos que en el secundario eran tres fórmulas separadas son acá el mismo procedimiento parado en tres lugares distintos:
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Movimiento & $a(t)$ & $v(t)$ & $x(t)$ \\
+\midrule
+Reposo & $0$ & $0$ & $x_0$ \\
+Uniforme & $0$ & $v_0$ & $x_0 + v_0(t-t_0)$ \\
+Uniformemente variado & $a$ & $v_0 + a(t-t_0)$ & $x_0 + v_0(t-t_0) + \tfrac12 a (t-t_0)^2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La columna de la derecha está escrita con $t_0$ general porque el instante de referencia no tiene por qué ser cero, y en los problemas de encuentro casi nunca lo es. Con $t_0=0$ se recuperan las expresiones de arriba.
+
+Falta cerrar el puente con la notación de los coeficientes, y es la resolución conceptual de la trampa del bloque anterior. Comparando término a término
+\[
+x(t) = x_0 + v_0\,t + \tfrac12\,a\,t^2 \qquad\text{con}\qquad x(t) = a_2t^2 + a_1t + a_0,
+\]
+se lee de una que $a_0 = x_0$, que $a_1 = v_0$ y que $a_2 = a/2$. El factor 2 que separa al coeficiente cuadrático de la aceleración no viene de ningún lado misterioso: viene del $\tfrac12$ de la primitiva. Dada una parábola cualquiera, sus tres coeficientes son la posición inicial, la velocidad inicial y la mitad de la aceleración, en ese orden.
+
+Vale la pena decir por qué conviene hacer esto en lugar de memorizar la tabla. Primero, porque el procedimiento entrega las tres filas de una sola vez, mientras que la memoria las guarda como tres cosas independientes. Segundo, y sobre todo, porque el procedimiento sigue funcionando cuando la aceleración no es constante o cambia por tramos, y ahí la fórmula memorizada no sirve para nada. La tabla es el caso fácil de algo más general, no al revés.
+
+\textit{Antes de seguir: tapá la tabla, escribí de memoria solamente la frase la aceleración es constante, y deducí de nuevo las dos expresiones integrando. Si te sale, no vas a necesitar volver a estudiarlas.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿De dónde salen, físicamente, las dos constantes de integración que aparecen al deducir el movimiento uniformemente variado?
+\item Para $x(t) = 12 - 4t + 3t^2$, escribí $v(t)$ y $a$, e identificá $x_0$ y $v_0$.
+\item ¿Por qué la fórmula $x = x_0 + v_0t + \tfrac12 at^2$ deja de valer si la aceleración cambia a mitad del movimiento, y qué se hace en ese caso?
+\end{chequeo}
+
+\begin{bloque}{La relación que no menciona el tiempo}
+Hay una familia entera de problemas en la que el enunciado no da el tiempo, no lo pide y no lo nombra: da una velocidad en un lugar, otra velocidad en otro lugar, y pregunta por una distancia. Plantearlos con las dos expresiones del bloque anterior funciona, pero obliga a arrastrar el tiempo como incógnita auxiliar solo para descartarlo al final. Se puede eliminar de entrada.
+
+De $v = v_0 + a\,t$, con $a\neq 0$, se despeja $t = (v-v_0)/a$. Reemplazando en $\Delta x = v_0 t + \tfrac12 a t^2$:
+\[
+\Delta x = v_0\,\frac{v-v_0}{a} + \frac{a}{2}\cdot\frac{(v-v_0)^2}{a^2}
+= \frac{2v_0(v-v_0) + (v-v_0)^2}{2a}
+= \frac{v^2-v_0^2}{2a},
+\]
+y despejando queda
+\[
+v^2 = v_0^2 + 2\,a\,\Delta x.
+\]
+
+No es una cuarta fórmula para agregar a la lista. Es una consecuencia algebraica de las dos que ya dedujimos, sin ninguna física nueva adentro, y por eso arrastra exactamente las mismas condiciones de validez: vale mientras la aceleración sea constante en todo el tramo entre los dos puntos, y no vale si cambia en el medio. Conviene saber además que el apunte de la cátedra no la trae escrita, así que si la buscás ahí no la vas a encontrar; sale de donde acabamos de sacarla.
+
+Lo que sí conviene guardar es el criterio para usarla, porque es lo que ahorra tiempo en un parcial. La señal es que el tiempo no aparezca ni como dato ni como pregunta. Si el enunciado no menciona el tiempo, la relación que no lo contiene es la herramienta correcta y el problema suele salir en dos líneas; si el enunciado pregunta cuándo, entonces el tiempo es la incógnita y hay que volver a las expresiones horarias.
+
+\textit{Antes de seguir: mirá los enunciados de la guía y clasificá cada uno en dos montones, según mencionen o no el tiempo. Ese montón es tu lista de candidatos a resolverse con la relación de arriba.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Qué condición sobre la aceleración hace falta para que valga $v^2 = v_0^2 + 2a\Delta x$?
+\item Un auto que va a $20\,\mathrm{m/s}$ frena con $a = -4\,\mathrm{m/s^2}$ hasta detenerse. ¿Cuántos metros recorre? Resolvelo sin calcular el tiempo.
+\item ¿Cómo te das cuenta, leyendo un enunciado, de que conviene esta relación y no la expresión horaria?
+\end{chequeo}
+
+\begin{bloque}{Caída libre y tiro vertical}
+Hay un movimiento que aparece en todos los prácticos y que hasta ahora no tiene lugar en el capítulo, porque no se deduce de nada de lo anterior: hay que ir a mirarlo.
+
+El experimento se hace en un escritorio y dura tres segundos. Agarrá una moneda y una hoja de papel, arrugá el papel hasta hacerlo un bollo, sostené las dos cosas a la misma altura y soltalas al mismo tiempo. Llegan juntas. Repetilo con la hoja abierta en lugar del bollo y ya no llegan juntas, porque el aire frena mucho más a la hoja abierta que al bollo. La diferencia, entonces, está en el aire y no en los cuerpos.
+
+Lo que se observa cuando el aire no interfiere de manera apreciable es esto: cerca de la superficie de la Tierra, todo cuerpo soltado cae con la misma aceleración, constante, dirigida hacia abajo, sin que importe de qué está hecho ni cuánta materia tiene. Es un dato experimental, y es todo lo que este capítulo necesita. Se lo llama \textbf{aceleración de la gravedad} y se lo anota $g$.
+
+Por qué todos los cuerpos caen con la misma aceleración es una pregunta muy buena que este capítulo no contesta, y no la contesta porque para hacerlo hacen falta ideas que todavía no están sobre la mesa. La contesta el capítulo siguiente. Acá alcanza con el hecho medido.
+
+Con eso, la caída libre y el tiro vertical no son movimientos nuevos: son el movimiento uniformemente variado con un valor particular de $a$. Y acá es donde la elección arbitraria del sistema de coordenadas, que en el primer bloque parecía un tecnicismo, se cobra su importancia. Si el eje es vertical con el sentido positivo hacia arriba, entonces la aceleración apunta en contra del eje y vale $a=-g$, con $g$ positiva. Si elegís el positivo hacia abajo, vale $a=+g$. Las dos elecciones son correctas y dan las mismas respuestas físicas; lo que no se puede es mezclarlas a mitad de camino. Con el eje hacia arriba, origen en el suelo y $t=0$ en el lanzamiento:
+\[
+v(t) = v_0 - g\,t, \qquad y(t) = y_0 + v_0\,t - \tfrac12\,g\,t^2.
+\]
+
+Un cuerpo que se suelta es el caso $v_0 = 0$; un cuerpo lanzado hacia arriba es el caso $v_0 > 0$, y ahí aparece la situación que abría el capítulo. En el punto más alto la velocidad se anula, porque el móvil deja de subir y todavía no empezó a bajar, y el instante en que eso ocurre sale de $v=0$, o sea $t_{\text{max}} = v_0/g$. La aceleración en ese instante no vale cero: sigue valiendo $-g$, igual que en todos los demás instantes del vuelo. Y esa es exactamente la razón por la cual el cuerpo no se queda flotando arriba. Si en el punto más alto la velocidad y la aceleración fueran las dos nulas, no habría nada que sacara al cuerpo de ese estado y se quedaría ahí para siempre. Esa es la respuesta a la primera pregunta de la apertura.
+
+Sobre el valor de $g$: en este material se usa el que fija la cátedra en sus enunciados, con la frase textual que vas a ver en la guía y en el parcial, considere que la aceleración de la gravedad es igual a 10 m/s$^2$. En las deducciones se lo deja como $g$, simbólico, y se reemplaza recién al final, entre otras cosas porque algunos resultados no dependen de su valor y eso solo se ve si no se lo reemplaza antes de tiempo.
+
+\textit{Antes de seguir: rehacé las dos expresiones de arriba eligiendo el eje positivo hacia abajo y el origen en el punto de lanzamiento, y verificá que el instante del punto más alto te dé el mismo número.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Cuál es la justificación de que $a=-g$ en un tiro vertical, y de qué tipo de afirmación se trata?
+\item En el punto más alto de un tiro vertical, ¿cuánto valen la velocidad y la aceleración? ¿Qué pasaría si la segunda fuese cero?
+\item Si elegís el eje positivo hacia abajo, ¿qué signo tiene la aceleración y qué signo tiene la velocidad de un cuerpo que sube?
+\end{chequeo}
+
+\begin{bloque}{Movimiento por tramos}
+Muchos movimientos reales no tienen una sola aceleración: un tren arranca acelerando, después viaja parejo, después frena. La aceleración queda definida por tramos, y el procedimiento se aplica tramo por tramo.
+
+La única sutileza está en las constantes de integración. Cada tramo se integra por separado y cada uno trae su propia constante, así que hay que fijar tantas constantes como tramos haya. La del primer tramo sale del dato físico que dé el enunciado. Las de los tramos siguientes no son datos libres: salen de exigir que la velocidad sea continua en el punto de empalme. Físicamente esto dice que la velocidad no puede pegar un salto, porque un salto de velocidad en un tiempo nulo exigiría una aceleración infinita, y eso no ocurre. Escrito con límites laterales, la condición es
+\[
+\lim_{t\to t_1^{-}} v(t) = \lim_{t\to t_1^{+}} v(t),
+\]
+o sea que el valor con el que termina un tramo tiene que ser el valor con el que arranca el siguiente. Fijadas las constantes de $v$, se repite todo el procedimiento para $x$, con la misma exigencia de continuidad.
+
+Un caso chico muestra el mecanismo entero. Sea $a = 1\,\mathrm{m/s^2}$ para $t<1\,\mathrm{s}$ y $a=2\,\mathrm{m/s^2}$ para $t\ge 1\,\mathrm{s}$, con $v(0)=1\,\mathrm{m/s}$. En el primer tramo, $v(t) = t + C_1$, y el dato inicial da $C_1 = 1$, así que $v(t) = t+1$ y al llegar a $t=1\,\mathrm{s}$ vale $2\,\mathrm{m/s}$. En el segundo tramo, $v(t) = 2t + C_2$, y la continuidad exige $2(1)+C_2 = 2$, de donde $C_2 = 0$ y $v(t)=2t$. La constante del segundo tramo no se inventó ni se dio por dato: la impuso la física.
+
+De todo esto sale una jerarquía de suavidad que conviene tener escrita, porque responde de una sola vez varias preguntas típicas sobre gráficos. La aceleración puede tener saltos, y de hecho los tiene en cualquier movimiento por tramos. La velocidad no puede tener saltos, pero sí puede tener puntos angulosos, que es lo que le pasa justo en los empalmes. Y la posición no puede tener ni saltos ni puntos angulosos: un punto anguloso en $x(t)$ significaría dos pendientes distintas a los costados del mismo instante, es decir una velocidad que salta, que es justamente lo que acabamos de prohibir.
+
+Queda un cuidado operativo. Cuando se resuelve una ecuación usando la expresión de un tramo, las soluciones que caigan fuera del intervalo de validez de ese tramo hay que descartarlas, y conviene descartarlas por escrito. Son raíces matemáticamente correctas de una ecuación que en esa región no describe el movimiento.
+
+\textit{Antes de seguir: dibujá a mano una $a(t)$ con un salto y, debajo, la $v(t)$ y la $x(t)$ que le corresponden, cuidando que ninguna de las tres viole la jerarquía de arriba.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿De dónde sale la constante de integración del segundo tramo, y por qué no puede elegirse libremente?
+\item ¿Cuál de las tres funciones, $x(t)$, $v(t)$ o $a(t)$, puede tener saltos, cuál puede tener puntos angulosos pero no saltos, y cuál no puede tener ninguna de las dos cosas?
+\item Resolviendo una ecuación con la expresión válida entre $2\,\mathrm{s}$ y $6\,\mathrm{s}$ obtenés $t = 8\,\mathrm{s}$. ¿Qué hacés con ese resultado?
+\end{chequeo}
+
+\begin{bloque}{Encuentro de dos móviles}
+Dos cuerpos se encuentran si en algún instante están en el mismo lugar. Escrito con funciones de movimiento, existe un $t_e$ tal que
+\[
+x_A(t_e) = x_B(t_e) = x_e,
+\]
+y el método es igualar las dos funciones, resolver para $t_e$ y evaluar en cualquiera de las dos para obtener $x_e$. La cuenta es sencilla. Lo que se cobra caro es el paso anterior a la cuenta.
+
+Ese paso es el montaje, y es el ritual que conviene volver reflejo en este capítulo. Antes de escribir ninguna ecuación: dibujá el eje, elegí y marcá el origen, marcá el sentido positivo, marcá el instante $t=0$, y escribí la función de movimiento de cada móvil referida a ese único sistema. Las dos funciones tienen que compartir el mismo cero de posición y el mismo cero de tiempo, porque igualarlas significa preguntar si coinciden dos coordenadas medidas con la misma regla y el mismo cronómetro. Si un móvil arranca seis segundos después que el otro, ese retraso tiene que aparecer dentro de su función, típicamente como un $(t-6)$, y si no aparece, el resultado va a estar mal aunque cada cuenta individual esté bien hecha.
+
+Conviene tener presente que el encuentro es la intersección de las dos gráficas de $x(t)$, y no la intersección de las trayectorias. Dos autos que recorren la misma ruta tienen trayectorias que se superponen todo el tiempo y no por eso chocan; lo que hace falta es que coincidan en posición y en instante a la vez, y eso es lo que ve el gráfico.
+
+Tres advertencias más, que salen de mirar la ecuación antes de resolverla. Si los dos móviles van con movimiento uniforme y la misma velocidad, las dos gráficas son rectas paralelas y no se cortan nunca: no hay encuentro, y conviene detectarlo antes de plantear nada, porque al igualar aparece una igualdad imposible entre las dos posiciones iniciales. Si una de las funciones es cuadrática, la ecuación puede tener dos soluciones, una o ninguna, y las dos soluciones pueden ser físicamente válidas las dos, así que no hay que quedarse con la primera que aparezca. Y si alguna función está definida por tramos, cada tramo se plantea por separado y las raíces que caigan fuera de su intervalo se descartan explícitamente.
+
+\textit{Antes de seguir: contá cuántas veces, en los problemas que ya resolviste alguna vez, igualaste dos posiciones sin haber escrito primero de dónde salía el cero de tiempo de cada una.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Qué dos coincidencias, y no una sola, exige un encuentro?
+\item Dos móviles van con movimiento uniforme y con la misma velocidad, partiendo de lugares distintos. ¿Qué pasa cuando igualás sus funciones de movimiento?
+\item Un móvil arranca $4\,\mathrm{s}$ después que el otro. ¿Cómo aparece ese dato en su función de movimiento si el $t=0$ se tomó en el arranque del primero?
+\end{chequeo}
+
+\begin{bloque}{Los tres gráficos, uno debajo del otro}
+Varios ejercicios piden graficar $x(t)$, $v(t)$ y $a(t)$ del mismo movimiento. Conviene hacerlos apilados, con el eje temporal alineado, porque así los tres se controlan entre sí y los errores saltan a la vista.
+
+Para bajar de un panel al siguiente se leen pendientes: el valor de $v$ en un instante es la pendiente de $x$ en ese instante, y el valor de $a$ es la pendiente de $v$. Para subir se leen áreas: el desplazamiento entre dos instantes es el área bajo $v$, y el cambio de velocidad es el área bajo $a$. Con eso hay dos controles que se hacen de un vistazo. Cada instante en que $v$ cruza el cero tiene que caer justo debajo de un máximo o un mínimo de $x$, y el signo de $a$ tiene que coincidir con la concavidad de $x$: donde $a$ es negativa, $x$ es cóncava hacia abajo.
+
+El dibujo de abajo es un tiro vertical con el eje positivo hacia arriba, origen en el suelo y lanzamiento en $t=0$. La posición es una parábola con las ramas hacia abajo, la velocidad es una recta que empieza positiva y termina negativa, y la aceleración es la constante $-g$, dibujada por debajo del eje horizontal porque es negativa con esta elección de eje. La vertical punteada marca el instante $t_1=v_0/g$ del punto más alto, y muestra que el máximo de $y$ y el cero de $v$ están en el mismo lugar.
+
+\begin{center}
+\begin{tikzpicture}[scale=1, color=textgray]
+  % --- Panel superior: y(t), parabola con ramas hacia abajo ---
+  \draw[rulegray, ->] (-0.3,6) -- (5.0,6) node[right] {\footnotesize $t$};
+  \draw[rulegray, ->] (0,5.7) -- (0,7.5) node[above] {\footnotesize $y$};
+  \draw[very thick, domain=0:2, samples=60, variable=\x, smooth]
+        plot ({2*\x}, {6 + 2*\x - \x*\x});
+  \fill (2,7) circle (1.6pt);
+  \node[anchor=south west] at (2.1,7.0) {\footnotesize altura máxima};
+
+  % --- Panel medio: v(t), recta decreciente que cruza el cero en t1 ---
+  \draw[rulegray, ->] (-0.3,3.6) -- (5.0,3.6) node[right] {\footnotesize $t$};
+  \draw[rulegray, ->] (0,2.4) -- (0,4.9) node[above] {\footnotesize $v$};
+  \draw[very thick] (0,4.6) -- (4,2.6);
+  \fill (2,3.6) circle (1.6pt);
+  \node[anchor=west] at (0.15,4.55) {\footnotesize $v_0$};
+
+  % --- Panel inferior: a(t) constante y negativa ---
+  \draw[rulegray, ->] (-0.3,1.5) -- (5.0,1.5) node[right] {\footnotesize $t$};
+  \draw[rulegray, ->] (0,0.5) -- (0,2.2) node[above] {\footnotesize $a$};
+  \draw[very thick] (0,0.9) -- (4,0.9);
+  \node[anchor=west] at (4.05,0.9) {\footnotesize $-g$};
+
+  % --- Vertical punteada que une los tres paneles ---
+  \draw[rulegray, dashed] (2,0.6) -- (2,7.25);
+  \node[rulegray, anchor=north] at (2,0.55) {\footnotesize $t_1$};
+\end{tikzpicture}
+\end{center}
+
+Los tres paneles se leen juntos. Antes de $t_1$ la posición crece y la velocidad es positiva; después de $t_1$ la posición decrece y la velocidad es negativa; la aceleración no se entera de nada de eso y se mantiene constante todo el tiempo, incluso en el instante en que la velocidad vale cero.
+
+\textit{Antes de seguir: tapá el panel del medio y reconstruilo mirando solamente el de arriba, decidiendo el signo de $v$ tramo por tramo a partir de si la posición sube o baja.}
+\end{bloque}
+
+\begin{chequeo}
+\item En el gráfico de $x(t)$ hay un máximo en $t=4\,\mathrm{s}$. ¿Qué tiene que pasar en el gráfico de $v(t)$ en ese mismo instante?
+\item ¿Cómo se obtiene el desplazamiento a partir del gráfico de $v(t)$ sin conocer la fórmula de $v$?
+\item Si el gráfico de $a(t)$ está siempre por debajo del eje, ¿qué se puede afirmar sobre la concavidad de $x(t)$?
+\end{chequeo}
+
+\section{Ejemplo resuelto}
+
+\begin{ejemplo}[completo]
+Se lanza una pelota verticalmente hacia arriba desde el suelo. En su camino pasa por un punto A, situado a 1.8 m del suelo, con velocidad $v$, y por un punto B, 2.4 m más alto que A, con velocidad $v/2$. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita determinar la velocidad $v$, la velocidad con que fue lanzada y la máxima altura que alcanza por encima del punto B.
+
+\medskip
+\textit{Inciso (a). Montaje.} Antes de escribir ninguna ecuación va el ritual. El eje es vertical, el origen se pone en el suelo, el sentido positivo se elige hacia arriba y el $t=0$ se toma en el instante del lanzamiento. Con esa elección la aceleración apunta en contra del eje, así que $a=-g$, y las funciones de movimiento son
+\[
+v(t) = v_0 - g\,t, \qquad y(t) = v_0\,t - \tfrac12\,g\,t^2,
+\]
+donde $y_0=0$ porque el origen quedó en el suelo. Si hubiéramos elegido el positivo hacia abajo la aceleración sería $+g$ y las alturas serían negativas; el resultado físico sería idéntico y las cuentas, más incómodas de leer. Explicate a vos mismo, antes de seguir, por qué el signo de $a$ depende de una elección nuestra y el movimiento de la pelota no.
+
+\medskip
+\textit{Inciso (b). Elección de herramienta.} Leé el enunciado buscando la palabra tiempo: no está. No lo dan como dato y no lo preguntan en ninguno de los tres pedidos. Esa es la señal de que conviene la relación que no lo contiene,
+\[
+v_f^2 = v_i^2 + 2\,a\,\Delta y,
+\]
+aplicada entre pares de puntos. Usar las expresiones horarias también funcionaría, pero obligaría a calcular tres instantes que después se descartan. Guardá el criterio como regla y no como comentario: si el tiempo no es dato ni incógnita, se elimina.
+
+\medskip
+\textit{Inciso (c). De A a B.} Entre A y B la velocidad pasa de $v$ a $v/2$ y la altura sube $h_{AB}=2{,}4\,\mathrm{m}$, con $a=-g$. Reemplazando,
+\[
+\left(\frac{v}{2}\right)^{2} = v^{2} - 2g\,h_{AB}
+\qquad\Longrightarrow\qquad
+\frac{v^2}{4} - v^2 = -2g\,h_{AB}
+\qquad\Longrightarrow\qquad
+v^{2} = \frac{8}{3}\,g\,h_{AB}.
+\]
+Conviene detenerse un segundo en esa expresión antes de reemplazar: dice que $v$ queda determinada por la separación entre A y B y por nada más. Con los números, $v^2 = \tfrac83\cdot 10\cdot 2{,}4 = 64$, o sea $v = 8{,}0\,\mathrm{m/s}$, y en B la velocidad vale $4{,}0\,\mathrm{m/s}$.
+
+\medskip
+\textit{Inciso (d). La velocidad de lanzamiento.} El camino es el mismo, cambiando el par de puntos: ahora entre el suelo y A, donde la velocidad pasa de $v_0$ a $v$ subiendo $h_A = 1{,}8\,\mathrm{m}$. Escribí vos la relación entre esos dos puntos, despejá $v_0$ y verificá que te dé $10{,}0\,\mathrm{m/s}$. Si te da otra cosa, revisá el signo de $\Delta y$ y el de $a$: con el eje hacia arriba, la altura crece y la aceleración es negativa.
+
+\medskip
+\textit{Inciso (e). La altura por encima de B.} Desde B hasta el punto más alto la velocidad pasa de $v/2$ a cero, así que
+\[
+0 = \left(\frac{v}{2}\right)^{2} - 2g\,h_{\text{sobre B}}
+\qquad\Longrightarrow\qquad
+h_{\text{sobre B}} = \frac{v^2}{8g}.
+\]
+Y acá aparece algo que se pierde si uno reemplaza demasiado temprano. Sustituyendo el $v^2$ del inciso (c),
+\[
+h_{\text{sobre B}} = \frac{1}{8g}\cdot\frac{8}{3}\,g\,h_{AB} = \frac{h_{AB}}{3},
+\]
+o sea que la altura que le queda por encima de B es siempre un tercio de la separación entre A y B, independientemente de $g$ y de todo lo demás. Con $h_{AB}=2{,}4\,\mathrm{m}$ da $0{,}8\,\mathrm{m}$. Verificalo por otro camino, que es gratis: la altura máxima sobre el suelo tiene que ser $1{,}8 + 2{,}4 + 0{,}8 = 5{,}0\,\mathrm{m}$, y calculada desde el lanzamiento con $v_0^2/2g$ tiene que dar lo mismo. Hacé esa cuenta y comprobá que cierra.
+
+\medskip
+\textit{Inciso (f). Los tres gráficos.} La forma es la del dibujo del último bloque teórico, con estos números encima. La posición es una parábola que arranca en cero, sube hasta $5{,}0\,\mathrm{m}$ y vuelve a bajar. La velocidad es una recta que arranca en $10{,}0\,\mathrm{m/s}$, cruza el cero en $t=v_0/g=1{,}0\,\mathrm{s}$ y sigue bajando hacia valores negativos. La aceleración es la constante $-10\,\mathrm{m/s^2}$ durante todo el vuelo, y no cambia en el instante del punto más alto ni en ningún otro. Alineá los tres ejes temporales y verificá el control de siempre: el cero de la velocidad cae exactamente debajo del máximo de la posición.
+
+\medskip
+\textit{Inciso (g). Cierre y límites.} Vale la pena mirar por qué este problema cerró. Había tres incógnitas, la velocidad en A, la velocidad de lanzamiento y la altura sobre B, y había tres datos independientes: la altura de A sobre el suelo, la separación entre A y B, y el hecho de que la velocidad en B fuera la mitad de la de A. Tres y tres, y por eso salió.
+
+Ese conteo es un hábito que conviene incorporar antes de calcular, y no después, porque hay enunciados en los que no cierra. El ejercicio de tiro vertical de la guía tiene exactamente este mismo planteo pero sin el dato de la altura de A sobre el suelo, y ahí una de las tres respuestas queda indeterminada. Cuando llegues a él vas a ver que la parte que sí queda determinada es la que depende únicamente de la separación entre A y B.
+\citaEjercicio{Adaptado del ejercicio 7 del Práctico 1}
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+La posición de una partícula que se mueve a lo largo del eje $x$ está dada por $x(t) = 9 + 6t - 3t^2$, con $x$ en metros y $t$ en segundos.
+
+Lo primero es leer los coeficientes con la identificación del bloque de movimiento uniformemente variado. Comparando con $x = a_2t^2 + a_1t + a_0$ se tiene $a_2 = -3$, $a_1 = 6$ y $a_0 = 9$, y de ahí $x_0 = 9\,\mathrm{m}$, $v_0 = 6\,\mathrm{m/s}$ y $a = 2a_2 = -6\,\mathrm{m/s^2}$. Fijate que la aceleración no es $-3\,\mathrm{m/s^2}$: el factor 2 viene del $\tfrac12$ de la primitiva y perderlo arrastra el error a todo el resto del ejercicio.
+
+Derivando con la regla de la potencia, $v(t) = 6 - 6t$, que es la misma expresión que da la fórmula general $v = v_0 + at$ con los valores de arriba. Derivando otra vez queda $a = -6\,\mathrm{m/s^2}$, constante, como tenía que ser.
+
+De acá en adelante seguí vos. Calculá en qué instante la velocidad se anula y qué posición ocupa la partícula ahí, y decidí si ese punto es un máximo, un mínimo o una inflexión, justificando con el signo de la segunda derivada y no con la intuición. Después buscá los instantes en que la partícula pasa por el origen resolviendo $x(t)=0$: te van a salir dos raíces, y una de ellas cae antes del $t=0$, así que decidí explícitamente qué hacés con ella y por qué. Terminá escribiendo, con la notación correcta de derivada evaluada en un punto, la expresión que representa la velocidad en $t=2\,\mathrm{s}$, y calculá su valor.
+\citaEjercicio{Similar al ejercicio 4 del Práctico 1}
+\end{ejemplo}
+
+\section{Errores comunes}
+
+Lo que sigue no es una lista de retos sino de discrepancias concretas entre lo que suele escribirse y lo que dicen las definiciones de este capítulo. Cada una tiene una manera objetiva de detectarse.
+
+\begin{erroresComunes}
+  \item Calcular la longitud del camino recorrido restando posiciones. La resta da el desplazamiento, que solo mira los extremos. Si el móvil invirtió el sentido dentro del intervalo, los dos números no coinciden. La detección es aritmética: si obtenés $d < \lvert\Delta x\rvert$, o si obtenés una $d$ negativa, la cuenta está mal, sin necesidad de revisar los datos.
+  \item Usar velocidad media y velocidad promedio como si fueran lo mismo. La primera es $\Delta x/\Delta t$ y tiene signo, la segunda es $d/\Delta t$ y es siempre positiva. En un ida y vuelta que termina donde empezó, la primera vale cero y la segunda no. Cuando un ejercicio pide las dos en incisos contiguos, es justamente porque no coinciden.
+  \item Llamar velocidad instantánea al cociente $\Delta x/\Delta t$ de un tramo con aceleración. Ese cociente es una velocidad media y depende del intervalo elegido; solo coincide con la instantánea cuando el movimiento es uniforme en ese intervalo. Es la insuficiencia que motivó la derivada, dada vuelta.
+  \item Escribir $\dfrac{dx(t_0)}{dt}$ para la velocidad en el instante $t_0$. Esa expresión indica evaluar primero y derivar después, o sea derivar un número, y da cero cualquiera sea el movimiento. Las formas correctas son $\left.\frac{dx(t)}{dt}\right\rvert_{t=t_0}$ y $x'(t_0)$.
+  \item Leer el coeficiente cuadrático de $x(t)$ como la aceleración. En $x = a_2t^2 + a_1t + a_0$ la aceleración vale $2a_2$, no $a_2$, y el factor 2 sale del $\tfrac12$ de la primitiva. Es un error de un factor 2 que no rompe nada visiblemente y contamina todos los incisos posteriores. La detección es derivar dos veces en lugar de leer.
+  \item Concluir que hay máximo o mínimo porque la derivada se anula. Puede tratarse de un punto de inflexión, donde la derivada se anula sin cambiar de signo y el móvil sigue en el mismo sentido. El criterio no es que $v$ valga cero sino que $v$ cambie de signo.
+  \item Poner aceleración nula en el punto más alto de un tiro vertical porque ahí la velocidad es nula. La velocidad se anula, la aceleración sigue valiendo $-g$. Si las dos fueran nulas el cuerpo se quedaría flotando ahí, que es exactamente lo que no se observa.
+  \item Interpretar velocidad negativa como frenado. El signo de $v$ indica el sentido del movimiento respecto del eje elegido, y nada más. Frenar es que $\lvert v\rvert$ disminuya, lo cual ocurre cuando $v$ y $a$ tienen signos opuestos, con $v$ positiva o negativa indistintamente.
+  \item Olvidar la constante de integración, o tratarla como un trámite. Cada integración introduce una constante y cada constante es un dato físico: la velocidad o la posición en un instante de referencia. Sin ese dato el problema no está determinado, por más que las integrales estén bien hechas.
+  \item Suponer que conocer la velocidad alcanza para conocer la posición. Que un cuerpo esté en reposo, o que vaya con velocidad constante, determina $v(t)$ y no determina $x(t)$: falta un dato de posición en algún instante.
+  \item Elegir libremente la constante de integración de un tramo posterior al primero. No es libre: la fija la continuidad de $v(t)$ en el empalme. La aceleración puede saltar, la velocidad no.
+  \item Igualar $x_A = x_B$ sin haber puesto los dos móviles en el mismo sistema de coordenadas y con el mismo origen de tiempo. Es el error más caro de los problemas de encuentro y no se nota en la cuenta, porque la cuenta cierra igual. La detección es previa: antes de igualar, verificar que las dos funciones estén escritas con el mismo cero de posición y el mismo cero de tiempo.
+  \item Quedarse con todas las raíces de una ecuación de encuentro resuelta con una expresión válida solo en un tramo. Las raíces que caen fuera de ese intervalo son soluciones de una ecuación que ahí no describe el movimiento, y se descartan por escrito.
+\end{erroresComunes}
+
+\section{Ejercicios}
+
+\subsection{Práctica en bloque}
+
+Los seis que siguen están ordenados por herramienta acumulada: los tres primeros no piden derivar ni integrar nada y se resuelven leyendo gráficos y signos, el cuarto es el primero que exige derivar, y los dos últimos ya usan las funciones de movimiento deducidas por integración. Antes de escribir ninguna ecuación, en todos: dibujá el eje, marcá el origen, marcá el $t=0$, y escribí la función de movimiento de cada móvil en ese único sistema. Es el equivalente cinemático del diagrama que vas a usar en los capítulos siguientes, y el error más caro de esta guía es saltearlo.
+
+\begin{ejercicio}[lectura de un gráfico de posición]{bloque}
+La posición de un móvil que se desplaza en línea recta está dada por la función de movimiento $x(t) = t^3 - 6t^2 + 12t - 5$, donde $x$ se mide en metros y $t$ en segundos.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje el eje, marque el origen y el sentido positivo, y grafique $x(t)$ en el intervalo $[0, 4]$ s a partir de los valores en $t = 0, 1, 2, 3$ y $4$ s.
+  \item Determine sobre el gráfico la longitud total del camino recorrido en los siguientes intervalos temporales (en segundos): $[0, 1]$, $[1, 2]$ y $[0, 4]$.
+  \item Determine la velocidad media en dichos intervalos, y explique por qué en este caso la longitud del camino recorrido coincide con el módulo del desplazamiento en los tres.
+  \item Determine gráficamente, midiendo la pendiente de la recta tangente y sin derivar, la velocidad instantánea en $t = 1$ s y en $t = 2$ s.
+  \item Obtenga $v(t)$ derivando, y compare con lo que midió en (d).
+  \item Determine para qué valores de $t$ el móvil se encuentra a 1 m de distancia de la posición que tiene en $t = 2$ s.
+  \item En $t = 2$ s la velocidad es nula. Indique si el móvil invierte el sentido de la marcha en ese instante y justifique. Describa cualitativamente el movimiento en todo el intervalo.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 1 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[qué gráficos pueden ser un movimiento]{bloque}
+El gráfico de posición de un móvil está formado por dos tramos rectos: el primero va desde el punto $(0$ s$, 0$ m$)$ hasta el punto $(5$ s$, 20$ m$)$, y el segundo es horizontal desde $(5$ s$, 20$ m$)$ hasta $(9$ s$, 20$ m$)$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje el gráfico y calcule, para cada tramo, la velocidad $v(t)$ y la aceleración $a(t)$.
+  \item Grafique $v(t)$ y $a(t)$ debajo del gráfico de posición, con el eje temporal alineado.
+  \item Discuta qué sucede en $t = 5$ s. Indique qué valor tendría que tomar la aceleración en ese instante para que el movimiento fuese el que el gráfico describe.
+  \item Indique qué característica debería tener el gráfico de posición para poder ser una función de movimiento admisible, y dibuje una versión corregida que llegue al mismo reposo final.
+  \item Un segundo móvil tiene un gráfico de posición que crece de forma continua hasta $t = 6$ s, donde salta de 20 m a 35 m, y sigue creciendo desde ahí. Indique si ese gráfico puede describir un movimiento, y justifique.
+  \item Complete la escalera: indique cuál de las tres funciones $x(t)$, $v(t)$ y $a(t)$ puede tener saltos, cuál puede tener puntos angulosos pero no saltos, y cuál no puede tener ninguna de las dos cosas.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 2 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[velocidad y aceleración son independientes]{bloque}
+Responda las siguientes preguntas. En cada una, escriba primero su respuesta en una palabra, sí o no, y recién después la justificación con un ejemplo concreto de movimiento.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item ¿Puede un cuerpo tener aceleración nula y velocidad no nula durante todo un intervalo?
+  \item ¿Puede un cuerpo tener velocidad negativa y estar aumentando su rapidez?
+  \item ¿Puede la velocidad media de un móvil ser nula en un intervalo durante el cual el móvil nunca estuvo detenido?
+  \item ¿Puede la longitud del camino recorrido ser menor que el módulo del desplazamiento?
+  \item ¿Puede un móvil tener velocidad nula en un instante sin que ese instante sea un máximo ni un mínimo de su posición?
+  \item Un móvil se lanza verticalmente hacia arriba. Indique el valor de su velocidad y el de su aceleración en el instante en que alcanza el punto más alto, y explique qué pasaría si la segunda también fuese nula.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 3 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[de la función de movimiento a la aceleración]{bloque}
+La posición de una partícula moviéndose a lo largo del eje $x$ está definida por la siguiente función de movimiento: $x(t) = -24 + 16t - 2t^2$, donde $x$ está en metros y $t$ en segundos.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Identifique los coeficientes $a_2$, $a_1$ y $a_0$. Indique cuál de ellos es la velocidad inicial, cuál la posición inicial, y cuánto vale la aceleración. Verifique que la aceleración no es $a_2$.
+  \item ¿Cuál es la posición de la partícula para $t = 0$, $2$ y $4$ s?
+  \item Obtenga $v(t)$ aplicando la definición de derivada como límite del cociente incremental, y verifique el resultado con la regla de la potencia.
+  \item ¿En qué instantes la partícula pasa por el origen? ¿Cuánto vale su velocidad en cada uno de esos instantes?
+  \item ¿En qué momento la velocidad es nula? ¿Qué posición ocupa la partícula en ese instante, y qué representa ese punto en el gráfico de $x(t)$?
+  \item Grafique $x(t)$, $v(t)$ y $a(t)$, uno debajo del otro y con el eje temporal alineado. Verifique que el instante hallado en (e) cae exactamente sobre el extremo de $x(t)$ y sobre el cero de $v(t)$.
+  \item Escriba correctamente, con la notación de derivada evaluada en un punto, la expresión que representa la velocidad en $t = 2$ s. Explique qué significaría, y cuánto daría, la expresión $\dfrac{dx(2)}{dt}$.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 4 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[encuentro de dos móviles acelerados]{bloque}
+Dos karts parten del reposo en el mismo instante sobre la recta principal de un circuito, uno detrás del otro y en el mismo sentido. El de adelante tiene una aceleración constante de 0.8 m/s$^2$ y el de atrás acelera a 1.4 m/s$^2$. El de atrás alcanza al de adelante cuando este último ha recorrido 40 metros.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje el eje, elija el origen y el sentido positivo, marque el $t = 0$, y escriba la función de movimiento de cada kart en ese único sistema de coordenadas.
+  \item ¿Cuánto tiempo tarda el kart de atrás en alcanzar al de adelante?
+  \item ¿Cuál era la distancia inicial entre ambos?
+  \item ¿Cuál es la velocidad de cada uno en el momento de encontrarse?
+  \item Grafique $x(t)$, $v(t)$ y $a(t)$ de ambos móviles, los dos en el mismo par de ejes en cada panel, y señale sobre el primero el punto que corresponde al encuentro.
+  \item Si los dos karts tuvieran exactamente la misma aceleración, indique sin hacer cuentas si el de atrás alcanzaría alguna vez al de adelante, y explique qué le pasa en ese caso a la ecuación de encuentro.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 5 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[tiro vertical, con un dato que falta]{bloque}
+Una piedra se tira desde el suelo verticalmente hacia arriba. En su camino pasa por un punto A con velocidad $v$ y por un punto B, 3 m más alto que A, con velocidad $v/2$. Calcule la velocidad $v$, la velocidad inicial y la máxima altura alcanzada por la piedra, por encima del punto B. Grafique las funciones de posición, velocidad y aceleración en función del tiempo.
+
+\medskip
+{\footnotesize Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Este es el enunciado tal como lo da la cátedra, y tiene un problema que conviene ver antes de empezar. De A a B, la relación sin tiempo da $v^2 = 8g$, y la altura máxima por encima de B resulta exactamente 1 m, sin importar cuánto valga $g$: esas dos cosas están completamente determinadas. La velocidad inicial, en cambio, exige saber a qué altura del suelo está el punto A, y el enunciado no lo dice. Con la lectura razonable de que A está al nivel del suelo, la velocidad inicial es la propia $v$ y ese pedido queda redundante. Resolvelo con esa suposición y dejala anotada. Que un problema quede indeterminado es un resultado, no un fracaso: contar incógnitas contra ecuaciones independientes antes de calcular es parte del oficio, y en un parcial, nombrar explícitamente la suposición que agregaste es lo que salva el puntaje.}
+\citaEjercicio{Es el ejercicio 7 del Práctico 1, reproducido textualmente}
+\end{ejercicio}
+
+\subsection{Práctica en bloque, ejercicios adicionales}
+
+Los tres que siguen son del mismo tema que los anteriores, con más piezas por ejercicio y menos guía por inciso. Es el nivel de planteo que la cátedra evalúa: en esta materia, los ejercicios adicionales de cada práctico son textualmente los problemas que después aparecen en el parcial. Mezclar cinemática con temas anteriores de la materia va a tener sentido más adelante; por ahora conviene consolidar este.
+
+\begin{ejercicio}[encuentro con arranque demorado y tramos]{bloque}
+En una ciclovía recta, un pelotón pasa a velocidad constante de 6.0 m/s justo al lado de un ciclista que está detenido reparando un pinchazo. El ciclista termina 5.0 s después y arranca con una aceleración constante de 1.2 m/s$^2$, que sostiene durante 10.0 s; a partir de ahí mantiene constante la velocidad alcanzada. El pelotón no cambia su velocidad en ningún momento. Se solicita determinar en qué instante y en qué lugar el ciclista alcanza al pelotón, para lo cual:
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje el eje, elija el origen y el $t = 0$, y escriba la función de movimiento del pelotón y la del ciclista, esta última definida por tramos, ambas referidas a ese mismo sistema.
+  \item Verifique que la velocidad del ciclista es continua en los dos empalmes, e indique de dónde sale la constante de integración de cada tramo posterior al primero y por qué no es un dato libre.
+  \item Determine el instante y la posición del alcance. Al plantear la ecuación de encuentro en cada tramo, descarte explícitamente las raíces que no correspondan a un alcance, sea porque caen fuera del intervalo de validez de la expresión usada o porque son el instante inicial.
+  \item Determine la máxima distancia que el pelotón llegó a sacarle al ciclista, y el instante en que eso ocurre.
+  \item Grafique $x(t)$, $v(t)$ y $a(t)$ de ambos móviles con el eje temporal compartido, y señale sobre los tres el instante hallado en (d).
+\end{enumerate}
+\citaEjercicio{Misma estructura que el ejercicio 6 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[dos móviles en caída y en ascenso]{bloque}
+En el patio interno de un edificio se deja caer una pelota de tenis desde un balcón situado a 40 m del piso. En el mismo instante, y sobre la misma vertical, otra pelota se lanza desde el piso hacia arriba con una velocidad inicial de 20 m/s. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita determinar dónde y cuándo se cruzan las dos pelotas, para lo cual:
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje el eje vertical, elija el origen y el sentido positivo, marque el $t = 0$ común a las dos pelotas, y escriba la función de movimiento de cada una en ese único sistema. Indique qué signo le corresponde a la aceleración con la elección que hizo, y qué signo tendría con la elección opuesta.
+  \item Determine el instante del cruce y la altura a la que ocurre.
+  \item Determine la velocidad y la aceleración de cada pelota en ese instante. Indique qué dato del enunciado hizo falta para conocer la aceleración de cada una, y qué dato no hizo falta.
+  \item Determine con qué velocidad llega al piso la pelota que se dejó caer, usando la relación que no involucra el tiempo. Justifique por qué en este inciso conviene esa relación y no la ecuación horaria.
+  \item Si la pelota de abajo se lanzara con el doble de velocidad inicial, indique sin rehacer todo el problema si el cruce ocurriría antes o después, y a qué altura.
+\end{enumerate}
+\citaEjercicio{Misma estructura que el ejercicio 5 del Práctico 1, en la familia del ejercicio 7}
+\end{ejercicio}
+
+\begin{ejercicio}[de la aceleración a la posición]{bloque}
+Un tren automático de aeropuerto recorre un tramo recto entre dos terminales. Parte del reposo con una aceleración constante de 1.0 m/s$^2$ durante 10.0 s; después viaja sin acelerar durante 20.0 s; finalmente frena con una aceleración constante de módulo 2.0 m/s$^2$ hasta detenerse en la segunda terminal. Se solicita determinar la distancia entre las dos terminales, para lo cual:
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje el eje, elija el origen y el $t = 0$, y escriba $a(t)$ definida por tramos.
+  \item Obtenga $v(t)$ integrando tramo por tramo. Indique de dónde sale la constante de integración de cada tramo, y verifique que el instante de detención sale del cálculo y no es un dato.
+  \item Obtenga $x(t)$ por tramos y calcule la distancia total recorrida.
+  \item Verifique el resultado de (c) por un camino independiente, calculando el área bajo el gráfico de $v(t)$ con geometría elemental, sin integrar.
+  \item Grafique $x(t)$, $v(t)$ y $a(t)$ con el eje temporal compartido, y señale sobre el gráfico de posición los dos instantes en que $v(t)$ tiene un punto anguloso.
+  \item Si el tren frenara con la mitad de esa desaceleración, determine cuántos metros más de andén harían falta.
+\end{enumerate}
+\end{ejercicio}
+
+\temacapitulo{Dinámica I: las tres leyes de Newton}
+
+\section{Motivación}
+
+\begin{motivacion}
+Empujás una caja por el piso de la cocina y la caja se mueve. Dejás de empujar y la caja se frena. La conclusión parece obvia: para que algo se mueva hace falta una fuerza, y si la fuerza se termina, el movimiento se termina. Es lo que ves todos los días, es lo que decía Aristóteles, y es lo que casi todos traemos del secundario sin habérnoslo cuestionado nunca.
+\end{motivacion}
+
+El problema es que esa conclusión es falsa, y hay una manera barata de comprobarlo. Poné un disco de hockey sobre una pista de hielo y dale un solo empujón. El disco sigue, y sigue, y sigue. Nadie lo está empujando. Si el hielo fuera perfectamente liso y no hubiera aire, no se frenaría nunca.
+
+Entre la caja de la cocina y el disco sobre el hielo hay una diferencia, y no es que uno obedezca leyes distintas del otro. La diferencia es que en la cocina hay una fuerza que no estabas contando. La caja se frena porque el piso la frena, no porque se le haya \emph{acabado} algo. Y una vez que empezás a contar esa fuerza que no veías, la regla se da vuelta entera: la fuerza no es lo que produce el movimiento, es lo que produce los \emph{cambios} de movimiento. Un objeto sin fuerzas encima no se queda quieto, se queda como estaba.
+
+Ese giro es todo el contenido de este capítulo. Las tres leyes de Newton son la formulación precisa de esa idea, y son el cuello de botella de la materia entera: dinámica con rozamiento, energía, momento lineal, momento angular y gravitación se apoyan sobre estas tres leyes y sobre una sola herramienta de dibujo, el diagrama de cuerpo aislado. Si esto queda firme, lo que viene es aplicar; si queda flojo, lo que viene se derrumba encima.
+
+Antes de arrancar, dos preguntas que conviene que te contestes ahora, sin leer más abajo. La primera: un libro está quieto sobre una mesa, ¿la fuerza normal que la mesa hace sobre el libro y el peso del libro forman un par de acción y reacción? La segunda: la primera ley habla del caso en que no hay fuerzas externas, y un paracaidista que ya alcanzó su velocidad límite baja a velocidad constante, con el peso y la resistencia del aire equilibrados; ¿ese caso lo describe la primera ley, o es otra cosa?
+
+Si las dos respuestas te salieron sin dudar y sabés justificarlas, ya cruzaste el umbral de este capítulo: leé los bloques teóricos en diagonal, como referencia, y andá directo a los ejemplos resueltos y a los ejercicios. Si alguna te hizo dudar, o si la contestaste rápido pero sin poder decir por qué, leelo entero y en orden. Las dos preguntas están respondidas más abajo, cada una en el bloque que le corresponde.
+
+\section{Marco teórico}
+
+\begin{bloque}{Fuerza}
+Una fuerza es aquello que produce un \textbf{cambio} en el movimiento de un objeto. No es lo que produce el movimiento, y la diferencia entre las dos formulaciones es la que separa la física de Newton de la intuición del sentido común.
+
+La fuerza es una magnitud vectorial, y eso no es una convención de notación sino un hecho experimental. Si tirás de un cuerpo con dos balanzas de resorte en direcciones distintas, el efecto que medís es el de la suma vectorial de las dos lecturas, no el de la suma de sus módulos. Por eso todo lo que sigue se escribe con flechas, se descompone en componentes y se suma componente a componente.
+
+Conviene separar las fuerzas en dos grupos por comodidad de trabajo. Las de contacto exigen que los cuerpos se toquen, como la normal, la tensión de una soga o el rozamiento. Las de campo actúan a distancia, como la gravitatoria. La separación es práctica, no fundamental: a escala atómica todas las fuerzas de contacto son eléctricas, y lo que llamamos tocar es una interacción entre nubes de electrones que nunca llegan a superponerse.
+
+La unidad de fuerza es el newton, definido como $1\,\mathrm{N} \equiv 1\,\mathrm{kg\cdot m/s^2}$. La definición ya adelanta la segunda ley: un newton es la fuerza que le imprime a un kilogramo una aceleración de un metro por segundo al cuadrado.
+
+Vale un recordatorio de cinemática, porque acá se usa todo el tiempo: la velocidad es un vector, así que un cuerpo que cambia de dirección manteniendo la rapidez ya está acelerando, aunque el velocímetro no se mueva.
+
+\textit{Antes de seguir: volvé a la caja de la cocina y enumerá, sin escribir ecuaciones, todas las fuerzas que actúan sobre ella mientras la empujás. Después decidí cuál de ellas desaparece cuando soltás y cuál no.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un satélite en órbita se mueve a rapidez constante y describe un círculo. ¿Está acelerando? ¿Hay fuerza neta sobre él?
+\item Si la fuerza fuera la causa del movimiento y no del cambio de movimiento, ¿qué tendría que pasarle al disco de hockey apenas termina el empujón?
+\end{chequeo}
+
+\begin{bloque}{Marco inercial y primera ley}
+Un \textbf{marco inercial} es un sistema de referencia en el que un objeto que no interactúa con nada tiene aceleración nula. Cualquier marco que se mueva con velocidad constante respecto de uno inercial también es inercial. La Tierra no lo es en sentido estricto, porque rota y orbita, pero sus aceleraciones son tan chicas comparadas con $g$ que para todo lo que hagamos acá se la trata como si lo fuera.
+
+La \textbf{primera ley} dice que, visto desde un marco inercial, un objeto sobre el que no actúan fuerzas externas mantiene su estado: si estaba en reposo sigue en reposo, y si se movía sigue moviéndose con la misma velocidad, en módulo, dirección y sentido.
+
+Acá hay un punto que se pasa por alto con facilidad. La primera ley habla del caso en que no hay fuerzas externas. El caso en que sí las hay pero se cancelan entre sí, y la fuerza neta da cero, es un caso distinto, y lo describe la segunda ley con $\sum \vec F = 0$. Que las dos situaciones tengan la misma consecuencia cinemática, velocidad constante, no las vuelve el mismo enunciado. La primera ley es una afirmación sobre qué marcos de referencia son legítimos para escribir la segunda, no un caso particular de ella.
+
+El paracaidista de la pregunta de arriba, entonces, no es un caso de la primera ley. Sobre él actúan dos fuerzas grandes, el peso y la resistencia del aire, que se cancelan. Es un caso de la segunda ley con fuerza neta nula.
+
+\textit{Antes de seguir: reformulá con tus palabras la diferencia entre que no haya fuerzas y que las fuerzas sumen cero, y buscá una situación cotidiana de cada tipo.}
+\end{bloque}
+
+\begin{chequeo}
+\item Estás sentado en un colectivo que frena de golpe y tu cuerpo se va hacia adelante. Desde la vereda, ¿qué fuerza te empujó hacia adelante? Contestá describiendo qué le pasa al colectivo y qué te pasa a vos.
+\item Una caja está quieta sobre el piso y otra caja idéntica flota lejos de todo en el espacio profundo. ¿Cuál de las dos ilustra la primera ley y cuál la segunda con fuerza neta nula?
+\item ¿Por qué un marco que gira no sirve para escribir $\sum \vec F = m\vec a$ tal como la vamos a escribir acá?
+\end{chequeo}
+
+\begin{bloque}{Masa inercial}
+La \textbf{masa inercial} mide la resistencia de un objeto a que le cambien la velocidad. Es un escalar, es aditiva, y no depende ni del entorno ni del método con que se la mida.
+
+Esa descripción en palabras suena vaga hasta que se la convierte en una receta de medición, y la receta es justamente lo que le da sentido al adjetivo inercial. Tomá dos cuerpos, aplicales por separado la misma fuerza y medí la aceleración de cada uno. Se define
+\[
+\frac{m_1}{m_2} \equiv \frac{a_2}{a_1}.
+\]
+Mirá el cruce de subíndices, porque ahí está todo el contenido. El cuerpo que menos se acelera es el que más masa tiene. La masa no se define pesando, se define midiendo cuánto le cuesta a un objeto cambiar de velocidad. Empujar un auto en punto muerto y empujar una bicicleta con el mismo empujón da aceleraciones muy distintas, y el cociente entre esas dos aceleraciones es, invertido, el cociente entre las dos masas.
+
+Hay una segunda idea de masa, la \textbf{masa gravitacional}, que mide con qué intensidad un cuerpo atrae y es atraído gravitatoriamente. Conceptualmente no tiene nada que ver con la anterior: una habla de resistencia al cambio, la otra de intensidad de una interacción. Experimentalmente, sin embargo, dan siempre el mismo valor, con una precisión altísima. Por eso se usa un solo número y una sola palabra, aunque sean dos propiedades distintas.
+
+La masa tampoco es el peso. Una valija de veinte kilos tiene veinte kilos de masa en Córdoba, en la Luna y flotando en el espacio, porque lo que mide es su resistencia a acelerar y eso no depende de dónde esté. Su peso, en cambio, vale unos doscientos newtons en Córdoba, la sexta parte en la Luna y prácticamente nada lejos de todo cuerpo masivo. Que en la vida diaria digamos que pesamos setenta kilos es un abuso de lenguaje cómodo, que funciona porque todos estamos parados sobre la misma superficie.
+
+\textit{Antes de seguir: explicá por qué la definición operacional de arriba permite comparar dos masas sin saber cuánta fuerza estás aplicando, siempre que sea la misma en los dos casos.}
+\end{bloque}
+
+\begin{chequeo}
+\item Aplicás la misma fuerza a un cuerpo A y a un cuerpo B, y medís $a_A = 6\,\mathrm{m/s^2}$ y $a_B = 2\,\mathrm{m/s^2}$. ¿Cuál tiene más masa y en qué proporción?
+\item Un astronauta que flota dentro de la estación espacial quiere saber si engordó. La balanza no le sirve. ¿Qué podría medir en su lugar, y por qué eso sí funciona?
+\end{chequeo}
+
+\begin{bloque}{Segunda ley y elección de modelo por dirección}
+La \textbf{segunda ley} vincula la fuerza neta con la aceleración:
+\[
+\sum \vec F = m\vec a,
+\]
+donde la suma recorre todas las fuerzas externas que actúan sobre el objeto, y es una suma vectorial. Muchas fuerzas entran, una sola aceleración sale. Como es una igualdad entre vectores, en la práctica se trabaja siempre en componentes: en el plano, $\sum F_x = ma_x$ y $\sum F_y = ma_y$, dos ecuaciones escalares independientes.
+
+Que sean independientes es lo que habilita el hábito operativo central del capítulo. Cuando la aceleración en una dirección es nula, esa ecuación se reduce a $\sum F = 0$ y el objeto está en equilibrio en esa dirección. Cuando no lo es, hay fuerza neta y la ecuación queda completa. Lo importante es que las dos cosas conviven en un mismo problema: una caja arrastrada por una mesa horizontal tiene fuerza neta en la dirección del movimiento y está en equilibrio en la dirección vertical, al mismo tiempo. El modelo no se elige por problema, se elige por dirección, y hay que volver a elegirlo en cada eje.
+
+Si el arrastre de la caja no te termina de convencer, mirá una segunda situación con la misma estructura y otra apariencia: una lámpara que cuelga del techo de un ascensor que sube acelerando. En la vertical hay fuerza neta, porque la lámpara acelera; en la horizontal está en equilibrio, porque no se mueve hacia los costados. Superficies distintas, misma estructura.
+
+Un detalle de escritura que ahorra errores: $m\vec a$ no es una fuerza. Es el resultado de sumar las fuerzas, no un sumando más. Nunca aparece en la lista de fuerzas ni en el diagrama; vive del otro lado del signo igual.
+
+Un último apunte sobre el alcance. La segunda ley te entrega la aceleración. Pasar de la aceleración a la velocidad y a la posición exige integrar, que es herramienta de cálculo y no se usa en este capítulo: todo lo que sigue se resuelve con álgebra vectorial y trigonometría. Ese camino ya está recorrido: es el capítulo anterior, donde la integral se construye desde cero motivada por esta misma pregunta.
+
+\textit{Antes de seguir: pensá una tercera situación cotidiana en la que un mismo objeto esté en equilibrio en una dirección y acelerando en la otra.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un chico tira de un carrito con una soga inclinada hacia arriba y el carrito avanza horizontalmente sobre el piso. ¿En qué dirección hay equilibrio y en cuál hay fuerza neta?
+\item Sobre un cuerpo actúan tres fuerzas y su aceleración es nula. ¿Se puede afirmar que las tres fuerzas son nulas? ¿Qué sí se puede afirmar?
+\item ¿Qué error se comete al dibujar una flecha rotulada $m\vec a$ junto a las fuerzas de un cuerpo?
+\end{chequeo}
+
+\begin{bloque}{Diagrama de cuerpo aislado}
+El \textbf{diagrama de cuerpo aislado (DCL)} representa al objeto como un punto y dibuja únicamente las fuerzas que actúan sobre él. La cátedra lo llama así, diagrama de cuerpo aislado; en Serway vas a encontrar exactamente el mismo objeto bajo el nombre de diagrama de cuerpo libre, y son la misma herramienta.
+
+La manera más útil de pensarlo es como un recorte. Trazás una línea imaginaria alrededor del objeto que elegiste analizar y anotás únicamente lo que cruza esa línea hacia adentro. Todo lo que el objeto le hace al resto del mundo queda afuera del recorte y no se dibuja. Las fuerzas de campo cruzan la línea igual que las de contacto, aunque no haya nada apoyado: el peso siempre entra.
+
+\begin{center}
+\begin{tikzpicture}[scale=1, color=textgray]
+  \draw[thick] (-1.4,0) -- (1.4,0);
+  \foreach \x in {-1.2,-0.8,...,1.3} {\draw[rulegray] (\x,0) -- (\x-0.22,-0.22);}
+  \draw[thick] (-0.45,0) rectangle (0.45,0.7);
+  \node at (0,-0.85) {\footnotesize situación};
+  \draw[rulegray, dashed] (0,0.35) circle (0.9);
+  \draw[rulegray, ->, thick] (1.8,0.35) -- (2.8,0.35);
+  \begin{scope}[xshift=4.6cm, yshift=0.35cm]
+    \fill (0,0) circle (2pt);
+    \draw[very thick, ->] (0,0) -- (0,1.5) node[above] {$\vec n$};
+    \draw[very thick, ->] (0,0) -- (0,-1.5) node[below] {$m\vec g$};
+    \node at (0,-2.2) {\footnotesize diagrama de cuerpo aislado};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+El diagrama de la derecha tiene dos flechas y nada más, y esa pobreza es deliberada: la mesa desapareció, el piso desapareció, quedó solo lo que la mesa y la Tierra le hacen al bloque. La regla de oro es hacer el DCL antes de escribir una sola ecuación, no después, para ilustrar lo que ya resolviste. La razón es que la mayoría de los errores de dinámica no son errores de álgebra, sino fuerzas de más o de menos en la lista, y el diagrama es el único lugar donde eso se ve.
+
+\textit{Antes de seguir: hacé el DCL de un libro que sostenés apoyado contra una pared vertical con la mano, empujándolo horizontalmente. Fijate cuántas fuerzas cruzan el recorte y cuáles se te habían pasado.}
+\end{bloque}
+
+\begin{chequeo}
+\item En el diagrama de arriba, ¿por qué no aparece la fuerza que el bloque hace sobre la mesa?
+\item Un cuerpo cuelga de una soga atada al techo. ¿Cuántas flechas tiene su DCL, y cuántas tendría el DCL de la soga si la soga tuviera masa?
+\end{chequeo}
+
+\begin{bloque}{Peso, normal y tensión}
+El \textbf{peso} es la fuerza con que la Tierra atrae al objeto, de módulo $F_g = mg$ y dirigida siempre hacia el centro de la Tierra. Depende del lugar, porque $g$ depende del lugar, y por eso no es una propiedad del objeto sino del sistema formado por el objeto y la Tierra. La masa entra en la fórmula, pero el peso no es la masa.
+
+La \textbf{normal} $\vec n$ es la fuerza que una superficie ejerce sobre un objeto apoyado en ella, siempre perpendicular a la superficie. Su rasgo distintivo es que es pasiva: no tiene un valor propio, toma el valor que haga falta para que el objeto no atraviese la superficie, hasta el punto en que la superficie se rompe. Un colchón se hunde exactamente lo necesario y no más; una mesa hace la fuerza que se le pide hasta que se parte.
+
+De ahí sale la consecuencia que más cuesta: $n$ no vale $mg$ salvo por casualidad. Vale $mg$ en el caso particular de un cuerpo apoyado en una superficie horizontal, sin otras fuerzas verticales y sin aceleración vertical. Basta con inclinar la superficie, apoyar una mano encima, colgarle algo al cuerpo o meterlo en un ascensor que acelera, y $n$ deja de valer $mg$. La normal siempre se obtiene despejándola de la segunda ley en la dirección perpendicular a la superficie, nunca escribiéndola de memoria.
+
+La \textbf{tensión} $T$ es el módulo de la fuerza que una cuerda ejerce sobre el objeto atado a ella. Es un escalar, y la fuerza correspondiente tiene la dirección de la cuerda y el sentido que se aleja del objeto: una soga tira, nunca empuja. En una cuerda de masa despreciable la tensión es la misma en todos sus puntos, lo que permite hablar de la tensión de la soga como de un solo número.
+
+\textit{Antes de seguir: buscá tres situaciones distintas en las que la normal sobre un mismo cuerpo tenga tres valores distintos, y explicá en cada una qué la obliga a valer eso.}
+\end{bloque}
+
+\begin{chequeo}
+\item Apoyás una caja de $10\,\mathrm{kg}$ sobre la mesa y encima le ponés un ladrillo de $2\,\mathrm{kg}$. Con $g = 10\,\mathrm{m/s^2}$, ¿cuánto vale la normal que la mesa hace sobre la caja?
+\item Una lámpara cuelga del techo por una soga. ¿La tensión de la soga vale el peso de la lámpara? ¿De qué depende esa respuesta?
+\item ¿Por qué decir que la normal siempre equilibra al peso es la descripción de un caso particular y no una definición?
+\end{chequeo}
+
+\begin{bloque}{Tercera ley y pares de interacción}
+La \textbf{tercera ley} dice que si un cuerpo ejerce una fuerza sobre otro, el segundo ejerce sobre el primero una fuerza de igual módulo y sentido opuesto. Para escribirla hace falta fijar qué significa cada subíndice, cosa que los textos suelen dar por sobreentendida. Acá se adopta esta convención, y se sostiene en todo el capítulo: en $\vec F_{12}$ el primer subíndice nombra al cuerpo que ejerce la fuerza y el segundo al cuerpo que la recibe. Con eso,
+\[
+\vec F_{12} = -\vec F_{21}.
+\]
+
+Las dos fuerzas de un par tienen tres propiedades que conviene tener presentes juntas. Actúan sobre cuerpos distintos, siempre. Son del mismo tipo, siempre: si una es gravitatoria la otra es gravitatoria, si una es de contacto la otra es de contacto. Y no existen por separado, porque no hay manera de ejercer una fuerza sin recibir su pareja.
+
+De la primera propiedad se sigue el uso práctico. Como actúan sobre cuerpos distintos, las dos fuerzas de un par nunca aparecen juntas en un mismo DCL y por lo tanto nunca se cancelan entre sí. Si al armar un diagrama te salen dos flechas opuestas y sospechás que son un par de acción y reacción, hay algo mal: o no son un par, o una de las dos no debería estar ahí.
+
+El caso que hace tropezar a todo el mundo es el del libro sobre la mesa. La normal apunta hacia arriba, el peso hacia abajo, tienen el mismo módulo y sentidos opuestos, y sin embargo no son un par de acción y reacción, porque las dos actúan sobre el libro. Que sus módulos coincidan es consecuencia de la segunda ley aplicada a un cuerpo que no acelera, no de la tercera, y basta con poner el libro en un ascensor acelerado para que dejen de coincidir. Las verdaderas parejas son otras dos: la del peso del libro es la atracción que el libro ejerce sobre la Tierra, y la de la normal es la fuerza que el libro ejerce sobre la mesa, hacia abajo. Esa era la primera de las dos preguntas del comienzo.
+
+Queda una cuestión de vocabulario que conviene aclarar acá, porque aparece en los enunciados de la guía. La cátedra suele pedir la reacción del plano sobre el bloque, y con eso nombra a la normal $\vec n$. Es una manera de hablar, no una afirmación sobre pares de tercera ley: cuando leas reacción del plano, entendé $\vec n$, y recordá que su verdadera pareja de tercera ley es la fuerza que el bloque ejerce sobre el plano, no el peso.
+
+\textit{Antes de seguir: escribí el par de tercera ley completo, con la convención de subíndices de arriba, para el caso de una persona que camina empujando el piso hacia atrás.}
+\end{bloque}
+
+\begin{chequeo}
+\item En una cinchada gana el equipo A. Si las fuerzas que los dos equipos se hacen a través de la soga son iguales y opuestas, ¿por qué gana alguien? Pensá qué otras fuerzas entran en el DCL de cada equipo.
+\item Una manzana de $0{,}2\,\mathrm{kg}$ cae, y la Tierra la atrae con unos $2\,\mathrm{N}$. ¿Con qué fuerza atrae la manzana a la Tierra, y por qué no vemos moverse a la Tierra?
+\item ¿Puede un par de acción y reacción producir aceleración nula en los dos cuerpos involucrados?
+\end{chequeo}
+
+\begin{bloque}{Plano inclinado}
+Un cuerpo apoyado en un plano inclinado un ángulo $\theta$ respecto de la horizontal admite el mismo tratamiento que cualquier otro, pero conviene elegir los ejes con cuidado. En lugar de usar horizontal y vertical, se toma un eje paralelo al plano y otro perpendicular a él.
+
+La razón de esa elección es concreta y vale la pena tenerla escrita. Si el cuerpo se mueve, se mueve a lo largo del plano, así que con ejes rotados su aceleración tiene una sola componente no nula en lugar de dos. Y la normal, que es perpendicular al plano por definición, queda alineada con un eje y no hay que descomponerla. El costo es que ahora hay que descomponer el peso, la única fuerza que quedó torcida respecto de los ejes, y el intercambio conviene porque descomponer una fuerza conocida sale más barato que arrastrar dos incógnitas repartidas en dos componentes cada una.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.15, color=textgray]
+  \draw[thick] (0,0) -- (4.6,0);
+  \draw[thick] (0,0) -- (4.6,2.3);
+  \draw[rulegray] (1.0,0) arc (0:26.565:1.0);
+  \node at (1.32,0.23) {\footnotesize $\theta$};
+  \begin{scope}[shift={(2.7,1.35)}, rotate=26.565]
+    \draw[thick] (-0.42,0) rectangle (0.42,0.6);
+    \coordinate (P) at (0,0.3);
+  \end{scope}
+  \draw[rulegray, ->] (P) -- +(206.565:1.5) node[left] {\footnotesize $x$};
+  \draw[rulegray, ->] (P) -- +(116.565:1.15) node[above] {\footnotesize $y$};
+  \draw[very thick, ->] (P) -- +(270:1.8) node[below] {$m\vec g$};
+  \draw[thick, ->] (P) -- +(206.565:0.81) node[left] {\footnotesize $mg\sen\theta$};
+  \draw[thick, ->] (P) -- +(296.565:1.61) node[below right] {\footnotesize $mg\cos\theta$};
+  \draw[very thick, ->] (P) -- +(116.565:1.61) node[above left] {$\vec n$};
+\end{tikzpicture}
+\end{center}
+
+La descomposición sale de la geometría del dibujo. El ángulo entre el peso y el eje perpendicular al plano es el mismo $\theta$ del plano, porque sus lados son perpendiculares entre sí. De ahí, la componente del peso a lo largo del plano vale $mg\sen\theta$ y apunta hacia abajo de la pendiente, y la componente perpendicular vale $mg\cos\theta$ y apunta contra la normal. Con eso, las ecuaciones quedan
+\[
+\sum F_x = mg\sen\theta + (\text{otras fuerzas a lo largo del plano}) = ma_x,
+\qquad
+\sum F_y = n - mg\cos\theta = 0,
+\]
+donde la segunda vale cero porque el cuerpo no despega del plano ni se hunde en él. De ahí sale ya $n = mg\cos\theta$, que es menor que $mg$ para cualquier inclinación, tiende a $mg$ cuando el plano se acuesta y tiende a cero cuando se para. En este capítulo el seno se escribe $\sen$, como lo escribe la cátedra; en textos en inglés vas a encontrar la misma función como $\sin$.
+
+Cuando en un problema aparecen dos ecuaciones de este tipo con una misma incógnita molesta, típicamente $T$ o $n$, dividir una por la otra la elimina de un saque y deja una relación entre el ángulo y los datos. Es una maniobra que conviene tener a mano.
+
+\textit{Antes de seguir: sin hacer cuentas, decidí qué le pasa a $n$ y qué le pasa a la componente del peso a lo largo del plano cuando la rampa se hace más empinada, y verificá que las dos respuestas sean coherentes con las fórmulas.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué la normal en un plano inclinado nunca puede valer $mg$, salvo en el caso trivial $\theta = 0$?
+\item Un cuerpo baja por una rampa lisa. ¿De qué datos depende su aceleración y de cuáles no?
+\end{chequeo}
+
+\begin{bloque}{Ley de Hooke}
+Un resorte estirado tira hacia adentro y un resorte comprimido empuja hacia afuera. En los dos casos la fuerza que ejerce apunta hacia la posición en la que el resorte no está deformado, y su módulo crece con la deformación. Esas dos observaciones, puestas juntas y aproximadas por una recta, son la \textbf{ley de Hooke}:
+\[
+F_s = -kx .
+\]
+Acá $x$ es el desplazamiento medido desde la posición de equilibrio y $k$ es la constante elástica del resorte, en $\mathrm{N/m}$. El signo menos no es un adorno: es lo que codifica que la fuerza siempre se opone al desplazamiento. Si estirás hacia el lado positivo, $x > 0$ y la fuerza sale negativa, o sea que apunta de vuelta hacia el origen; si comprimís, $x < 0$ y la fuerza sale positiva, otra vez hacia el origen. Una fuerza con esa propiedad se llama restauradora, y el signo menos es la manera más económica de escribirla.
+
+La constante $k$ mide la rigidez. Un resorte con $k$ grande necesita mucha fuerza para estirarse poco; uno con $k$ chico se estira mucho con poco. Es lo que separa el resorte de una balanza de precisión del de una gomita elástica. Esta misma $k$ vuelve a aparecer más adelante en la materia, en energía elástica y en el movimiento oscilatorio, con el mismo significado.
+
+El caso vertical merece una aclaración aparte, porque es donde se cuela el error más frecuente. Colgá un cuerpo de un resorte sujeto al techo: el resorte se estira hasta que la fuerza elástica equilibra al peso, y el cuerpo queda en reposo en una posición que no es la de la longitud natural del resorte.
+
+\begin{center}
+\begin{tikzpicture}[scale=1, color=textgray]
+  \draw[thick] (-0.9,0) -- (3.9,0);
+  \foreach \x in {-0.8,-0.4,...,3.8} {\draw[rulegray] (\x,0) -- (\x-0.22,0.22);}
+  % resorte con su longitud natural
+  \draw[thick] (0,0) -- (0,-0.3);
+  \foreach \i in {0,...,4} {\draw[thick] (0,-0.3-0.18*\i) -- (0.22,-0.39-0.18*\i) -- (0,-0.48-0.18*\i);}
+  \draw[thick] (0,-1.2) -- (0,-1.4);
+  \node[align=center] at (0,-3.15) {\footnotesize longitud\\ natural};
+  \draw[rulegray, dashed] (-0.6,-1.4) -- (3.7,-1.4);
+  % resorte estirado por el cuerpo colgado
+  \draw[thick] (2.0,0) -- (2.0,-0.3);
+  \foreach \i in {0,...,4} {\draw[thick] (2.0,-0.3-0.3*\i) -- (2.22,-0.45-0.3*\i) -- (2.0,-0.6-0.3*\i);}
+  \draw[thick] (2.0,-1.8) -- (2.0,-2.0);
+  \draw[thick] (1.72,-2.0) rectangle (2.28,-2.55);
+  \draw[rulegray, dashed] (1.1,-2.0) -- (3.7,-2.0);
+  \node[align=center] at (2.0,-3.15) {\footnotesize equilibrio con\\ el cuerpo colgado};
+  \draw[rulegray, <->] (3.5,-1.4) -- (3.5,-2.0) node[midway, right] {\footnotesize $d$};
+  \draw[very thick] (1.15,-2.0) -- (1.45,-2.0);
+  \node[left] at (1.15,-2.0) {\footnotesize $x = 0$};
+\end{tikzpicture}
+\end{center}
+
+Llamemos $d$ a ese estiramiento inicial. En el reposo, la segunda ley en la vertical da $kd - mg = 0$, o sea $d = mg/k$. Ahora viene lo importante. Si a partir de esa posición desplazás el cuerpo una distancia adicional $x$ y volvés a plantear la segunda ley, el peso y la parte $kd$ de la fuerza elástica se cancelan entre sí, y lo único que sobrevive es $-kx$. Es decir que si tomás el origen en la nueva posición de equilibrio, y no en la longitud natural, la ley de Hooke sigue valiendo tal cual está escrita arriba, sin ningún término extra por el peso. Medida desde el origen equivocado, en cambio, la fuerza neta que obtenés está corrida en exactamente $mg$.
+
+\textit{Antes de seguir: mostrá con el álgebra de arriba, en dos renglones, por qué el peso desaparece de la ecuación al medir $x$ desde la nueva posición de equilibrio.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un resorte de $k = 400\,\mathrm{N/m}$ se estira $3\,\mathrm{cm}$. ¿Cuánto vale el módulo de la fuerza que ejerce, y hacia dónde apunta?
+\item Dos resortes se estiran lo mismo, pero uno ejerce el doble de fuerza que el otro. ¿Qué relación hay entre sus constantes elásticas?
+\item ¿Qué cambia, y qué no cambia, en la expresión $F_s = -kx$ cuando el resorte cuelga en vez de estar horizontal?
+\end{chequeo}
+
+\section{Ejemplo resuelto}
+
+\begin{ejemplo}[completo]
+Una persona de 60 kg está parada sobre una balanza de baño dentro de un ascensor, que sube acelerando a 2.0 m/s$^2$. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita determinar qué marca la balanza y compararlo con el peso de la persona.
+
+\medskip
+\textit{Inciso (a). Montaje.} El objeto que se aísla es la persona, no el ascensor y no la balanza. Su diagrama de cuerpo aislado ya está resuelto acá abajo, junto con el eje elegido.
+
+\begin{center}
+\begin{tikzpicture}[scale=1, color=textgray]
+  \fill (0,0) circle (2pt);
+  \draw[very thick, ->] (0,0) -- (0,1.7) node[above] {$\vec n$};
+  \draw[very thick, ->] (0,0) -- (0,-1.7) node[below] {$m\vec g$};
+  \draw[rulegray, ->] (-1.6,-0.6) -- (-1.6,0.6) node[above] {\footnotesize $+y$};
+  \draw[rulegray, ->] (2.4,-0.5) -- (2.4,0.5) node[above] {\footnotesize $\vec a$};
+  \node[rulegray] at (2.4,-1.0) {\footnotesize no es una fuerza};
+\end{tikzpicture}
+\end{center}
+
+Solo dos fuerzas cruzan el recorte: el peso, que es de campo y entra siempre, y la normal que la balanza ejerce hacia arriba sobre los pies. La balanza como objeto no aparece en el dibujo, solo su efecto sobre la persona. La aceleración está dibujada aparte y en gris a propósito, porque sirve para recordar hacia dónde apunta pero no es una fuerza y no se suma con las otras dos. Explicate a vos mismo, antes de seguir, por qué el peso de la persona no cambia por estar dentro de un ascensor.
+
+\medskip
+\textit{Inciso (b). Elección de modelo.} Hay una sola dirección relevante, la vertical, y en esa dirección la persona no está en equilibrio: sube acelerando junto con el ascensor, con $a_y = +2{,}0\,\mathrm{m/s^2}$ tomando el eje positivo hacia arriba. El modelo es el de fuerza neta, no el de equilibrio. Esto es lo que hay que decidir antes de escribir nada, y se decide mirando la aceleración, no la cantidad de fuerzas.
+
+\medskip
+\textit{Inciso (c). Despeje de la normal.} Con el eje hacia arriba, la normal entra positiva y el peso negativo:
+\[
+\sum F_y = n - mg = ma_y
+\qquad\Longrightarrow\qquad
+n = m(g + a_y).
+\]
+Reemplazando, $n = 60\,\mathrm{kg} \cdot (10 + 2{,}0)\,\mathrm{m/s^2} = 720\,\mathrm{N}$.
+
+Fijate que en ningún momento se escribió $n = mg$. La normal salió despejada de la segunda ley, que es de donde sale siempre. Si la hubiéramos postulado igual al peso, habríamos obtenido $600\,\mathrm{N}$ y una aceleración nula, contradiciendo el dato del enunciado. Reformulá con tus palabras por qué la normal tiene que ser mayor que el peso para que la persona acelere hacia arriba.
+
+\medskip
+\textit{Inciso (d). Qué mide la balanza.} Una balanza no mide peso: mide la fuerza con que la aplastan, y por tercera ley esa fuerza tiene el mismo módulo que la normal que ella ejerce sobre la persona. Después divide por un valor de $g$ cableado de fábrica y muestra el resultado en kilogramos. Acá marcaría $720\,\mathrm{N} / 10\,\mathrm{m/s^2} = 72\,\mathrm{kg}$.
+
+Mientras tanto, el peso de la persona sigue valiendo $mg = 600\,\mathrm{N}$, exactamente lo mismo que en el palier. No aumentó nada, lo que aumentó es la normal. La sensación de pesadez en el arranque del ascensor es la sensación de una normal más grande contra la planta de los pies, y la balanza coincide con esa sensación porque mide justamente eso.
+
+\medskip
+\textit{Inciso (e). Cierre y límites.} Conviene terminar preguntándole al resultado qué pasa en los casos extremos, que es donde se detectan los errores. Si el ascensor sube a velocidad constante, $a_y = 0$ y la fórmula devuelve $n = mg = 600\,\mathrm{N}$, o sea $60\,\mathrm{kg}$ en el visor: subir rápido no cambia nada, cambiar de velocidad sí. Si el ascensor baja acelerando, $a_y$ es negativa y la marca baja. Y si el cable se corta, la persona y la balanza caen juntas con $a_y = -g$, la fórmula da $n = 0$, la balanza marca cero y la persona flota adentro de la cabina. Eso, y no la ausencia de gravedad, es lo que le pasa a un astronauta en órbita.
+
+La respuesta al problema, entonces, no es el número $720$. Es que la balanza mide la normal, que la normal depende de la aceleración, y que el peso se quedó donde estaba todo el tiempo.
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+Una caja de 4.0 kg se suelta desde el reposo sobre una rampa lisa que forma 30 grados con la horizontal. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se piden la aceleración de la caja y la reacción de la rampa sobre ella.
+
+Sobre la caja actúan solo dos fuerzas, la normal y el peso, y los ejes van paralelo y perpendicular a la rampa, con el positivo de $x$ hacia abajo de la pendiente. El peso ya está descompuesto sobre esos ejes acá abajo; la rampa no hace falta dibujarla.
+
+\begin{center}
+\begin{tikzpicture}[scale=1, color=textgray]
+  \begin{scope}[shift={(-2.2,0.8)}]
+    \draw[rulegray, ->] (0,0) -- (210:0.85) node[left] {\footnotesize $x$};
+    \draw[rulegray, ->] (0,0) -- (120:0.85) node[above] {\footnotesize $y$};
+  \end{scope}
+  \fill (0,0) circle (2pt);
+  \draw[very thick, ->] (0,0) -- (120:1.56) node[above] {$\vec n$};
+  \draw[very thick, ->] (0,0) -- (270:1.8) node[below] {$m\vec g$};
+  \draw[thick, ->] (0,0) -- (210:0.9) node[left] {\footnotesize $mg\sen\theta$};
+  \draw[thick, ->] (0,0) -- (300:1.56) node[below right] {\footnotesize $mg\cos\theta$};
+\end{tikzpicture}
+\end{center}
+
+A lo largo del plano la caja acelera, así que corresponde el modelo de fuerza neta. La única fuerza con componente en esa dirección es el peso:
+\[
+\sum F_x = mg\sen\theta = ma_x
+\qquad\Longrightarrow\qquad
+a_x = g\sen\theta = 10\,\mathrm{m/s^2}\cdot 0{,}500 = 5{,}0\,\mathrm{m/s^2}.
+\]
+La masa se canceló sola, y eso significa que dos cajas de masas muy distintas bajan esta rampa con la misma aceleración. Es un resultado que conviene guardar, porque reaparece en caída libre y en gravitación.
+
+En la dirección perpendicular la caja no se mueve, ni despega de la rampa ni se hunde en ella, así que ahí corresponde el modelo de equilibrio. Planteá $\sum F_y = 0$ con las fuerzas que tienen componente perpendicular, despejá $n$ y evaluá con los datos. Después contestá tres cosas con el resultado en la mano: si $n$ es mayor o menor que el peso de la caja, qué pasa con $n$ cuando la rampa se acuesta hasta quedar horizontal, y qué pasa cuando se para hasta quedar vertical.
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+Un bloque apoyado sobre una mesa horizontal lisa está unido a un resorte horizontal de constante $k = 200$ N/m, cuyo otro extremo está fijo a la pared. Se toma el origen $x = 0$ en la posición del bloque con el resorte sin deformar, y el sentido positivo alejándose de la pared.
+
+Con el bloque desplazado a $x = +5{,}0\,\mathrm{cm}$ el resorte está estirado. Aplicando $F_s = -kx$ con $x$ en metros,
+\[
+F_s = -\,200\,\mathrm{N/m} \cdot (+0{,}050\,\mathrm{m}) = -10\,\mathrm{N},
+\]
+o sea $10\,\mathrm{N}$ de módulo, con el signo negativo indicando que apunta hacia la pared, de vuelta hacia el origen. Nada de esto hubo que razonarlo aparte, el sentido salió de la fórmula.
+
+Ahora calculá vos la fuerza del resorte cuando el bloque está en $x = -3{,}0\,\mathrm{cm}$, es decir con el resorte comprimido, y verificá que el signo que te da sea coherente con el sentido en que esperás que el resorte empuje. Después compará los dos módulos y decidí si el cociente entre ellos coincide con el cociente entre los dos desplazamientos.
+\end{ejemplo}
+
+\section{Errores comunes}
+
+Lo que sigue no es una lista de retos sino de discrepancias concretas entre lo que suele escribirse y lo que dicen las tres leyes. Cada una tiene una manera objetiva de detectarse.
+
+\begin{erroresComunes}
+  \item Escribir $n = mg$ sin despejarla. Vale solo en superficie horizontal, sin otras fuerzas verticales y sin aceleración vertical. En un plano inclinado da $mg\cos\theta$, en un ascensor acelerado da $m(g+a)$, y con una mano apoyada encima da otra cosa. La detección es directa: si $n$ apareció escrita sin haber planteado la segunda ley en la dirección perpendicular a la superficie, el valor no está justificado.
+  \item Tomar $\vec n$ y $m\vec g$ como par de acción y reacción. Las dos actúan sobre el mismo cuerpo, y un par de tercera ley nunca lo hace. Cuando sus módulos coinciden es por la segunda ley aplicada a un cuerpo sin aceleración vertical, y dejan de coincidir apenas hay aceleración.
+  \item Dibujar en el diagrama de cuerpo aislado fuerzas que el objeto ejerce sobre otros. El recorte solo admite lo que entra. La fuerza del bloque sobre la mesa existe y es real, pero pertenece al diagrama de la mesa.
+  \item Dibujar $m\vec a$ como una flecha más entre las fuerzas. Es el resultado de la suma, no un sumando, y aparece del otro lado del signo igual.
+  \item Tratar la ausencia de fuerzas y la cancelación de fuerzas como el mismo enunciado. La primera ley describe la primera situación; la segunda ley con $\sum\vec F = 0$ describe la segunda. Las consecuencias cinemáticas coinciden, los enunciados no.
+  \item Leer la fuerza como causa del movimiento en vez de causa de sus cambios. La prueba de que falla está en cualquier objeto que se mueve a velocidad constante con fuerza neta nula.
+  \item Usar masa y peso como sinónimos, o suponer que el peso es una propiedad del objeto. El peso es del sistema objeto y Tierra, y cambia con el lugar; la masa no.
+  \item Afirmar que uno pesa más en un ascensor que acelera hacia arriba. El peso vale $mg$ y no se enteró de nada. Lo que aumentó es la normal, que es lo que mide la balanza y lo que sienten los pies.
+  \item Usar $F_s = -kx$ como fuerza neta sobre un cuerpo colgado de un resorte, midiendo $x$ desde la longitud natural. Medir desde ahí es perfectamente legítimo, pero entonces $-kx$ es solo la fuerza del resorte y falta el término $mg$. La cuenta cierra sola únicamente si se toma el origen en la nueva posición de equilibrio, donde $kd$ y $mg$ ya se cancelaron entre sí.
+\end{erroresComunes}
+
+\section{Ejercicios}
+
+\subsection{Práctica en bloque}
+
+Todos los ejercicios de esta sección son de dinámica sin rozamiento, y todos terminan en una fuerza, una aceleración, una tensión, una normal o una constante elástica. Ninguno pide posición ni velocidad. Antes de calcular nada, hacé el diagrama de cuerpo aislado, incluso en los incisos que no te lo piden explícitamente.
+
+\begin{ejercicio}[normal y tercera ley]{bloque}
+Un cajón de fruta de 8.0 kg está apoyado sobre el piso de una verdulería. El verdulero apoya la mano sobre la tapa y empuja verticalmente hacia abajo con una fuerza de módulo $|F| = 25$ N. El cajón no se mueve. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del cajón.
+  \item Calcule la fuerza que el piso ejerce sobre el cajón.
+  \item Indique cuál es la fuerza de reacción a la que calculó en (b): sobre qué cuerpo actúa y en qué sentido.
+  \item El peso del cajón vale 80 N y el resultado de (b) no vale 80 N. Explique por qué esto no contradice ninguna de las tres leyes.
+  \item Repita (b) suponiendo que, en lugar de empujar, el verdulero engancha el cajón con un dedo y tira hacia arriba con la misma fuerza de 25 N.
+\end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}[plano inclinado]{bloque}
+Una caja de 12 kg se mantiene en reposo sobre la rampa de un estacionamiento, que forma un ángulo de 30 grados con la horizontal. La caja está sujeta por una soga de masa despreciable, paralela a la superficie de la rampa. No hay rozamiento entre la caja y la rampa. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de la caja e indique el sistema de coordenadas elegido.
+  \item Calcule la tensión de la soga.
+  \item Calcule la reacción de la rampa sobre la caja.
+  \item Justifique por qué el resultado de (c) no coincide con el peso de la caja.
+  \item Sin volver a calcular, indique cómo cambian las respuestas de (b) y (c) si la rampa fuera más empinada, y qué ocurre en el caso límite en que el ángulo tiende a 90 grados.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 1 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[segunda ley y masa inercial]{bloque}
+Una persona empuja un carrito de supermercado vacío, de 15 kg, sobre un piso horizontal liso. Empuja en dirección horizontal con una fuerza constante de módulo $|F| = 30$ N. Después repite exactamente el mismo empujón con el carrito cargado, y mide que ahora la aceleración es de 0.75 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del carrito vacío.
+  \item Calcule la aceleración del carrito vacío.
+  \item Usando únicamente el cociente entre las dos aceleraciones medidas, y sin usar el valor de la fuerza, determine la masa del carrito cargado.
+  \item Deduzca la masa de la mercadería.
+  \item Explique por qué el procedimiento de (c) funcionaría igual si la persona no supiera cuánta fuerza está haciendo, siempre que sea la misma en los dos casos.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 2 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[tensión y equilibrio]{bloque}
+Una maceta de 4.0 kg cuelga del techo de un balcón mediante un cable de masa despreciable. Para que no golpee contra la pared, se ata a la maceta una soga horizontal que la mantiene quieta, con el cable formando un ángulo de 30 grados con la vertical. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de la maceta.
+  \item Escriba las ecuaciones de equilibrio en la dirección vertical y en la horizontal.
+  \item Calcule la tensión del cable.
+  \item Calcule la tensión de la soga horizontal.
+  \item Verifique que la tensión del cable es mayor que el peso de la maceta y explique físicamente por qué tiene que ser así.
+\end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}[ley de Hooke]{bloque}
+El resorte de una balanza de verdulería se alarga 4.0 cm cuando se cuelga de él una bolsa de 1.2 kg. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Calcule la constante elástica del resorte, expresándola en N/m.
+  \item Calcule cuánto se alarga el resorte al colgar una bolsa de 2.0 kg.
+  \item Indique la dirección y el sentido de la fuerza que el resorte ejerce sobre la bolsa en (b), y relaciónelos con el signo de la ley de Hooke.
+  \item Otro comercio usa una balanza con un resorte más rígido. Sin hacer cuentas, indique si sus marcas de graduación quedan más juntas o más separadas que las de la primera, y justifique.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 11 del Práctico 2}
+\end{ejercicio}
+
+\subsection{Práctica en bloque, ejercicios adicionales}
+
+Los tres que siguen son del mismo tema y de la misma familia que los anteriores, con más piezas por ejercicio y menos guía por inciso. Es el nivel de planteo que la cátedra evalúa. Mezclarlos con temas anteriores de la materia va a tener sentido más adelante, cuando haya más temas cerrados con los cuales mezclar; por ahora conviene consolidar este.
+
+\begin{ejercicio}[tensión y elección de modelo]{bloque}
+Una mochila de 5.0 kg cuelga de un gancho fijo al techo de un colectivo urbano. El colectivo arranca por una avenida recta y horizontal con una aceleración constante de 2.0 m/s$^2$, y la mochila queda desviada un ángulo constante respecto de la vertical. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita determinar la tensión de la correa y el ángulo de desviación, para lo cual:
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de la mochila, visto desde la vereda.
+  \item Escriba la segunda ley por separado en la dirección horizontal y en la vertical, indicando en cuál de las dos la mochila está en equilibrio.
+  \item Determine el ángulo que forma la correa con la vertical.
+  \item Determine la tensión de la correa.
+  \item Muestre que el ángulo obtenido en (c) no depende de la masa de la mochila, y explique qué significa eso para dos pasajeros con mochilas distintas.
+  \item Analice qué le pasa al ángulo si el colectivo acelera cada vez más fuerte, y por qué la correa nunca llega a quedar horizontal.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 6 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[ley de Hooke]{bloque}
+Un resorte de masa despreciable cuelga del techo de un taller. Al colgarle un cuerpo de 0.50 kg, el resorte se alarga 10 cm respecto de su longitud natural y el cuerpo queda en reposo. Después se tira del cuerpo 6.0 cm hacia abajo y se lo suelta. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita calcular la aceleración del cuerpo en el instante en que se lo suelta, para lo cual:
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del cuerpo en la situación de reposo, y otro en el instante en que se lo suelta.
+  \item Calcule la constante elástica del resorte.
+  \item Indique respecto de qué posición conviene medir el estiramiento en el instante del suelte, y justifique la elección.
+  \item Calcule la fuerza neta sobre el cuerpo en ese instante, y a partir de ella su aceleración, indicando el sentido.
+  \item Un compañero mide el estiramiento desde la longitud natural del resorte y obtiene una aceleración distinta. Identifique exactamente en qué paso se equivoca.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 12 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[plano inclinado]{bloque}
+Una caja de 20 kg se mantiene en reposo sobre una tabla lisa inclinada 37 grados respecto de la horizontal, sujeta por una soga de masa despreciable paralela a la tabla. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$, y que el seno y el coseno de 37 grados valen 0.60 y 0.80 respectivamente.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de la caja.
+  \item Calcule la tensión de la soga y la reacción de la tabla sobre la caja.
+  \item La soga se corta. Calcule la aceleración de la caja inmediatamente después, e indique si la reacción de la tabla cambió respecto de (b).
+  \item Repita el cálculo de (b) para el caso en que la soga, en lugar de ser paralela a la tabla, se ata horizontalmente. Compare las dos reacciones de la tabla y explique el resultado.
+  \item Escriba la reacción de la tabla del caso (d) en función de la masa y del ángulo, y analice qué ocurre cuando el ángulo tiende a cero.
+\end{enumerate}
+\end{ejercicio}
+
+% ============================================================
+%  CAPITULO 3 de sintesis/fisica-1/fisica-1.tex (era el 2 antes de que
+%
+%  FRAGMENTO, no documento completo. Se inserta tal cual antes del
+%  se insertara Cinematica adelante).
+%
+%  NO redefine \sen ni carga tikz: las dos cosas ya estan en el
+%  preambulo local del documento (lineas 7 y 11 del .tex) y volver
+%  a declararlas rompe la integracion.
+%  Tampoco lleva \setMateria ni \renewcommand{\miNombre}: se definen
+%  una sola vez por materia, arriba de todo.
+% ============================================================
+
+\temacapitulo{Dinámica II: rozamiento y sistemas acoplados}
+
+\section{Motivación}
+
+\begin{motivacion}
+En el capítulo anterior la caja de la cocina se frenaba porque el piso la frenaba, y no porque se le hubiera acabado nada. Esa fuerza que no estabas contando quedó ahí, nombrada apenas por lo que hacía, sin nombre propio, sin fórmula y sin manera de calcularla. Este capítulo se la da.
+\end{motivacion}
+
+La fuerza se llama rozamiento, y viene con una sorpresa. El prior con el que llega casi todo el mundo es que el rozamiento es el enemigo, lo que te frena, lo que hay que minimizar. La realidad es al revés: el rozamiento es lo que te permite moverte. Caminás porque la suela no desliza contra la vereda y el piso te empuja hacia adelante. Un auto arranca porque la rueda no patina. Un nudo agarra porque las hebras no se corren entre sí. En una vereda perfectamente lisa no podrías avanzar un centímetro, por más que patalearas.
+
+Hay un dato de la naturaleza que conviene tener presente antes de empezar a calcular. Los coeficientes de rozamiento de los materiales industriales bajan hasta el orden de $0{,}06$ con lubricante, y el teflón contra teflón llega a $0{,}04$. La articulación de tu rodilla, con su líquido sinovial, anda por $0{,}003$. Dos órdenes de magnitud por debajo de cualquier cosa que sepamos fabricar, y la venís usando todos los días sin pensarlo.
+
+La segunda mitad del capítulo cambia de asunto. Hasta acá todos los problemas tenían un cuerpo. A partir de ahora hay dos o tres, atados por una soga o apoyados uno contra otro, y no se pueden analizar por separado sin perder información. Aparece un objeto lógico nuevo, que no es una fuerza y no sale de ningún diagrama: la ecuación que dice que si un extremo de la soga baja diez centímetros, el otro sube diez centímetros. Eso no lo sabés por ninguna fuerza, lo sabés porque mediste la soga.
+
+Una sola oración sobre por qué esto importa ahora: el rozamiento dentro de un sistema acoplado es el problema 3 del parcial, y el ejercicio 19 del práctico es literalmente el que la cátedra tomó en 2025.
+
+Antes de arrancar, dos preguntas que conviene que te contestes ahora, sin leer más abajo. La primera: un cajón que pesa 100 N está quieto sobre el piso, el coeficiente de rozamiento estático entre el cajón y el piso vale $0{,}4$, lo empujás horizontalmente con 20 N y no se mueve; ¿cuánto vale la fuerza de rozamiento? La segunda: estás caminando por la vereda y mirás qué pasa entre la suela y el piso mientras el pie está apoyado; ¿ese rozamiento es estático o dinámico?
+
+Si las dos respuestas te salieron sin dudar y sabés justificarlas, ya cruzaste el umbral de este capítulo: leé los bloques teóricos en diagonal, como referencia, y andá directo a los ejemplos resueltos y a los ejercicios. Si alguna te hizo dudar, o si la contestaste rápido pero sin poder decir por qué, leelo entero y en orden. Las dos preguntas están respondidas más abajo, cada una en el bloque que le corresponde.
+
+\section{Marco teórico}
+
+\begin{bloque}{Rozamiento estático}
+Cuando dos superficies se tocan, la fuerza que una le hace a la otra no es solo la normal. Además de la componente perpendicular a la superficie está la componente paralela a ella, y esa es la fuerza de \textbf{rozamiento}. Es una fuerza más del catálogo que armamos en el capítulo anterior, al lado del peso, la normal y la tensión, y entra al diagrama de cuerpo aislado como cualquier otra.
+
+Conviene resolver primero una cuestión de vocabulario, porque acá se cruzan cuatro palabras para dos objetos. Rozamiento y fricción son sinónimos, y la cátedra usa las dos indistintamente en los enunciados. Rozamiento dinámico y rozamiento cinético también son el mismo objeto: la primera forma es la que usa la cátedra, la segunda la que vas a encontrar en la bibliografía en inglés, donde además los coeficientes se escriben $\mu_s$ y $\mu_k$. En todo este capítulo se escriben $\mu_e$ para el estático y $\mu_d$ para el dinámico, que es lo que vas a tener impreso delante en el parcial. Y una aclaración de símbolos que ahorra un mal rato: $\mu$ es siempre un coeficiente de rozamiento y es adimensional, mientras que $k$ es siempre la constante elástica de un resorte y se mide en N/m. No tienen nada que ver una con otra.
+
+El \textbf{rozamiento estático} es el que actúa mientras las dos superficies no deslizan una respecto de la otra. Su rasgo distintivo es el mismo que ya viste en la normal: es pasivo. No tiene un valor propio, toma el valor que haga falta para que el cuerpo no arranque, negociando contra lo que se le aplique. Empujás un ropero con 50 N y no se mueve, el rozamiento vale 50 N. Empujás con 150 N y sigue sin moverse, el rozamiento vale 150 N. La fuerza de rozamiento estático se despeja del equilibrio, exactamente igual que la normal, y nunca se postula.
+
+Lo que sí tiene el rozamiento estático es un techo. El margen de negociación se acaba en
+\[
+f_e \le \mu_e\, n ,
+\]
+donde $\mu_e$ es el coeficiente de rozamiento estático entre ese par de superficies y $n$ es el módulo de la normal. Mirá el signo, porque ahí está todo: es una desigualdad, no una fórmula. El producto $\mu_e n$ no es el valor del rozamiento, es el valor máximo que puede alcanzar antes de ceder. Hay un único caso en que la desigualdad se vuelve igualdad, y es el de \textbf{movimiento inminente}, el instante justo antes de que el cuerpo arranque. Ahí, y solo ahí, $f_{e,\max} = \mu_e n$.
+
+Con eso ya se contesta la primera pregunta del comienzo. El cajón pesa 100 N, está sobre piso horizontal y nadie lo aprieta, así que $n = 100$ N y el techo del rozamiento estático vale $\mu_e n = 40$ N. Pero el empuje es de 20 N y el cajón no se mueve, o sea que está en equilibrio en la dirección horizontal, y de ahí sale que el rozamiento vale 20 N. Los 40 N son la respuesta a otra pregunta, la de cuánto habría que empujar para arrancarlo.
+
+\textit{Antes de seguir: escribí con tus palabras qué tienen en común la normal y el rozamiento estático, y en qué se diferencia el techo $\mu_e n$ de un valor.}
+\end{bloque}
+
+\begin{chequeo}
+\item Alguien afirma que el mismo cajón de arriba, empujado con 55 N, sigue sin moverse. ¿Es posible? Justificá, y decí qué tendría que valer $\mu_e$ para que lo fuera.
+\item Un libro está quieto sobre una mesa horizontal y nadie lo toca. ¿Cuánto vale el rozamiento estático entre el libro y la mesa?
+\item ¿Por qué escribir $f_e = \mu_e n$ para un cuerpo quieto genérico es un error y no una aproximación razonable?
+\end{chequeo}
+
+\begin{bloque}{Rozamiento dinámico y los coeficientes}
+Una vez que el cuerpo arranca y las superficies deslizan una sobre otra, la negociación se termina. El \textbf{rozamiento dinámico} vale
+\[
+f_d = \mu_d\, n ,
+\]
+con igualdad y sin margen. Ya no se ajusta a lo que le apliques: mientras haya deslizamiento vale eso, y dentro de este modelo tampoco depende de la rapidez con que el cuerpo se mueve. Ir a 1 m/s o a 5 m/s da la misma fuerza de rozamiento.
+
+Para la mayoría de los pares de materiales $\mu_d$ resulta menor que $\mu_e$, y eso se nota con el cuerpo. Cuesta más arrancar el ropero que mantenerlo andando una vez que arrancó, y el salto que sentís en la mano cuando por fin se mueve es exactamente el escalón entre $\mu_e n$ y $\mu_d n$. La versión cara de esa misma física es el freno de un auto: si la rueda se traba y empieza a patinar, pasás de rozamiento estático a dinámico, el coeficiente baja y frenás peor. Para eso existe el ABS, que suelta y aprieta el freno muchas veces por segundo para mantener la rueda del lado estático.
+
+Hay un detalle de escritura en $f = \mu n$ que vale la pena fijar ahora, porque es fuente de un error caro. Esa igualdad relaciona \emph{magnitudes}, nunca vectores. No existe una versión con flechas de esa ecuación, y la razón es geométrica: $\vec f$ es paralela a la superficie y $\vec n$ es perpendicular a ella, así que las dos son perpendiculares entre sí, y ninguna constante escalar puede convertir un vector en otro que forma noventa grados con él. El módulo de una se calcula con el módulo de la otra; la dirección de $\vec f$ se decide aparte, y de eso se ocupa el bloque que sigue.
+
+Los coeficientes son números sin unidades, propios de cada par de superficies y no de un material solo. Van típicamente de $0{,}03$ a $1{,}0$, y no hay ninguna ley que los obligue a ser menores que uno: hule sobre concreto seco llega a $\mu_e = 1{,}0$. En el otro extremo, el teflón contra teflón vale $0{,}04$, y es el único de los pares que suelen aparecer tabulados en el que $\mu_e$ y $\mu_d$ coinciden, o sea el único de esa lista que no cuesta más arrancar que mantener andando. Conviene tomarlo con la salvedad de que los valores tabulados son aproximados.
+
+Un rasgo del modelo que sorprende siempre es que la fuerza de rozamiento no depende del área de contacto. Acostar el ropero sobre su cara ancha no cambia nada. Acá conviene ser honesto sobre el alcance de lo que estás leyendo: el modelo lo afirma y funciona bien en el rango de situaciones donde se lo usa, pero la justificación microscópica de por qué el área no entra no sale de este material, así que no la vas a encontrar acá ni conviene inventarla.
+
+Queda una frontera para no cruzar. Cuando un cuerpo se mueve dentro de un fluido, el aire o el agua le hacen una fuerza resistiva que sí depende de la rapidez y crece con ella. Es un modelo distinto, aparece más adelante en la materia, y confundirlo con el rozamiento dinámico, que acá se modela constante, arruina el planteo desde el primer renglón.
+
+\textit{Antes de seguir: pensá qué le pasaría a la sensación de empujar el ropero si existiera un material con $\mu_d$ mayor que $\mu_e$, y por qué eso se sentiría raro.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un bloque desliza sobre una mesa horizontal y se va frenando. Mientras se frena, ¿la fuerza de rozamiento va disminuyendo?
+\item ¿Qué está mal, exactamente, en escribir $\vec f_d = \mu_d \vec n$?
+\item Dos cajones idénticos, uno apoyado sobre su cara ancha y otro sobre su cara angosta, se arrastran sobre el mismo piso. ¿Cuál necesita más fuerza?
+\end{chequeo}
+
+\begin{bloque}{Contra qué se opone el rozamiento}
+La formulación que circula, y que funciona hasta que deja de funcionar, es que el rozamiento se opone al movimiento. La correcta es que el rozamiento se opone al movimiento \emph{relativo entre las dos superficies que están en contacto}. Las dos frases coinciden mientras una de las superficies sea el piso y esté quieta, y dejan de coincidir apenas las dos se mueven.
+
+La segunda pregunta del comienzo es el caso más limpio. Estás caminando a cinco kilómetros por hora, así que vos te movés. Pero el pie que está apoyado no se mueve respecto de la vereda: se planta, el resto de tu cuerpo pasa por encima, y la suela no desliza. Como no hay deslizamiento entre suela y piso, el rozamiento es \textbf{estático}, aunque el dueño de la suela venga a toda velocidad. Y no apunta hacia atrás frenándote: apunta hacia adelante, porque vos empujás el piso hacia atrás y el piso te empuja hacia adelante. Esa es la fuerza que te hace caminar.
+
+El caso que importa para lo que viene es el de un libro apoyado sobre otro, los dos deslizando sobre la mesa. Para el libro de arriba, lo que decide el rozamiento en su cara inferior no es su velocidad respecto de la mesa sino su velocidad respecto del libro de abajo. Si los dos van juntos a la misma velocidad, entre ellos no hay deslizamiento y el rozamiento entre ellos es estático, por más que ambos se muevan. Si uno adelanta al otro, ahí sí hay rozamiento dinámico entre ellos, y el sentido sobre cada uno se decide mirando quién se corre respecto de quién.
+
+La regla operativa es corta. Para cada superficie de contacto, preguntate cómo se mueve el cuerpo que estás aislando respecto de la superficie que toca, y el rozamiento sobre ese cuerpo se opone a ese movimiento relativo. Es una pregunta por superficie, no una por problema, y en cuerpos apilados hay que hacérsela dos veces, una por cada cara.
+
+\textit{Antes de seguir: un vaso está apoyado sobre un mantel y tirás del mantel despacio, sin que el vaso se corra respecto de la tela. Decidí si el rozamiento entre vaso y mantel es estático o dinámico, y hacia dónde apunta sobre el vaso.}
+\end{bloque}
+
+\begin{chequeo}
+\item Una caja va en la caja de una camioneta que acelera, y no se corre respecto de la chapa. ¿Qué tipo de rozamiento actúa sobre ella y hacia dónde apunta?
+\item ¿Por qué la frase ``el rozamiento se opone al movimiento'' no alcanza para decidir el sentido de la fuerza en dos bloques apilados?
+\item Si dos cuerpos apoyados uno sobre otro se mueven juntos, ¿puede haber rozamiento dinámico entre ellos?
+\end{chequeo}
+
+\begin{bloque}{Ángulo crítico}
+Hay una manera de medir $\mu_e$ sin medir ninguna fuerza, y de paso deja escrita una relación que va a reaparecer donde menos se la espera. Apoyás el cuerpo sobre un plano y vas levantando el plano hasta que el cuerpo arranca a deslizar. El ángulo en que arranca se llama \textbf{ángulo crítico} $\theta_c$.
+
+Con los ejes paralelo y perpendicular al plano, y la descomposición del peso que ya está hecha en el capítulo anterior, el cuerpo quieto sobre el plano da
+\[
+mg\sen\theta - f_e = 0 ,
+\qquad
+n - mg\cos\theta = 0 ,
+\]
+o sea $f_e = mg\sen\theta$ y $n = mg\cos\theta$. Dividiendo la primera por la segunda, la masa y $g$ se cancelan y queda $f_e = n\tan\theta$. Esto vale para cualquier ángulo con el cuerpo quieto, y muestra otra vez que el rozamiento estático se despeja del equilibrio: si inclinás más, $f_e$ crece sola, sin que nadie se lo pida y sin que $\mu_e$ intervenga.
+
+En el ángulo crítico, y solo ahí, el movimiento es inminente y el rozamiento estático llegó a su techo, $f_e = \mu_e n$. Reemplazando,
+\[
+\mu_e = \tan\theta_c .
+\]
+La masa se canceló, y eso significa que el ángulo en que un cuerpo empieza a deslizar no depende de cuánto pesa: dos cuerpos del mismo material y de masas muy distintas arrancan al mismo ángulo. Con $\theta_c = 20{,}0$ grados, por ejemplo, sale $\mu_e = 0{,}364$.
+
+La variante dinámica sale del mismo planteo. Si bajás un poco el plano hasta un ángulo $\theta_c'$ menor, en el que el cuerpo ya lanzado desliza a rapidez constante, entonces $a_x = 0$, el modelo vuelve a ser el de equilibrio, y ahora el rozamiento que actúa es el dinámico. Repitiendo la cuenta sale $\mu_d = \tan\theta_c'$, y como $\mu_d < \mu_e$ queda confirmado que $\theta_c' < \theta_c$.
+
+Guardá la forma $\tan\theta = \mu$. Va a volver a aparecer en un problema que no se parece en nada a este, con un plano horizontal y una fuerza inclinada, y ahí conviene reconocerla.
+
+\textit{Antes de seguir: explicate por qué el ángulo crítico permite medir $\mu_e$ sin dinamómetro, sin balanza y sin conocer la masa.}
+\end{bloque}
+
+\begin{chequeo}
+\item Dos bloques del mismo material, uno de 1 kg y otro de 10 kg, se apoyan en la misma tabla que se va levantando de a poco. ¿Cuál arranca primero?
+\item Sobre un plano inclinado 10 grados, con $\mu_e = 0{,}5$, un bloque de 2 kg está quieto. ¿Cuánto vale el rozamiento sobre él?
+\item ¿Por qué el ángulo en que el bloque desliza a velocidad constante es menor que aquel en que arranca?
+\end{chequeo}
+
+\begin{bloque}{Un diagrama por cuerpo}
+El diagrama de cuerpo aislado no cambia. Sigue siendo el recorte del capítulo anterior, con lo que entra dibujado y lo que sale afuera. Lo que cambia es que ahora hace falta más de uno.
+
+La regla es que se hace un DCL separado por cada cuerpo, siempre. Un diagrama único que abarque a los dos cuerpos parece más económico y es exactamente lo contrario: al encerrar a los dos dentro del mismo recorte, las fuerzas que se hacen entre ellos quedan adentro y desaparecen del dibujo, y esas fuerzas internas son casi siempre lo que el problema está pidiendo. La tensión de la soga que une dos bloques no aparece en el diagrama del conjunto, porque tira de uno hacia un lado y del otro hacia el otro y en el balance total se cancela sola.
+
+Con dos cuerpos hay una decisión nueva que en el capítulo anterior no existía: los ejes no tienen por qué ser los mismos en los dos diagramas. Si un bloque se mueve sobre un plano inclinado y el otro cuelga de una soga vertical, lo natural es tomar ejes rotados para el primero y ejes verticales para el segundo. Es completamente legítimo, y va contra el reflejo de elegir un sistema de coordenadas por problema. Los ejes se eligen por cuerpo, igual que el modelo de equilibrio o fuerza neta se elige por dirección.
+
+Los pares de tercera ley también se reparten. Si $\vec P_{AB}$ es la fuerza que A le hace a B, esa flecha va en el diagrama de B y en ningún otro; su pareja $\vec P_{BA}$ va en el diagrama de A. Las dos existen, las dos son iguales en módulo y opuestas en sentido, y nunca se ven juntas en el mismo dibujo. Ese reparto es lo que hace que el error de dibujar en el DCL de un cuerpo una fuerza que ese cuerpo ejerce sobre otro se vuelva casi invisible cuando hay dos diagramas sobre la misma hoja.
+
+Queda una decisión estratégica que conviene tomar a conciencia, porque ahorra la mitad del trabajo. Elegir por cuál cuerpo empezar no es indistinto. En un montaje de dos cajones apilados con una soga que pasa por una roldana, aislar primero el cajón de arriba deja la tensión despejada en un renglón, porque sobre él actúan pocas fuerzas y todas conocidas salvo una. Aislar primero el de abajo deja dos incógnitas juntas, la tensión y la fuerza aplicada, y obliga a ir igual al otro cuerpo para cerrar. El criterio práctico es empezar por el cuerpo con menos incógnitas en su diagrama, no por el más grande ni por el que nombra el enunciado.
+
+\textit{Antes de seguir: dibujá los dos DCL de una caja apoyada sobre otra, las dos quietas sobre el piso, y marcá cuál flecha del primero es la pareja de cuál flecha del segundo.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué un solo diagrama que encierre a los dos cuerpos no sirve para calcular la tensión de la soga que los une?
+\item Dos bloques unidos por una soga, uno sobre un plano inclinado y otro colgando. ¿Cuántos sistemas de coordenadas conviene usar y por qué?
+\item Si $\vec P_{AB}$ aparece dibujada en el diagrama de A, ¿qué se hizo mal?
+\end{chequeo}
+
+\begin{bloque}{Vínculo cinemático}
+Con dos cuerpos, cada DCL entrega sus ecuaciones de segunda ley, pero las incógnitas crecen más rápido que las ecuaciones. Dos cuerpos en el plano dan cuatro ecuaciones escalares, y aparecen dos aceleraciones desconocidas más la fuerza interna. Falta una ecuación, y no va a salir de ningún diagrama por más que los mires.
+
+Esa ecuación que falta es el \textbf{vínculo cinemático}, y sale de la geometría del montaje. Si una soga inextensible une dos cuerpos, la soga no se estira ni se acorta, así que si un extremo baja diez centímetros el otro sube diez centímetros. Eso no lo sabés por ninguna fuerza, lo sabés porque mediste la soga. Y si en cada instante lo que un extremo baja es exactamente lo que el otro sube, entonces los dos recorren la misma distancia en el mismo tiempo, así que llevan la misma rapidez y la ganan al mismo ritmo. Las dos aceleraciones tienen entonces el mismo módulo, aunque apunten en direcciones distintas y aunque una sea vertical y la otra paralela a un plano inclinado.
+
+El otro vínculo típico es el de contacto. Si dos bloques se empujan entre sí y no se separan, no solo tienen aceleraciones del mismo módulo: tienen exactamente la misma aceleración, mismo vector, porque se mueven juntos. Es un vínculo más fuerte que el de la soga, y por eso los problemas de bloques en contacto salen más rápido.
+
+Vale la pena decir en voz alta lo que este objeto es, porque es lo genuinamente nuevo del capítulo. Todo lo demás que venís usando sale de las leyes de Newton. El vínculo no: es información sobre cómo está armado el aparato, no sobre qué fuerzas hay. Un montaje distinto con las mismas fuerzas puede dar un vínculo distinto, y ahí es donde conviene mirar el dibujo en vez de las ecuaciones.
+
+\textit{Antes de seguir: escribí el vínculo cinemático para una soga que pasa por una polea y de la que cuelgan dos cuerpos, y después para dos bloques que se empujan sobre una mesa. Fijate qué tienen de distinto.}
+\end{bloque}
+
+\begin{chequeo}
+\item Dos cuerpos unidos por una soga que pasa por una polea. Uno baja y el otro sube. ¿Sus aceleraciones son iguales, opuestas, o algo más preciso que eso?
+\item ¿De qué parte del enunciado sale el vínculo cinemático, si no sale de ninguna fuerza?
+\item Si la soga fuera elástica en lugar de inextensible, ¿seguiría valiendo el vínculo?
+\end{chequeo}
+
+\begin{bloque}{Convención de signos}
+Acá se pierde más problemas que en cualquier otro paso, y no por falta de física sino por una decisión de escritura que se toma sin pensar.
+
+En una máquina de Atwood, dos cuerpos cuelgan de una soga que pasa por una polea, y cuando uno sube el otro baja. Si tomás el eje positivo hacia arriba para los dos, sus aceleraciones son opuestas, y hay que arrastrar esa diferencia de signo hasta el final. Lo que suele pasar es que se toma arriba positivo para ambos y después se escribe la misma $a$ en las dos ecuaciones, y el sistema queda inconsistente: da tensiones negativas, o aceleraciones mayores que $g$, o valores que no cambian cuando deberían.
+
+La convención que evita el problema es tomar el sentido positivo, en cada cuerpo, como el sentido en el que ese cuerpo se mueve. Para el que baja, positivo hacia abajo; para el que sube, positivo hacia arriba; para el que va sobre un plano inclinado, positivo en la dirección en que avanza a lo largo del plano. Con eso las dos aceleraciones son el mismo número positivo, el vínculo cinemático queda escrito como $a_A = a_B = a$, y las ecuaciones se suman sin trampas.
+
+La imagen que sostiene la convención es la de dos personas tirando de la misma soga en sentidos opuestos. Cada una avanza hacia su propio lado, y a cada una le conviene llamar positivo a hacia donde va. No es que la física cambie según quién mire; es que estás escribiendo dos ecuaciones sobre dos cuerpos distintos, y nada te obliga a usar el mismo eje en las dos.
+
+Queda una condición para que esto funcione, y es que tenés que decidir de antemano hacia dónde se mueve el sistema. Si te equivocás en esa decisión, la cuenta no explota: te devuelve una aceleración negativa, que es la manera que tiene el álgebra de avisarte que el movimiento va al revés de como lo supusiste. Los módulos siguen siendo correctos.
+
+\textit{Antes de seguir: reescribí la convención en una sola oración, y explicate por qué elegir mal el sentido del movimiento no invalida el resultado.}
+\end{bloque}
+
+\begin{chequeo}
+\item En una Atwood con arriba positivo para los dos cuerpos, ¿qué relación hay entre $a_A$ y $a_B$?
+\item Planteás un sistema acoplado y te da $a = -2{,}0$ m/s$^2$. ¿Qué información te está dando ese signo?
+\item ¿Por qué es legítimo usar ejes con sentidos distintos en dos cuerpos del mismo problema?
+\end{chequeo}
+
+\begin{bloque}{El atajo del conjunto, y la polea ideal}
+Existe un atajo que ahorra bastante trabajo, y viene con un límite que conviene tener claro antes de usarlo. Si lo único que necesitás es la aceleración, podés tratar al conjunto de cuerpos como una sola partícula de masa igual a la suma de las masas, sometida únicamente a las fuerzas externas al conjunto. Las fuerzas que los cuerpos se hacen entre sí quedan adentro y no entran en la cuenta. Es legítimo, es rápido, y para la Atwood o para dos bloques en contacto te da la aceleración en un renglón.
+
+El límite es directamente la contracara de la ventaja. La fuerza de contacto entre los dos bloques, o la tensión de la soga que los une, es interna al sistema, y por eso mismo no aparece en la ecuación del conjunto. No es que sea difícil de encontrar por ese camino: es que no está. Para calcularla hay que volver a los diagramas individuales, sí o sí. La comparación entre los dos métodos se resume así: el atajo del conjunto es más rápido para la aceleración y no sirve para ninguna fuerza interna, mientras que un DCL por cuerpo cuesta más y entrega todo, incluida la aceleración.
+
+La otra idealización que aparece en todos estos montajes es la de la \textbf{polea ideal}, sin masa y sin rozamiento en el eje. Su efecto es que la tensión es la misma a los dos lados de la polea, lo que permite escribir una sola $T$ en las dos ecuaciones en vez de dos incógnitas separadas. Cuando el enunciado dice ``despreciando el rozamiento en la polea'', te está concediendo justamente eso, y conviene saber qué te están concediendo. Con una polea real, que tiene masa y roza, las tensiones a los dos lados dejan de ser iguales, y para tratarla hace falta dinámica de rotación, que llega más adelante en la materia y no está en este material.
+
+\textit{Antes de seguir: pensá un problema en el que el atajo del conjunto te resuelva todo, y otro en el que te resuelva la mitad, y decí qué los diferencia.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué la tensión de la soga no aparece en la ecuación del conjunto tratado como una sola partícula?
+\item Dos bloques en contacto empujados por una fuerza. Si te piden solo la aceleración, ¿cuántos diagramas necesitás? ¿Y si te piden la fuerza de contacto?
+\item ¿Qué deja de valer si la polea tiene masa?
+\end{chequeo}
+
+\begin{bloque}{Tres montajes estándar}
+Con las piezas anteriores se resuelven los tres montajes que después aparecen mezclados en todos los problemas. Conviene deducirlos una vez y quedarse con la forma del resultado, no con la fórmula memorizada. Los cuerpos se llaman A y B en todos los casos.
+
+La \textbf{máquina de Atwood} tiene dos cuerpos colgando de una soga que pasa por una polea ideal, con $m_B > m_A$, así que B baja y A sube. Tomando positivo el sentido de movimiento de cada uno, y con el vínculo $a_A = a_B = a$,
+\[
+m_B g - T = m_B a ,
+\qquad
+T - m_A g = m_A a .
+\]
+Sumando las dos, la tensión se cancela sola, que es la razón por la que conviene sumarlas:
+\[
+a = \left(\frac{m_B - m_A}{m_A + m_B}\right) g ,
+\qquad
+T = \left(\frac{2 m_A m_B}{m_A + m_B}\right) g .
+\]
+La forma de $a$ tiene una lectura estructural que conviene tener: el numerador $(m_B - m_A)g$ es la fuerza desequilibrada del conjunto y el denominador es la masa total, o sea que la Atwood no es más que la segunda ley aplicada al sistema entero. Los casos límite confirman el resultado. Con $m_A = m_B$ da $a = 0$ y $T = m g$, que es lo que tiene que pasar cuando los dos pesos se equilibran. Con $m_B$ mucho mayor que $m_A$, la aceleración tiende a $g$ y el montaje se comporta como una caída libre que arrastra un peso despreciable.
+
+En \textbf{dos bloques en contacto} sobre una superficie horizontal lisa, una fuerza $\vec F$ empuja a A, y A empuja a B. Acá el vínculo es más fuerte, los dos tienen la misma aceleración. El atajo del conjunto da
+\[
+a = \frac{F}{m_A + m_B} ,
+\]
+y para la fuerza de contacto hay que aislar a B, sobre el cual la única fuerza horizontal es la que le hace A:
+\[
+P_{AB} = m_B a = \left(\frac{m_B}{m_A + m_B}\right) F .
+\]
+Fijate que $P_{AB} < F$ siempre, y que el reparto depende de quién va adelante: si la fuerza se aplica sobre B en vez de sobre A, la aceleración no cambia pero la fuerza de contacto pasa a valer $m_A F/(m_A+m_B)$. Tiene sentido, porque la fuerza de contacto es la que tiene que poner en movimiento a todo lo que queda por delante de ella.
+
+El tercero es un \textbf{bloque en un plano inclinado unido a un cuerpo que cuelga}. A está sobre el plano de ángulo $\theta$, sin rozamiento, y B cuelga de la soga que pasa por una polea en el extremo superior. Supongamos que B baja y A sube por el plano. Con ejes rotados para A, verticales para B, y positivo en el sentido de movimiento de cada uno,
+\[
+m_B g - T = m_B a ,
+\qquad
+T - m_A g \sen\theta = m_A a ,
+\]
+y sumando,
+\[
+a = \left(\frac{m_B - m_A \sen\theta}{m_A + m_B}\right) g ,
+\qquad
+T = \left[\frac{m_A m_B (1 + \sen\theta)}{m_A + m_B}\right] g .
+\]
+El caso límite acá es especialmente lindo. Si el plano se para hasta la vertical, $\theta \to 90$ grados y $\sen\theta \to 1$, las dos expresiones se convierten exactamente en las de la Atwood. No se parecen, se vuelven idénticas, porque un plano vertical es lo mismo que no tener plano: A queda colgando. En el otro extremo, con $m_A = 0$ queda $a = g$, que es B en caída libre sin nada atado.
+
+\textit{Antes de seguir: mirá la expresión de $a$ del tercer montaje y decidí, sin calcular, qué condición tienen que cumplir las masas y el ángulo para que el sistema quede quieto.}
+\end{bloque}
+
+\begin{chequeo}
+\item En la Atwood con $m_A = 3$ kg y $m_B = 5$ kg, y $g = 10$ m/s$^2$, ¿cuánto valen $a$ y $T$? Verificá que $T$ quede entre los dos pesos.
+\item ¿Por qué la fuerza de contacto entre dos bloques cambia al invertir el orden, si la aceleración no cambia?
+\item En el tercer montaje, ¿qué pasa con $T$ cuando $\theta$ tiende a cero, y qué situación física describe ese resultado?
+\end{chequeo}
+
+\begin{bloque}{Rozamiento dentro de un sistema acoplado}
+Las dos mitades del capítulo se cruzan acá, y este cruce es lo que la cátedra evalúa. No hay ninguna regla nueva: se aplican las mismas de siempre, pero se apilan tres cosas que por separado ya costaban.
+
+La primera es cuál normal entra en cada rozamiento. En dos cuerpos apilados sobre el piso hay dos superficies de contacto y por lo tanto dos normales distintas. La normal entre A, que está arriba, y B, que está abajo, sostiene solo a A, así que sale del equilibrio vertical de A. La normal del piso sobre B tiene que sostener a los dos, porque A descansa sobre B y B descansa sobre el piso, y sale del equilibrio vertical de B, donde aparece el peso de B más la fuerza que A le hace hacia abajo. Cada rozamiento se calcula con la normal de su propia superficie, y confundirlas es el error más caro de todo el capítulo.
+
+La segunda es la dirección de cada rozamiento, y ahí se aplica el criterio del movimiento relativo. El rozamiento sobre A en su cara inferior se opone al movimiento de A respecto de B, no al movimiento de A respecto del piso. Si A y B se mueven en sentidos opuestos, el rozamiento entre ellos apunta para un lado sobre A y para el otro sobre B, y las dos flechas forman un par de tercera ley que se reparte entre los dos diagramas, igual que la fuerza de contacto.
+
+La tercera es que hay que decidir el régimen antes de elegir la fórmula. Un enunciado que da los dos coeficientes no está pidiendo que uses los dos. Si el cuerpo desliza, y con más razón si el enunciado dice que se mueve a velocidad constante, el rozamiento que actúa es el dinámico y el coeficiente estático sobra. Elegir cuál corresponde es parte del problema, y ese dato de más está puesto a propósito.
+
+Un detalle de método que se agradece en el parcial: cuando el enunciado dice velocidad constante, la aceleración es cero y todas las ecuaciones se vuelven de equilibrio, aun con varios cuerpos moviéndose. El problema pasa a ser un sistema de sumas de fuerzas igualadas a cero, que es mucho más barato de resolver que uno con aceleración.
+
+\textit{Antes de seguir: dibujá el DCL de un cajón apoyado sobre otro, con los dos deslizando sobre el piso y a distinta velocidad, y contá cuántas normales y cuántos rozamientos aparecen en total entre los dos diagramas.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un cajón A de 3 kg está sobre otro B de 5 kg, y B apoya en el piso. Con $g = 10$ m/s$^2$, ¿cuánto vale la normal del piso sobre B?
+\item Si A y B se mueven juntos, sin deslizar uno respecto del otro, ¿qué rozamiento actúa entre ellos y con qué relación se calcula?
+\item Un enunciado da $\mu_e$ y $\mu_d$ y aclara que el conjunto se mueve a velocidad constante. ¿Cuál de los dos usás y por qué?
+\end{chequeo}
+
+\section{Ejemplo resuelto}
+
+\begin{ejemplo}[completo]
+Una caja A de 3.0 kg está apoyada sobre la mesada de la cocina. De la caja sale una soga inextensible y de masa despreciable, horizontal, que pasa por una roldana fija al borde de la mesada y de la que cuelga una bolsa B de 2.0 kg. El coeficiente de rozamiento estático entre la caja y la mesada es 0.50 y el dinámico es 0.25. Se desprecia el rozamiento en la roldana. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita determinar la aceleración del sistema y la tensión de la soga.
+
+\medskip
+\textit{Inciso (a). Montaje.} Hay dos cuerpos y se hacen dos recortes, uno por cada uno, no uno solo que los abarque a los dos. Si los encerráramos juntos, la tensión quedaría adentro del recorte y no habría manera de calcularla, que es justamente la mitad de lo que el problema pide. El diagrama de la caja está resuelto acá abajo, junto con los ejes elegidos.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, color=textgray]
+  \draw[thick] (-3.2,0) -- (0.6,0);
+  \foreach \x in {-3.1,-2.7,...,0.5} {\draw[rulegray] (\x,0) -- (\x-0.22,-0.22);}
+  \draw[thick] (-2.4,0) rectangle (-1.5,0.75);
+  \node at (-1.95,0.375) {\footnotesize A};
+  \draw[thick] (-1.5,0.375) -- (0.6,0.375);
+  \draw[thick] (0.6,0.375) circle (0.2);
+  \fill (0.6,0.375) circle (1pt);
+  \draw[thick] (0.8,0.375) -- (0.8,-0.8);
+  \draw[thick] (0.5,-1.45) rectangle (1.1,-0.8);
+  \node at (0.8,-1.125) {\footnotesize B};
+  \node at (-1.3,-2.9) {\footnotesize situación};
+  \draw[rulegray, ->, thick] (1.9,-0.35) -- (2.9,-0.35);
+  \begin{scope}[xshift=5.4cm, yshift=-0.35cm]
+    \fill (0,0) circle (2pt);
+    \draw[very thick, ->] (0,0) -- (0,1.5) node[above] {$\vec n$};
+    \draw[very thick, ->] (0,0) -- (0,-1.5) node[below] {$m_A\vec g$};
+    \draw[very thick, ->] (0,0) -- (1.4,0) node[right] {$\vec T$};
+    \draw[very thick, ->] (0,0) -- (-1.1,0) node[left] {$\vec f_d$};
+    \draw[rulegray, ->] (-1.9,1.35) -- (-1.2,1.35) node[right] {\footnotesize $+x$};
+    \draw[rulegray, ->] (-1.9,1.35) -- (-1.9,2.0) node[above] {\footnotesize $+y$};
+    \node at (0,-2.55) {\footnotesize cuerpo aislado de A};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+Cuatro fuerzas cruzan el recorte de la caja: el peso, la normal de la mesada, la tensión de la soga que tira hacia la roldana y el rozamiento. El eje $+x$ apunta hacia la roldana, que es hacia donde la caja se mueve, así que la tensión entra positiva y el rozamiento negativo. Explicate a vos mismo, antes de seguir, por qué el rozamiento sobre la caja apunta hacia atrás en este caso y no hacia adelante como en la suela del zapato del bloque tercero.
+
+\medskip
+\textit{Inciso (b). El segundo cuerpo.} El diagrama de la bolsa no está dibujado, hacelo vos ahora, en el margen, antes de leer el inciso siguiente. Sobre la bolsa cruzan el recorte solo dos fuerzas, su peso hacia abajo y la tensión de la soga hacia arriba. Y una advertencia que vale la pena tener escrita: los ejes de este segundo diagrama no tienen por qué ser los del primero. Acá conviene tomar el positivo hacia abajo, que es hacia donde la bolsa se mueve, aunque en el diagrama de la caja el positivo fuera horizontal. Son dos cuerpos distintos y cada uno lleva sus ejes.
+
+\medskip
+\textit{Inciso (c). Elección de modelo y vínculo.} En la vertical de la caja no hay movimiento, así que ahí corresponde el modelo de equilibrio y de ahí sale la normal, despejada y no postulada:
+\[
+\sum F_y = n - m_A g = 0 \qquad \Longrightarrow \qquad n = m_A g .
+\]
+Que en este caso $n$ coincida con el peso es una casualidad del montaje, no una regla: alcanza con que la soga tire un poco hacia arriba en vez de horizontal, o con que toda la cocina esté dentro de un ascensor acelerado como el del capítulo anterior, para que deje de valer eso. Con la normal en la mano, el rozamiento dinámico vale $f_d = \mu_d n = \mu_d m_A g$.
+
+En la horizontal de la caja y en la vertical de la bolsa sí hay aceleración, así que ahí el modelo es el de fuerza neta. Con el positivo en el sentido de movimiento de cada cuerpo,
+\[
+\text{caja A:} \quad T - \mu_d m_A g = m_A a ,
+\qquad\qquad
+\text{bolsa B:} \quad m_B g - T = m_B a .
+\]
+El vínculo cinemático ya está usado y conviene decirlo en voz alta: la misma letra $a$ aparece en las dos ecuaciones porque la soga es inextensible, y entonces lo que la bolsa baja en un segundo es lo que la caja avanza en ese segundo. Eso no salió de ninguno de los dos diagramas, salió de mirar la soga.
+
+\medskip
+\textit{Inciso (d). Despeje.} Acá el paso lo hacés vos. Sumá las dos ecuaciones miembro a miembro y verificá que la tensión se cancela sola, porque entra positiva en una y negativa en la otra. Con eso queda una sola ecuación con una sola incógnita, de la que sale
+\[
+a = \left(\frac{m_B - \mu_d m_A}{m_A + m_B}\right) g .
+\]
+Comprobá que tu suma coincida con esta expresión antes de seguir. Reemplazando ese resultado en la ecuación de la bolsa se despeja la tensión:
+\[
+T = m_B (g - a) = \left[\frac{m_A m_B (1 + \mu_d)}{m_A + m_B}\right] g .
+\]
+
+\medskip
+\textit{Inciso (e). Números.} Con $m_A = 3{,}0$ kg, $m_B = 2{,}0$ kg, $\mu_d = 0{,}25$ y $g = 10$ m/s$^2$, la normal vale $n = 30$ N y el rozamiento dinámico $f_d = 7{,}5$ N. De ahí
+\[
+a = \frac{2{,}0 - 0{,}25 \cdot 3{,}0}{3{,}0 + 2{,}0} \cdot 10\ \mathrm{m/s^2} = 2{,}5\ \mathrm{m/s^2} ,
+\qquad
+T = 2{,}0\,\mathrm{kg} \cdot (10 - 2{,}5)\,\mathrm{m/s^2} = 15\ \mathrm{N} .
+\]
+Conviene verificarlo con el otro diagrama, que es gratis: en la caja, $T - f_d = 15 - 7{,}5 = 7{,}5$ N, y $m_A a = 3{,}0 \cdot 2{,}5 = 7{,}5$ N. Cierra.
+
+Fijate de paso que la tensión, 15 N, es menor que el peso de la bolsa, 20 N. Tiene que serlo, porque la bolsa está bajando acelerada, y si la soga tirara con la misma fuerza que el peso la bolsa quedaría quieta.
+
+\medskip
+\textit{Inciso (f). Cierre y límites.} La primera pregunta que conviene hacerle al resultado es qué masa mínima de bolsa hace arrancar la caja. Mientras la caja está quieta el rozamiento es estático, no vale $\mu_e n$ sino lo que exija el equilibrio, y lo que exige el equilibrio es que iguale a la tensión. En el instante de movimiento inminente, y solo ahí, el rozamiento llega a su techo:
+\[
+T = f_{e,\max} = \mu_e m_A g = 0{,}50 \cdot 30\,\mathrm{N} = 15\ \mathrm{N} ,
+\]
+y como la bolsa quieta está en equilibrio, $T = m_B g$, de donde $m_B = 1{,}5$ kg. Con menos de kilo y medio de bolsa no pasa nada y el rozamiento se limita a igualar la tensión, valga lo que valga. Con 2,0 kg, que es el dato, el sistema arranca, y ahí el rozamiento pasa a valer $\mu_d n$ y ya no negocia.
+
+El segundo límite es hacer $\mu_d \to 0$ en la expresión de $a$: queda $a = m_B g/(m_A+m_B) = 4{,}0$ m/s$^2$. Ese es el mismo montaje sin rozamiento, y la diferencia entre 4,0 y 2,5 es todo lo que el rozamiento le sacó al sistema.
+
+La respuesta al problema, entonces, no es el número 2,5. Es que el rozamiento entró al sistema por una sola de las dos superficies y aun así cambió las dos ecuaciones, porque las ecuaciones están atadas entre sí por la soga.
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+En una mudanza, una caja de libros A de 2.0 kg está apoyada sobre una caja de ropa B de 8.0 kg, y B apoya sobre el piso del camión. Una persona tira de B con una fuerza horizontal $\vec F$ y las dos cajas se mueven juntas, sin que A se corra respecto de B. El coeficiente de rozamiento estático entre A y B es 0.40, y el coeficiente de rozamiento dinámico entre B y el piso es 0.20. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se pide la máxima fuerza que se puede aplicar sin que la caja de libros se corra.
+
+Empezá por los dos diagramas de cuerpo aislado, que esta vez no vienen dibujados. Sobre A cruzan el recorte tres fuerzas: su peso, la normal que le hace B, y el rozamiento que le hace B en su cara inferior. Sobre B cruzan seis: su peso, la normal que le hace A desde arriba, el rozamiento que le hace A en su cara superior, la normal del piso, el rozamiento del piso y la fuerza aplicada. Dibujalos por separado antes de escribir una sola ecuación, y marcá cuáles dos flechas de los dos diagramas forman un par de tercera ley.
+
+El punto que decide el problema está en el rozamiento sobre A. A no toca el piso, toca a B, así que el rozamiento sobre A se opone al movimiento de A respecto de B. Como las dos cajas van juntas, no hay deslizamiento entre ellas y el rozamiento entre ellas es estático. Y como sobre A no hay ninguna otra fuerza horizontal, ese rozamiento es lo único que puede acelerarla: apunta hacia adelante, en el mismo sentido en que la caja se mueve. Explicate esto con tus palabras antes de calcular, porque contradice el reflejo de que el rozamiento siempre frena.
+
+De ahí sale el resto, y el álgebra queda para vos. Planteá el equilibrio vertical de A para obtener la normal entre A y B, y el equilibrio vertical de B para obtener la normal del piso, y prestá atención a que no son la misma ni valen lo mismo. Después escribí la segunda ley horizontal de A y encontrá la aceleración máxima que el rozamiento estático puede sostener, recordando que ahí se usa el techo $\mu_e n$ y no un valor cualquiera. Con esa aceleración en la mano, tratá al conjunto como una sola partícula para obtener la fuerza aplicada, que es lo único para lo que ese atajo sirve acá.
+
+Cuando tengas el resultado, contestá tres cosas. Si la normal del piso vale el peso de B o algo distinto, y por qué. Qué le pasa a la fuerza máxima si en lugar de tirar de B se tira de A con las mismas dos cajas. Y qué observarías si la persona tirara con más fuerza que la máxima, describiendo el movimiento de cada caja por separado.
+\end{ejemplo}
+
+\section{Errores comunes}
+
+Lo que sigue no es una lista de retos sino de discrepancias concretas entre lo que suele escribirse y lo que dice el modelo. Cada una tiene una manera objetiva de detectarse.
+
+\begin{erroresComunes}
+  \item Escribir $f_e = \mu_e n$ para un cuerpo quieto cualquiera. La relación estática es una desigualdad, $f_e \le \mu_e n$, y la igualdad vale únicamente en el instante de movimiento inminente. El valor de $f_e$ sale del equilibrio, igual que el de la normal. La detección es directa: si el problema no dice que el cuerpo está a punto de arrancar, ni pide la fuerza mínima para moverlo, entonces $\mu_e n$ no es el rozamiento sino su techo.
+  \item Tratar $f = \mu n$ como una ecuación vectorial y escribirla con flechas. Relaciona módulos. Los dos vectores son perpendiculares entre sí, y ninguna constante escalar convierte uno en el otro. La dirección de $\vec f$ no sale de esa ecuación, sale del movimiento relativo.
+  \item Decidir el sentido del rozamiento oponiéndolo al movimiento del cuerpo en lugar de al movimiento relativo entre las dos superficies en contacto. Mientras la otra superficie sea el piso quieto las dos reglas coinciden y el error no se nota. En dos cuerpos apilados que se mueven a distinta velocidad, y en la suela del zapato de alguien que camina, dan respuestas distintas.
+  \item Hacer un solo diagrama de cuerpo aislado para dos cuerpos. Las fuerzas que los cuerpos se hacen entre sí quedan encerradas dentro del recorte y no aparecen, y son justamente las que el problema suele pedir. La señal de alarma es haber terminado el planteo sin que la tensión ni la fuerza de contacto figuren en ninguna ecuación.
+  \item Escribir las dos ecuaciones de una Atwood con el eje positivo hacia arriba para los dos cuerpos, y usar igual la misma $a$ en las dos. Con ejes iguales las aceleraciones son opuestas y hay que arrastrar el signo. Se detecta porque el sistema devuelve tensiones negativas o aceleraciones mayores que $g$.
+  \item Buscar una fuerza interna después de haber tratado al conjunto como una sola partícula. Esa fuerza no está en la ecuación del conjunto, y no por dificultad sino por construcción: es interna al sistema que se eligió. Para obtenerla hay que volver a los diagramas individuales.
+  \item Suponer que la tensión es igual a los dos lados de cualquier polea. Vale para la polea ideal, sin masa y sin rozamiento, que es la que los enunciados conceden explícitamente. Con una polea real las dos tensiones difieren, y esa situación requiere herramientas que llegan más adelante.
+  \item Escribir $n = mg$ sin despejarla. Este ya estaba en el capítulo anterior y acá reaparece con casos peores. Contra una pared vertical la normal es horizontal y vale la fuerza con que se aprieta, sin ninguna relación con el peso. Con una fuerza aplicada en diagonal hacia arriba, la normal queda reducida y vale $mg - F\sen\theta$. Y en cuerpos apilados hay dos normales, y la de abajo tiene que sostener los dos pesos.
+  \item Dibujar en el diagrama de un cuerpo una fuerza que ese cuerpo ejerce sobre otro. También venía del capítulo anterior, y con dos cuerpos se vuelve difícil de ver: $\vec P_{AB}$ va en el diagrama de B y $\vec P_{BA}$ en el de A, y tener las dos hojas al lado invita a mezclarlas. La verificación es contar, en cada diagrama por separado, que todas las flechas tengan la punta apuntando hacia el cuerpo que se aisló.
+  \item Tomar $\vec n$ y $m\vec g$ como par de acción y reacción. Enunciado en el capítulo anterior, y acá con un caso nuevo: en dos bloques apilados hay dos normales distintas, y ninguna de las dos es la reacción de ningún peso. La reacción de la normal que B le hace a A es la normal que A le hace a B, las dos entre cuerpos y no entre un cuerpo y la Tierra.
+  \item Aplicar el coeficiente estático a un cuerpo que ya está deslizando, típicamente porque el enunciado da los dos coeficientes. Un enunciado que da los dos no está pidiendo que uses los dos: decidir el régimen es parte del problema, y si el cuerpo se mueve, con más razón si se mueve a velocidad constante, el que actúa es el dinámico. Este último no sale de ningún libro; sale de mirar cómo están redactados los enunciados de la cátedra, y es la trampa que más veces aparece en los problemas de bloques apilados.
+\end{erroresComunes}
+
+\section{Ejercicios}
+
+\subsection{Práctica en bloque}
+
+Los cinco que siguen están ordenados por novedades acumuladas, y ese orden no coincide con el del marco teórico. Los tres primeros son de sistemas acoplados sin rozamiento, para que el vínculo cinemático y los diagramas separados sean la única dificultad; los dos últimos son de rozamiento con un solo cuerpo, para que el rozamiento sea la única dificultad. Antes de calcular nada, hacé los diagramas de cuerpo aislado, uno por cuerpo, incluso en los incisos que no te lo piden explícitamente.
+
+\begin{ejercicio}[acoplados y fuerza de contacto]{bloque}
+En el hall de una terminal de micros, dos changuitos de equipaje encastrados uno detrás del otro se empujan sobre el piso liso. El changuito A tiene una masa de 20 kg y el B, encastrado detrás, una masa de 10 kg. Una persona empuja horizontalmente al changuito A con una fuerza de módulo $|\vec F| = 60$ N. El rozamiento con el piso es despreciable.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de cada changuito por separado.
+  \item Tratando al conjunto como un solo cuerpo, calcule la aceleración del sistema.
+  \item Calcule la fuerza que A ejerce sobre B, y explique de cuál de los dos diagramas de (a) la obtuvo.
+  \item Identifique la reacción de la fuerza calculada en (c): sobre qué cuerpo actúa, en qué sentido, y en cuál de los dos diagramas aparece.
+  \item La persona rodea el conjunto y empuja desde atrás, sobre B, con la misma fuerza de 60 N. Indique si cambia la aceleración y si cambia la fuerza de contacto, calculando la que corresponda.
+  \item Explique por qué el procedimiento de (b) sirve para hallar la aceleración pero no puede dar la fuerza de contacto, cualquiera sea el orden de los changuitos.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 5 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[tensiones en una cadena de cuerpos]{bloque}
+Sobre una laguna congelada se arrastran tres trineos en fila, unidos entre sí por sogas de masa despreciable e inextensibles. El trineo A, de 6.0 kg, va adelante; detrás va B, de 4.0 kg, y último C, de 2.0 kg. Una persona tira de A con una soga, en dirección horizontal, con una fuerza de módulo $|\vec F| = 24$ N. El rozamiento con el hielo es despreciable. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de cada uno de los tres trineos.
+  \item Calcule la aceleración del conjunto.
+  \item Calcule la tensión de la soga que une A con B y la de la soga que une B con C.
+  \item Indique cuál de las dos tensiones es mayor y justifique el resultado sin recurrir a las cuentas, a partir de qué masa tiene que poner en movimiento cada soga.
+  \item Se cambia el orden de los trineos y ahora el más liviano va adelante. Indique si cambia la aceleración del conjunto y si cambian las tensiones, y justifique.
+  \item Los tres trineos se cuelgan uno debajo del otro de una misma soga vertical, en el mismo orden, y se los iza con una aceleración de 2.0 m/s$^2$ hacia arriba. Calcule la tensión de la soga superior.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 7 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[polea, plano inclinado y vínculo cinemático]{bloque}
+En una obra se apoya un bloque de mampostería A, de 6.0 kg, sobre un tablón inclinado 30 grados respecto de la horizontal. Del bloque sale una soga inextensible y de masa despreciable, paralela al tablón, que pasa por una roldana fija en el extremo superior y de la que cuelga un balde B de 4.0 kg. No hay rozamiento entre el bloque y el tablón, y se desprecia el rozamiento en la roldana. Se suelta el sistema y se lo deja evolucionar libremente. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita determinar la aceleración de las masas y la tensión de la soga, para lo cual:
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de cada cuerpo por separado, e indique en cada uno el sistema de coordenadas elegido. No tienen por qué ser el mismo.
+  \item Escriba la segunda ley para cada cuerpo, y escriba aparte la ecuación que vincula las dos aceleraciones. Indique de dónde sale esa última ecuación, dado que no proviene de ningún diagrama.
+  \item Determine hacia dónde se mueve el sistema y calcule el módulo de la aceleración.
+  \item Calcule la tensión de la soga usando uno de los dos diagramas, y verifíquela con el otro.
+  \item Determine qué masa debería tener el balde para que el sistema quede en reposo, y explique qué representa físicamente ese valor.
+  \item Escriba la aceleración en función de las masas y del ángulo, y analice a qué se reduce la expresión cuando el tablón se vuelve vertical.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 4 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[rozamiento estático y dinámico]{bloque}
+Un ropero de 50 kg está apoyado sobre el piso de una habitación. El coeficiente de rozamiento estático entre el ropero y el piso es 0.50 y el coeficiente de rozamiento dinámico es 0.30. Una persona lo empuja horizontalmente. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del ropero mientras la persona lo empuja sin lograr moverlo, y calcule la reacción del piso.
+  \item La persona empuja con 180 N y el ropero no se mueve. Calcule el valor de la fuerza de rozamiento en esa situación.
+  \item Calcule la mínima fuerza horizontal capaz de poner el ropero en movimiento.
+  \item Una vez en movimiento, la persona sostiene un empuje de 300 N. Calcule la aceleración del ropero.
+  \item Calcule con qué fuerza hay que empujar para que el ropero avance a velocidad constante, y explique por qué ese valor es menor que el de (c).
+  \item El ropero se acuesta sobre su cara más ancha, de modo que la superficie apoyada contra el piso se duplica. Indique cuáles de las respuestas anteriores cambian y cuáles no, y qué afirma el modelo de rozamiento al respecto.
+\end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}[rozamiento contra una pared vertical]{bloque}
+Una fuerza horizontal aprieta un borrador que pesa 6.0 N contra un pizarrón vertical. El coeficiente de rozamiento estático entre el borrador y el pizarrón es 0.80 y el coeficiente de rozamiento dinámico es 0.40. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$, y que el borrador está inicialmente en reposo.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del borrador, indicando con claridad la dirección de la reacción del pizarrón y la de la fuerza de rozamiento.
+  \item Se aprieta con una fuerza de módulo 8.0 N. Determine si el borrador se desliza, y calcule el valor de la fuerza de rozamiento en esa situación.
+  \item Calcule la mínima fuerza horizontal que hay que aplicar para que el borrador no resbale.
+  \item Se afloja el apriete hasta 6.0 N. Calcule la aceleración con la que baja el borrador e indique su sentido.
+  \item Calcule la fuerza total que el pizarrón ejerce sobre el borrador en la situación de (b), dando sus dos componentes y su módulo.
+  \item Explique por qué apretar más fuerte ayuda a sostener el borrador, si la fuerza que se aplica es perpendicular a la dirección en la que el borrador tiende a caer.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 8 del Práctico 2}
+\end{ejercicio}
+
+\subsection{Práctica en bloque, ejercicios adicionales}
+
+Los tres que siguen combinan las dos novedades del capítulo al mismo tiempo, el rozamiento y el acoplamiento, que es exactamente el cruce que el práctico deja para el final y el que la cátedra evalúa. Tienen más piezas por ejercicio y menos guía por inciso que los anteriores.
+
+\begin{ejercicio}[ángulo óptimo de arrastre]{bloque}
+En un galpón se arrastra un fardo de alfalfa sobre el piso de cemento, tirando de una soga que forma un ángulo $\theta$ con la horizontal. El módulo de la fuerza aplicada es $|\vec F| = 100$ N y el coeficiente de rozamiento dinámico entre el fardo y el piso es 0.75. El ángulo $\theta$ puede variarse entre cero y noventa grados, y el fardo permanece siempre apoyado sobre el piso. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$, y que el seno y el coseno de 37 grados valen 0.60 y 0.80 respectivamente. Se solicita determinar el ángulo que da la máxima aceleración, para lo cual:
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del fardo, con la fuerza aplicada formando el ángulo $\theta$.
+  \item Escriba la reacción del piso en función de $F$, $\theta$ y el peso del fardo, y explique por qué no vale el peso.
+  \item Obtenga la aceleración del fardo en función de $\theta$, en forma literal.
+  \item Muestre que maximizar esa expresión equivale a maximizar $\cos\theta + \mu_d\sen\theta$, y determine el ángulo óptimo. Dé su valor numérico.
+  \item Explique por qué el ángulo óptimo no depende ni de la masa del fardo ni del módulo de la fuerza aplicada, y qué ángulo resulta óptimo sobre una superficie sin rozamiento.
+  \item Recién ahora se informa que el fardo tiene una masa de 10 kg. Calcule la aceleración en el ángulo óptimo, y compárela con la que se obtendría tirando horizontalmente.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 9 del Práctico 2}
+\end{ejercicio}
+
+El inciso (d) del ejercicio anterior se resuelve sin derivar, con una identidad de trigonometría que conviene tener escrita porque no es de uso corriente. Cualquier combinación de un seno y un coseno del mismo ángulo se puede escribir como un solo coseno desfasado: si se busca $\cos\theta + \mu\sen\theta$ en la forma $R\cos(\theta - \varphi)$ y se desarrolla el coseno de la resta, queda $R\cos\varphi\cos\theta + R\sen\varphi\sen\theta$, así que hay que pedir $R\cos\varphi = 1$ y $R\sen\varphi = \mu$. Dividiendo una por otra sale $\tan\varphi = \mu$, y sumando los cuadrados sale $R = \sqrt{1+\mu^2}$. Con eso,
+\[
+\cos\theta + \mu\sen\theta = \sqrt{1+\mu^{2}}\;\cos(\theta - \varphi) ,
+\qquad \tan\varphi = \mu ,
+\]
+y un coseno es máximo cuando su argumento vale cero, o sea cuando $\theta = \varphi$. Es una herramienta matemática, no física nueva, y del lado de la física lo interesante es que $\tan\theta_{\text{óptimo}} = \mu_d$ tiene exactamente la misma forma que el $\tan\theta_c = \mu_e$ del ángulo crítico, en dos problemas que no se parecen en nada por fuera.
+
+\begin{ejercicio}[dos cuerpos unidos con rozamiento en plano inclinado]{bloque}
+En un depósito de correo, la cinta transportadora está detenida y funciona como una rampa fija, inclinada 37 grados respecto de la horizontal. Dos paquetes unidos por una soga inextensible y de masa despreciable, paralela a la rampa, descienden deslizando sobre ella. El paquete A, de 6.0 kg, va adelante y arrastra al paquete B, de 3.0 kg, que va detrás. El coeficiente de rozamiento dinámico entre A y la rampa es 0.20, y entre B y la rampa es 0.50. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$, y que el seno y el coseno de 37 grados valen 0.60 y 0.80 respectivamente.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de cada paquete, con los ejes elegidos, y calcule la reacción de la rampa sobre cada uno.
+  \item Escriba la segunda ley para cada paquete y la ecuación que vincula sus aceleraciones. Cuente cuántas incógnitas y cuántas ecuaciones tiene.
+  \item Obtenga la aceleración del conjunto en función de las masas, los coeficientes y el ángulo, y calcule su valor.
+  \item Obtenga la tensión de la soga en forma literal, muestre que es proporcional a la diferencia de los coeficientes, y calcule su valor.
+  \item Analice qué ocurre con la tensión si los dos paquetes tuvieran el mismo coeficiente de rozamiento, y describa cómo se mueve el sistema en ese caso.
+  \item Los paquetes se colocan en el orden inverso, de modo que ahora el más rugoso va adelante. Determine qué le ocurre a la soga y describa el movimiento de cada paquete.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 10 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[bloques apilados con rozamiento doble]{bloque}
+En un taller, el cajón A, de 3.0 kg, está apoyado sobre el cajón B, de 5.0 kg, que a su vez apoya sobre el piso. Del cajón A sale una soga horizontal que pasa por una roldana fija a una columna y vuelve para engancharse al cajón B. Una persona tira del cajón B con una fuerza horizontal $\vec F$, alejándolo de la columna, y el conjunto se mueve a velocidad constante. El coeficiente de rozamiento dinámico entre las superficies es 0.20 y el estático es 0.35. Se desprecia el rozamiento en la roldana y la masa de la soga. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita calcular la fuerza necesaria para arrastrar el cajón B con velocidad constante, para lo cual:
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de cada uno de los cajones, teniendo en cuenta todas las fuerzas que actúan sobre los mismos.
+  \item Indique en qué sentido se mueve cada cajón y en qué sentido apunta la fuerza de rozamiento entre A y B sobre cada uno de ellos.
+  \item Calcule la reacción del piso sobre el cajón B.
+  \item Calcule la fuerza $\vec F$ suponiendo que solo existe roce entre los cajones.
+  \item Calcule la fuerza $\vec F$ considerando además el roce con el piso.
+  \item Un compañero razona que, como todo se mueve junto, alcanza con una fuerza igual al rozamiento del piso contra el peso total. Calcule el valor que obtendría con ese razonamiento e identifique qué fuerzas dejó afuera.
+\end{enumerate}
+\citaEjercicio{Misma estructura que el ejercicio 19 del Práctico 2, que la cátedra tomó como problema 3 del Parcial 1 de 2025}
+\end{ejercicio}
+
+Un último apunte sobre el ejercicio anterior. El ejercicio 19 del práctico tiene esa misma estructura con otros datos, y es el que la cátedra tomó como problema 3 en el parcial de 2025. Hacelo por tu cuenta, con el enunciado del práctico y sin mirar esta síntesis, después de haber terminado el de acá. Es la mejor autoevaluación disponible de todo el capítulo, y solo sirve si llegás a él sin haberlo visto resuelto.
+
+\end{document}
