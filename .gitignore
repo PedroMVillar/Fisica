@@ -72,3 +72,33 @@ Thumbs.db
 desktop.ini
 *.swp
 *~
+
+# ============================================================
+# Infraestructura de syntheca (el plugin de IA que genera el apunte)
+#
+# Nada de esto es material de estudio: son las fuentes ingeridas, el
+# estado del pipeline y la ficha de perfil. El PRODUCTO sí se versiona
+# (sintesis/, flashcards/, mapas-mentales/).
+# ============================================================
+
+# Fuentes ingeridas, banco de ejercicios, perfil academico, herramientas
+skills/
+
+# Scripts auxiliares del pipeline
+scripts/
+
+# Estado acumulado del pipeline
+mapa-estudio.json
+
+# Zona de descarga para ingestas
+_inbox/
+
+# ============================================================
+# Bibliografia pesada
+#
+# Los PDF de editorial que superan el umbral de aviso de GitHub (50 MB)
+# quedan solo en disco. El apunte de catedra y el Serway vol. 2 si se
+# versionan.
+# ============================================================
+bibliografia/bibliografia-extra/alonso-finn-campos-y-ondas-vol2.pdf
+bibliografia/bibliografia-extra/serway-jewett-fisica-vol1.pdf
