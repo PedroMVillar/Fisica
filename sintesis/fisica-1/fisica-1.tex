@@ -472,7 +472,7 @@ El experimento se hace en un escritorio y dura tres segundos. Agarrá una moneda
 
 Lo que se observa cuando el aire no interfiere de manera apreciable es esto: cerca de la superficie de la Tierra, todo cuerpo soltado cae con la misma aceleración, constante, dirigida hacia abajo, sin que importe de qué está hecho ni cuánta materia tiene. Es un dato experimental, y es todo lo que este capítulo necesita. Se lo llama \textbf{aceleración de la gravedad} y se lo anota $g$.
 
-Por qué todos los cuerpos caen con la misma aceleración es una pregunta muy buena que este capítulo no contesta, y no la contesta porque para hacerlo hacen falta ideas que todavía no están sobre la mesa. La contesta el capítulo siguiente. Acá alcanza con el hecho medido.
+Por qué todos los cuerpos caen con la misma aceleración es una pregunta muy buena que este capítulo no contesta, y no la contesta porque para hacerlo hacen falta ideas que todavía no están sobre la mesa. La contesta la dinámica, más adelante en este libro. Acá alcanza con el hecho medido.
 
 Con eso, la caída libre y el tiro vertical no son movimientos nuevos: son el movimiento uniformemente variado con un valor particular de $a$. Y acá es donde la elección arbitraria del sistema de coordenadas, que en el primer bloque parecía un tecnicismo, se cobra su importancia. Si el eje es vertical con el sentido positivo hacia arriba, entonces la aceleración apunta en contra del eje y vale $a=-g$, con $g$ positiva. Si elegís el positivo hacia abajo, vale $a=+g$. Las dos elecciones son correctas y dan las mismas respuestas físicas; lo que no se puede es mezclarlas a mitad de camino. Con el eje hacia arriba, origen en el suelo y $t=0$ en el lanzamiento:
 \[
@@ -793,6 +793,828 @@ Un tren automático de aeropuerto recorre un tramo recto entre dos terminales. P
 \end{enumerate}
 \end{ejercicio}
 
+% ============================================================
+%  CAPITULO 2 de sintesis/fisica-1/fisica-1.tex
+%
+%  FRAGMENTO, no documento completo. Se inserta tal cual DESPUES del
+%  capitulo "Cinematica en una dimension" y ANTES del capitulo de
+%  Dinamica I.
+%
+%  NO redefine \sen ni carga tikz: las dos cosas ya estan en el
+%  preambulo local del archivo (lineas 7 y 11) y volver a declararlas
+%  rompe la integracion. Tampoco lleva \setMateria ni
+%  \renewcommand{\miNombre}: se definen una sola vez por materia.
+%
+%  Al insertarse en la posicion 2, los ejercicios de los dos capitulos
+%  de dinamica se renumeran de 2.x/3.x a 3.x/4.x. Es automatico y
+%  esperado: \theejercicionum = \thechapter.\arabic{ejercicionum}.
+%
+%  RESTRICCION DURA: el lector todavia NO vio dinamica. En todo el
+%  capitulo no aparece ninguna fuerza, ninguna masa, ningun diagrama de
+%  cuerpo aislado, y en movimiento circular no se menciona la fuerza
+%  centripeta: solo la aceleracion centripeta, que es cinematica pura.
+%  Las aceleraciones estan siempre DADAS por el enunciado, nunca
+%  deducidas de una causa.
+%
+%  Tres figuras, ninguna decorativa:
+%   1) trayectoria con r, v y a en un punto (reemplaza la descripcion
+%      verbal de que v es tangente y a no tiene por que serlo);
+%   2) descomposicion tangencial y normal en ESE MISMO punto, con la
+%      misma geometria que la figura 1;
+%   3) tiro parabolico con a constante dibujada en tres puntos.
+%  Coherencia verificada contra el algebra: en las tres, el eje +x va
+%  hacia la derecha y el eje +y hacia arriba, y en la figura 3 el
+%  vector a apunta hacia abajo porque el texto escribe a = -g jotagorro.
+%  En las figuras 1 y 2 el punto marcado es el mismo, sobre la curva
+%  y = 3 - x^2/4, en x = 2: ahi la tangente tiene direccion (1,-1). La
+%  aceleracion de referencia es a = (-0.2,-1.2), que se descompone en
+%  a_t = (0.5,-0.5) mas a_n = (-0.7,-0.7).
+%  ATENCION antes de "corregir" la figura 2: sus vectores son esos tres
+%  multiplicados por el mismo factor de escala 1.4, para que se lean a
+%  simple vista. O sea que la figura dibuja a = (-0.28,-1.68),
+%  a_t = (0.7,-0.7) y a_n = (-0.98,-0.98). El factor comun no altera ni
+%  la suma, ni el paralelismo de a_t con la tangente, ni la
+%  perpendicularidad de a_n, que es lo unico que la figura afirma. La
+%  figura 1, en cambio, dibuja a sin escalar.
+% ============================================================
+
+\temacapitulo{Cinemática en el plano: vectores, tiro parabólico y movimiento circular}
+
+\section{Motivación}
+
+\begin{motivacion}
+En el capítulo anterior la aceleración apuntaba siempre para el mismo lado que la velocidad o para el lado exactamente contrario, nunca para otro lugar, y en algún momento eso dejó de llamarte la atención y pasó a ser un hecho de la física. No lo es. Sobre una recta no hay ningún otro lado al que apuntar.
+\end{motivacion}
+
+Ese es el punto ciego que este capítulo viene a levantar. Todo el capítulo anterior transcurrió adentro de una limitación que desde adentro no se ve: en una dimensión hay exactamente dos direcciones posibles, y por lo tanto la aceleración está obligada a ser paralela a la velocidad. La obligación es de la recta, no de la física. Apenas el movimiento tiene dos dimensiones para elegir, la aceleración se suelta de la velocidad y empieza a hacer cosas que en una recta eran directamente imposibles de escribir.
+
+La versión concreta es un lugar común, y conviene mirarlo con desconfianza. Tomás una curva en un auto con el velocímetro clavado en 60. El velocímetro sostiene que no pasa absolutamente nada: marcó 60 antes de entrar, marca 60 en el medio y va a marcar 60 al salir. Y sin embargo vos te vas contra la puerta, lo cual es una observación tan legítima como la aguja. Uno de los dos está describiendo mal la situación, y no hay forma de dirimirlo con las herramientas del capítulo anterior, porque ahí la rapidez y el estado de movimiento eran prácticamente la misma cosa.
+
+La respuesta corta es que el velocímetro mide una sola cosa y hacen falta dos. Mide cuán rápido, y no mide hacia dónde. Un movimiento en el plano cambia de dos maneras independientes entre sí, y un número solo no puede llevar esa información. De ahí sale la necesidad del vector, y de ahí sale la partición que organiza medio capítulo: la parte de la aceleración que cambia la rapidez y la parte que cambia la dirección, que son dos objetos distintos y pueden existir por separado. Un auto en una curva a velocímetro constante tiene la primera nula y la segunda no. Eso no es una paradoja, es la definición trabajando.
+
+Vale la pena decir qué se gana concretamente. Se gana el tiro de proyectil completo, que es el ejercicio 9 del práctico y el problema 1 de más de un parcial; se gana el movimiento circular entero, que es la mitad de la Guía 1 y el punto de partida de todo lo que viene después; y se gana algo más barato de decir y más caro de conseguir, que es escribir un movimiento cualquiera del plano a partir de su aceleración, integrando dos veces, sin depender de ninguna fórmula tabulada. Esa última es la herramienta que resuelve el único ejercicio del práctico marcado como adicional, y ninguna fórmula del recetario la reemplaza.
+
+Antes de arrancar, tres preguntas para que te contestes ahora, sin leer más abajo. La primera: un auto toma una curva con el velocímetro clavado en 60, ¿está acelerando? La segunda: tirás una piedra en diagonal y la seguís hasta el punto más alto de su vuelo, ¿cuánto vale ahí su velocidad? La tercera: dos móviles recorren exactamente la misma curva del plano, de punta a punta, ¿tienen la misma función de movimiento?
+
+Las tres están respondidas más abajo, cada una en el bloque que le corresponde, y ninguna de las tres habilita saltear nada. Si las tres te salieron con justificación, el bloque de trayectorias y el de vectores se pueden leer en diagonal, pero conviene leerlos igual: la parte nueva de esos dos bloques no es el álgebra sino el vocabulario físico, que es distinto del que usa Álgebra Lineal y que decide varios ejercicios de la guía. Si alguna te hizo dudar, o si la contestaste rápido y no podés decir por qué, el capítulo va en orden y no conviene alterarlo.
+
+\section{Marco teórico}
+
+\begin{bloque}{Del eje al plano: funciones de movimiento y trayectoria}
+Un punto del plano necesita dos números para quedar identificado, así que hace falta un sistema de coordenadas con dos ejes perpendiculares, un origen $O$ común a los dos, una unidad de longitud y un sentido positivo por eje. Todo lo que se dijo en el capítulo anterior sobre lo arbitrario y lo fijo de esa elección sigue valiendo, con un agravante que aparece recién acá y que conviene anotar desde el principio: en una dimensión mover el origen cambiaba los números y no cambiaba ninguna conclusión, y en el plano hay conclusiones que dependen de dónde pusiste el origen. El bloque de movimiento circular tiene el caso concreto.
+
+Con los ejes puestos, el movimiento queda descripto por un \textbf{par} de funciones de movimiento, $x(t)$ e $y(t)$, cada una con las mismas dos exigencias de siempre, univaluada y continua. El tiempo entra como parámetro: no se grafica $y$ contra $x$ y listo, se calculan las dos coordenadas para cada instante.
+
+De ahí sale la distinción central del bloque. Las funciones de movimiento llevan la información temporal completa. La \textbf{trayectoria} es otra cosa: es el conjunto de puntos del plano que el cuerpo ocupó, sin ninguna referencia a cuándo los ocupó. La trayectoria olvidó el tiempo. Se obtiene eliminando $t$ entre las dos funciones de movimiento, y eso es exactamente lo que el ejercicio 8 del práctico pide en su primer inciso.
+
+La relación entre las dos no es uno a uno, y la asimetría va en un solo sentido. De las funciones de movimiento sale una única trayectoria; de una trayectoria salen infinitas funciones de movimiento, porque cualquier reparametrización del tiempo la deja intacta. Dos móviles pueden recorrer la misma curva a velocidades completamente distintas, uno acelerando y el otro frenando, y compartir trayectoria hasta el último punto. Esa es la tercera pregunta de la apertura, y la respuesta es que no, no tienen la misma función de movimiento, y no hay ningún dato en la trayectoria que permita reconstruirla.
+
+Hay algo más incómodo todavía, y es que la forma de las funciones de movimiento no anticipa la forma de la trayectoria. El contraejemplo canónico es
+\[
+x(t) = R\,\sen(\omega t), \qquad y(t) = R\,\sen(\omega t),
+\]
+que se parece muchísimo a la parametrización de una circunferencia y describe un \textbf{segmento de recta}: dividiendo miembro a miembro queda $y = x$, y como el seno vive entre $-1$ y $1$, el móvil va y viene sobre el segmento entre $(-R,-R)$ y $(R,R)$. Dos senos no hacen un círculo. Lo que hace el círculo es que las dos coordenadas estén desfasadas, y eso no se ve mirando qué funciones son sino haciendo la eliminación.
+
+La eliminación de $t$ tiene una trampa de método que aparece apenas alguna de las dos funciones no es inyectiva. Si $x(t) = \alpha t^2$, despejar da $t = \pm\sqrt{x/\alpha}$, con dos signos, y además $x$ nunca puede ser negativa. Al reemplazar en $y(t)$ se obtiene una ecuación que no trae escrita esa restricción, así que hay que agregarla a mano: la trayectoria no es toda la curva $y(x)$ sino el pedazo con $x \geq 0$. La decisión del signo es física y no algebraica, y sale de que el tiempo corre hacia adelante.
+
+Conviene dejar anotada acá una consecuencia que se cobra cara más adelante. Que dos trayectorias se crucen no significa que los móviles se encuentren: para que haya encuentro tienen que coincidir la posición y el instante a la vez, y la trayectoria, que olvidó el tiempo, no puede informar la segunda mitad de esa condición.
+
+\textit{Antes de seguir: tomá $x(t) = 2t$, $y(t) = t$ y después $x(t) = 2t^3$, $y(t) = t^3$, y verificá que las dos parejas dan la misma trayectoria; escribí en una línea qué información se perdió al eliminar $t$.}
+\end{bloque}
+
+\begin{chequeo}
+\item Dos móviles tienen la misma trayectoria. ¿Se puede afirmar algo sobre sus velocidades? ¿Y si tuvieran las mismas funciones de movimiento?
+\item Al eliminar $t$ entre $x(t)=3t^2$ e $y(t)=t^2+1$ obtenés una recta. ¿La trayectoria es toda esa recta? Justificá.
+\item Dos trayectorias se cruzan en un punto del plano. ¿Alcanza para afirmar que los móviles chocan?
+\end{chequeo}
+
+\begin{bloque}{El vector, y las cuatro cosas que le agrega la física}
+El vector como objeto algebraico ya lo tenés, y este bloque no lo vuelve a construir: suma, producto por un escalar, base, ortonormalidad y las propiedades del producto interno se usan directamente. Lo que sí hace falta es el vocabulario físico, que no coincide con el del álgebra y que decide varios incisos del práctico.
+
+Un vector, en física, tiene \textbf{módulo}, \textbf{dirección}, \textbf{sentido} y \textbf{punto de aplicación}. Las dos del medio no son sinónimos acá, aunque en el álgebra no se distingan: la dirección es la recta sobre la que el vector se apoya, y el sentido es cuál de las dos maneras de recorrer esa recta le corresponde. Multiplicar por un escalar negativo deja la dirección intacta y da vuelta el sentido. La frase suena rara si venís de espacios vectoriales, donde $\vec A$ y $-\vec A$ generan el mismo subespacio y nadie los llama distintos, y es justamente un lugar donde se tropieza por saber álgebra, no a pesar de saberla.
+
+El punto de aplicación tampoco existe en el álgebra y acá importa mucho, porque es lo que hace que el vector posición y el vector velocidad sean objetos distintos aunque los dos vivan en el plano. El vector posición se dibuja siempre desde el origen; el vector velocidad se dibuja siempre desde el móvil. Cuando un ejercicio pide dibujar $\vec v$ y $\vec a$ sobre la trayectoria, lo que está pidiendo es que respetes eso.
+
+Para la parte de dibujo hay una sola destreza que conviene tener, y es sumar cola con punta: el segundo vector se traslada hasta que su cola quede sobre la punta del primero, y la suma va desde la cola del primero hasta la punta del segundo. Sirve siempre, incluso cuando los dos vectores son colineales, caso en el que la regla del paralelogramo directamente no está definida porque el paralelogramo se degenera.
+
+En base ortonormal cartesiana, todo vector del plano se escribe
+\[
+\vec A = A_x\,\hat\imath + A_y\,\hat\jmath,
+\]
+con $\hat\imath$ y $\hat\jmath$ los versores de los ejes, de módulo 1. Esta notación es nueva en este libro, aunque la operación no lo sea: descomponer en componentes y sumar componente a componente ya lo venís haciendo. El módulo sale por Pitágoras, $\lvert\vec A\rvert = \sqrt{A_x^2+A_y^2}$, y se usa sin ceremonia.
+
+Queda un detalle operativo que se cobra en los ejercicios y que no es álgebra sino aritmética con calculadora. El ángulo que $\vec A$ forma con el eje $x$ se obtiene de
+\[
+\tan\theta_A = \frac{A_y}{A_x},
+\]
+pero la función arcotangente no alcanza para determinarlo, porque la tangente tiene período $\pi$ y no $2\pi$. Un vector del primer cuadrante y su opuesto, que está en el tercero, tienen exactamente la misma tangente, y la calculadora devuelve siempre el del primero. La corrección se hace mirando los signos de $A_x$ y $A_y$ para saber en qué cuadrante estás, y sumando $\pi$ cuando corresponde. Es un paso que se saltea con facilidad y que da un ángulo mal por exactamente 180 grados, un error que no se nota en el número y se nota en el dibujo.
+
+\textit{Antes de seguir: escribí $\vec A = -3\hat\imath - 4\hat\jmath$, calculá su módulo, pedile el ángulo a la calculadora y decidí, dibujando el vector, si el número que te dio es el que corresponde.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Qué le cambia a un vector multiplicarlo por $-2$: el módulo, la dirección, el sentido, o más de una de las tres?
+\item ¿Por qué el vector posición y el vector velocidad de un mismo móvil no se dibujan desde el mismo punto?
+\item Dos vectores tienen la misma tangente del ángulo con el eje $x$ y no son paralelos del mismo sentido. ¿Cómo puede ser, y cómo se detecta?
+\end{chequeo}
+
+\begin{bloque}{Producto escalar: el medidor de alineación}
+El producto escalar tiene dos expresiones que valen lo mismo,
+\[
+\vec A \cdot \vec B = \lvert\vec A\rvert\,\lvert\vec B\rvert\cos\varphi = A_xB_x + A_yB_y,
+\]
+donde $\varphi$ es el ángulo entre los dos vectores. Reservo $\varphi$ para eso durante todo el capítulo, porque $\alpha$ va a nombrar el ángulo de lanzamiento y $\theta$ la posición angular sobre una circunferencia, y las tres cosas conviven en la misma página. La segunda expresión sale de la primera desarrollando en la base y usando que $\hat\imath\cdot\hat\imath = \hat\jmath\cdot\hat\jmath = 1$ y $\hat\imath\cdot\hat\jmath = 0$; las propiedades habituales, conmutatividad y distributividad, están disponibles y no hace falta rehacerlas.
+
+Lo que conviene retener no es la definición sino la lectura. El producto escalar mide alineación. Vale $\lvert\vec A\rvert\lvert\vec B\rvert$, el máximo posible, cuando los dos vectores son paralelos y del mismo sentido; vale cero cuando son perpendiculares; y es negativo cuando apuntan a lados opuestos. Con esa lectura, cuatro operaciones del capítulo se vuelven la misma operación:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Qué se quiere & Cómo sale \\
+\midrule
+El módulo de un vector & $\lvert\vec A\rvert^2 = \vec A\cdot\vec A$ \\
+Saber si dos vectores son perpendiculares & $\vec A \perp \vec B$ exactamente cuando $\vec A\cdot\vec B = 0$ \\
+El ángulo entre dos vectores & $\cos\varphi = \dfrac{\vec A\cdot\vec B}{\lvert\vec A\rvert\lvert\vec B\rvert}$ \\[6pt]
+La proyección sobre una dirección & $\vec A\cdot\hat u$, con $\hat u$ un versor \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La última fila merece dos líneas más, porque de ahí sale una fórmula que vas a escribir en cada ejercicio de tiro de proyectil. Proyectando sobre el versor del eje $x$,
+\[
+\vec A\cdot\hat\imath = \lvert\vec A\rvert\,\lvert\hat\imath\rvert\cos\varphi = \lvert\vec A\rvert\cos\varphi,
+\]
+y como el mismo producto escalar en componentes vale $A_x$, queda $A_x = \lvert\vec A\rvert\cos\varphi$ y, proyectando sobre $\hat\jmath$, $A_y = \lvert\vec A\rvert\,\sen\varphi$. Es la descomposición trigonométrica de siempre, y ahora tiene de dónde salir: la componente cartesiana \emph{es} un producto escalar con el versor del eje. Cuando dentro de dos bloques escribamos $v_{0x} = v_0\cos\alpha$ sin comentarios, ese es el origen.
+
+Falta un criterio que el capítulo usa y que no se deduce del de perpendicularidad. Dos vectores son \textbf{paralelos} exactamente cuando uno es múltiplo del otro, y eso en el plano se escribe
+\[
+\vec A \parallel \vec B \quad\Longleftrightarrow\quad A_xB_y = A_yB_x.
+\]
+La justificación es directa: si $\vec B = \lambda\vec A$, entonces $A_xB_y - A_yB_x = \lambda(A_xA_y - A_yA_x) = 0$. El caso particular que más aparece es el paralelismo a la recta $y = x$, cuya dirección es $\hat\imath+\hat\jmath$: ahí la condición se reduce a $A_x = A_y$, y con eso se resuelve el inciso del práctico que pregunta en qué instantes la velocidad y la aceleración son paralelas a esa recta.
+
+\textit{Antes de seguir: explicá con tus palabras por qué el criterio de perpendicularidad es una igualdad a cero y el de paralelismo no, mirando qué mide el coseno en cada caso.}
+\end{bloque}
+
+\begin{chequeo}
+\item Dos vectores no nulos tienen producto escalar negativo. ¿Qué se puede afirmar sobre el ángulo que forman?
+\item ¿Por qué $\vec A\cdot\hat\imath$ da directamente la componente $A_x$, sin ninguna cuenta adicional?
+\item Escribí la condición para que $\vec A = 3\hat\imath + a_y\hat\jmath$ sea paralelo a $\vec B = -6\hat\imath + 4\hat\jmath$, y despejá $a_y$.
+\end{chequeo}
+
+\begin{bloque}{Derivar un vector: velocidad y aceleración en el plano}
+El \textbf{vector posición} de un móvil es el que va del origen hasta donde está el móvil,
+\[
+\vec r(t) = x(t)\,\hat\imath + y(t)\,\hat\jmath,
+\]
+y contiene exactamente la misma información que el par de funciones de movimiento, escrita de una manera que permite operar. El \textbf{desplazamiento} entre dos instantes es la resta $\Delta\vec r = \vec r(t_2) - \vec r(t_1)$, que es un vector y no un número, y cuyo módulo tampoco es la longitud del camino recorrido, por la misma razón que en una dimensión. La \textbf{velocidad media} es
+\[
+\bar{\vec v} = \frac{\Delta\vec r}{\Delta t},
+\]
+un vector con la dirección y el sentido de $\Delta\vec r$, porque $\Delta t$ es un escalar positivo. Como en el capítulo anterior, depende del intervalo elegido y no del instante.
+
+La velocidad instantánea se define exactamente igual que allá, con el cociente incremental y el límite:
+\[
+\vec v(t) \equiv \lim_{\Delta t\to 0}\frac{\vec r(t+\Delta t) - \vec r(t)}{\Delta t} = \frac{d\vec r}{dt}.
+\]
+Acá aparece la única operación genuinamente nueva de la primera mitad del capítulo, porque derivar un vector no es algo que el álgebra defina, y conviene hacer la cuenta una vez completa. Escribiendo los dos vectores en la base,
+\[
+\vec r(t+\Delta t) - \vec r(t) = \big[x(t+\Delta t) - x(t)\big]\hat\imath + \big[y(t+\Delta t) - y(t)\big]\hat\jmath,
+\]
+y el paso que hay que mirar es el de sacar factor común $\hat\imath$ y $\hat\jmath$. Se puede porque son \emph{los mismos} versores en los dos instantes. Dividiendo por $\Delta t$ y tomando el límite, los versores salen afuera por ser constantes y queda
+\[
+\vec v(t) = \left(\lim_{\Delta t\to 0}\frac{\Delta x}{\Delta t}\right)\hat\imath + \left(\lim_{\Delta t\to 0}\frac{\Delta y}{\Delta t}\right)\hat\jmath = \frac{dx}{dt}\,\hat\imath + \frac{dy}{dt}\,\hat\jmath.
+\]
+Derivar un vector es derivar cada componente, y el motivo es ese y no otro. Vale la pena decirlo en voz alta porque es la hipótesis sobre la que se apoya todo lo que sigue: \textbf{la base $\{\hat\imath,\hat\jmath\}$ no depende del tiempo}. En el último bloque del capítulo esa hipótesis se cae, a propósito, y entonces esta cuenta deja de valer tal cual está.
+
+La consecuencia práctica es cómoda hasta el aburrimiento. Un movimiento en el plano, escrito en base cartesiana, son dos movimientos en una dimensión corriendo en paralelo, acoplados únicamente por compartir el reloj. Todo lo que sabés de $x(t)$, $v(t)$ y $a(t)$ se aplica idéntico a la componente $y$, sin cambiar una letra.
+
+La \textbf{aceleración} se obtiene derivando otra vez,
+\[
+\vec a(t) = \frac{d\vec v}{dt} = \frac{d^2\vec r}{dt^2} = \frac{d^2x}{dt^2}\,\hat\imath + \frac{d^2y}{dt^2}\,\hat\jmath.
+\]
+
+Queda una propiedad geométrica que se usa todo el tiempo y que sale del mismo límite. El vector $\Delta\vec r$ es una cuerda de la trayectoria, con la cola en la posición del instante $t$ y la punta en la del instante $t+\Delta t$. Cuando $\Delta t$ se achica, el segundo punto se desliza sobre la curva hacia el primero y la cuerda se apoya cada vez más sobre la curva, igual que la secante se apoyaba sobre el gráfico en el capítulo anterior. En el límite queda la recta tangente: \textbf{la velocidad es siempre tangente a la trayectoria}, y su sentido es el del movimiento. Es la única de las tres magnitudes de la que se puede afirmar algo así sin conocer el movimiento.
+
+De la aceleración no se puede afirmar nada parecido, y ahí está el contenido de la primera pregunta de la apertura. La figura muestra los tres vectores en un mismo instante sobre una trayectoria curva: $\vec r$ desde el origen, $\vec v$ tangente, y $\vec a$ apuntando hacia donde le corresponda, que en general no es ni la dirección de $\vec v$ ni la de $\vec r$.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.25, color=textgray]
+  % ejes: +x a la derecha, +y hacia arriba (coincide con todo el texto)
+  \draw[rulegray, ->] (-0.35,0) -- (4.1,0) node[right] {\footnotesize $x$};
+  \draw[rulegray, ->] (0,-0.35) -- (0,3.5) node[above] {\footnotesize $y$};
+  \node[rulegray, anchor=north east] at (-0.02,-0.02) {\footnotesize $O$};
+  % trayectoria: y = 3 - x^2/4
+  \draw[very thick, domain=0.3:3.35, samples=80, variable=\x, smooth]
+        plot ({\x}, {3 - 0.25*\x*\x});
+  \node[anchor=west] at (0.45,2.72) {\footnotesize trayectoria};
+  % punto P = (2,2)
+  \fill (2,2) circle (1.6pt);
+  % vector posicion, desde el origen
+  \draw[->, thick] (0,0) -- (2,2);
+  \node[anchor=south east] at (1.05,1.05) {\footnotesize $\vec r$};
+  % velocidad: tangente en x=2, direccion (1,-1) normalizada
+  \draw[->, thick] (2,2) -- (2.78,1.22);
+  \node[anchor=south west] at (2.72,1.28) {\footnotesize $\vec v$};
+  % aceleracion en el mismo punto: (-0.2,-1.2)
+  \draw[->, thick] (2,2) -- (1.8,0.8);
+  \node[anchor=north east] at (1.82,0.86) {\footnotesize $\vec a$};
+\end{tikzpicture}
+\end{center}
+
+Los tres vectores están dibujados con su punto de aplicación correcto: $\vec r$ arranca en el origen porque mide una posición respecto de él, y $\vec v$ y $\vec a$ arrancan en el móvil porque describen lo que le pasa ahí. La velocidad se apoya sobre la curva; la aceleración se mete hacia adentro de la concavidad y no tiene por qué apoyarse en nada.
+
+\textit{Antes de seguir: releé la cuenta del límite y decí exactamente en qué renglón se usó que $\hat\imath$ y $\hat\jmath$ no dependen del tiempo, y qué habría que hacer distinto si dependieran.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué derivar $\vec r(t)$ se reduce a derivar $x(t)$ e $y(t)$ por separado? Nombrá la propiedad de la base que lo permite.
+\item Un móvil tiene $\lvert\Delta\vec r\rvert = 5$ m entre dos instantes. ¿Se puede afirmar que recorrió 5 m?
+\item ¿Cuál de los tres vectores, $\vec r$, $\vec v$ o $\vec a$, tiene una dirección determinada por la trayectoria sola, sin más datos?
+\end{chequeo}
+
+\begin{bloque}{Aceleración tangencial y aceleración normal}
+La aceleración de un movimiento en el plano hace dos cosas a la vez, y la manera de separarlas es proyectarla sobre la dirección de la velocidad y sobre la perpendicular. Con el versor velocidad $\hat v = \vec v/\lvert\vec v\rvert$, se define la componente tangencial
+\[
+a_t = \vec a\cdot\hat v, \qquad \vec a_t = (\vec a\cdot\hat v)\,\hat v, \qquad \vec a_n = \vec a - \vec a_t,
+\]
+y con eso $\vec a = \vec a_t + \vec a_n$ por construcción. Que $\vec a_n$ es efectivamente perpendicular a la velocidad se verifica en un renglón: $\vec a_n\cdot\vec v = \vec a\cdot\vec v - (\vec a\cdot\hat v)(\hat v\cdot\vec v) = \vec a\cdot\vec v - (\vec a\cdot\hat v)\lvert\vec v\rvert = 0$. No hizo falta ninguna herramienta nueva, es producto escalar puro, y en componentes cartesianas queda
+\[
+\vec a_t = \frac{a_xv_x + a_yv_y}{v_x^2+v_y^2}\,\big(v_x\hat\imath + v_y\hat\jmath\big),
+\]
+que es la forma en la que llega el dato en todos los ejercicios.
+
+Lo importante es qué hace cada pedazo, y eso tiene demostración corta. Derivando $\lvert\vec v\rvert^2 = \vec v\cdot\vec v$ con la regla del producto,
+\[
+2\,\lvert\vec v\rvert\,\frac{d\lvert\vec v\rvert}{dt} = 2\,\vec v\cdot\vec a
+\qquad\Longrightarrow\qquad
+\frac{d\lvert\vec v\rvert}{dt} = \vec a\cdot\hat v = a_t.
+\]
+La componente tangencial \emph{es} la derivada de la rapidez. Cambia cuán rápido va el móvil y no cambia hacia dónde va. La componente normal, que es lo que sobra, no aparece en esa derivada por ninguna parte: no toca la rapidez, solo tuerce la dirección de la velocidad, y siempre apunta hacia el lado cóncavo de la trayectoria, que es hacia donde la curva se está doblando.
+
+De ahí salen dos afirmaciones que se usan sin volver a demostrarlas. Si la rapidez es constante, entonces $a_t = 0$ y toda la aceleración es normal. Si la trayectoria es una recta, la dirección de $\vec v$ no cambia, entonces $a_n = 0$ y toda la aceleración es tangencial. Juntando las dos, y esta es la respuesta a la primera pregunta de la apertura: \textbf{todo movimiento que no sea rectilíneo está acelerado}, aunque el velocímetro marque siempre lo mismo. El auto en la curva a 60 tiene $a_t = 0$ y $a_n \neq 0$, y el velocímetro, que solo mide $\lvert\vec v\rvert$, es ciego a la segunda mitad por construcción.
+
+Conviene fijar la notación antes de seguir, porque hay tres objetos y solo dos nombres a mano. La letra $a_t$ nombra la \emph{componente escalar} tangencial, que lleva signo; $\vec a_t$ es el vector que se arma multiplicándola por $\hat v$; y $a_n$, de acá en adelante, nombra el módulo $\lvert\vec a_n\rvert$, que es positivo por definición. Con esos nombres, y como las dos componentes son perpendiculares entre sí, el módulo de la aceleración total se compone como una hipotenusa y no como una suma:
+\[
+\lvert\vec a\rvert = \sqrt{a_t^2 + a_n^2}.
+\]
+Es Pitágoras sobre la descomposición que acabamos de hacer, y conviene tenerla escrita porque el práctico pide los tres módulos juntos y sumarlos da siempre de más.
+
+La figura toma el mismo punto de la trayectoria del bloque anterior y le hace la descomposición encima. Las líneas punteadas son el paralelogramo que arma $\vec a$ a partir de sus dos componentes.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.5, color=textgray]
+  % misma curva y mismo punto que la figura anterior: y = 3 - x^2/4, P = (2,2)
+  \draw[very thick, domain=0.75:3.25, samples=70, variable=\x, smooth]
+        plot ({\x}, {3 - 0.25*\x*\x});
+  \fill (2,2) circle (1.6pt);
+  % velocidad, tangente, direccion (1,-1)
+  \draw[->, thick] (2,2) -- (3.09,0.91);
+  \node[anchor=south west] at (3.0,0.98) {\footnotesize $\vec v$};
+  % aceleracion total (-0.28,-1.68) = 1.4*(-0.2,-1.2)
+  \draw[->, thick] (2,2) -- (1.72,0.32);
+  \node[anchor=north] at (1.70,0.30) {\footnotesize $\vec a$};
+  % componente tangencial (0.7,-0.7)
+  \draw[->, thick] (2,2) -- (2.70,1.30);
+  \node[anchor=south west] at (2.64,1.34) {\footnotesize $\vec a_t$};
+  % componente normal (-0.98,-0.98)
+  \draw[->, thick] (2,2) -- (1.02,1.02);
+  \node[anchor=south east] at (1.06,1.04) {\footnotesize $\vec a_n$};
+  % paralelogramo punteado: a_t + a_n = a
+  \draw[rulegray, dashed] (2.70,1.30) -- (1.72,0.32);
+  \draw[rulegray, dashed] (1.02,1.02) -- (1.72,0.32);
+\end{tikzpicture}
+\end{center}
+
+Fijate que $\vec a_t$ quedó del mismo sentido que $\vec v$, y eso significa que en ese instante el móvil está aumentando su rapidez. Si $\vec a_t$ hubiera salido con el sentido opuesto, el producto escalar $\vec a\cdot\hat v$ habría dado negativo y el móvil estaría frenando. El signo de $a_t$ es toda la información sobre frenado o aceleración que hay en el problema, y no depende de ninguna elección de ejes, que es más de lo que se podía decir en una dimensión.
+
+\textit{Antes de seguir: pensá un movimiento con $a_t \neq 0$ y $a_n = 0$, otro con $a_t = 0$ y $a_n \neq 0$, y decí en cada caso qué forma tiene la trayectoria y qué hace el velocímetro.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un móvil tiene $\vec a\cdot\vec v < 0$. ¿Está frenando o acelerando, y por qué el signo alcanza para decidirlo?
+\item ¿Puede un movimiento tener $\lvert\vec a\rvert \neq 0$ con la rapidez constante en todo instante? Si sí, ¿cuánto vale $a_t$?
+\item Si $a_t = 3$ m/s$^2$ y $a_n = 4$ m/s$^2$, ¿cuánto vale $\lvert\vec a\rvert$? ¿Por qué no vale 7 m/s$^2$?
+\end{chequeo}
+
+\begin{bloque}{Aceleración constante en el plano: el método general}
+Este bloque es el más importante del capítulo y es el que menos herramientas nuevas usa, porque es el aparato de integración del capítulo anterior aplicado dos veces en paralelo.
+
+El planteo es al revés del de los bloques anteriores. Ahí se conocía $\vec r(t)$ y se derivaba; acá se conoce $\vec a(t)$ y hay que subir. Como la base es constante, integrar un vector también es integrar cada componente por separado, y cada integración introduce una constante:
+\[
+\vec v(t) = \int \vec a(t)\,dt, \qquad \vec r(t) = \int \vec v(t)\,dt.
+\]
+Conviene decir la regla de conteo en voz alta, porque es la generalización que hace falta y no es evidente si uno viene de una recta. En una dimensión aparecían dos constantes de integración; en el plano aparecen \textbf{cuatro, dos por eje}. Ninguna es un dato libre: cada una la fija un dato físico, típicamente la velocidad y la posición en un instante conocido, o la posición en dos instantes conocidos. Si al terminar te sobra una constante sin fijar, falta un dato del enunciado, y si te falta una constante, la integración está incompleta.
+
+En el caso particular en que $\vec a$ es constante, las dos integrales salen de memoria porque son las mismas que ya hiciste:
+\[
+\vec v(t) = \vec v_0 + \vec a\,t, \qquad \vec r(t) = \vec r_0 + \vec v_0\,t + \tfrac12\,\vec a\,t^2,
+\]
+con $\vec v_0$ y $\vec r_0$ los valores en $t = 0$. Ese $\tfrac12$ es el mismo de siempre, con el mismo origen: es la primitiva de $t$. Y el resultado es una identidad entre vectores, así que vale componente a componente y son dos ecuaciones escalares.
+
+Vale la pena mirar qué trayectoria produce, porque no depende de qué represente $\vec a$. Si $\vec a$ es constante y no es paralela a $\vec v_0$, la trayectoria es una parábola, y punto. No la hace la gravedad: la hace que la aceleración sea constante y esté torcida respecto de la velocidad inicial. Un disco sobre hielo con una aceleración horizontal constante describe una parábola perfectamente horizontal, sin que la gravedad participe de nada.
+
+Las dos ecuaciones de arriba son \emph{el} método del capítulo, y todo lo que viene en el bloque siguiente es un caso particular de ellas. Conviene resistirse a la tentación de saltearlas: son cuatro renglones que reemplazan una tabla de ocho fórmulas, y a diferencia de la tabla, no dejan de valer cuando el enunciado cambia.
+
+\textit{Antes de seguir: escribí las dos ecuaciones de arriba en componentes, contá cuántas constantes de integración quedan a la vista, y decí qué dato del enunciado fijaría cada una.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué aparecen cuatro constantes de integración en el plano y no dos?
+\item Un enunciado da la aceleración constante y la posición en dos instantes distintos, pero ninguna velocidad. ¿Alcanza para determinar el movimiento?
+\item ¿Qué condición sobre $\vec a$ y $\vec v_0$ hace que la trayectoria sea una recta en lugar de una parábola?
+\end{chequeo}
+
+\begin{bloque}{Tiro de proyectil: el caso $a_x = 0$}
+Ahora sí, la especialización. La hipótesis física es que se desprecia por completo la acción del aire, que la Tierra es localmente plana y que $g$ es constante en toda la región del vuelo. Con eso, y con el eje $y$ vertical hacia arriba,
+\[
+\vec a = -g\,\hat\jmath, \qquad\text{es decir}\qquad a_x = 0,\quad a_y = -g.
+\]
+Ese $a_x = 0$ es la única hipótesis que separa este bloque del anterior, y conviene tenerla identificada porque es lo primero que un enunciado puede romper.
+
+Con $\vec r_0 = h\,\hat\jmath$ y $\vec v_0 = v_0\cos\alpha\,\hat\imath + v_0\,\sen\alpha\,\hat\jmath$, donde $\alpha$ es el ángulo de lanzamiento respecto de la horizontal y las componentes salen del puente del bloque de producto escalar, reemplazar en las dos ecuaciones generales da
+\[
+\vec v(t) = v_0\cos\alpha\,\hat\imath + \big(v_0\,\sen\alpha - g\,t\big)\hat\jmath,
+\qquad
+\vec r(t) = v_0\cos\alpha\,t\;\hat\imath + \Big(h + v_0\,\sen\alpha\,t - \tfrac12 g\,t^2\Big)\hat\jmath.
+\]
+
+Mirá las dos componentes por separado, porque ahí está la mitad del capítulo anterior devuelta intacta. En el eje $x$ la velocidad no cambia nunca: es un movimiento rectilíneo uniforme. En el eje $y$ la aceleración vale $-g$ y es constante: es el tiro vertical del capítulo anterior, con las mismas fórmulas y los mismos signos, sin ninguna modificación. El eje $x$ no se entera de que hay gravedad y el eje $y$ no se entera de que hubo un disparo horizontal. Lo único que comparten es el reloj, y ese acoplamiento por el tiempo es todo lo que hay que administrar.
+
+De ahí sale todo lo demás, y sale despejando, no memorizando:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\multicolumn{2}{l}{\footnotesize Válidas solo si $a_x = 0$, con lanzamiento desde la altura $h$ y ángulo $\alpha$} \\
+\midrule
+Instante de altura máxima & $t_{\max} = \dfrac{v_0\,\sen\alpha}{g}$, de imponer $v_y = 0$ \\[7pt]
+Altura máxima & $y_{\max} = h + \dfrac{v_0^2\,\sen^2\alpha}{2g}$ \\[7pt]
+Ecuación de la trayectoria & $y(x) = h + \tan\alpha\;x - \dfrac{g}{2v_0^2\cos^2\alpha}\,x^2$ \\[7pt]
+Alcance con $h = 0$ & $x_f = \dfrac{v_0^2\,\sen(2\alpha)}{g}$ \\[7pt]
+Alcance con $h \geq 0$ & $x_f = \dfrac{v_0^2}{g}\cos\alpha\left(\sen\alpha + \sqrt{\sen^2\alpha + \dfrac{2gh}{v_0^2}}\right)$ \\[9pt]
+Ángulo óptimo & $\tan\alpha_{op} = \dfrac{1}{\sqrt{1 + 2gh/v_0^2}}$, que da $45^\circ$ solo si $h = 0$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La ecuación de la trayectoria sale de despejar $t = x/(v_0\cos\alpha)$ de la primera componente y reemplazar en la segunda, y ese despeje es una división porque $x(t)$ es lineal. Guardá ese detalle, que vuelve en dos párrafos. El alcance con $h = 0$ se obtiene pidiendo $y = 0$ y descartando la raíz $x = 0$, que es el propio lanzamiento; queda $x_f = 2v_0^2\cos\alpha\,\sen\alpha/g$, y el $\sen(2\alpha)$ de la tabla es simplemente eso escrito con la identidad $\sen(2\alpha) = 2\,\sen\alpha\cos\alpha$, que sale del seno de la suma con los dos ángulos iguales. Escrito así se ve por qué el óptimo a nivel del suelo es $45^\circ$: el seno alcanza su máximo cuando su argumento vale $90^\circ$.
+
+Un resultado que cierra el círculo con el producto escalar, y que vale la pena verificar una vez: en el ángulo óptimo, la velocidad de lanzamiento y la velocidad de llegada resultan \textbf{perpendiculares}, o sea $\vec v_0\cdot\vec v_f = 0$. Con $h = 0$ y $\alpha = 45^\circ$ es inmediato, porque $\vec v_f$ es la reflexión de $\vec v_0$ respecto de la horizontal y el producto escalar da $v_0^2(\cos^2 45^\circ - \sen^2 45^\circ)$; con $h > 0$ la cuenta es un poco más larga y da exactamente la condición de la última fila de la tabla.
+
+Hay dos casos límite que conviene no leer como errores. Con $\alpha = 0$, o sea lanzamiento horizontal, la fórmula da $t_{\max} = 0$: no está fallando, está diciendo que el punto más alto de la trayectoria es el propio lanzamiento, porque $v_y$ ya vale cero ahí y no vuelve a valerlo. Y con $\alpha = 90^\circ$ toda la componente horizontal se anula y lo que queda es, literalmente, el tiro vertical del capítulo anterior, que es el caso más degenerado y el único en que $\vec a$ y $\vec v$ son colineales.
+
+Ahora la parte que más se cobra, y que hay que decir con todas las letras. \textbf{Cuando el enunciado agrega una aceleración horizontal, por viento o por lo que sea, ninguna fila de esa tabla es aplicable}, porque todas se dedujeron con $a_x = 0$. Lo que sí sigue funcionando es el método del bloque anterior: escribir $\vec a$ completo e integrarlo dos veces. Y hay una trampa fina adentro de esto que conviene ver antes de tropezar con ella. Si la aceleración extra es puramente horizontal, la fórmula de $y_{\max}$ \emph{sigue dando el resultado correcto}. Eso es peor que si fallara, porque confirma un método equivocado: funciona porque el eje $y$ quedó intacto y el eje $x$ no, no porque la tabla valga, y no va a funcionar la próxima vez que la aceleración extra tenga alguna componente vertical.
+
+El cambio concreto de procedimiento es este. Con $a_x \neq 0$, la componente horizontal pasa a ser $x(t) = v_{0x}t + \tfrac12 a_x t^2$, y despejar el tiempo a partir de una posición horizontal dada deja de ser una división y pasa a ser una ecuación cuadrática, con dos raíces y con una decisión explícita sobre cuál descartar. Es exactamente lo que mide el ejercicio adicional del práctico. Y el óptimo de $45^\circ$ también se cae, por la misma razón por la que se cae con $h \neq 0$.
+
+La figura muestra el vuelo con los vectores en tres instantes. La aceleración está dibujada tres veces con la misma longitud y el mismo sentido, porque es la misma en todo el vuelo; la velocidad cambia en las tres.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.15, color=textgray]
+  % eje x hacia la derecha, eje y hacia arriba: coincide con a = -g jotagorro
+  \draw[rulegray, ->] (-0.4,0) -- (5.4,0) node[right] {\footnotesize $x$};
+  \draw[rulegray, ->] (0,-0.1) -- (0,2.9) node[above] {\footnotesize $y$};
+  % trayectoria: y = 1 + 1.2x - 0.3x^2, lanzamiento en (0,1), impacto en x = 4.71
+  \draw[very thick, domain=0:4.71, samples=90, variable=\x, smooth]
+        plot ({\x}, {1 + 1.2*\x - 0.3*\x*\x});
+  \draw[rulegray, dashed] (0,1) -- (-0.25,1);
+  \node[rulegray, anchor=east] at (-0.27,1) {\footnotesize $h$};
+  % lanzamiento, punto (0,1)
+  \fill (0,1) circle (1.5pt);
+  \draw[->, thick] (0,1) -- (0.54,1.65);
+  \node[anchor=south west] at (0.44,1.62) {\footnotesize $\vec v$};
+  \draw[->, thick] (0,1) -- (0,0.2);
+  \node[anchor=west] at (0.05,0.5) {\footnotesize $\vec a$};
+  % vertice, punto (2,2.2)
+  \fill (2,2.2) circle (1.5pt);
+  \draw[->, thick] (2,2.2) -- (2.85,2.2);
+  \node[anchor=south] at (2.6,2.25) {\footnotesize $\vec v$};
+  \draw[->, thick] (2,2.2) -- (2,1.4);
+  \node[anchor=west] at (2.05,1.75) {\footnotesize $\vec a = \vec a_n$};
+  % tramo descendente, punto (3.5,1.525)
+  \fill (3.5,1.525) circle (1.5pt);
+  \draw[->, thick] (3.5,1.525) -- (4.13,0.956);
+  \node[anchor=south west] at (4.0,1.0) {\footnotesize $\vec v$};
+  \draw[->, thick] (3.5,1.525) -- (3.5,0.725);
+  \node[anchor=east] at (3.45,1.1) {\footnotesize $\vec a$};
+\end{tikzpicture}
+\end{center}
+
+El vértice es el punto que hay que mirar. Ahí $\vec v$ es horizontal y $\vec a$ es vertical, o sea que son perpendiculares y toda la aceleración es normal: $a_t = 0$ y $a_n = g$. El móvil está acelerando y no está cambiando de rapidez, que es el mismo fenómeno del auto en la curva, escrito en otro problema. Y esa es la segunda pregunta de la apertura: en el punto más alto la velocidad \textbf{no} vale cero, vale $v_0\cos\alpha$, horizontal. Lo que vale cero es su componente vertical, que es el dato importado del tiro vertical de una dimensión, donde efectivamente eran la misma cosa porque no había otra componente.
+
+El contraste general vale la pena dejarlo escrito: $\vec a$ fue constante durante todo el vuelo y su descomposición en tangencial y normal cambió punto a punto. Que un vector sea constante no dice nada sobre cómo se reparten sus componentes en una base que se mueve con el móvil.
+
+\textit{Antes de seguir: tomá el vuelo de la figura y decidí, sin calcular, en qué tramos $a_t$ es negativa y en cuáles positiva, usando solamente el signo de $\vec a\cdot\vec v$.}
+\end{bloque}
+
+\begin{chequeo}
+\item En el punto más alto de un tiro oblicuo, ¿cuánto valen $v_x$, $v_y$ y $\lvert\vec v\rvert$?
+\item Un enunciado agrega una aceleración horizontal constante. ¿Cuáles de las fórmulas de la tabla siguen valiendo y por qué la de $y_{\max}$ es la más peligrosa de las que dan bien?
+\item ¿Por qué con $a_x \neq 0$ despejar el tiempo a partir de $x$ deja de ser una división?
+\end{chequeo}
+
+\begin{bloque}{Movimiento circular en base cartesiana}
+Un movimiento circular es aquel cuya trayectoria es una circunferencia de radio $R$. Como la distancia al centro no cambia, alcanza con un solo número para decir dónde está el móvil: el ángulo que forma con el eje $x$ el segmento que va del centro al móvil, medido en sentido antihorario. Ese número es la \textbf{posición angular} $\theta(t)$, y también se la llama función de movimiento angular.
+
+Conviene avisar sobre la letra. Más adelante, en los capítulos de dinámica, $\theta$ va a nombrar el ángulo de inclinación de un plano; acá nombra la posición angular sobre una circunferencia. Es la misma letra para dos objetos distintos, por convención de cada tema, y no hay ninguna relación entre los dos usos.
+
+Derivando $\theta$ una y dos veces se obtienen la \textbf{velocidad angular} y la \textbf{aceleración angular}:
+\[
+\omega(t) = \frac{d\theta}{dt}, \qquad \gamma(t) = \frac{d\omega}{dt} = \frac{d^2\theta}{dt^2}.
+\]
+La aceleración angular se escribe $\gamma$ en todo este capítulo, que es como la nombra la cátedra; en muchos textos aparece como $\alpha$, letra que acá está ocupada por el ángulo de lanzamiento. La estructura es la que ya conocés: $\theta$, $\omega$ y $\gamma$ son los $x$, $v$ y $a$ del movimiento angular, y toda la maquinaria de derivación e integración del capítulo anterior se traslada tal cual, incluidas las dos constantes de integración al subir de $\gamma$ a $\theta$. Un movimiento circular con $\gamma$ constante es, palabra por palabra, un movimiento uniformemente variado escrito en ángulos.
+
+Para obtener los vectores hay que poner el movimiento en coordenadas. Con el \textbf{origen del sistema de coordenadas en el centro de la circunferencia}, y ese es un supuesto que hay que arrastrar explícitamente porque decide varios resultados de abajo,
+\[
+\vec r(t) = R\big[\cos\theta(t)\,\hat\imath + \sen\theta(t)\,\hat\jmath\big].
+\]
+Derivar esto es la primera vez en el capítulo que hace falta la regla de la cadena, así que la primera vez va escrita completa. Como $R$ es constante y $\theta$ depende de $t$,
+\[
+\vec v(t) = R\Big[-\sen\theta(t)\,\frac{d\theta}{dt}\,\hat\imath + \cos\theta(t)\,\frac{d\theta}{dt}\,\hat\jmath\Big]
+= R\,\omega(t)\big[-\sen\theta\,\hat\imath + \cos\theta\,\hat\jmath\big].
+\]
+Derivando otra vez, ahora con la regla del producto sobre $R\,\omega(t)$ multiplicando un corchete que también depende de $t$,
+\[
+\vec a(t) = R\,\gamma(t)\big[-\sen\theta\,\hat\imath + \cos\theta\,\hat\jmath\big] - R\,\omega^2(t)\big[\cos\theta\,\hat\imath + \sen\theta\,\hat\jmath\big].
+\]
+
+Los dos corchetes que aparecieron son versores, y son perpendiculares entre sí. Al primero lo llamamos $\hat u_\theta$ y al segundo $\hat u_\rho$, nombres que el bloque final justifica:
+\[
+\hat u_\rho = \cos\theta\,\hat\imath + \sen\theta\,\hat\jmath, \qquad
+\hat u_\theta = -\sen\theta\,\hat\imath + \cos\theta\,\hat\jmath,
+\qquad \hat u_\rho\cdot\hat u_\theta = 0.
+\]
+El primero apunta desde el centro hacia el móvil y el segundo es tangente a la circunferencia. En el apunte de la cátedra el versor radial aparece a veces escrito $\hat r$; es el mismo objeto que $\hat u_\rho$, y acá se usa siempre la segunda forma.
+
+Con esos nombres, lo que quedó es
+\[
+\vec r = R\,\hat u_\rho, \qquad
+\vec v = R\,\omega\,\hat u_\theta, \qquad
+\vec a = \underbrace{R\,\gamma\,\hat u_\theta}_{\vec a_t} \;\underbrace{-\;R\,\omega^2\,\hat u_\rho}_{\vec a_n},
+\]
+o sea que la aceleración salió \emph{ya descompuesta} en tangencial y normal, sin haber tenido que proyectar nada. La tangencial es la que va con $\gamma$, lo cual tiene sentido porque $\gamma$ es la que cambia la rapidez, y la normal es la que va con $\omega^2$, con un signo menos que dice que apunta en contra de $\hat u_\rho$, o sea hacia el centro. Por eso a $\vec a_n$ se la llama \textbf{aceleración centrípeta} en movimiento circular.
+
+Los módulos, entonces:
+\[
+\lvert\vec v\rvert = R\,\lvert\omega\rvert, \qquad
+\lvert\vec a_t\rvert = R\,\lvert\gamma\rvert, \qquad
+\lvert\vec a_n\rvert = R\,\omega^2, \qquad
+\lvert\vec a\rvert = \sqrt{a_t^2+a_n^2}.
+\]
+La primera merece una aclaración de unidades que no es un trámite. $\lvert\vec v\rvert = R\lvert\omega\rvert$ vale \textbf{solo con $\omega$ en radianes por segundo}, y el motivo es que el radián está definido como el cociente entre la longitud del arco y el radio. Con esa definición, el arco recorrido es $s = R\theta$, y derivando queda $ds/dt = R\,d\theta/dt$, que es la fórmula. Si $\theta$ estuviera en grados, $s = R\theta$ sería falsa y todo lo demás también. Los enunciados mezclan las dos unidades a propósito, así que la conversión hay que hacerla antes de reemplazar y no después.
+
+De la primera relación sale una forma de la aceleración centrípeta que el apunte no escribe y que los ejercicios piden, porque suelen dar $\lvert\vec v\rvert$ y $R$ en vez de $\omega$. Despejando $\lvert\omega\rvert = \lvert\vec v\rvert/R$ y reemplazando,
+\[
+\lvert\vec a_n\rvert = R\,\omega^2 = R\,\frac{\lvert\vec v\rvert^2}{R^2} = \frac{\lvert\vec v\rvert^2}{R} = \lvert\vec v\rvert\,\lvert\omega\rvert.
+\]
+Las tres formas son la misma cuenta y se elige la que le vaya bien a los datos. El módulo sobre $\omega$ en la última no es un adorno: la velocidad angular puede ser negativa, si el móvil gira en sentido horario, y un módulo nunca lo es. Es el mismo cuidado que ya hizo falta en $\lvert\vec v\rvert = R\lvert\omega\rvert$, tres renglones más arriba.
+
+Falta el resultado que más se malinterpreta, y va con su hipótesis pegada. \textbf{Si el origen de coordenadas está en el centro de la circunferencia}, entonces
+\[
+\vec r\cdot\vec v = R\,\hat u_\rho \cdot R\,\omega\,\hat u_\theta = R^2\omega\,(\hat u_\rho\cdot\hat u_\theta) = 0,
+\]
+o sea que el vector posición es perpendicular a la velocidad en todo instante. La condición no es decorativa: toda la deducción arrancó escribiendo $\vec r = R\hat u_\rho$, y eso solo es cierto con el origen en el centro. Si el origen está en cualquier otro punto del plano, el vector posición ya no tiene módulo constante, la perpendicularidad deja de valer en general, y lo que sigue siendo perpendicular a $\vec v$ es el vector que va \emph{del centro} al móvil, que ahora es otro vector. Lo mismo pasa con la aceleración centrípeta: apunta siempre al centro de la circunferencia, que no tiene por qué ser el origen que elegiste. Un ejercicio del práctico pone el círculo centrado fuera del origen precisamente para cobrar esto.
+
+\textit{Antes de seguir: escribí $\vec r\cdot\vec v$ para un movimiento circular de radio 2 centrado en el punto $(3,0)$, con el origen en $(0,0)$, y decidí si se anula para todo $t$ o solo para algunos instantes.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Cuál es la relación entre $\lvert\vec v\rvert$ y $\omega$, y en qué unidad tiene que estar $\omega$ para que valga? Justificá con la definición de radián.
+\item ¿Puede $\vec a_n$ ser nula en un movimiento circular? ¿Y $\vec a_t$? Respondé mirando las expresiones de sus módulos.
+\item Un móvil recorre una circunferencia centrada en $(0,4)$ y el origen está en $(0,0)$. ¿Vale $\vec r \perp \vec v$ en todo instante? ¿Qué vector sí cumple eso?
+\end{chequeo}
+
+\begin{bloque}{Movimiento circular uniforme, período y conteo de vueltas}
+El caso más simple es el \textbf{movimiento circular uniforme}, donde $\omega$ es constante y por lo tanto $\gamma = 0$. Integrando una vez, $\theta(t) = \omega_0 t + \theta_0$, con $\theta_0$ la posición angular inicial, y de ahí
+\[
+\vec r(t) = R\big[\cos(\omega_0t+\theta_0)\,\hat\imath + \sen(\omega_0t+\theta_0)\,\hat\jmath\big],
+\qquad
+\lvert\vec v\rvert = R\lvert\omega_0\rvert, \qquad \vec a = \vec a_n = -R\,\omega_0^2\,\hat u_\rho.
+\]
+Los tres módulos son constantes y las tres direcciones rotan, lo cual es una manera exacta de decir que este movimiento es uniforme en un sentido muy limitado. Como $\gamma = 0$ no hay aceleración tangencial, así que $\vec v\cdot\vec a = 0$ en todo instante: en el circular uniforme la velocidad y la aceleración son perpendiculares siempre. Este es el mismo enunciado del auto en la curva, escrito con símbolos.
+
+Un movimiento se llama \textbf{periódico} si existe un $T > 0$ tal que $\vec r(t+T) = \vec r(t)$ para todo $t$. Derivando esa igualdad una y dos veces se obtiene $\vec v(t+T) = \vec v(t)$ y $\vec a(t+T) = \vec a(t)$, así que la periodicidad de la posición arrastra la de todo lo demás y no hay que pedirla aparte. El número $T$ es el \textbf{período} y su inversa $f = 1/T$ es la \textbf{frecuencia}, que se lee como cantidad de repeticiones por unidad de tiempo. La definición no menciona circunferencias por ninguna parte: un péndulo, los pistones de un motor en régimen y el oscilador armónico del capítulo anterior son periódicos y ninguno describe un círculo.
+
+En el circular uniforme, como el seno y el coseno tienen período $2\pi$, la posición se repite cuando el ángulo avanza $2\pi$, o sea
+\[
+T = \frac{2\pi}{\omega_0} = \frac{2\pi R}{\lvert\vec v\rvert}, \qquad f = \frac{1}{T} = \frac{\omega_0}{2\pi}.
+\]
+La segunda forma de $T$ es la misma sustitución $\omega_0 = \lvert\vec v\rvert/R$ de antes, y es la que sirve cuando el dato es la rapidez.
+
+Acá hay que ser cuidadoso con algo que se usa sin pensarlo. \textbf{El período y la frecuencia existen solo si el movimiento es periódico}, y un movimiento circular con $\gamma \neq 0$ no lo es: la velocidad angular cambia, cada vuelta tarda distinto que la anterior, y no hay ningún $T$ que cumpla la definición. Preguntar cuánto vale el período de un disco que está acelerando no tiene respuesta, no porque falte un dato sino porque el objeto no existe.
+
+Contar vueltas, en cambio, sí se puede siempre, y no necesita período. Una vuelta completa son $2\pi$ radianes por la definición de radián, así que
+\[
+N = \frac{\Delta\theta}{2\pi},
+\]
+con $\Delta\theta$ el ángulo total barrido en el intervalo. Esa cuenta vale igual si $\omega$ es constante, si crece, si decrece o si cambia de signo, porque solo mira cuánto ángulo se acumuló. En el caso uniforme coincide con $\Delta t/T$, que es la versión que se aprende primero y la única que después no sirve.
+
+\textit{Antes de seguir: un disco arranca del reposo y acelera angularmente parejo. Decidí si tiene período, y calculá igual cuántas vueltas dio, diciendo qué herramienta usaste en cada caso.}
+\end{bloque}
+
+\begin{chequeo}
+\item En un movimiento circular uniforme, ¿qué ángulo forman $\vec v$ y $\vec a$? ¿Y en uno con $\gamma \neq 0$?
+\item ¿Por qué un movimiento circular con aceleración angular constante y no nula no tiene período?
+\item ¿Cómo se cuentan las vueltas de un movimiento circular no uniforme, y de qué definición sale esa cuenta?
+\end{chequeo}
+
+\begin{bloque}{La base que gira con el móvil}
+Lo que sigue no agrega ningún resultado nuevo. Agrega la notación en la que los resultados que acabás de obtener se escriben en un renglón, y una idea que sí es nueva y que no aparece en ningún lugar anterior de este libro: una base que depende del tiempo.
+
+El punto de partida son las \textbf{coordenadas polares}. En vez de dar un punto del plano por sus dos coordenadas cartesianas, se lo da por su distancia al origen y por el ángulo:
+\[
+\rho = \sqrt{x^2+y^2} \geq 0, \qquad \theta = \arctan\frac{y}{x} \ \text{con corrección de cuadrante},
+\]
+y a la inversa, $x = \rho\cos\theta$, $y = \rho\,\sen\theta$. Los versores asociados son los dos que ya aparecieron solos en el bloque de movimiento circular,
+\[
+\hat u_\rho(t) = \cos\theta(t)\,\hat\imath + \sen\theta(t)\,\hat\jmath, \qquad
+\hat u_\theta(t) = -\sen\theta(t)\,\hat\imath + \cos\theta(t)\,\hat\jmath,
+\]
+ortonormales, con $\hat u_\rho$ apuntando desde el origen hacia el móvil y $\hat u_\theta$ perpendicular a él, en el sentido en que crece $\theta$.
+
+La diferencia con $\{\hat\imath,\hat\jmath\}$ está escrita en la notación y es el contenido del bloque: estos dos versores dependen del tiempo, porque $\theta$ depende del tiempo. No son dos flechas clavadas en el plano, son dos flechas que giran con el móvil. Y por lo tanto tienen derivada, y la derivada no es cero. Derivando con la regla de la cadena, exactamente como se hizo con $\vec r$,
+\[
+\frac{d\hat u_\rho}{dt} = \big(-\sen\theta\,\hat\imath + \cos\theta\,\hat\jmath\big)\frac{d\theta}{dt} = \omega\,\hat u_\theta,
+\qquad
+\frac{d\hat u_\theta}{dt} = \big(-\cos\theta\,\hat\imath - \sen\theta\,\hat\jmath\big)\frac{d\theta}{dt} = -\omega\,\hat u_\rho.
+\]
+Cada versor tiene por derivada un múltiplo del otro. Y esos resultados no son versores: su módulo vale $\lvert\omega\rvert$, no 1, porque derivar no preserva el módulo.
+
+Vale la pena detenerse acá. Todo el capítulo, desde el bloque de derivar un vector, se apoyó en que $\hat\imath$ y $\hat\jmath$ no cambian con el tiempo, y esa fue la razón por la que salían afuera del límite y derivar un vector se reducía a derivar sus componentes. Con esta base eso deja de ser cierto. Si escribís $\vec A(t) = A_\rho(t)\hat u_\rho + A_\theta(t)\hat u_\theta$ y derivás componente a componente, el resultado está mal: faltan los dos términos que vienen de derivar los versores. Es la primera vez en este libro que hace falta prestarle atención a eso, y no va a ser la última.
+
+Con las derivadas en la mano, la deducción del movimiento circular queda en tres renglones. Como el radio es constante, $\vec r = R\,\hat u_\rho$, y entonces
+\[
+\vec v = R\,\frac{d\hat u_\rho}{dt} = R\,\omega\,\hat u_\theta,
+\qquad
+\vec a = R\Big(\gamma\,\hat u_\theta + \omega\,\frac{d\hat u_\theta}{dt}\Big) = R\,\gamma\,\hat u_\theta - R\,\omega^2\,\hat u_\rho.
+\]
+Es palabra por palabra el resultado del bloque cartesiano, obtenido sin escribir un solo seno ni un solo coseno. Esa es la ganancia, y conviene ser honesto sobre cuál no es: no es un resultado nuevo, es el mismo resultado sin las cuentas. Vale la pena tener las dos versiones porque el práctico usa las dos, y porque cuando dos caminos independientes llegan al mismo lugar, eso mismo es una verificación. Cuando un enunciado pide el vector posición de un móvil circular válido para todo $t$, la respuesta compacta es $\vec r = R\,\hat u_\rho$, y la respuesta explícita es la de la base cartesiana; las dos son correctas y dicen lo mismo.
+
+Queda una limitación importante que conviene conocer antes de intentar usarla mal. En polares \textbf{no se puede integrar componente a componente}. Si conocés $\vec a$ escrita en $\hat u_\rho$ y $\hat u_\theta$ e intentás integrarla para obtener $\vec v$, te encontrás con que los versores dependen del tiempo a través de una $\theta(t)$ que es justamente lo que todavía no conocés, así que no salen afuera de la integral y la cuenta no cierra. Es el contrapunto exacto de lo que pasaba en cartesianas, donde integrar componente a componente era legítimo por la misma razón por la que acá no lo es. El movimiento circular es la excepción cómoda, porque ahí $\rho = R$ es dato y el problema se reduce a integrar $\gamma$, $\omega$ y $\theta$, que son escalares y se manejan con el aparato del capítulo anterior.
+
+\textit{Antes de seguir: derivá vos $\hat u_\theta$ a partir de su definición, sin mirar el resultado de arriba, y explicá de dónde sale el signo menos.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué $d\hat u_\rho/dt$ no es un versor, y cuánto vale su módulo?
+\item ¿Qué paso de la deducción de $\vec v = d\vec r/dt$ en base cartesiana deja de ser válido en base polar?
+\item Un movimiento tiene $\rho(t)$ variable. ¿Se puede obtener $\vec v$ integrando $\vec a$ componente a componente en polares? Justificá.
+\end{chequeo}
+
+\section{Ejemplo resuelto}
+
+\begin{ejemplo}[completo]
+Desde la terraza de un edificio, a 20 m sobre el nivel de la vereda, se lanza una pelota con una rapidez inicial de 25 m/s formando un ángulo de 37 grados por encima de la horizontal. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$, que el seno y el coseno de 37 grados valen 0.60 y 0.80 respectivamente, y desprecie por completo la acción del aire. Se solicita determinar la altura máxima, el tiempo de vuelo, el alcance y la velocidad con que llega a la vereda.
+
+\medskip
+\textit{Inciso (a). Montaje.} El origen va en la vereda, justo debajo del punto de lanzamiento; el eje $x$ apunta horizontalmente en el sentido del tiro y el eje $y$ hacia arriba, y el $t=0$ es el instante del lanzamiento. Con esa elección, la posición inicial es $\vec r_0 = 20\,\hat\jmath\ \mathrm{m}$ y la velocidad inicial se descompone con el puente del producto escalar,
+\[
+\vec v_0 = v_0\cos\alpha\,\hat\imath + v_0\,\sen\alpha\,\hat\jmath = 25\cdot 0{,}80\,\hat\imath + 25\cdot 0{,}60\,\hat\jmath = 20\,\hat\imath + 15\,\hat\jmath \ \ \mathrm{m/s}.
+\]
+Antes de seguir, verificá que el módulo de ese vector da los $25\,\mathrm{m/s}$ del enunciado. Es gratis y detecta al instante un seno intercambiado por un coseno, que es el error más frecuente de este paso.
+
+\medskip
+\textit{Inciso (b). Elección de herramienta.} Acá hay una decisión y conviene tomarla a conciencia. Se podría ir a buscar la tabla del bloque de tiro de proyectil y reemplazar, y en este problema funcionaría, porque no hay viento y $a_x = 0$. Vamos por el otro lado igual, escribiendo la aceleración completa e integrando dos veces, por dos motivos: es un renglón más de trabajo, y es el único camino que sigue funcionando cuando el enunciado agrega una aceleración horizontal. La aceleración es
+\[
+\vec a = -g\,\hat\jmath = -10\,\hat\jmath\ \ \mathrm{m/s^2},
+\]
+constante, y al integrarla dos veces aparecen cuatro constantes, dos por eje, que quedan fijadas por $\vec v(0) = \vec v_0$ y $\vec r(0) = \vec r_0$. El resultado es el general del bloque de método:
+\[
+\vec v(t) = \vec v_0 + \vec a\,t, \qquad \vec r(t) = \vec r_0 + \vec v_0\,t + \tfrac12\,\vec a\,t^2.
+\]
+
+\medskip
+\textit{Inciso (c). Especialización en componentes.} Recién ahora se reemplaza, y ahí entra la hipótesis $a_x = 0$:
+\[
+x(t) = 20\,t, \qquad y(t) = 20 + 15\,t - 5\,t^2,
+\]
+con $x$ e $y$ en metros y $t$ en segundos. Mirá las dos por separado: la primera es un movimiento uniforme y la segunda es, letra por letra, un tiro vertical con velocidad inicial $15\,\mathrm{m/s}$ desde una altura de $20\,\mathrm{m}$. El disparo horizontal no aparece en la segunda y la gravedad no aparece en la primera.
+
+\medskip
+\textit{Inciso (d). Altura máxima.} La altura es máxima cuando la componente vertical de la velocidad se anula, porque es ahí donde $y(t)$ deja de crecer. De $v_y = 15 - 10\,t = 0$ sale $t = 1{,}5\,\mathrm{s}$, y reemplazando,
+\[
+y_{\max} = 20 + 15\cdot 1{,}5 - 5\cdot 1{,}5^2 = 20 + 22{,}5 - 11{,}25 = 31{,}25\ \mathrm{m}.
+\]
+En ese instante la velocidad no es nula: vale $20\,\hat\imath\ \mathrm{m/s}$, horizontal, y es el mínimo de rapidez de todo el vuelo.
+
+\medskip
+\textit{Inciso (e). Tiempo de vuelo y alcance.} La pelota llega a la vereda cuando $y = 0$, o sea $5t^2 - 15t - 20 = 0$, que simplificada es $t^2 - 3t - 4 = 0$ y tiene raíces $t = 4\,\mathrm{s}$ y $t = -1\,\mathrm{s}$. La segunda se descarta explícitamente: corresponde a extender la parábola hacia atrás en el tiempo, antes de que existiera el lanzamiento, y ahí las ecuaciones no describen ningún movimiento real. Con $t_f = 4\,\mathrm{s}$, el alcance es $x_f = 20\cdot 4 = 80\,\mathrm{m}$.
+
+\medskip
+\textit{Inciso (f). Velocidad de llegada.} Evaluando el vector velocidad en $t_f$,
+\[
+\vec v_f = 20\,\hat\imath + (15 - 10\cdot 4)\,\hat\jmath = 20\,\hat\imath - 25\,\hat\jmath\ \ \mathrm{m/s},
+\qquad
+\lvert\vec v_f\rvert = \sqrt{400+625} = 32{,}02\ \mathrm{m/s}.
+\]
+El ángulo con la horizontal sale de $\tan\varphi = 25/20$, o sea $51{,}34^\circ$ por debajo de la horizontal, y el signo negativo de la componente $y$ es el que decide que sea por debajo y no por encima. Es el momento de aplicar la corrección de cuadrante: la calculadora devuelve el ángulo del primer cuadrante y hay que leerlo contra el dibujo.
+
+\medskip
+\textit{Inciso (g). Descomposición tangencial y normal.} En el vértice, $\vec v$ es horizontal y $\vec a$ vertical, así que $a_t = 0$ y $a_n = 10\ \mathrm{m/s^2}$: toda la aceleración es normal y la pelota acelera sin cambiar de rapidez. Calculá vos la descomposición en el instante del impacto, siguiendo los tres pasos del bloque correspondiente y sin saltearte ninguno: armá $\hat v = \vec v_f/\lvert\vec v_f\rvert$, obtené la componente escalar $a_t = \vec a\cdot\hat v$, armá con ella el vector $\vec a_t = a_t\,\hat v$, y recién entonces restá $\vec a_n = \vec a - \vec a_t$. El paso del medio es el que se saltea con más frecuencia, y saltearlo lleva a escribir una resta entre un vector y un número, que no significa nada. Verificá que te dé $a_t = 7{,}81\ \mathrm{m/s^2}$ y $\lvert\vec a_n\rvert = 6{,}25\ \mathrm{m/s^2}$. El control que cierra la cuenta es $a_t^2 + a_n^2 = g^2$, que tiene que dar $100$ exacto sin importar en qué instante lo evalúes.
+
+\medskip
+\textit{Inciso (h). Ecuación de la trayectoria.} Despejando $t = x/20$ de la primera componente y reemplazando en la segunda,
+\[
+y(x) = 20 + \frac{3}{4}\,x - \frac{x^2}{80}.
+\]
+Verificalo evaluando en $x = 80\,\mathrm{m}$, donde tiene que dar cero. El despeje fue una división porque $x(t)$ es lineal, y eso pasa únicamente porque $a_x = 0$.
+
+\medskip
+\textit{Inciso (i). Cierre y límites.} Vale la pena mirar dónde entró cada hipótesis. Los incisos (a) y (b) no usaron $a_x = 0$ en ninguna parte: valen para cualquier aceleración constante. La hipótesis entra recién en (c), cuando la componente $x$ de $\vec a$ se pone en cero, y de ahí para abajo todo depende de ella, incluida la división del inciso (h). Si el enunciado tuviera viento, los incisos (a) y (b) quedarían idénticos y habría que rehacer de (c) en adelante, con una cuadrática en lugar de una división.
+
+Como cierre, rehacé el inciso (e) con el ángulo complementario, 53 grados, para el cual el seno y el coseno valen 0.80 y 0.60. Vas a obtener un alcance distinto del de 37 grados, y eso puede sorprender, porque a nivel del suelo los ángulos complementarios dan el mismo alcance. Explicá por qué acá no: la propiedad de los complementarios se demuestra con $x_f = v_0^2\,\sen(2\alpha)/g$, que es la fila de la tabla que exige $h = 0$, y este lanzamiento sale de una terraza.
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+Sobre la superficie horizontal de una pista de hielo, un disco pasa por el origen en $t = 0$ con velocidad $\vec v_0 = 6\,\hat\imath + 8\,\hat\jmath$ m/s y desde ese instante mantiene una aceleración constante $\vec a = 1.5\,\hat\imath - 2\,\hat\jmath$ m/s$^2$. Todo el movimiento ocurre en el plano horizontal, de modo que la gravedad no interviene en ninguna de las dos componentes.
+
+Lo primero es notar que este es el mismo esquema del tiro de proyectil con otra aceleración. La parábola no la hace la gravedad: la hace que $\vec a$ sea constante y no sea paralela a $\vec v_0$. Acá la aceleración tiene las dos componentes no nulas, así que ninguna fórmula de la tabla del bloque de tiro sirve, y hay que integrar.
+
+Integrando dos veces, con las cuatro constantes fijadas por el paso por el origen con velocidad $\vec v_0$,
+\[
+\vec v(t) = (6 + 1{,}5\,t)\,\hat\imath + (8 - 2\,t)\,\hat\jmath,
+\qquad
+\vec r(t) = \big(6\,t + 0{,}75\,t^2\big)\,\hat\imath + \big(8\,t - t^2\big)\,\hat\jmath.
+\]
+
+La primera evaluación va resuelta, para fijar el procedimiento. En $t = 0$ la rapidez es $\lvert\vec v_0\rvert = \sqrt{36+64} = 10\ \mathrm{m/s}$, el versor velocidad es $\hat v = 0{,}6\,\hat\imath + 0{,}8\,\hat\jmath$, y la componente tangencial de la aceleración vale
+\[
+a_t = \vec a\cdot\hat v = 1{,}5\cdot 0{,}6 + (-2)\cdot 0{,}8 = -0{,}7\ \mathrm{m/s^2}.
+\]
+El signo negativo dice que en ese instante el disco está frenando, aunque las dos componentes de su velocidad sean positivas. Como $\lvert\vec a\rvert = \sqrt{2{,}25+4} = 2{,}5\ \mathrm{m/s^2}$, la componente normal sale de Pitágoras: $a_n = \sqrt{2{,}5^2 - 0{,}7^2} = 2{,}4\ \mathrm{m/s^2}$.
+
+De acá en adelante seguí vos. Determiná el instante en que la rapidez es mínima y cuánto vale, trabajando con $\lvert\vec v\rvert^2$ para no arrastrar una raíz. Verificá que en ese mismo instante $\vec v$ y $\vec a$ resultan perpendiculares, y explicá por qué tiene que ser así razonando sobre $a_t$ y no sobre la cuenta. Dá la posición del disco en ese instante. Decidí si el disco pasa alguna vez por un punto de la pista situado sobre el eje $x$, y en cuál. Terminá graficando cualitativamente la trayectoria, con $\vec v$ y $\vec a$ dibujados en tres instantes, uno antes del mínimo de rapidez, uno en el mínimo y uno después.
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+Un ventilador de techo tiene aspas de 0.60 m de radio. Se lo enciende desde el reposo y durante los primeros 6 s la aceleración angular es constante e igual a 2 rad/s$^2$. A partir de ese instante la velocidad angular se mantiene constante.
+
+El planteo entero es el del capítulo anterior con otros nombres. La posición angular, la velocidad angular y la aceleración angular son los $x$, $v$ y $a$ del movimiento angular, y con $\gamma$ constante lo que hay es un movimiento uniformemente variado escrito en ángulos. Se integra igual, con dos constantes.
+
+Poniendo el origen del sistema de coordenadas en el centro del ventilador, tomando $\theta(0) = 0$ y midiendo desde el eje $x$, la primera integración da $\omega(t) = 2\,t$, con constante nula porque arranca del reposo, y la segunda da $\theta(t) = t^2$, con constante nula por la elección de $\theta(0)$. Ninguna de las dos es un dato libre: las dos las fija el enunciado. Al cabo de los 6 s, entonces, $\omega = 12\ \mathrm{rad/s}$ y $\theta = 36\ \mathrm{rad}$.
+
+De acá en adelante seguí vos. Calculá la rapidez de un punto del borde del aspa en $t = 6\,\mathrm{s}$. Calculá $\lvert\vec a_t\rvert$, $\lvert\vec a_n\rvert$ y $\lvert\vec a\rvert$ para ese punto en $t = 3\,\mathrm{s}$ y en $t = 6\,\mathrm{s}$, y explicá por qué una de las tres cambia de valor apenas se terminan los 6 s mientras las otras no. Calculá cuántas vueltas dio el ventilador durante el arranque, y decí explícitamente por qué esa cuenta no se puede hacer con el período. Calculá el período y la frecuencia una vez alcanzado el régimen, expresando la frecuencia también en vueltas por minuto, y a partir de ahí cuántas vueltas da en el minuto siguiente al arranque. Terminá dibujando $\vec v$, $\vec a_t$ y $\vec a_n$ sobre la trayectoria en un instante del arranque y en uno del régimen, y comparando los dos dibujos.
+\end{ejemplo}
+
+\section{Errores comunes}
+
+Lo que sigue no es una lista de retos sino de discrepancias concretas entre lo que suele escribirse y lo que dicen las definiciones de este capítulo. Cada una tiene una manera objetiva de detectarse.
+
+\begin{erroresComunes}
+  \item Suponer que la aceleración apunta hacia donde va el movimiento. En una dimensión eso era forzoso porque no había otra dirección disponible, no porque lo dijera la física. En el plano, $\vec a$ y $\vec v$ son independientes: pueden formar cualquier ángulo, y de hecho en un tiro de proyectil con $\alpha \neq 90^\circ$ no son paralelas en ningún instante del vuelo. El único lanzamiento en que sí lo son es el vertical, que es exactamente el caso en que el movimiento vuelve a ocurrir sobre una recta. La detección es calcular $\vec a\cdot\hat v$ y ver si da el módulo entero de $\vec a$ o menos.
+  \item Contestar que la velocidad es nula en el punto más alto de un tiro oblicuo. Lo que se anula es $v_y$; la componente horizontal sigue valiendo $v_0\cos\alpha$ y no cambia en todo el vuelo. La respuesta viene importada del tiro vertical, donde $v_y$ era la velocidad entera porque no había otra componente.
+  \item Confundir la pendiente de la trayectoria con la velocidad. La trayectoria olvidó el tiempo, así que $dy/dx$ no contiene ninguna información sobre rapidez: dos móviles que recorren la misma curva a velocidades completamente distintas tienen la misma $dy/dx$ en cada punto. La velocidad es $d\vec r/dt$ y es un vector; la pendiente es un número y solo informa la dirección de la tangente.
+  \item Sumar los módulos de dos vectores para obtener el módulo de la suma. Vale $\lvert\vec A + \vec B\rvert \leq \lvert\vec A\rvert + \lvert\vec B\rvert$, con igualdad solamente si son paralelos y del mismo sentido. El mismo error aparece disfrazado al escribir $\lvert\vec a\rvert = a_t + a_n$: como las dos componentes son perpendiculares, se componen por Pitágoras.
+  \item Decir que multiplicar por un escalar negativo cambia la dirección. Cambia el sentido y deja la dirección intacta, que es la recta de apoyo. La distinción no existe en el álgebra y sí en física, y aparece en los incisos que preguntan qué le pasa a un vector cuando se lo invierte.
+  \item Tomar el ángulo que devuelve la calculadora sin verificar el cuadrante. La tangente tiene período $\pi$, así que un vector y su opuesto dan exactamente el mismo valor de $\arctan(A_y/A_x)$. La detección es dibujar el vector con los signos de sus componentes y comparar con el número obtenido; el error, cuando está, es de exactamente 180 grados.
+  \item Afirmar que en un movimiento circular el vector posición es siempre perpendicular a la velocidad. Eso vale si el origen de coordenadas está en el centro de la circunferencia, y la hipótesis está en el planteo, no en el enunciado del resultado. Con el origen en otro punto, el vector que sigue siendo perpendicular a $\vec v$ es el que va del centro al móvil, que ya no es $\vec r$. La detección es evaluar $\vec r\cdot\vec v$ y ver si se anula para todo $t$ o solo para algunos instantes.
+  \item Dibujar la aceleración centrípeta apuntando al origen de coordenadas. Apunta al centro de la circunferencia, que coincide con el origen solo si vos lo pusiste ahí. Es el mismo problema que el punto anterior, del lado de la aceleración.
+  \item Aplicar las fórmulas cerradas del tiro de proyectil cuando hay una aceleración horizontal. Todas se dedujeron con $a_x = 0$ y ninguna sobrevive a esa modificación. El caso incómodo es $y_{\max}$, que con viento puramente horizontal sigue dando el resultado correcto: funciona porque el eje $y$ quedó intacto y el eje $x$ no, y deja de funcionar apenas la aceleración extra tenga alguna componente vertical.
+  \item Despejar el tiempo de $x(t)$ por división cuando $a_x \neq 0$. Con aceleración horizontal, $x(t)$ es cuadrática y hay dos raíces, una de las cuales hay que descartar por escrito. Es exactamente el paso que separa el método general del recetario.
+  \item Dar por sentado que el ángulo óptimo de lanzamiento es 45 grados. Lo es solo si el lanzamiento y la caída ocurren a la misma altura y no hay ninguna aceleración horizontal. Con altura inicial, el óptimo es menor que 45 grados, y la fórmula de la tabla lo dice.
+  \item Calcular vueltas dividiendo el intervalo por el período cuando el movimiento no es uniforme. Si $\gamma \neq 0$ el movimiento no es periódico y el período directamente no existe, así que la cuenta no está mal aproximada sino que no está definida. La cuenta que vale siempre es $N = \Delta\theta/2\pi$.
+  \item Usar $\lvert\vec v\rvert = R\lvert\omega\rvert$ o $\lvert\vec a_n\rvert = R\omega^2$ con $\omega$ en grados por segundo. Las dos relaciones salen de que el radián está definido como arco sobre radio, y con cualquier otra unidad angular son falsas. La detección es dimensional a medias, porque el radián no aparece en el análisis de unidades, así que conviene chequear la unidad del dato antes de reemplazar.
+  \item Perder constantes de integración al pasar de una dimensión a dos. En el plano son cuatro, dos por eje, y cada una la fija un dato físico. Si al terminar sobra una sin fijar, falta un dato del enunciado y el problema está indeterminado; si falta una, la integración quedó incompleta.
+  \item Integrar componente a componente en coordenadas polares. Los versores $\hat u_\rho$ y $\hat u_\theta$ dependen del tiempo a través de $\theta(t)$, así que no salen afuera de la integral. Es legítimo en cartesianas por la razón exactamente opuesta, y confundir los dos casos es el error que la base móvil viene a hacer visible.
+  \item Derivar un vector escrito en base polar como si la base fuera constante. Faltan los términos que vienen de $d\hat u_\rho/dt = \omega\,\hat u_\theta$ y $d\hat u_\theta/dt = -\omega\,\hat u_\rho$. La detección es comparar el resultado con la versión cartesiana del mismo movimiento, que tiene que dar lo mismo.
+\end{erroresComunes}
+
+\section{Ejercicios}
+
+\subsection{Práctica en bloque}
+
+Los seis que siguen están ordenados por herramienta acumulada, y ese orden no coincide con el del marco teórico. Los dos primeros se resuelven derivando e integrando componente a componente, sin ninguna idea de movimiento circular; el tercero y el cuarto no piden una sola cuenta y se contestan con las definiciones en la mano; los dos últimos son circulares, primero uniforme y después no uniforme. Antes de escribir ninguna ecuación, en todos: dibujá los dos ejes, marcá dónde ponés el origen, marcá el $t = 0$, y escribí $x(t)$ e $y(t)$ en ese único sistema. En una dimensión el origen era una comodidad; acá decide si dos vectores te van a salir perpendiculares o no, y es el error más caro de esta guía.
+
+\begin{ejercicio}[trayectoria y descripción vectorial]{bloque}
+Una partícula se mueve en el plano y sus funciones de movimiento son $x(t) = 2\,[\mathrm{m/s^2}]\,t^2$ e $y(t) = 0.25\,[\mathrm{m/s^4}]\,t^4 + 1\,\mathrm{m}$, con $t$ medido en segundos y a partir de $t = 0$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Determine la ecuación de la trayectoria eliminando el tiempo entre las dos funciones de movimiento, y grafíquela. Indique explícitamente qué porción del plano ocupa la trayectoria y de dónde sale esa restricción, dado que la ecuación que obtuvo no la trae escrita.
+  \item Escriba los vectores $\vec r(t)$, $\vec v(t)$ y $\vec a(t)$ en la base $\{\hat\imath, \hat\jmath\}$, indicando en cada paso por qué derivar el vector se reduce a derivar cada componente.
+  \item Calcule el módulo de la aceleración en $t = 2$ s.
+  \item Calcule el ángulo que forman $\vec v$ y $\vec a$ en $t = 2$ s.
+  \item Determine el instante en que $\vec v$ es paralela a la recta $y = x$, y el instante en que lo es $\vec a$. Verifique que no son el mismo, y explique qué significa geométricamente cada uno sobre el gráfico de (a).
+  \item Calcule la velocidad media entre $t = 1$ s y $t = 3$ s, como vector. Indique si su módulo coincide con la longitud del arco recorrido dividida por el intervalo, y por qué.
+  \item Un compañero afirma que, como la trayectoria es una parábola, el movimiento es un tiro parabólico. Indique si tiene razón, comparando el $\vec a(t)$ de (b) con el de un tiro parabólico.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 8 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[lanzamiento horizontal desde una altura]{bloque}
+Desde el borde de un acantilado de 80 m de altura sobre el mar se lanza una piedra horizontalmente, con una rapidez inicial de 15 m/s. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$ y desprecie por completo la acción del aire.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje un esquema de la situación, elija el origen y el sentido positivo de los dos ejes, y escriba las ecuaciones de movimiento $x(t)$ e $y(t)$ y el vector $\vec v(t)$ con la elección que hizo.
+  \item Dibuje sobre la trayectoria los vectores $\vec r$, $\vec v$ y $\vec a$ en el instante del lanzamiento y en el instante en que la piedra llega al agua. Indique cuál de los tres no cambió entre los dos instantes.
+  \item Calcule cuánto tiempo permanece la piedra en el aire. Al resolver la ecuación, indique por escrito qué hace con la raíz que no corresponde.
+  \item Calcule a qué distancia horizontal del pie del acantilado cae.
+  \item Calcule el módulo de la velocidad con que llega al agua y el ángulo que forma con la horizontal.
+  \item Repita el cálculo de (c) para una piedra que se deja caer desde el mismo borde, sin velocidad inicial. Compare los dos resultados y explique de qué depende, y de qué no depende, el tiempo de vuelo.
+  \item Repita el cálculo de (c) para una piedra lanzada desde el mismo borde verticalmente hacia arriba con 15 m/s.
+  \item El enunciado del práctico pide dibujar los vectores en el punto más alto de la trayectoria. Indique dónde está ese punto en este lanzamiento, y por qué la fórmula $t_{\max} = v_0\sen\alpha/g$ devuelve cero sin que eso sea un error.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 9 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[qué hace cada eje en un tiro de proyectil]{bloque}
+Responda las siguientes preguntas sobre un proyectil lanzado desde el suelo con rapidez $v_0$ y un ángulo $\alpha$ respecto de la horizontal, despreciando por completo la acción del aire. En cada una escriba primero la respuesta en una línea y recién después la justificación.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item ¿Qué tipo de movimiento tiene el proyectil sobre el eje horizontal, y de qué componente de $\vec a$ depende esa respuesta?
+  \item ¿Qué tipo de movimiento tiene sobre el eje vertical? Indique con qué movimiento del capítulo de una dimensión coincide exactamente, y qué habría que cambiarle a aquellas fórmulas para usarlas acá.
+  \item ¿En qué punto de la trayectoria se anula la componente vertical de la velocidad? ¿Cuánto vale el vector velocidad completo en ese punto?
+  \item ¿Existe algún instante del vuelo en que la aceleración sea nula? ¿Y algún instante en que $\vec a$ sea paralela a $\vec v$?
+  \item En el punto más alto, ¿cuánto valen $\lvert\vec a_t\rvert$ y $\lvert\vec a_n\rvert$? Explique cómo puede ser que $\vec a$ sea constante durante todo el vuelo y sin embargo su descomposición tangencial y normal cambie punto a punto.
+  \item Dos proyectiles se lanzan desde el suelo con la misma rapidez, uno con ángulo $\alpha$ y el otro con ángulo $90^\circ - \alpha$. Muestre que los dos caen en el mismo lugar, y explique por qué no tardan lo mismo.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 10 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[qué caracteriza a un movimiento circular]{bloque}
+Responda las siguientes preguntas sobre un cuerpo que describe una circunferencia de radio $R$. Salvo en el inciso (d), suponga que el origen del sistema de coordenadas está en el centro de la circunferencia.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item ¿Cuántas clases de velocidad hay que distinguir en un movimiento circular uniforme? Escriba la relación entre ellas e indique en qué unidad tiene que estar la velocidad angular para que esa relación valga, y por qué.
+  \item ¿Puede $\vec a_n$ ser nula en un movimiento circular? ¿Puede serlo $\vec a_t$? Responda a partir de las expresiones de sus módulos, no de la intuición.
+  \item ¿Qué magnitudes alcanzan para describir por completo un movimiento circular uniforme? Escriba cómo se obtienen el período y la frecuencia a partir de ellas.
+  \item ¿Qué ángulo forman $\vec r$ y $\vec v$? Responda primero con el origen en el centro y después para un origen ubicado en otro punto del plano, e indique qué vector sigue siendo perpendicular a $\vec v$ en el segundo caso.
+  \item ¿Qué ángulo forman $\vec v$ y $\vec a$ en un movimiento circular uniforme? ¿Y en uno no uniforme?
+  \item Un cuerpo recorre la circunferencia con rapidez constante. Indique si está acelerado, y reformule la respuesta como un enunciado general sobre cualquier trayectoria que no sea recta.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 11 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[movimiento circular uniforme]{bloque}
+Una estación espacial describe alrededor de la Tierra una órbita que puede considerarse circular, de radio $R = 6.8 \times 10^{6}$ m medido desde el centro del planeta, y la recorre con rapidez constante $\lvert\vec v\rvert = 7.7 \times 10^{3}$ m/s.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje un esquema de la órbita, ubique el origen del sistema de coordenadas en el centro de la circunferencia y marque sobre el dibujo los vectores $\vec r$, $\vec v$ y $\vec a$ en un instante cualquiera.
+  \item Calcule la velocidad angular de la estación.
+  \item Calcule el módulo de su aceleración por los tres caminos equivalentes, $R\omega^2$, $\lvert\vec v\rvert^2/R$ y $\lvert\vec v\rvert\omega$, y verifique que dan lo mismo. Indique hacia dónde apunta ese vector.
+  \item Calcule el período de la órbita y expréselo en minutos, y calcule la frecuencia.
+  \item Escriba $\vec r(t)$ y $\vec v(t)$ completos, tomando $\theta(0) = 0$, y verifique por producto escalar que son perpendiculares en todo instante.
+  \item Otra estación orbita al doble de radio con la misma rapidez. Indique, sin rehacer las cuentas, qué le pasa a su aceleración y a su período, y en qué factor.
+  \item La rapidez de la estación no cambia en ningún momento de la órbita y, sin embargo, su aceleración no es nula. Explique la aparente contradicción usando la descomposición tangencial y normal.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 12 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[movimiento circular no uniforme]{bloque}
+El disco de una pulidora de pisos tiene un radio de 0.25 m. Se enciende el motor y, desde ese instante, la posición angular de un punto del borde del disco queda descripta por $\theta(t) = 2\,[\mathrm{rad/s^2}]\,t^2$, medida desde el eje $x$ y con el origen del sistema de coordenadas en el centro del disco.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Escriba el vector posición $\vec r(t)$ de ese punto del borde, válido para todo $t$, en la base $\{\hat\imath, \hat\jmath\}$ y también en la base de versores polares.
+  \item Obtenga la velocidad angular y la aceleración angular en función del tiempo, e indique qué tipo de movimiento angular resulta y con cuál de los movimientos del capítulo de una dimensión es idéntico.
+  \item Escriba $\lvert\vec a_t\rvert$, $\lvert\vec a_n\rvert$ y $\lvert\vec a\rvert$ en función del tiempo. Justifique por qué el módulo total se compone como una hipotenusa y no como una suma.
+  \item Calcule las tres cantidades de (c) y el módulo de la velocidad en $t = 4$ s, y dibuje sobre la trayectoria los vectores $\vec v$, $\vec a_t$, $\vec a_n$ y $\vec a$ en ese instante.
+  \item Calcule cuántas vueltas completa el disco en los primeros 10 s. Explique por qué acá no se puede contar dividiendo el intervalo por el período.
+  \item A partir de $t = 10$ s se apaga el motor y la aceleración angular pasa a valer $\gamma_1 = -8$ rad/s$^2$, constante. Obtenga $\omega(t)$ y $\theta(t)$ para ese segundo tramo integrando, indicando de dónde sale cada una de las dos constantes de integración y por qué ninguna es un dato libre. Calcule en qué instante se detiene el disco y cuántas vueltas da desde que se apagó el motor.
+  \item Indique en qué instantes del movimiento completo la aceleración del punto del borde es exactamente centrípeta, y en cuáles exactamente tangencial.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 13 del Práctico 1}
+\end{ejercicio}
+
+\subsection{Práctica en bloque, ejercicios adicionales}
+
+Los tres que siguen cruzan dos cosas del capítulo al mismo tiempo y traen menos guía por inciso: el primero mezcla el método general de integración con el tiro de proyectil, el segundo mezcla la determinación de una trayectoria con el producto escalar y con el movimiento circular, y el tercero mezcla el tiro con una condición geométrica de impacto. Es el nivel de planteo que la cátedra evalúa: en esta materia, los ejercicios adicionales de cada práctico son textualmente los problemas que después aparecen en el parcial. Mezclarlos con lo que viene en los capítulos siguientes no corresponde todavía: acá los movimientos están dados por el enunciado, y en ningún inciso se pregunta por qué son esos y no otros.
+
+\begin{ejercicio}[aceleración constante que no es solo la gravedad]{bloque}
+Un dron de reparto vuela horizontalmente a 45 m de altura sobre una playa y suelta un paquete cuando pasa exactamente sobre una baliza. En el instante en que lo suelta, el paquete lleva la misma velocidad que el dron, horizontal y de 18 m/s. Ese día sopla un viento de cola que le imprime al paquete una aceleración horizontal constante de 1.5 m/s$^2$, en el mismo sentido de su avance, durante toda la caída. La zona de entrega es un círculo de 1.5 m de radio centrado a 60 m de la baliza, medidos sobre la arena en el sentido del vuelo. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje un esquema, elija el origen y los sentidos positivos, y escriba el vector aceleración $\vec a$ completo. Indique cuáles de las fórmulas cerradas del tiro parabólico dejan de valer con este $\vec a$ y por qué.
+  \item Obtenga $\vec v(t)$ y $\vec r(t)$ integrando $\vec a$ dos veces componente a componente. Indique cuántas constantes de integración aparecieron y qué dato del enunciado fija cada una.
+  \item Calcule el tiempo de caída y la distancia horizontal recorrida, y determine si el paquete cae dentro de la zona de entrega.
+  \item Determine en qué instante el paquete pasa por la vertical de un poste plantado a 40 m de la baliza, y a qué altura lo hace. Señale en qué cambió el procedimiento respecto de un tiro sin viento.
+  \item Calcule el vector velocidad con que el paquete llega a la arena, su módulo, y las componentes tangencial y normal de la aceleración en ese instante.
+  \item Repita (c) y (e) suponiendo que no hubiese viento, y calcule a qué distancia de la zona de entrega habría caído el paquete. Verifique que el tiempo de caída y la componente vertical de la velocidad de impacto valen exactamente lo mismo en los dos casos, mientras que el alcance y el módulo de la velocidad de impacto no. Explique qué tienen en común las dos cantidades que coincidieron, y por qué esa coincidencia no significa ni que el viento sea despreciable ni que las fórmulas cerradas del tiro con $a_x = 0$ se puedan usar acá.
+  \item Grafique cualitativamente la trayectoria del paquete con viento y sin viento, en el mismo par de ejes, y dibuje sobre la primera los vectores $\vec v$, $\vec a$, $\vec a_t$ y $\vec a_n$ en el instante del impacto.
+\end{enumerate}
+\citaEjercicio{Adaptado del ejercicio 9 del Práctico 1, en la familia del ejercicio 15}
+\end{ejercicio}
+
+\begin{ejercicio}[circunferencia con el origen fuera del centro]{bloque}
+Un móvil se desplaza en el plano con funciones de movimiento $x(t) = 3\,\mathrm{m} + 4\,\mathrm{m}\cos(\omega t)$ e $y(t) = 4\,\mathrm{m}\,\sen(\omega t)$, con $\omega = \pi/2$ rad/s y $t$ en segundos.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Determine la ecuación de la trayectoria y grafíquela, indicando su centro y su radio. Marque en el dibujo dónde queda el origen del sistema de coordenadas.
+  \item Escriba $\vec r(t)$, $\vec v(t)$ y $\vec a(t)$, y calcule $\lvert\vec v\rvert$ y $\lvert\vec a\rvert$. Indique si son constantes y qué tipo de movimiento resulta.
+  \item Determine los instantes en que $\vec r$ es perpendicular a $\vec v$. Explique por qué la respuesta no es en todo instante, y qué vector sí es perpendicular a $\vec v$ siempre.
+  \item Determine los instantes en que $\vec v$ es perpendicular a $\vec a$, y explique por qué esta respuesta sí es distinta de la anterior.
+  \item Indique hacia qué punto del plano apunta $\vec a$ en todo instante, y verifíquelo evaluando $\vec a$ en dos instantes cualesquiera.
+  \item Calcule el período y la frecuencia del movimiento, y determine en qué instantes el móvil pasa más cerca y más lejos del origen de coordenadas, dando las dos distancias.
+  \item Dibuje sobre la trayectoria los vectores $\vec v$, $\vec a$ y $\vec a_n$ en tres instantes distintos, e indique si $\vec a$ y $\vec a_n$ coinciden.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 14 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[tiro sobre un terreno en pendiente]{bloque}
+Desde el borde superior de una ladera que baja con una inclinación constante de 37 grados respecto de la horizontal se lanza una piedra con una rapidez inicial de 20 m/s, formando 53 grados con la horizontal y hacia el lado de la pendiente. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$, que el seno y el coseno de 37 grados valen 0.60 y 0.80 respectivamente, y desprecie por completo la acción del aire.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Dibuje un esquema, elija el origen en el punto de lanzamiento y escriba $x(t)$ e $y(t)$. Escriba además la ecuación de la recta que describe la ladera en ese mismo sistema de coordenadas.
+  \item Explique por qué acá no sirve la condición $y = 0$ para hallar el instante de impacto, y escriba la condición que sí corresponde.
+  \item Determine el instante en que la piedra toca la ladera, la distancia horizontal recorrida, el desnivel descendido y la distancia medida sobre la ladera desde el punto de lanzamiento.
+  \item Calcule la altura máxima que alcanza la piedra por encima del punto de lanzamiento, y el instante en que la alcanza. Indique si ese instante es la mitad del tiempo de vuelo y por qué.
+  \item Calcule el vector velocidad con que la piedra llega al suelo y su módulo.
+  \item Determine cuál habría sido el alcance si el terreno fuese horizontal, y compare con el resultado de (c). Indique si el ángulo de 45 grados sigue siendo el óptimo sobre una ladera que baja, y justifique cualitativamente.
+\end{enumerate}
+\citaEjercicio{Similar al problema 1 del Parcial 1 de 2024}
+\end{ejercicio}
+
+Un último apunte. El ejercicio 15 del práctico está marcado como adicional, y en esta materia eso significa una cosa concreta: es, textualmente, el problema 1 que la cátedra tomó en el parcial de 2025. Tiene una aceleración horizontal como la del ejercicio del dron y un ángulo de lanzamiento oblicuo como el del ejercicio de la ladera, y no está resuelto en ninguna parte de este capítulo a propósito. Hacelo por tu cuenta, con el enunciado del práctico y sin mirar esta síntesis, después de haber terminado los tres adicionales. Es la mejor autoevaluación disponible de todo el capítulo, y solo sirve si llegás a él sin haberlo visto resuelto.
+
 \temacapitulo{Dinámica I: las tres leyes de Newton}
 
 \section{Motivación}
@@ -884,7 +1706,7 @@ Si el arrastre de la caja no te termina de convencer, mirá una segunda situaci�
 
 Un detalle de escritura que ahorra errores: $m\vec a$ no es una fuerza. Es el resultado de sumar las fuerzas, no un sumando más. Nunca aparece en la lista de fuerzas ni en el diagrama; vive del otro lado del signo igual.
 
-Un último apunte sobre el alcance. La segunda ley te entrega la aceleración. Pasar de la aceleración a la velocidad y a la posición exige integrar, que es herramienta de cálculo y no se usa en este capítulo: todo lo que sigue se resuelve con álgebra vectorial y trigonometría. Ese camino ya está recorrido: es el capítulo anterior, donde la integral se construye desde cero motivada por esta misma pregunta.
+Un último apunte sobre el alcance. La segunda ley te entrega la aceleración. Pasar de la aceleración a la velocidad y a la posición exige integrar, que es herramienta de cálculo y no se usa en este capítulo: todo lo que sigue se resuelve con álgebra vectorial y trigonometría. Ese camino ya está recorrido: es el primer capítulo, donde la integral se construye desde cero motivada por esta misma pregunta.
 
 \textit{Antes de seguir: pensá una tercera situación cotidiana en la que un mismo objeto esté en equilibrio en una dirección y acelerando en la otra.}
 \end{bloque}
