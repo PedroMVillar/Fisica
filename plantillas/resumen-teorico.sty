@@ -114,4 +114,49 @@
 
 \titlespacing{\subsubsection}{0pt}{*2}{*1}
 
+% ============================================================
+% ENTORNO "ejercicio"
+% ============================================================
+% Caja de color con la misma estetica que \section (barra +
+% fondo + barra), pero mas angosta (regla de 1pt) y con un tono
+% mas oscuro de la paleta activa (rtColor3) para diferenciarla
+% del titulo de guia/practico, que usa rtColor2.
+%
+% Uso:
+%   \begin{ejercicio}{7}
+%     ... enunciado tal cual la guia ...
+%   \end{ejercicio}
+%
+% El argumento es la etiqueta EXACTA que trae la guia (numero,
+% y el "V o F o I" si corresponde va dentro del cuerpo), no un
+% contador automatico: asi no hay riesgo de renumerar mal si
+% faltan ejercicios o hay incisos sueltos.
+% ------------------------------------------------------------
+\newenvironment{ejercicio}[1]{%
+  \par\addvspace{14pt}%
+  \noindent\hrule height 1pt
+  \vskip0pt
+  \noindent\colorbox{rtColor3}{\parbox[t]{\dimexpr\linewidth-2\fboxsep\relax}{\bfseries Ejercicio #1}}%
+  \vskip0pt
+  \noindent\hrule height 1pt
+  \vspace{6pt}\par\noindent\ignorespaces
+}{%
+  \par\addvspace{2pt}%
+}
+
+% ============================================================
+% ENTORNO "solucion"
+% ============================================================
+% Bloque liviano debajo del ejercicio: sin caja de color, solo
+% un filete fino arriba y el rotulo "Resolucion" en negrita
+% cursiva, para no competir visualmente con la caja del enunciado.
+% ------------------------------------------------------------
+\newenvironment{solucion}{%
+  \par\vspace{4pt}%
+  \noindent\hrule height 0.4pt
+  \vspace{4pt}\par\noindent{\bfseries\itshape Resolución:}\par\nobreak\vspace{2pt}\noindent\ignorespaces
+}{%
+  \par\addvspace{2pt}%
+}
+
 \endinput
