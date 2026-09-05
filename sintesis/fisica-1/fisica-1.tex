@@ -2601,4 +2601,602 @@ En un taller, el cajón A, de 3.0 kg, está apoyado sobre el cajón B, de 5.0 kg
 
 Un último apunte sobre el ejercicio anterior. El ejercicio 19 del práctico tiene esa misma estructura con otros datos, y es el que la cátedra tomó como problema 3 en el parcial de 2025. Hacelo por tu cuenta, con el enunciado del práctico y sin mirar esta síntesis, después de haber terminado el de acá. Es la mejor autoevaluación disponible de todo el capítulo, y solo sirve si llegás a él sin haberlo visto resuelto.
 
+% ============================================================
+%  CAPITULO 5 de sintesis/fisica-1/fisica-1.tex
+%
+%  FRAGMENTO, no documento completo. Se inserta tal cual DESPUES del
+%  ultimo parrafo del capitulo 4 y antes del cierre del documento.
+%
+%  NO redefine \sen ni carga tikz: las dos cosas ya estan en el
+%  preambulo local del archivo (lineas 7 y 11) y volver a declararlas
+%  rompe la integracion. Tampoco lleva \setMateria ni
+%  \renewcommand{\miNombre}: se definen una sola vez por materia.
+%
+%  Este capitulo NO usa energia, trabajo ni conservacion (Guia 3, sin
+%  escribir), y NO plantea ni resuelve ecuaciones diferenciales. La
+%  ley de Hooke ya esta escrita en el capitulo 3 (linea 1835) y aca
+%  solo se invoca en una linea, nunca se re-deriva.
+%
+%  Dos figuras, las dos reemplazan texto:
+%   1) circulo de referencia (bloque de la sombra del MCU): da el
+%      significado geometrico de A y de phi, que de otro modo habria
+%      que describir en un parrafo entero. El angulo se mide desde el
+%      semieje +x y la proyeccion sobre x es el coseno, coherente con
+%      x = A cos(wt+phi) tal como lo escribe el texto.
+%   2) tres paneles x(t), v(t), a(t) del ejemplo resuelto completo.
+%      Verificados contra el algebra del propio ejemplo:
+%      x = 0,25 + 0,18 cos(4t); v = -0,72 sen(4t); a = -2,88 cos(4t).
+%      En t=0:   x maxima (0,43),        v nula,          a minima (-2,88).
+%      En T/4:   x en el equilibrio,     v minima (-0,72), a nula.
+%      En T/2:   x minima (0,07),        v nula,          a maxima (+2,88).
+%      En 3T/4:  x en el equilibrio,     v maxima (+0,72), a nula.
+%      El panel de x no cruza el cero, porque x se mide desde el
+%      origen del enunciado y no desde el equilibrio.
+% ============================================================
+
+\temacapitulo{Fuerza elástica y movimiento armónico simple}
+
+\section{Motivación}
+
+\begin{motivacion}
+Desde el primer capítulo venís resolviendo todo con el mismo aparato: conseguís la aceleración, integrás dos veces, fijás las dos constantes con los datos del enunciado y el movimiento queda escrito. Nunca falló. Este capítulo empieza con el primer movimiento de la materia en el que ese aparato no arranca, y no porque dé mal.
+\end{motivacion}
+
+El movimiento es el de un cuerpo atado a un resorte, y la razón por la que la cuenta se traba está a dos renglones de distancia. Ya tenés la ley de Hooke del capítulo 3 y ya tenés la segunda ley, y juntándolas sale que la aceleración del cuerpo es proporcional a su posición y de signo contrario. Eso es nuevo. Todas las aceleraciones que integraste hasta acá eran constantes, como la de la caída libre, o eran funciones conocidas del tiempo. Ésta es una función de la posición, que es justamente lo que todavía no sabés.
+
+La salida no viene de una técnica nueva de integración sino de un lugar bastante inesperado. Un cuerpo que oscila colgado de un resorte y un punto que gira parejo sobre una circunferencia no se parecen en nada: uno va y viene sobre una recta, el otro nunca vuelve sobre sus pasos y siempre gira para el mismo lado. Y sin embargo son el mismo movimiento visto de costado. Si mirás la circunferencia de canto, hasta que se te aplaste y parezca un segmento, lo que ves ir y venir sobre ese segmento es exactamente un resorte oscilando. No es una analogía ni una manera de acordarse: la sombra del punto que gira cumple, letra por letra, la ecuación que la dinámica del resorte exige. Todo el capítulo sale de ahí.
+
+El capítulo 2 ya había nombrado al cuerpo colgado de un resorte, al pasar, como ejemplo de movimiento periódico que no describe ningún círculo. Éste es el capítulo donde ese movimiento se construye y donde recibe su nombre, movimiento armónico simple.
+
+Una oración sobre por qué conviene ahora. El primer parcial es el 24 de septiembre, los ejercicios 12 y 17 del Práctico 2 son de este tema, y el 17 pide las tres funciones de movimiento con sus gráficos, que es el contenido central de lo que viene.
+
+Antes de arrancar, dos preguntas para que te contestes ahora, sin leer más abajo. La primera: un cuerpo atado a un resorte oscila, y en cierto instante pasa por la posición de equilibrio; ¿cuánto vale su aceleración en ese instante? La segunda: dos cuerpos iguales cuelgan de resortes iguales y se sueltan desde el reposo, pero uno se soltó desde el doble de lejos que el otro; ¿cuál tarda más en completar una oscilación?
+
+Las dos están contestadas más abajo, cada una en el bloque que le corresponde. A diferencia de los dos capítulos anteriores, acá ninguna de las dos habilita saltear nada, ni siquiera si te salieron con justificación. La intuición sobre cómo se mueve un resorte es una cosa y el aparato de la amplitud, la constante de fase y el corrimiento del origen es otra, y el segundo es nuevo aunque tengas la primera.
+
+\section{Marco teórico}
+
+\begin{bloque}{Una aceleración que depende de la posición}
+El punto de partida ya está escrito. En el capítulo 3 la ley de Hooke quedó como $F_s = -kx$, con $x$ medido desde la posición de equilibrio y $k$ la rigidez del resorte en N/m, y con el signo menos codificando que la fuerza apunta siempre de vuelta hacia el equilibrio. Poné ese resorte horizontal sobre una mesa lisa, atale un cuerpo de masa $m$ y escribí la segunda ley en la dirección del movimiento:
+\[
+-kx = ma
+\qquad\text{y por lo tanto}\qquad
+a = -\frac{k}{m}\,x .
+\]
+
+De paso, esa igualdad ya contesta la primera pregunta del comienzo. En la posición de equilibrio $x$ vale cero, así que el resorte no hace fuerza y la aceleración también vale cero, justo en el punto por el que el cuerpo pasa más rápido. Rapidez máxima y aceleración nula conviven sin ningún problema, que es la misma disociación entre velocidad y aceleración que el capítulo 1 dejó instalada con la moneda en el punto más alto del tiro vertical, donde pasaba exactamente lo contrario.
+
+Mirá ahora qué clase de objeto es esa igualdad, porque ahí está la novedad real del capítulo. La aceleración quedó escrita en función de la posición. Conviene que compruebes vos mismo lo que eso implica, porque decirlo no alcanza contra un aparato que te viene funcionando desde el primer capítulo. Intentá arrancar como siempre:
+\[
+v(t) = \int a\,dt = -\frac{k}{m}\int x(t)\,dt .
+\]
+Para resolver esa integral necesitás saber cómo depende $x$ del tiempo, y $x(t)$ es exactamente lo que estás buscando. La cuenta se muerde la cola, y no hay ningún arreglo algebraico que la destrabe. Es el mismo callejón que apareció en el capítulo 2 al intentar integrar componente a componente en base polar, donde los versores dependían de una $\theta(t)$ que todavía no se conocía.
+
+Vale la pena decirlo en la versión fuerte, porque la versión débil circula mucho y es engañosa. No es que las fórmulas de aceleración constante den un resultado aproximado o un poco corrido: es que toda la herramienta de integrar la aceleración no aplica acá. Escribir $x = x_0 + v_0 t + \tfrac12 a t^2$ para un resorte no es una aproximación grosera, es usar una fórmula fuera de su dominio, porque esa fórmula se dedujo pidiendo que $a$ fuera constante y acá $a$ cambia en cada instante, y cambia precisamente porque el cuerpo se movió.
+
+Una aclaración de honestidad, y después no se vuelve sobre el asunto. Una relación que liga una función con su segunda derivada es un objeto matemático con nombre propio y con métodos propios de resolución, y esos métodos llegan más adelante en tu carrera. Nada de lo que sigue los usa. Lo que sigue rodea el problema por un camino que ya tenés andado.
+
+\textit{Antes de seguir: volvé al bloque de movimiento circular uniforme del capítulo 2 y buscá un movimiento cuya aceleración sea proporcional a la posición y de signo opuesto. Está escrito ahí, en la primera fórmula del bloque, y no hace falta que inventes nada, alcanza con reconocerlo.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué no sirve escribir $v = v_0 + at$ para el cuerpo atado al resorte, si $a$ tiene un valor perfectamente definido en cada instante?
+\item Un cuerpo oscila atado a un resorte. ¿Dónde vale más el módulo de la fuerza del resorte, en el punto más alejado del equilibrio o al pasar por el equilibrio?
+\item ¿Qué información hace falta para poder calcular $\int x(t)\,dt$, y por qué todavía no la tenés?
+\end{chequeo}
+
+\begin{bloque}{La sombra del movimiento circular}
+El capítulo 2 dejó escrito, y lo dedujiste vos derivando dos veces, que un punto que recorre una circunferencia de radio $R$ con velocidad angular constante $\omega_0$ cumple
+\[
+\vec r(t) = R\big[\cos(\omega_0 t+\theta_0)\,\hat\imath + \sen(\omega_0 t+\theta_0)\,\hat\jmath\big],
+\qquad
+\vec a = -R\,\omega_0^{2}\,\hat u_\rho .
+\]
+Quedate solamente con la componente $x$ de las dos. La primera da $x(t) = R\cos(\omega_0 t+\theta_0)$. Para la segunda, acordate de que $\hat u_\rho = \cos\theta\,\hat\imath + \sen\theta\,\hat\jmath$, así que la componente $x$ de la aceleración vale $-R\,\omega_0^2\cos(\omega_0 t+\theta_0)$, que es $-\omega_0^2$ multiplicado por la propia $x$:
+\[
+a_x = -\omega_0^{2}\,x .
+\]
+
+Ésa es exactamente la forma que la dinámica del resorte pedía, y no salió de ningún lugar nuevo: es un movimiento que vos ya derivaste hace dos capítulos, mirado por su sombra sobre un diámetro.
+
+\begin{center}
+\begin{tikzpicture}[scale=1, color=textgray]
+  \draw[rulegray, ->] (-2.4,0) -- (2.7,0) node[right] {\footnotesize $x$};
+  \draw[rulegray, ->] (0,-2.4) -- (0,2.5) node[above] {\footnotesize $y$};
+  \draw[thick] (0,0) circle (1.8);
+  \draw[very thick] (0,0) -- (50:1.8);
+  \fill (50:1.8) circle (1.8pt);
+  \node[anchor=south west] at (50:1.85) {\footnotesize $P$};
+  \node[anchor=south east] at (50:1.28) {\footnotesize $A$};
+  \draw[rulegray] (0.7,0) arc (0:50:0.7);
+  \node[rulegray, anchor=north] at (0.35,-0.05) {\footnotesize $\omega t+\varphi$};
+  \draw[rulegray, dashed] (50:1.8) -- (1.157,0);
+  \fill (1.157,0) circle (1.8pt);
+  \node[anchor=north] at (1.157,-0.14) {\footnotesize $Q$};
+  \draw[rulegray] (-1.8,-0.1) -- (-1.8,0.1);
+  \node[anchor=north] at (-1.8,-0.16) {\footnotesize $-A$};
+  \draw[rulegray] (1.8,-0.1) -- (1.8,0.1);
+  \node[anchor=north west] at (1.72,-0.16) {\footnotesize $A$};
+  \draw[rulegray, ->] (98:2.05) arc (98:132:2.05);
+  \node[rulegray] at (115:2.4) {\footnotesize $\omega$};
+\end{tikzpicture}
+\end{center}
+
+El punto $P$ gira parejo sobre la circunferencia de radio $A$, y $Q$ es su sombra sobre el eje $x$, o sea el pie de la perpendicular. Mientras $P$ da vueltas, $Q$ va y viene entre $-A$ y $A$ sin salirse nunca de ese segmento, y su coordenada es $x = A\cos(\omega t+\varphi)$. Ésa es la circunferencia auxiliar, y conviene aclarar que en el problema del resorte no hay ningún cuerpo girando: es un artificio de cálculo que resulta que entrega la respuesta.
+
+El emparejamiento se hace comparando las dos igualdades. La dinámica exige $a = -(k/m)\,x$ y la sombra entrega $a_x = -\omega^2 x$, así que las dos describen el mismo movimiento si y solo si
+\[
+\omega^{2} = \frac{k}{m},
+\qquad\text{es decir}\qquad
+\omega = \sqrt{\frac{k}{m}} .
+\]
+Con eso quedan bautizadas las tres piezas de la fórmula. El radio de la circunferencia auxiliar es la \textbf{amplitud} $A$, la máxima distancia al equilibrio que el cuerpo alcanza. La posición angular inicial $\theta_0$ del capítulo 2 pasa a llamarse \textbf{constante de fase} $\varphi$, y es el mismo número: dice dónde estaba $P$ cuando arrancó el cronómetro y, por lo tanto, desde dónde arrancó el cuerpo. Y $\omega$ es la velocidad angular de $P$.
+
+Sobre esa última hay que ser preciso, porque parece un abuso de notación y no lo es. En el capítulo 2, $\omega$ era la velocidad angular de algo que efectivamente giraba. Acá el cuerpo atado al resorte no gira nada, y sin embargo se le escribe la misma letra. La razón es que se trata literalmente de la misma $\omega$: es la velocidad angular del punto auxiliar $P$, medida en rad/s como siempre. El símbolo no cambió de significado, cambió de escenario. En este contexto se la llama \textbf{frecuencia angular}, que es el nombre que toma cuando lo que interesa es la sombra y no el punto que la produce.
+
+Con eso queda definido el objeto del capítulo. Un cuerpo describe un \textbf{movimiento armónico simple} cuando la fuerza neta sobre él tiene la forma de una constante negativa multiplicada por el apartamiento respecto del equilibrio, y entonces su aceleración cumple $a = -\omega^2 x$ con $\omega = \sqrt{k/m}$. El criterio ocupa un renglón y es lo primero que hay que verificar en cualquier ejercicio: si la fuerza neta sale con esa forma, todo el resto del capítulo se aplica sin preguntar nada más, y si no sale con esa forma, no se aplica nada.
+
+Falta decir con precisión qué se probó y qué no, porque la diferencia importa. Lo que la proyección exhibe es \emph{una} solución, un movimiento que cumple lo que la dinámica exige y que por lo tanto podría ser el del resorte. No prueba que sea el único posible. El argumento que hace muy difícil que haya otro ya está instalado desde el capítulo 2, en la regla de conteo de constantes: subir de la aceleración a la posición mete dos constantes de integración por eje, ninguna de ellas es un dato libre, y si al terminar te sobra una constante sin fijar es que falta un dato del enunciado. Acá el movimiento es sobre una recta, las dos constantes son $A$ y $\varphi$, y los dos datos que las fijan son la posición y la velocidad en un instante conocido. La cuenta cierra exacto, sin constantes que sobren y sin datos que falten. Lo que no hay en este capítulo es la demostración formal de unicidad, que necesita justamente las herramientas que este capítulo decidió no usar. Es una deuda declarada, no un paso que se saltea.
+
+\textit{Antes de seguir: explicate con tus palabras qué significa geométricamente $\varphi$ sobre la circunferencia auxiliar, y decidí qué le pasa a la sombra si hacés girar el mismo círculo al doble de velocidad angular sin tocarle el radio.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿De dónde sale $\omega = \sqrt{k/m}$? Nombrá las dos expresiones que se emparejaron para obtenerla.
+\item Dos cuerpos de la misma masa oscilan sobre una mesa lisa, cada uno atado a un resorte horizontal, de constantes 20 N/m y 80 N/m. ¿En qué proporción están sus frecuencias angulares?
+\item ¿Por qué la proyección del movimiento circular no alcanza para afirmar que el coseno es la única solución posible?
+\end{chequeo}
+
+\begin{bloque}{Las tres funciones y sus desfasajes}
+Con la forma de $x(t)$ en la mano, la velocidad y la aceleración salen derivando, que es la herramienta que venís usando desde el capítulo 1 y que acá no necesita ningún comentario extra. Con $\omega$, $A$ y $\varphi$ constantes,
+\[
+x(t) = A\cos(\omega t+\varphi),
+\qquad
+v(t) = -\omega A\,\sen(\omega t+\varphi),
+\qquad
+a(t) = -\omega^{2} A\cos(\omega t+\varphi) .
+\]
+La última expresión es idéntica a $-\omega^2 x(t)$, y eso cierra el círculo: la función que se propuso copiando la sombra del movimiento circular cumple, derivada dos veces, exactamente la condición que la segunda ley había impuesto. El argumento $\omega t + \varphi$ se llama fase y se mide en radianes, así que $\varphi$ también va en radianes.
+
+De las tres expresiones se leen los dos valores extremos que los enunciados piden todo el tiempo. Como el seno y el coseno nunca superan uno en módulo,
+\[
+v_{\max} = \omega A,
+\qquad
+a_{\max} = \omega^{2} A ,
+\]
+y conviene saber dónde ocurre cada uno, porque no ocurren en el mismo lugar. La rapidez es máxima cuando el coseno de la posición vale cero, o sea al pasar por el equilibrio, y ahí la aceleración vale cero. El módulo de la aceleración es máximo cuando ese coseno vale uno en módulo, o sea en los dos extremos del recorrido, y ahí la velocidad vale cero. Los dos máximos están lo más lejos posible uno del otro.
+
+Esa alternancia es lo que se ve al graficar las tres funciones apiladas con el mismo eje temporal, que es como el capítulo 1 recomendó hacerlo. Los ceros de la velocidad caen justo debajo de los extremos de la posición, y los ceros de la aceleración caen justo debajo de los pasos por el equilibrio. Dicho en tiempo, la velocidad está corrida un cuarto de período respecto de la posición, y la aceleración está corrida medio período, que es lo mismo que decir que es la posición dada vuelta y multiplicada por $\omega^2$. El gráfico de los tres paneles está resuelto más abajo, en el ejemplo, con números concretos.
+
+Queda una pieza que todo lo anterior dio por supuesta y que los enunciados casi nunca regalan. Cada fórmula de arriba mide $x$ desde la posición de equilibrio, pero los problemas suelen traer el origen puesto en otro lado, en una regla pegada al borde de la mesa o en el techo del que cuelga el resorte. La solución ocupa dos renglones y hay que escribirla igual, porque es donde más gente se cae. Si el equilibrio está en la coordenada $x_0$ del enunciado, se define
+\[
+x'(t) = x(t) - x_0 ,
+\]
+que es la posición medida desde el equilibrio, y toda la maquinaria del capítulo vale sobre $x'$. Como $x_0$ es una constante, su derivada es cero, y entonces la velocidad y la aceleración tienen exactamente las mismas expresiones en las dos coordenadas: derivar $x$ y derivar $x'$ da lo mismo. Lo que sí cambia es la posición, que en el sistema del enunciado se escribe
+\[
+x(t) = x_0 + A\cos(\omega t+\varphi) ,
+\]
+y con ella las coordenadas extremas, que valen $x_0 - A$ y $x_0 + A$ y no $-A$ y $A$. La amplitud se mide en $x'$ y las respuestas se entregan en $x$; ésa es toda la operación.
+
+Hay una colisión de nombres acá que conviene decir con todas las letras antes de que haga daño. En los capítulos 1 y 2, $x_0$ significaba la posición inicial, la de $t = 0$. En este capítulo $x_0$ es la posición de equilibrio, que es otra cosa y en general es otro número. En el ejercicio 17 del Práctico 2 conviven las dos: el equilibrio está en 40 cm y la posición inicial en 55 cm, y confundirlas arruina la amplitud, la constante de fase y las dos coordenadas extremas de una sola vez.
+
+Y esto no es un truco nuevo sino el mismo movimiento que ya hiciste en el capítulo 3 con el resorte vertical. Ahí el origen quedaba corrido por el peso, una distancia $d = mg/k$, y al medir desde la nueva posición de reposo el peso desaparecía de la ecuación y sobrevivía solo $-kx'$. Acá el origen queda corrido por la geometría del enunciado. Es la misma idea en los dos casos: el movimiento armónico ocurre alrededor del equilibrio, y poner el origen ahí es lo que hace que las fórmulas queden limpias. De paso, eso deja escrito un resultado que el capítulo 3 todavía no podía dar, porque no tenía el concepto de oscilación. Un resorte vertical oscila con el mismo $\omega = \sqrt{k/m}$ y el mismo período que uno horizontal con el mismo $k$ y la misma $m$. El peso no cambia el período ni la amplitud; lo único que hace es correr el centro de la oscilación una distancia $mg/k$.
+
+\textit{Antes de seguir: mirá el ejercicio 17 del Práctico 2 y escribí cuál de sus dos números es la posición de equilibrio y cuál la posición inicial, y decidí cuál de las dos entra en $x_0$ y cuál no.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un oscilador está en un extremo de su recorrido. ¿Cuánto valen su velocidad y el módulo de su aceleración en ese instante?
+\item ¿Por qué $v(t)$ y $a(t)$ tienen la misma expresión medidas desde el origen del enunciado que desde el equilibrio, y qué es lo que sí cambia al correr el origen?
+\item Un cuerpo oscila con el equilibrio en la marca de 0,60 m y amplitud 0,15 m. ¿Entre qué dos marcas se mueve, y cuánto camino recorre en un período completo?
+\end{chequeo}
+
+\begin{bloque}{Período y frecuencia, con dos letras ya ocupadas}
+El movimiento armónico simple es periódico, y las dos magnitudes que miden esa periodicidad ya están construidas desde el capítulo 2, así que acá se invocan y no se vuelven a deducir. El coseno se repite cuando su argumento avanza $2\pi$, y como el argumento avanza a razón de $\omega$ radianes por segundo,
+\[
+T = \frac{2\pi}{\omega} = 2\pi\sqrt{\frac{m}{k}},
+\qquad
+f = \frac{1}{T} = \frac{\omega}{2\pi} .
+\]
+El \textbf{período} $T$ es el tiempo que tarda una oscilación completa, de ida y de vuelta, y se mide en segundos. La \textbf{frecuencia} $f$ es la cantidad de oscilaciones por unidad de tiempo, y su unidad es el hertz, que es una oscilación por segundo. La segunda forma de $T$ sale de reemplazar $\omega$ por $\sqrt{k/m}$ y es la que conviene tener a mano cuando los datos son la masa y la constante del resorte.
+
+Mirá esa segunda forma con atención, porque contesta la segunda pregunta del comienzo y la respuesta es contraintuitiva. En $T = 2\pi\sqrt{m/k}$ no aparece la amplitud por ningún lado. Dos cuerpos iguales colgados de resortes iguales tardan exactamente lo mismo en completar una oscilación, aunque uno se haya soltado desde el doble de lejos que el otro. El que arrancó más lejos tiene que recorrer el doble de camino, es cierto, pero también arranca con el doble de fuerza encima y alcanza el doble de rapidez, y los dos efectos se compensan de manera exacta. El período de un oscilador depende de con qué está hecho, la masa y la rigidez, y no de cómo lo arrancaste. Es un resultado verificable dentro del propio ejercicio 17 del práctico, sin cambiar una sola cuenta.
+
+Quedan dos aclaraciones de vocabulario que si no se hacen dejan enunciados ambiguos. La primera es que $\omega$ y $f$ no son la misma magnitud aunque las dos midan lo mismo en un sentido informal: $\omega$ es la frecuencia angular y se mide en rad/s, $f$ es la frecuencia y se mide en hertz, y entre las dos hay un factor $2\pi$. El apunte de la cátedra, en la sección donde presenta el oscilador, llama simplemente frecuencia a $\omega$, aunque después define $f = \omega/2\pi$ en otro capítulo. No hay contradicción, hay una palabra usada suelta, y en este capítulo se sostiene la distinción porque el ejercicio 17 pide el período y la frecuencia por separado y sin ella no se sabe qué contestar.
+
+La segunda es una letra que en este libro ya estaba ocupada. En los capítulos 3 y 4, $T$ era la tensión de una cuerda, una fuerza medida en newtons; acá $T$ es el período, un tiempo medido en segundos. No son parientes y no hay ninguna relación entre las dos. El Práctico 2 usa las dos en la misma guía, tensión en los ejercicios 4, 7 y 13 y período en el 17, así que la confusión es posible en la práctica y no solo en principio. Lo que las distingue es de qué habla el problema y qué unidad tiene que tener la respuesta, y no se inventa acá ningún símbolo alternativo porque la cátedra imprime $T$ para las dos y eso es lo que vas a tener delante en el parcial.
+
+\textit{Antes de seguir: sin hacer una sola cuenta, decidí qué le pasa al período de un oscilador si duplicás la masa, y qué le pasa si duplicás la constante del resorte. Después fijate si uno de los dos cambios puede compensar al otro y con qué números.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un oscilador tiene $\omega = 10$ rad/s. ¿Cuánto valen $T$ y $f$, y en qué unidad queda expresada cada una?
+\item Alguien te dice que el período de cierto resorte vale $0{,}8$ N. ¿Qué está mal, y cómo lo detectás sin saber nada más del problema?
+\item Dos cuerpos iguales en resortes iguales se sueltan desde el reposo, uno desde el doble de lejos que el otro. ¿Cuál vuelve primero a su punto de partida?
+\end{chequeo}
+
+\begin{bloque}{Las dos constantes, a partir de cómo arranca el movimiento}
+La frecuencia angular salió del resorte y de la masa, y no depende de nada más. Las otras dos constantes, $A$ y $\varphi$, salen de cómo empezó el movimiento, y ésa es toda la información que el enunciado tiene que dar. Llamemos $x_i$ y $v_i$ a la posición y la velocidad en el instante $t=0$, las dos medidas desde el equilibrio. Evaluando las expresiones del bloque anterior en ese instante,
+\[
+x_i = A\cos\varphi,
+\qquad
+v_i = -\omega A\,\sen\varphi .
+\]
+El reflejo es dividir una por la otra para eliminar $A$, y eso funciona pero deja un agujero. Conviene primero el otro camino, que es elevar las dos al cuadrado y sumarlas, porque ahí el seno y el coseno se van solos por la identidad pitagórica:
+\[
+x_i^{2} + \left(\frac{v_i}{\omega}\right)^{2} = A^{2}\big(\cos^{2}\varphi + \sen^{2}\varphi\big) = A^{2},
+\qquad\text{de donde}\qquad
+A = \sqrt{x_i^{2} + \left(\frac{v_i}{\omega}\right)^{2}} .
+\]
+Esta forma de la amplitud no falla nunca. En particular vale cuando el cuerpo se lanza desde la posición de equilibrio, con $x_i = 0$, caso en el que la amplitud queda $A = v_i/\omega$ y en el que cualquier receta que divida por $x_i$ o por $\cos\varphi$ se rompe. Conviene despejarla siempre así.
+
+La misma identidad, aplicada en un instante cualquiera y no solo en $t=0$, entrega gratis una relación entre rapidez y posición que aparece en casi todos los ejercicios:
+\[
+v^{2} = \omega^{2}\big(A^{2} - x^{2}\big) ,
+\]
+con $x$ medida desde el equilibrio. Sirve para calcular la rapidez en un punto sin averiguar en qué instante el cuerpo pasa por ahí, que es un rodeo caro y evitable. Poniendo $x = 0$ se recupera $v_{\max} = \omega A$, y poniendo $x = \pm A$ se recupera que en los extremos el cuerpo está quieto. Ni esta relación ni la fórmula de la amplitud salieron de ningún principio nuevo: son consecuencias algebraicas de que la posición y la velocidad sean un coseno y un seno de la misma fase.
+
+Para la constante de fase conviene usar las dos ecuaciones juntas en vez de la tangente sola. Con $A$ ya calculada,
+\[
+\cos\varphi = \frac{x_i}{A},
+\qquad
+\sen\varphi = -\frac{v_i}{\omega A} ,
+\]
+y conocer el seno y el coseno a la vez determina el ángulo sin ambigüedad. Si en cambio despejás $\tan\varphi = -v_i/(\omega x_i)$, te quedan dos candidatos separados por $\pi$ y hay que elegir. El criterio no es una regla que memorizar sino un chequeo que hacés: tomá el candidato, reemplazalo en $v(0) = -\omega A\,\sen\varphi$ y verificá que el signo coincida con el de $v_i$. Si no coincide, es el otro.
+
+Dos casos aparecen todo el tiempo y conviene tenerlos reconocidos de entrada. Si el cuerpo se suelta desde el reposo en un extremo, $v_i = 0$, la amplitud es directamente la distancia inicial al equilibrio y $\varphi = 0$ si se lo soltó del lado positivo o $\varphi = \pi$ si fue del negativo. Si en cambio se lo lanza justo desde el equilibrio hacia el lado positivo, $x_i = 0$ y $v_i > 0$, entonces $\cos\varphi = 0$ y $\sen\varphi < 0$, de donde $\varphi = -\pi/2$.
+
+Ese último caso merece una aclaración, porque es el que vas a encontrar escrito de otra manera. El apunte de la cátedra presenta el oscilador armónico con la forma
+\[
+x(t) = A\,\sen(\omega t) ,
+\]
+sin constante de fase. No es otra fórmula ni otra convención: es exactamente el caso $\varphi = -\pi/2$ de la forma general, porque
+\[
+A\,\sen(\omega t) = A\cos\!\left(\omega t - \frac{\pi}{2}\right) .
+\]
+Y no hace falta creerlo en abstracto, porque los dos textos que tenés adelante son el mismo oscilador. El ejemplo del apunte trabaja con $\omega = 2$ rad/s y período $\pi$ s, y el ejercicio 17 del práctico, con $k = 8$ N/m y $m = 2$ kg, da $\omega = \sqrt{8/2} = 2$ rad/s y período $\pi$ s también. Mismo resorte, misma masa, mismo movimiento. Lo único que los separa es dónde arranca: el del apunte arranca en el centro yendo hacia el lado positivo, y eso es $\varphi = -\pi/2$, o sea el seno; el del práctico arranca en un extremo y desde el reposo, y eso es $\varphi = 0$, o sea el coseno puro. Por eso en este capítulo se trabaja siempre con $A\cos(\omega t+\varphi)$: la forma con seno, tomada literalmente, no puede escribir la respuesta del ejercicio 17, mientras que la general escribe las dos.
+
+\textit{Antes de seguir: tomá un oscilador cualquiera que se suelta desde el reposo en el extremo negativo y decidí qué constante de fase le corresponde. Después verificá tu respuesta reemplazando en $x(0)$ y en $v(0)$, sin buscarla en el texto de arriba.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un cuerpo se lanza desde la posición de equilibrio con una rapidez de $0{,}60$ m/s, y su frecuencia angular vale 3 rad/s. ¿Cuánto vale la amplitud?
+\item ¿Por qué conviene obtener $A$ sumando cuadrados en vez de despejarla de $x_i = A\cos\varphi$?
+\item Escribí $A\,\sen(\omega t)$ en la forma $A\cos(\omega t+\varphi)$ y decí qué condición inicial describe ese movimiento.
+\end{chequeo}
+
+\begin{bloque}{Dos resortes tirando del mismo cuerpo}
+Lo que sigue no está en ninguno de los libros que venís usando, así que conviene decir de dónde sale: se construye acá con dos piezas que ya tenés del capítulo 3, la ley de Hooke y el hecho de que las fuerzas sobre un mismo cuerpo se suman como vectores. No hay física nueva, hay un montaje nuevo.
+
+El montaje es el del ejercicio 12 del práctico. De un mismo techo cuelgan dos resortes, de constantes $k_1$ y $k_2$, y de los dos cuelga un mismo cuerpo. Lo primero que hay que establecer es geométrico y no dinámico: como los dos resortes están sujetos al mismo techo por arriba y al mismo cuerpo por abajo, los dos se estiran lo mismo. Eso es lo que significa que estén \textbf{en paralelo}, y es exactamente el mismo objeto lógico que el vínculo cinemático del capítulo 4, donde si un extremo de la soga bajaba diez centímetros el otro subía diez. No sale de ninguna fuerza, sale de mirar cómo está armado el aparato.
+
+Ese vínculo se apoya en un dato del enunciado que parece relleno y no lo es: los dos resortes tienen la misma longitud natural. Si tuvieran longitudes naturales distintas, uno empezaría a tirar antes que el otro y la afirmación de que se deforman lo mismo dejaría de valer, porque lo que importa no es cuánto miden sino cuánto se apartaron de su propia longitud sin deformar.
+
+Con el vínculo establecido, la superposición hace el resto. Las dos fuerzas actúan sobre el mismo cuerpo, tienen la misma dirección y el mismo sentido, y se suman:
+\[
+F_{\text{total}} = -k_1 x - k_2 x = -(k_1 + k_2)\,x ,
+\qquad\text{o sea}\qquad
+k_{\text{eq}} = k_1 + k_2 .
+\]
+Lo importante es la forma del resultado, no el número. La fuerza total volvió a quedar como una constante negativa multiplicada por el apartamiento, que es el criterio de movimiento armónico simple del bloque anterior, así que el conjunto se comporta exactamente como un único resorte de constante $k_{\text{eq}}$. Todo el capítulo se le aplica sin cambiarle una coma, incluido $\omega = \sqrt{k_{\text{eq}}/m}$ y el corrimiento del equilibrio $d = mg/k_{\text{eq}}$ del caso vertical.
+
+Un chequeo de sentido común antes de usar el resultado: dos resortes cuestan más de estirar que uno solo, así que $k_{\text{eq}}$ tiene que salir mayor que cada una de las dos constantes por separado. Si te da un valor intermedio entre las dos, promediaste en vez de sumar. Una advertencia de escritura al pasar, porque el práctico la usa: en el ejercicio 12 las constantes aparecen como $K_1$ y $K_2$ en mayúscula, mientras que en el 11 y en el 17 van con minúscula. Es la misma magnitud y en este libro se escribe siempre $k$.
+
+Conviene además tener claro que estar en paralelo nombra una relación entre fuerzas y deformaciones, no un dibujo. Dos resortes colgados uno al lado del otro del mismo techo están en paralelo, y también lo están dos resortes horizontales que sujetan un carrito desde las dos paredes de una habitación, aunque el segundo montaje no se parezca en nada al primero. El criterio para reconocerlo es siempre el mismo: preguntarse si los dos se deforman lo mismo y si sus fuerzas se suman sobre el mismo cuerpo.
+
+\textit{Antes de seguir: decidí qué pasaría si los dos resortes colgados del mismo techo tuvieran longitudes naturales distintas, y si en ese caso seguiría siendo cierto que se estiran lo mismo. Escribí en una oración qué parte del razonamiento de arriba se cae.}
+\end{bloque}
+
+\begin{chequeo}
+\item Dos resortes en paralelo, de 30 N/m y 70 N/m, sostienen el mismo cuerpo. ¿Cuánto vale la constante equivalente, y por qué el resultado no puede ser 50 N/m?
+\item ¿Qué dato del enunciado sostiene la afirmación de que los dos resortes se estiran lo mismo?
+\item Se cuelga un segundo resorte del mismo cuerpo, en paralelo con el primero. ¿El período de la oscilación aumenta o disminuye?
+\end{chequeo}
+
+\section{Ejemplo resuelto}
+
+\begin{ejemplo}[completo]
+Sobre una mesa horizontal hay una cinta métrica fija a lo largo del borde. Un resorte de masa despreciable y constante elástica 12 N/m tiene un extremo fijo a un tope, y su extremo libre, sin deformar, coincide con la marca de 0.25 m. Ahí se adhiere un cuerpo de 0.75 kg, que puede deslizar sin rozamiento. Se desplaza el cuerpo hasta la marca de 0.43 m y se lo suelta desde el reposo. Se solicita escribir y graficar la posición, la velocidad y la aceleración del cuerpo en función del tiempo, y determinar el período, la frecuencia, las marcas extremas entre las que oscila y el módulo de su velocidad al pasar por la posición de equilibrio.
+
+\medskip
+\textit{Inciso (a). Montaje: cuál de los dos números es cuál.} El enunciado trae dos posiciones y no dice cuál es cuál, así que lo primero es separarlas. La marca de 0,25 m es donde el resorte no está deformado, o sea donde no hace fuerza, o sea la posición de equilibrio. La marca de 0,43 m es la posición inicial, desde donde se suelta. En este capítulo $x_0$ nombra a la primera, al revés de lo que significaba en los capítulos 1 y 2, donde $x_0$ era la posición inicial. Acá $x_0 = 0{,}25$ m y la posición inicial es otro número. Definimos entonces la coordenada medida desde el equilibrio,
+\[
+x'(t) = x(t) - 0{,}25\ \mathrm{m} ,
+\]
+y anotamos de una vez que la velocidad y la aceleración van a tener la misma expresión en las dos coordenadas, porque $0{,}25$ m es una constante y la derivada de una constante es cero.
+
+\medskip
+\textit{Inciso (b). Que es un movimiento armónico simple, y con qué frecuencia angular.} El resorte es horizontal y la mesa es lisa, así que en la dirección del movimiento la única fuerza es la elástica, y medida desde el equilibrio vale $-kx'$. La segunda ley da
+\[
+-k x' = m a
+\qquad\Longrightarrow\qquad
+a = -\frac{k}{m}\,x' ,
+\]
+que es la forma que define el movimiento armónico simple. La frecuencia angular sale de emparejar con $a = -\omega^2 x'$:
+\[
+\omega = \sqrt{\frac{k}{m}} = \sqrt{\frac{12\ \mathrm{N/m}}{0{,}75\ \mathrm{kg}}} = \sqrt{16}\ \mathrm{rad/s} = 4\ \mathrm{rad/s} .
+\]
+Explicate a vos mismo, antes de seguir, por qué la masa entra dividiendo y no multiplicando, y qué le pasaría al movimiento si el cuerpo fuera más pesado con el mismo resorte.
+
+\medskip
+\textit{Inciso (c). Las dos constantes.} El cuerpo se suelta desde el reposo, así que $v_i = 0$, y la posición inicial medida desde el equilibrio es $x'_i = 0{,}43 - 0{,}25 = 0{,}18$ m. La amplitud sale de la fórmula general,
+\[
+A = \sqrt{(x'_i)^{2} + \left(\frac{v_i}{\omega}\right)^{2}} = \sqrt{(0{,}18\ \mathrm{m})^{2} + 0} = 0{,}18\ \mathrm{m} ,
+\]
+que en este caso coincide con la distancia inicial al equilibrio justamente porque se soltó del reposo. Para la constante de fase, $\cos\varphi = x'_i/A = 1$ y $\sen\varphi = -v_i/(\omega A) = 0$, de donde $\varphi = 0$. El chequeo se hace reemplazando: $v(0) = -\omega A \sen(0) = 0$, que coincide con el dato de que se soltó del reposo.
+
+\medskip
+\textit{Inciso (d). Las tres funciones.} Con $\omega = 4$ rad/s, $A = 0{,}18$ m y $\varphi = 0$, la posición medida desde el equilibrio es $x'(t) = 0{,}18\cos(4t)$, con $t$ en segundos. Acá el paso lo hacés vos. Derivá esa expresión una vez para obtener $v(t)$ y otra vez para obtener $a(t)$, prestando atención a que la regla de la cadena baja un factor 4 en cada derivación. Comprobá que tus dos resultados coincidan con éstos antes de seguir:
+\[
+v(t) = -0{,}72\,\sen(4t)\ \mathrm{m/s},
+\qquad
+a(t) = -2{,}88\cos(4t)\ \mathrm{m/s^2} .
+\]
+Y una verificación que cierra el círculo con el inciso (b): como $0{,}18 \cdot 16 = 2{,}88$, la aceleración se puede escribir $a = -16\,x' = -16\,(x - 0{,}25)$, que es exactamente $-\omega^2 x'$ con $\omega^2 = 16$. Devuelta al sistema de la cinta métrica, la posición queda
+\[
+x(t) = 0{,}25 + 0{,}18\cos(4t)\ \mathrm{m} .
+\]
+
+\medskip
+\textit{Inciso (e). Los gráficos.} Los tres van apilados y con el mismo eje temporal, que es la única manera de que los desfasajes se vean. El período vale $T = 2\pi/4 = \pi/2 \approx 1{,}571$ s, y los valores en los cuatro instantes notables son éstos:
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+$t$ & $x$ [m] & $v$ [m/s] & $a$ [m/s$^2$] \\
+\midrule
+$0$ & $0{,}43$ & $0$ & $-2{,}88$ \\
+$T/4 \approx 0{,}393$ s & $0{,}25$ & $-0{,}72$ & $0$ \\
+$T/2 \approx 0{,}785$ s & $0{,}07$ & $0$ & $+2{,}88$ \\
+$3T/4 \approx 1{,}178$ s & $0{,}25$ & $+0{,}72$ & $0$ \\
+$T \approx 1{,}571$ s & $0{,}43$ & $0$ & $-2{,}88$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.95, color=textgray]
+  % Panel superior: x(t), oscila alrededor de 0,25 y nunca cruza el cero
+  \draw[rulegray, ->] (-0.3,5.6) -- (4.7,5.6) node[right] {\footnotesize $t$};
+  \draw[rulegray, ->] (0,5.5) -- (0,7.6) node[above] {\footnotesize $x$};
+  \draw[rulegray, dashed] (0,6.6) -- (4.35,6.6);
+  \node[rulegray, anchor=west] at (4.35,6.6) {\footnotesize $x_0$};
+  \draw[very thick, domain=0:4, samples=90, variable=\s, smooth]
+        plot ({\s}, {6.6+0.72*cos(90*\s)});
+  \node[anchor=east] at (-0.05,7.32) {\footnotesize $0{,}43$};
+  \node[anchor=east] at (-0.05,6.6) {\footnotesize $0{,}25$};
+  \node[anchor=east] at (-0.05,5.88) {\footnotesize $0{,}07$};
+  % Panel medio: v(t) = -0,72 sen(4t)
+  \draw[rulegray, ->] (-0.3,3.6) -- (4.7,3.6) node[right] {\footnotesize $t$};
+  \draw[rulegray, ->] (0,2.7) -- (0,4.6) node[above] {\footnotesize $v$};
+  \draw[very thick, domain=0:4, samples=90, variable=\s, smooth]
+        plot ({\s}, {3.6-0.72*sin(90*\s)});
+  \node[anchor=east] at (-0.05,4.32) {\footnotesize $0{,}72$};
+  \node[anchor=east] at (-0.05,2.88) {\footnotesize $-0{,}72$};
+  % Panel inferior: a(t) = -2,88 cos(4t)
+  \draw[rulegray, ->] (-0.3,1.4) -- (4.7,1.4) node[right] {\footnotesize $t$};
+  \draw[rulegray, ->] (0,0.5) -- (0,2.35) node[above right, inner sep=1.5pt] {\footnotesize $a$};
+  \draw[very thick, domain=0:4, samples=90, variable=\s, smooth]
+        plot ({\s}, {1.4-0.72*cos(90*\s)});
+  \node[anchor=east] at (-0.05,2.12) {\footnotesize $2{,}88$};
+  \node[anchor=east] at (-0.05,0.68) {\footnotesize $-2{,}88$};
+  % Verticales que alinean los tres paneles
+  \draw[rulegray, dashed] (1,0.45) -- (1,7.45);
+  \draw[rulegray, dashed] (2,0.45) -- (2,7.45);
+  \draw[rulegray, dashed] (3,0.45) -- (3,7.45);
+  \draw[rulegray, dashed] (4,0.45) -- (4,7.45);
+  \node[rulegray, anchor=north] at (1,0.4) {\footnotesize $T/4$};
+  \node[rulegray, anchor=north] at (2,0.4) {\footnotesize $T/2$};
+  \node[rulegray, anchor=north] at (3,0.4) {\footnotesize $3T/4$};
+  \node[rulegray, anchor=north] at (4,0.4) {\footnotesize $T$};
+\end{tikzpicture}
+\end{center}
+
+Los tres paneles se controlan entre sí. El de arriba no cruza nunca el eje horizontal, y eso no es un error de dibujo: es la consecuencia de que $x$ se mide desde el origen de la cinta métrica y no desde el equilibrio, de modo que el cuerpo se mueve entre 0,07 m y 0,43 m sin pasar jamás por la marca cero. En cada instante en que la posición está en un extremo, la velocidad vale cero y la aceleración toma su valor de mayor módulo; en cada instante en que la posición cruza la línea punteada del equilibrio, la velocidad toma su valor de mayor módulo y la aceleración vale cero. La velocidad está corrida un cuarto de período respecto de la posición, y la aceleración es la posición espejada, con medio período de corrimiento.
+
+\medskip
+\textit{Inciso (f). Período, frecuencia, extremos y velocidad en el equilibrio.} El período ya salió, $T = \pi/2 \approx 1{,}571$ s, y de ahí la frecuencia
+\[
+f = \frac{1}{T} = \frac{2}{\pi} \approx 0{,}637\ \mathrm{Hz} .
+\]
+Fijate que el enunciado pide el período y la frecuencia como dos cosas distintas y que efectivamente lo son: $T$ en segundos, $f$ en hertz, y $\omega = 4$ rad/s es una tercera magnitud, la frecuencia angular, que no es ninguna de las dos. Anotá también que esta $T$ es un tiempo, no la tensión de una cuerda de los capítulos 3 y 4: la unidad alcanza para distinguirlas siempre.
+
+Las marcas extremas se obtienen volviendo de $x'$ a $x$, que es el paso que el inciso (a) dejó preparado:
+\[
+x_{\min} = x_0 - A = 0{,}07\ \mathrm{m},
+\qquad
+x_{\max} = x_0 + A = 0{,}43\ \mathrm{m} .
+\]
+Y la rapidez al pasar por el equilibrio es la máxima del movimiento,
+\[
+v_{\max} = \omega A = 4\ \mathrm{rad/s} \cdot 0{,}18\ \mathrm{m} = 0{,}72\ \mathrm{m/s} .
+\]
+
+\medskip
+\textit{Inciso (g). Cierre y límites.} La respuesta que más se equivoca es la de las marcas extremas. Con la amplitud en la mano da tentación contestar $0{,}18$ m y $-0{,}18$ m, que son las coordenadas extremas medidas desde el equilibrio y no desde la cinta métrica, y una de las dos ni siquiera existe sobre la cinta. La pregunta era en qué marcas de la cinta, así que la respuesta es 0,07 m y 0,43 m.
+
+Conviene además probar el resultado contra dos variantes. Si el cuerpo se hubiera desplazado hasta la marca de 0,61 m en vez de 0,43 m, la amplitud sería el doble y la rapidez máxima también sería el doble, pero el período y la frecuencia quedarían idénticos, porque en $T = 2\pi\sqrt{m/k}$ no aparece la amplitud. Y si el mismo resorte con el mismo cuerpo colgara verticalmente en vez de estar sobre la mesa, el equilibrio se correría a $x_0 + mg/k = 0{,}25 + 0{,}625 = 0{,}875$ m, la amplitud cambiaría porque cambia la distancia entre el punto de suelte y el nuevo equilibrio, pero $\omega$ y $T$ no se enterarían del peso.
+
+La respuesta real del problema, entonces, no es ninguno de los números. Es que todo el ejercicio se resuelve corriendo el origen a la posición de equilibrio, trabajando ahí con las tres fórmulas del capítulo, y devolviendo las respuestas al sistema en el que el enunciado las pidió.
+\citaEjercicio{Adaptado del ejercicio 17 del Práctico 2}
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+Un bloque de 0.80 kg se desliza sin rozamiento sobre una mesa de aire, unido a un resorte horizontal de constante elástica 20 N/m. El origen de coordenadas se toma en la posición de equilibrio. Cuando se pone en marcha el cronómetro, el bloque está a 0.06 m del equilibrio y se mueve hacia el equilibrio con una velocidad de módulo 0.40 m/s.
+
+La frecuencia angular sale del resorte y de la masa, y no le importa cómo arrancó el movimiento: $\omega = \sqrt{20/0{,}80} = 5$ rad/s. Las condiciones iniciales, en cambio, no son las cómodas. El bloque no está en un extremo ni pasa por el equilibrio, así que ni la amplitud es la posición inicial ni la constante de fase es cero. Con $x_i = 0{,}06$ m y, tomando el positivo hacia donde está el bloque, $v_i = -0{,}40$ m/s porque se mueve de vuelta hacia el origen,
+\[
+A = \sqrt{(0{,}06\ \mathrm{m})^{2} + \left(\frac{0{,}40\ \mathrm{m/s}}{5\ \mathrm{rad/s}}\right)^{2}} = \sqrt{0{,}0036 + 0{,}0064}\ \mathrm{m} = 0{,}10\ \mathrm{m} .
+\]
+La amplitud salió mayor que la posición inicial, y tenía que salir así: el bloque no solo estaba apartado del equilibrio, además venía moviéndose, y ese movimiento lo va a llevar más lejos en algún momento del recorrido. Notá también que esta fórmula no se habría roto si el bloque hubiera arrancado justo en el equilibrio, con $x_i = 0$: habría dado $A = v_i/\omega$ sin ninguna excepción que declarar. Para la fase, $\cos\varphi = 0{,}06/0{,}10 = 0{,}6$ y $\sen\varphi = -v_i/(\omega A) = 0{,}40/0{,}50 = 0{,}8$, así que $\varphi = 0{,}927$ rad. El chequeo de signo se hace por escrito: $v(0) = -\omega A \sen\varphi = -0{,}50 \cdot 0{,}8 = -0{,}40$ m/s, negativa como el dato.
+
+De acá en adelante seguís vos. Escribí las tres funciones de movimiento con estos valores, calculá el período y la frecuencia, y anotá las dos posiciones extremas y el módulo de la velocidad al pasar por el equilibrio. Después calculá el módulo de la velocidad del bloque cuando pasa por la posición 0,08 m, y hacelo con la relación entre rapidez y posición que salió de la identidad pitagórica, sin averiguar en qué instante ocurre. Y para terminar, decidí si el bloque llega antes al extremo o antes al equilibrio, justificándolo con el signo de la velocidad inicial y no con la cuenta.
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+De un techo cuelgan dos resortes de masa despreciable, los dos de longitud natural 0.60 m, de constantes elásticas 40 N/m y 60 N/m. De ambos se suspende un mismo cuerpo de 4.0 kg. Se estira el conjunto hasta que los resortes miden el doble de su longitud natural y se lo suelta desde el reposo. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$. Se solicita determinar la aceleración del cuerpo en el instante en que se lo suelta.
+
+El planteo del montaje va resuelto acá, porque es la parte nueva. Los dos resortes están sujetos al mismo techo y al mismo cuerpo, así que se estiran lo mismo, y la hipótesis que sostiene esa afirmación es que los dos tienen la misma longitud natural: si una fuera mayor que la otra, uno empezaría a tirar antes y las deformaciones dejarían de coincidir. Con las deformaciones iguales, las dos fuerzas se suman sobre el mismo cuerpo por superposición, y la fuerza total queda $-(k_1+k_2)x'$, de modo que
+\[
+k_{\text{eq}} = k_1 + k_2 = 40 + 60 = 100\ \mathrm{N/m} ,
+\]
+mayor que cada una por separado, como tiene que ser. De acá en más el par de resortes se puede tratar como uno solo de 100 N/m y el problema se vuelve el de un resorte vertical, que ya conocés. Al pasar, la guía escribe estas dos constantes con $K$ mayúscula; es la misma magnitud que la $k$ de este libro.
+
+El resto lo hacés vos, y es dinámica que ya tenés consolidada. Dibujá el diagrama de cuerpo aislado del cuerpo en el instante en que se lo suelta, con las dos fuerzas elásticas y el peso, y fijate que ahí no hay nada del movimiento posterior: es la segunda ley aplicada a un instante. Calculá cuánto se deformaron los resortes en ese instante, sabiendo que el enunciado dice que miden el doble de la longitud natural. Escribí la fuerza neta como la fuerza elástica total menos el peso y obtené la aceleración, indicando su sentido.
+
+Cuando tengas ese número, agregá dos cosas más, que dejan preparado el cierre del capítulo. Calculá la posición de equilibrio del sistema, o sea cuánto se estirarían los resortes con el cuerpo colgado y quieto, usando $d = mg/k_{\text{eq}}$. Y decí qué relación hay entre esa deformación de equilibrio y la deformación que tenían los resortes en el instante del suelte, porque esa diferencia es una magnitud del capítulo que todavía no nombraste en este ejercicio.
+\citaEjercicio{Adaptado del ejercicio 12 del Práctico 2}
+\end{ejemplo}
+
+\section{Errores comunes}
+
+Lo que sigue no es una lista de retos sino de discrepancias concretas entre lo que suele escribirse y lo que dice el modelo del oscilador. Cada una tiene una manera objetiva de detectarse.
+
+\begin{erroresComunes}
+  \item Usar las fórmulas de aceleración constante para un cuerpo atado a un resorte. Éste es el error número uno del capítulo, y viene de que esas fórmulas resolvieron todo durante dos capítulos enteros. No dan un valor aproximado: no aplican, porque se dedujeron pidiendo que $a$ fuera constante y en el oscilador $a$ cambia en cada instante y cambia por haberse movido el cuerpo. La detección es directa: si en el planteo aparece un valor único de $a$ para todo el movimiento, o si aparece $v^2 = v_0^2 + 2a\Delta x$, la herramienta elegida no corresponde.
+  \item Medir la posición desde el origen del enunciado en lugar de desde el equilibrio, y entregar después las coordenadas extremas en la coordenada equivocada. La amplitud se mide siempre desde el equilibrio, y las marcas extremas que el problema pide valen $x_0 - A$ y $x_0 + A$. Es el mismo error que ya figuraba en el capítulo 3 al usar $-kx$ como fuerza neta midiendo desde la longitud natural del resorte: en los dos casos la cuenta queda corrida por una constante que nadie declaró. Se detecta preguntándose si el número que se está por entregar podría leerse sobre la regla del enunciado.
+  \item Tomar el $x_0$ del enunciado como posición inicial por costumbre de los capítulos 1 y 2. En este capítulo $x_0$ es la posición de equilibrio, y las dos suelen convivir en el mismo enunciado con valores distintos. La verificación es identificar cuál de los dos números corresponde al resorte sin deformar, que es el equilibrio, y cuál corresponde al instante en que arranca el cronómetro.
+  \item Confundir la frecuencia angular con la frecuencia. Son dos magnitudes distintas separadas por un factor $2\pi$, una en rad/s y otra en hertz. Cuando un enunciado pide el período y la frecuencia está pidiendo $T$ y $f$, no $T$ y $\omega$. El chequeo es de unidades y no falla.
+  \item Suponer que el período depende de la amplitud, típicamente razonando que si el cuerpo tiene que recorrer más camino va a tardar más. Recorre más camino, pero también arranca con más fuerza encima y llega a más rapidez, y los dos efectos se cancelan de forma exacta. En $T = 2\pi\sqrt{m/k}$ la amplitud no aparece, y la manera objetiva de detectar el error es que aparezca $A$ en una expresión de $T$ o de $f$.
+  \item Suponer que la amplitud es siempre la distancia inicial al equilibrio. Eso vale solo si el cuerpo se soltó desde el reposo. Si además tenía velocidad, la amplitud es mayor y sale de $A = \sqrt{x_i^2 + (v_i/\omega)^2}$. La señal es que el enunciado dé una velocidad inicial no nula y que la amplitud haya salido igual a la posición inicial.
+  \item Elegir mal el signo de la constante de fase por haber usado solo la tangente. La tangente deja dos candidatos separados por $\pi$ y no distingue entre ellos. El criterio no es una regla que memorizar: se reemplaza el candidato en $v(0) = -\omega A\,\sen\varphi$ y se compara el signo con el de la velocidad inicial del enunciado.
+  \item Concluir que en $x = A/2$ la rapidez vale $v_{\max}/2$. La posición va con un coseno y la velocidad con un seno, así que no son proporcionales entre sí. La relación correcta es $v^2 = \omega^2(A^2-x^2)$, que en $x = A/2$ da una rapidez de $\sqrt{3}/2$ veces la máxima, cerca del 87 por ciento y no del 50.
+  \item Confundir la amplitud con el camino recorrido en una oscilación. En un período completo el cuerpo recorre $4A$, porque va del extremo al otro extremo y vuelve, mientras que su desplazamiento en ese período es cero. Es la misma distinción entre camino recorrido y desplazamiento que el capítulo 1 dejó instalada, aplicada al caso en que la diferencia es máxima.
+  \item Leer $T$ como tensión en un problema de oscilaciones, o al revés. En los capítulos 3 y 4 era una fuerza en newtons, acá es un tiempo en segundos, y el Práctico 2 usa las dos en la misma guía. Lo que las separa es de qué habla el problema y qué unidad tiene que tener la respuesta.
+  \item Promediar las constantes de dos resortes en paralelo en lugar de sumarlas. Dos resortes cuestan más de estirar que uno, así que la constante equivalente tiene que resultar mayor que cada una de las dos por separado. Si el resultado cae entre las dos, la operación que se hizo no fue una suma de fuerzas.
+\end{erroresComunes}
+
+\section{Ejercicios}
+
+\subsection{Práctica en bloque}
+
+Los seis que siguen están ordenados por novedad acumulada. Los tres primeros trabajan con el equilibrio puesto en el origen, para que la única dificultad sea el movimiento armónico en sí; el cuarto agrega el corrimiento del origen; los dos últimos agregan la composición de resortes. En todos conviene empezar por lo mismo antes de calcular nada: identificar la posición de equilibrio, decidir dónde poner el origen y verificar que la fuerza neta tenga la forma que define el movimiento armónico simple.
+
+\begin{ejercicio}[reconocer un MAS y leer sus constantes]{bloque}
+En un laboratorio de física, un carrito de 0.10 kg se desliza sin rozamiento sobre un riel horizontal. Un resorte de masa despreciable y constante elástica 40 N/m tiene un extremo fijo al tope del riel y el otro unido al carrito. Se corre el carrito 4.0 cm hacia un costado y se lo suelta desde el reposo.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Escriba la fuerza que el resorte ejerce sobre el carrito en función de su apartamiento respecto de la posición de equilibrio, e indique qué condición tiene que cumplir esa fuerza para que el movimiento resultante sea armónico simple.
+  \item Calcule la frecuencia angular, el período y la frecuencia del movimiento, y aclare en qué unidad queda expresada cada una de las tres.
+  \item Calcule el módulo de la velocidad máxima y el de la aceleración máxima del carrito, e indique en qué posición del recorrido ocurre cada una.
+  \item Se repite el experimento corriendo el carrito 8.0 cm en lugar de 4.0 cm. Indique cuáles de las cinco cantidades calculadas en (b) y (c) cambian y cuáles no, y calcule las que cambien.
+  \item Determine qué masa habría que montar sobre el carrito para que el período resulte el doble del calculado en (b), y explique por qué la respuesta no es simplemente el doble de la masa original.
+\end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}[de la función de movimiento a la velocidad y la aceleración]{bloque}
+El desplazamiento de una placa de un instrumento respecto de su posición de equilibrio, medido sobre una recta y expresado en metros, responde a la función
+\[
+x(t) = 0.12\,\cos\!\left(5\,t + \frac{\pi}{3}\right),
+\]
+con el tiempo en segundos. La placa tiene una masa de 0.40 kg y está montada sobre un resorte horizontal de masa despreciable.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Identifique la amplitud, la frecuencia angular y la constante de fase, y calcule el período y la frecuencia del movimiento.
+  \item Obtenga las funciones velocidad y aceleración derivando, y verifique que la aceleración obtenida es proporcional a la posición con signo opuesto. Dé la constante de proporcionalidad.
+  \item Calcule la posición, la velocidad y la aceleración de la placa en el instante inicial, y determine hacia qué lado se está moviendo en ese momento.
+  \item Grafique las tres funciones, una debajo de la otra y con el mismo eje temporal, cubriendo un período completo. Acompañe los gráficos con una tabla de los valores de las tres funciones en los instantes $t = 0$, $t = T/4$, $t = T/2$, $t = 3T/4$ y $t = T$, y señale sobre los gráficos el desfasaje entre la posición y la velocidad y el que hay entre la posición y la aceleración.
+  \item Calcule el primer instante en que la placa pasa por la posición de equilibrio, y el módulo de su velocidad en ese instante.
+  \item Calcule la constante elástica del resorte, indicando de cuál de los datos del enunciado sale.
+\end{enumerate}
+\citaEjercicio{Misma estructura que el ejercicio 4 del Práctico 1}
+\end{ejercicio}
+
+\begin{ejercicio}[condiciones iniciales que no son las fáciles]{bloque}
+Sobre una mesa de aire un bloque de 2.0 kg está unido a un resorte horizontal de constante elástica 32 N/m, con el otro extremo del resorte fijo a un tope. El origen de coordenadas se toma en la posición de equilibrio del bloque. En el instante $t = 0$ el bloque pasa por la posición 0.09 m con una velocidad de 0.48 m/s, alejándose del equilibrio.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Calcule la frecuencia angular y el período, y explique por qué las dos quedan determinadas antes de saber nada sobre cómo empezó el movimiento.
+  \item Calcule la amplitud del movimiento. Verifique que el resultado es mayor que 0.09 m y explique, en términos físicos, por qué tenía que serlo.
+  \item Determine la constante de fase. Como el cálculo deja dos candidatos, indique cuál corresponde y con qué chequeo lo decidió.
+  \item Escriba las funciones posición, velocidad y aceleración, y calcule el módulo de la velocidad del bloque cuando pasa por la posición 0.12 m.
+  \item El experimento se repite soltando al bloque desde el reposo en la posición 0.09 m. Indique cuáles de las respuestas anteriores cambian y cuáles no, y calcule las que cambien.
+\end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}[el equilibrio no está en el origen]{bloque}
+Sobre un banco de trabajo hay una regla pegada a lo largo del borde. Un resorte horizontal de masa despreciable y constante elástica 18 N/m tiene un extremo fijo y el otro, sin deformar, coincide con la marca de 0.30 m de la regla. Ahí se adhiere un cuerpo de 0.50 kg, que desliza sobre el banco sin rozamiento. Se empuja el cuerpo hasta la marca de 0.22 m y se lo suelta desde el reposo.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Indique cuál de los dos números del enunciado, 0.30 m o 0.22 m, es la posición de equilibrio y cuál la posición inicial, y explique en qué se apoya para distinguirlos.
+  \item Defina una coordenada medida desde la posición de equilibrio, escriba la relación entre esa coordenada y la de la regla, y justifique por qué las funciones velocidad y aceleración son las mismas en las dos.
+  \item Calcule la amplitud, la frecuencia angular, el período y la frecuencia, y determine la constante de fase del movimiento.
+  \item Escriba la posición del cuerpo en función del tiempo, expresada en la coordenada de la regla, y dé las dos marcas de la regla entre las que oscila.
+  \item Calcule el módulo de la velocidad del cuerpo cuando pasa por la marca de 0.30 m, y el módulo de su aceleración en las dos marcas extremas.
+  \item Un compañero contesta que la amplitud vale 0.22 m y que el cuerpo oscila entre las marcas de 0 y 0.44 m. Explique de dónde sale cada uno de esos dos números, indique qué tomó como posición de equilibrio en cada paso y por qué las dos elecciones no pueden ser las dos correctas.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 17 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[un resorte más, y qué le pasa al período]{bloque}
+De una viga cuelga un resorte de masa despreciable, de longitud natural 0.45 m y constante elástica 32 N/m, y de su extremo inferior pende un cuerpo de 2.0 kg en reposo. Se tira del cuerpo hacia abajo y se lo suelta, y el cuerpo oscila. Después se agrega un segundo resorte, también de masa despreciable, de la misma longitud natural 0.45 m y de constante elástica 18 N/m, colgado de la misma viga y enganchado al mismo cuerpo, de modo que los dos resortes trabajan uno al lado del otro. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Calcule el período de oscilación del cuerpo con un solo resorte, y la distancia que ese resorte se estira respecto de su longitud natural cuando el cuerpo está en reposo.
+  \item Con los dos resortes colgados, justifique por qué los dos se estiran lo mismo, e indique cuál de los datos del enunciado es la hipótesis que sostiene esa afirmación.
+  \item Obtenga la fuerza total que los dos resortes ejercen sobre el cuerpo en función de su apartamiento, y a partir de ahí la constante elástica del resorte único que produciría el mismo efecto. Verifique que el valor obtenido es mayor que cada una de las dos constantes por separado, y explique por qué tenía que serlo.
+  \item Calcule el nuevo período de oscilación y la nueva posición de equilibrio del cuerpo, e indique si el cuerpo quedó más arriba o más abajo que antes.
+  \item Los dos resortes se cuelgan ahora uno a continuación del otro, el segundo enganchado al extremo inferior del primero, con el cuerpo colgando del último. Argumente qué magnitud es la misma en los dos resortes en esta configuración y cuál se reparte, obtenga a partir de eso la constante del resorte único equivalente, y calcule el período. Compare los tres períodos obtenidos y ordénelos.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 12 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[el mismo oscilador, dos maneras de arrancarlo]{bloque}
+Dos carritos iguales, de 0.50 kg cada uno, se deslizan sin rozamiento sobre dos rieles paralelos. Cada carrito está unido a un resorte de masa despreciable y constante elástica 4.5 N/m, con el otro extremo fijo. Los dos movimientos empiezan en el mismo instante. El carrito A se suelta desde el reposo, apartado 0.10 m de su posición de equilibrio. El carrito B se lanza justo desde su posición de equilibrio, con una velocidad de 0.30 m/s.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Calcule la frecuencia angular y el período de cada carrito, y explique qué datos del enunciado los determinan y cuáles no intervienen.
+  \item Calcule la amplitud del movimiento de cada carrito, y explique por qué en el caso de B no se puede obtener a partir de su posición inicial.
+  \item Escriba la posición de cada carrito en función del tiempo, con su constante de fase. Muestre que la expresión de B se puede escribir sin constante de fase usando un seno en lugar de un coseno, y escriba la identidad trigonométrica que lo justifica.
+  \item Calcule el módulo de la velocidad máxima de cada carrito y el primer instante en que cada uno pasa por su posición de equilibrio. Determine cuánto tiempo separa esos dos instantes y exprese ese intervalo como una fracción del período.
+  \item Un tercer carrito, idéntico a los otros dos, se suelta desde el reposo apartado 0.20 m. Indique cuáles de las cantidades calculadas en (a), (b) y (d) coinciden con las del carrito A y cuáles no, sin rehacer las cuentas completas.
+\end{enumerate}
+\end{ejercicio}
+
+\subsection{Práctica en bloque, ejercicios adicionales}
+
+Los tres que siguen combinan las dos novedades del capítulo al mismo tiempo, el movimiento armónico y la composición de resortes, y están escritos al nivel de planteo que la cátedra evalúa: más piezas por ejercicio, menos guía por inciso, y la decisión de dónde poner el origen enteramente a tu cargo.
+
+\begin{ejercicio}[el resorte que cuelga, medido desde el techo]{bloque}
+Del techo de un taller cuelga un resorte de masa despreciable, de longitud natural 0.20 m y constante elástica 25 N/m. De su extremo inferior se cuelga un cuerpo de 1.0 kg, que queda en reposo. Después se tira del cuerpo hacia abajo hasta que queda a 0.75 m del techo y se lo suelta desde el reposo. Todas las posiciones se miden sobre una vertical, con el origen en el techo y el sentido positivo hacia abajo. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del cuerpo en la posición de reposo y calcule a qué distancia del techo queda. Escriba después la fuerza neta sobre el cuerpo cuando está apartado una distancia cualquiera de esa posición, y muestre que el peso no aparece en esa expresión.
+  \item Calcule la frecuencia angular, el período y la amplitud del movimiento, y escriba la posición del cuerpo en función del tiempo, medida desde el techo.
+  \item Dé las dos distancias al techo entre las que oscila el cuerpo, y calcule el módulo de su velocidad máxima y el de su aceleración máxima, indicando en qué punto del recorrido ocurre cada una.
+  \item Determine si el resorte llega a quedar sin estirar en algún momento del movimiento, calculando cuánto mide en el punto más alto del recorrido.
+  \item El mismo resorte y el mismo cuerpo se montan sobre una mesa horizontal sin rozamiento, y se aparta al cuerpo la misma distancia que en (b) antes de soltarlo. Indique cuáles de las respuestas de (b) y (c) cambian y cuáles no, y justifique a partir de la expresión de la fuerza neta obtenida en (a).
+  \item Se reemplaza el cuerpo por otro de 4.0 kg y se lo suelta desde el reposo a la misma distancia de 0.75 m del techo. Determine el nuevo período y la nueva amplitud, indique si para llegar a esa marca hubo que subir o bajar el cuerpo respecto de su posición de reposo, y explique por qué esta vez la amplitud sí cambió aunque se lo haya soltado desde la misma marca.
+\end{enumerate}
+\citaEjercicio{Misma estructura que el ejercicio 17 del Práctico 2, en la familia del ejercicio 12}
+\end{ejercicio}
+
+\begin{ejercicio}[dos resortes, dos caminos y un solo número]{bloque}
+De un travesaño cuelgan dos resortes de masa despreciable, los dos de longitud natural 0.35 m, de constantes elásticas 45 N/m y 35 N/m. De los extremos inferiores de ambos se cuelga un mismo cuerpo de 0.80 kg. Se tira del cuerpo hacia abajo hasta que los resortes miden 0.53 m y se lo suelta desde el reposo. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del cuerpo en el instante en que se lo suelta, y calcule su aceleración planteando directamente la segunda ley, sin usar nada del movimiento posterior.
+  \item Calcule la posición de equilibrio del sistema, expresada como la longitud que tienen los resortes con el cuerpo en reposo, y a partir de ella la amplitud de la oscilación que empieza al soltar.
+  \item Calcule la frecuencia angular y el período del movimiento, y obtenga con ellos la aceleración máxima. Compárela con el resultado de (a) y explique por qué los dos caminos tienen que coincidir.
+  \item Calcule el módulo de la velocidad máxima del cuerpo y la longitud que tienen los resortes cuando eso ocurre. Dé después la longitud que alcanzan en el punto más alto del recorrido y verifique que ahí los dos resortes siguen estirados, que es la condición para que todo lo anterior valga: un resorte que cuelga puede tirar del cuerpo, pero no empujarlo.
+  \item Determine las dos longitudes que pueden tener los resortes en un instante en que el módulo de la aceleración del cuerpo vale la mitad de la calculada en (a), calcule el módulo de la velocidad del cuerpo en cada una de las dos, y explique a qué se debe la relación que encuentra entre esos dos módulos.
+  \item Explique por qué el enunciado aclara que los dos resortes tienen la misma longitud natural, y describa qué parte del razonamiento dejaría de valer si uno midiera 0.35 m y el otro 0.40 m.
+\end{enumerate}
+\citaEjercicio{Adaptado del ejercicio 12 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[un carrito entre dos paredes]{bloque}
+Un carrito de 0.25 kg se desliza sin rozamiento sobre un riel horizontal tendido entre dos paredes. Dos resortes de masa despreciable, de constantes elásticas 64 N/m y 36 N/m, lo unen a cada una de las paredes, uno de cada lado. Los resortes están fijos al carrito, de modo que tanto pueden tirar como empujar. Con el carrito sobre una marca del riel los dos resortes están sin deformar. Se corre el carrito 5.0 cm hacia uno de los lados y se lo suelta desde el reposo.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del carrito apartado una distancia cualquiera de la marca, y escriba las dos fuerzas elásticas indicando cuál de los resortes queda estirado y cuál comprimido.
+  \item Obtenga la fuerza neta sobre el carrito en función de su apartamiento y muestre que tiene la forma que define un movimiento armónico simple. Dé la constante elástica del resorte único que produciría la misma fuerza, y compárela con la que se obtendría si los dos resortes colgaran de un mismo techo sujetando un mismo cuerpo.
+  \item Calcule la frecuencia angular, el período, el módulo de la velocidad máxima y el de la aceleración máxima del carrito.
+  \item Se desengancha uno de los dos resortes y se repite el experimento, apartando el carrito la misma distancia. Calcule la frecuencia angular en los dos casos posibles, según cuál de los dos se haya desenganchado.
+  \item Verifique que el cuadrado de la frecuencia angular obtenida en (c) es igual a la suma de los cuadrados de las dos obtenidas en (d), y explique de dónde sale esa relación a partir de la expresión de la fuerza neta de (b), sin recurrir a los números.
+  \item Indique qué habría cambiado si el carrito, en lugar de soltarse desde el reposo, se hubiera lanzado desde la marca con una velocidad de 1.0 m/s. Calcule la amplitud en ese caso y compárela con la del movimiento original, que sale directamente del enunciado.
+\end{enumerate}
+\end{ejercicio}
+
+Queda una cuenta pendiente del ejemplo resuelto de los dos resortes colgados, y conviene hacerla ahora que todo el capítulo está escrito. Ese ejercicio parecía de Dinámica I y se resolvía como tal: fuerza elástica total menos peso, dividido la masa, y salían 5,0 m/s$^2$ en el instante del suelte. Miralo ahora con las herramientas de este capítulo. La constante equivalente vale 100 N/m, así que $\omega = \sqrt{100/4{,}0} = 5$ rad/s. El equilibrio está donde los resortes se estiran $d = mg/k_{\text{eq}} = 0{,}40$ m, y como en el instante del suelte estaban estirados 0,60 m, el cuerpo se soltó a 0,20 m del equilibrio y desde el reposo, que es exactamente la definición de amplitud. Entonces ese instante es un extremo del recorrido, y la aceleración ahí es la máxima del movimiento:
+\[
+a_{\max} = \omega^{2} A = 25 \cdot 0{,}20\ \mathrm{m/s^2} = 5{,}0\ \mathrm{m/s^2} ,
+\]
+el mismo número, obtenido sin escribir una sola fuerza. El ejercicio no era de Dinámica I con un resorte adentro: era un ejercicio de movimiento armónico simple que no lo decía, y lo que el enunciado pedía era su aceleración máxima. Este cierre deja dos cosas. La primera es la verificación, con el mismo criterio del capítulo 2: cuando dos caminos independientes llegan al mismo lugar, eso mismo es una verificación. La segunda es más importante y es la razón por la que este cierre está acá. El movimiento armónico simple no es un tema aparte que se agregó al final de la dinámica; es una manera de leer problemas de dinámica que ya sabías resolver, y que en muchos casos los resuelve más rápido y dice más sobre ellos.
+
+Dos apuntes finales sobre lo que queda afuera. Los tres resultados que salieron de la identidad pitagórica, la amplitud a partir de las condiciones iniciales, la relación entre rapidez y posición y la rapidez máxima, se vuelven a obtener en la Guía 3 por un camino bastante más corto, y ese camino además ofrece una interpretación de por qué el cuerpo oscila que con las herramientas de este capítulo no se puede dar. Es la otra mitad de lo que el capítulo 3 había anunciado al presentar la constante elástica; ésta se paga acá y aquélla queda pendiente para entonces. Y por fuera de la materia, el patrón de una fuerza que crece con el apartamiento y apunta de vuelta al equilibrio reaparece en un péndulo que oscila poco, en una cuerda de guitarra y en dos átomos unidos por un enlace, que es la razón por la que el oscilador armónico termina siendo la puerta de entrada a las ondas.
+
+Cuando hayas terminado los ejercicios de acá, hacé los ejercicios 17 y 12 del Práctico 2 por tu cuenta, con el enunciado del práctico delante y sin mirar esta síntesis. Son exactamente los dos problemas que el capítulo entero viene preparando, y por eso mismo son la mejor autoevaluación disponible: solo sirven si llegás a ellos sin haberlos visto resueltos.
+
 \end{document}
