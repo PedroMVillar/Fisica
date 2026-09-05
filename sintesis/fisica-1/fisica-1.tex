@@ -3199,4 +3199,390 @@ Dos apuntes finales sobre lo que queda afuera. Los tres resultados que salieron 
 
 Cuando hayas terminado los ejercicios de acá, hacé los ejercicios 17 y 12 del Práctico 2 por tu cuenta, con el enunciado del práctico delante y sin mirar esta síntesis. Son exactamente los dos problemas que el capítulo entero viene preparando, y por eso mismo son la mejor autoevaluación disponible: solo sirven si llegás a ellos sin haberlos visto resueltos.
 
+% ============================================================
+%  CAPITULO 6 de sintesis/fisica-1/fisica-1.tex
+%
+%  FRAGMENTO, no documento completo. Va DESPUES del ultimo parrafo del
+%  capitulo 5 y antes del \end{document}.
+%
+%  NO redefine \sen ni carga tikz: ya estan en el preambulo local
+%  (lineas 7 y 11). Tampoco lleva \setMateria ni \miNombre.
+%
+%  g = 10 m/s2, igual que en los cinco capitulos anteriores. Sin
+%  energia, sin trabajo, sin conservacion (Guia 3), sin ecuaciones
+%  diferenciales. La cinematica circular del capitulo 2 se USA y se
+%  invoca por remision; no se rederiva en ninguna parte.
+%
+%  Una sola figura, y reemplaza texto: el DCL de la valija sobre el
+%  plato del carrusel. Verificada contra el algebra del ejemplo:
+%   - a escala: el plato baja con la direccion (0,8 , -0,6), o sea el
+%     par seno 0,60 / coseno 0,80 del enunciado. La valija esta en
+%     (1.2,-0.9), a 1,50 del cubo sobre la superficie, con proyeccion
+%     horizontal 1,20 = R = d cos(beta).
+%   - flechas proporcionales a los modulos: mg = 50, T = 37,58, n = 34,32.
+%   - la componente horizontal de la normal apunta hacia AFUERA, que es
+%     el signo con el que entra en el sistema 2x2.
+%   - a_n en rulegray, corrida y rotulada, con la convencion de la
+%     figura del ascensor del capitulo 3 (lineas 1895 y 1899).
+% ============================================================
+
+\temacapitulo{Dinámica del movimiento circular}
+
+\section{Motivación}
+
+\begin{motivacion}
+El capítulo 2 te dejó una afirmación puramente geométrica, que probaste vos derivando dos veces: si un cuerpo recorre una circunferencia, tiene aceleración dirigida al centro, aunque su velocímetro marque siempre lo mismo. Eso ya es tuyo. Lo que ese capítulo no estaba en condiciones de preguntar, porque todavía no había una sola fuerza en escena, es la única pregunta de éste. Quién la produce.
+\end{motivacion}
+
+Conviene decir de entrada qué tan corto es el trayecto. No hay ningún hecho cinemático nuevo que aprender acá: la aceleración normal, la componente tangencial y las tres formas equivalentes del módulo están escritas desde el capítulo 2 y se usan tal como quedaron. Tampoco hay una ley nueva, porque la segunda ley es la de los capítulos 3 y 4 sin agregados. Lo único que falta es juntarlas, y esa juntura ocupa un renglón.
+
+El orden en que se juntan importa. Primero la geometría, que no es negociable y no depende de quién empuje: si el movimiento es circular, la aceleración normal está ahí. Después la pregunta dinámica, que es la novedad. La segunda ley no fabrica esa aceleración, factura la fuerza neta que hace falta para sostenerla. Todo el capítulo se resuelve identificando quién paga esa factura en cada situación concreta, y ése es el trabajo de los ejercicios.
+
+Una oración sobre por qué conviene ahora. Este tema cierra la Guía 2, el primer parcial es el 24 de septiembre, y los ejercicios 13, 14 y 18 del Práctico 2 son exactamente de acá. El 18 está entre los adicionales, que en esta materia significa nivel de parcial.
+
+Antes de arrancar, dos preguntas para que te contestes ahora, sin leer más abajo. La primera: una piedra atada a una cuerda gira en un círculo horizontal sobre el hielo y la cuerda se corta; ¿qué trayectoria sigue la piedra a partir de ese instante, y con qué ley lo justificás? La segunda: sobre el plato de un microondas hay una moneda que gira con el plato sin resbalar; nombrá el objeto que ejerce la fuerza que la mantiene sobre la circunferencia. Las dos están contestadas más abajo, cada una en el bloque que le corresponde, y las dos se contestan con cosas que ya tenés.
+
+\section{Marco teórico}
+
+\begin{bloque}{La factura de una aceleración que ya tenías}
+El punto de partida está escrito y no hace falta rehacerlo. Del capítulo 2, un cuerpo que recorre una circunferencia de radio $R$ tiene una componente de aceleración dirigida al centro, cuyo módulo se escribe en tres formas equivalentes,
+\[
+a_n = R\,\omega^2 = \frac{\lvert\vec v\rvert^2}{R} = \lvert\vec v\rvert\,\lvert\omega\rvert ,
+\]
+y esa afirmación es geométrica: sale de derivar dos veces la posición de algo que recorre una circunferencia, sin nombrar ninguna fuerza. En otros textos esta componente se escribe $a_c$ y se la llama centrípeta. Acá se la sigue llamando $a_n$, como en el capítulo 2, porque es la componente normal de la aceleración y no deja de serlo porque la trayectoria sea circular.
+
+Del otro lado tenés la segunda ley, que en los capítulos 3 y 4 usaste siempre en componentes, eligiendo el modelo dirección por dirección. Elegí ahora la radial, con el sentido positivo hacia el centro, y proyectá. Del lado derecho aparece la masa multiplicada por la componente radial de la aceleración, que la geometría ya te entregó, y queda la única ecuación nueva del capítulo:
+\[
+\sum F_r \;=\; m\,a_n \;=\; m\,\frac{v^2}{R} \;=\; m\,\omega^2 R .
+\]
+Los cuatro miembros son la misma cosa escrita con los datos que cada enunciado tenga a mano. Conviene verlos juntos, porque hay problemas que entregan la rapidez y el radio y hay otros que entregan la velocidad angular en revoluciones por minuto, y en esos últimos escribir $v^2/R$ obliga a un rodeo que la forma con $\omega^2 R$ ahorra.
+
+La igualdad se lee de derecha a izquierda, y ahí está el hilo de todo lo que sigue. El lado derecho lo fija el movimiento: si el cuerpo describe ese círculo con esa rapidez, ese número es el que es. El lado izquierdo es la factura, y dice cuánto tiene que sumar la componente radial de las fuerzas reales para que ese movimiento pueda existir. Si nadie la paga, el movimiento circular no ocurre, y eso contesta la primera pregunta de la apertura: cortada la cuerda no queda ninguna fuerza horizontal, la primera ley toma el control y la piedra sigue en línea recta con la velocidad que tenía en ese instante, que era tangente a la circunferencia.
+
+Hay una consecuencia de escritura que conviene fijar antes de dibujar nada. El término $m\,a_n$ es el $m\vec a$ de la segunda ley escrito para esta dirección. Del capítulo 3, palabra por palabra: no es una fuerza, es el resultado de sumar las fuerzas, y vive del otro lado del signo igual. Ponerlo como una flecha más en un diagrama de cuerpo aislado, rotulada fuerza centrípeta, es el mismo error de categoría que dibujar $m\vec a$ como flecha en el diagrama de una caja que se arrastra, y eso hace tres capítulos que no lo hacés.
+
+\textit{Antes de seguir: reformulá con tus palabras, en una oración, por qué $\sum F_r = m\omega^2 R$ no dice que exista una fuerza nueva. Después escribí las tres formas del miembro derecho y anotá al lado de cada una qué dato del enunciado la haría preferible.}
+\end{bloque}
+
+\begin{chequeo}
+\item Un auto recorre una rotonda con el velocímetro clavado en 40 km/h. ¿La fuerza neta sobre el auto es nula? Justificá desde la geometría de la trayectoria, no desde la lista de fuerzas.
+\item ¿De qué lado del signo igual va el término $m\,v^2/R$, y qué consecuencia tiene eso para el diagrama de cuerpo aislado?
+\item Dos cuerpos de la misma masa giran con la misma velocidad angular, uno a 0,50 m del eje y el otro a 1,0 m. ¿En qué proporción están las fuerzas netas radiales sobre cada uno?
+\end{chequeo}
+
+\begin{bloque}{Quién paga la cuota}
+La pregunta operativa de cada ejercicio es siempre la misma: qué fuerzas reales tienen componente radial, y cuánto suman. No hay una fuerza nueva de la naturaleza que se active cuando algo gira. Las candidatas son las de los capítulos 3 y 4, y lo único que cambia es cuál queda a cargo.
+
+Una cuerda que sostiene un cuerpo girando en un círculo horizontal es el caso mínimo, porque la tensión apunta al centro y es la única con componente radial: la ecuación queda $T = m\,v^2/R$ y no hay nada más que hacer. En un círculo vertical el peso también tiene componente radial, que cambia punto a punto, y la ecuación radial combina las dos. Cuando un auto toma una curva plana, quien paga es el rozamiento estático entre las cubiertas y el asfalto, dirigido hacia el centro de la curva. Como el estático tiene un techo, $f_e \leq \mu_e\,n$, y en una curva horizontal la normal equilibra al peso, imponer que la cuota no supere ese techo da la rapidez máxima de una sola vez:
+\[
+m\,\frac{v^2}{R} \leq \mu_e\, m g
+\qquad\Longrightarrow\qquad
+v_{\max} = \sqrt{\mu_e\, g\, R} .
+\]
+La masa se canceló, así que el auto cargado y el vacío derrapan a la misma rapidez. Un resorte también puede pagarla, y ahí hay una vuelta de tuerca que conviene ver escrita: el radio del círculo es la longitud del resorte ya deformado, de modo que la elongación vale $x = R - L_0$ y la ecuación radial queda $k(R-L_0) = m\,v^2/R$, con $R$ a los dos lados del igual. Y cuando el cuerpo va apoyado sobre una superficie que gira con él, la normal entra en el reparto junto con lo que haya de hilos. Ése es el caso caro, y es el ejemplo resuelto de este capítulo.
+
+Ahí está también la respuesta a la segunda pregunta de la apertura. Sobre la moneda del microondas actúan el peso, la normal y el rozamiento estático, y las dos primeras son verticales, así que la paga el rozamiento estático, ejercido por el plato. Que hayas podido nombrar el objeto que la ejerce no es un detalle de redacción: es el test que separa una fuerza de algo que no lo es, y vuelve a aparecer en la sección de errores.
+
+Una aclaración de honestidad, y después no se vuelve sobre el asunto. Queda afuera de este capítulo la familia de fuerzas que dependen de la rapidez del propio cuerpo, del tipo del rozamiento del aire, que frenan a un móvil hasta una rapidez terminal. Escribirlas lleva a relacionar una función con su derivada, que es la misma frontera que el capítulo 5 ya dejó declarada. Es un límite del apunte, no un olvido, y ningún ejercicio del Práctico 2 lo necesita.
+
+\textit{Antes de seguir: para cada una de estas cuatro situaciones nombrá quién paga la cuota y qué objeto ejerce esa fuerza. Un vagón de montaña rusa en el punto más bajo de un rulo. La ropa pegada a la pared del tambor del lavarropas durante el centrifugado. Un satélite en órbita circular. Un chico sentado en el borde de una calesita.}
+\end{bloque}
+
+\begin{chequeo}
+\item En la ecuación radial de un auto en una curva plana, ¿por qué interviene $\mu_e$ y no $\mu_d$, si el auto claramente se está moviendo?
+\item ¿Por qué la elongación del resorte que gira no vale $R$ sino $R - L_0$?
+\item Una cuerda sostiene un cuerpo en un círculo horizontal. Si duplicás la rapidez sin tocar el radio, ¿por cuánto se multiplica la tensión?
+\end{chequeo}
+
+\begin{bloque}{Dos direcciones, y un atajo que a veces sirve}
+Casi ningún problema de este capítulo tiene toda la acción en la dirección radial. Lo habitual es que el cuerpo describa un círculo horizontal mientras se sostiene en la vertical, y eso es el hábito del capítulo 3 de elegir el modelo por dirección y no por problema. En la dirección perpendicular al plano del movimiento no hay aceleración, así que ahí vale $\sum F = 0$. En la dirección radial hay aceleración, y ahí vale la ecuación circular. Dos ecuaciones para el mismo cuerpo, en el mismo instante, sin contradicción entre ellas.
+
+Antes de escribirlas hay un paso geométrico que conviene hacer explícito, porque ahí se pierden más ejercicios que en el álgebra. Hay que identificar el radio de la circunferencia que el cuerpo describe, y ese radio no siempre coincide con la longitud del hilo que lo sujeta. Coinciden cuando el hilo está en el plano del movimiento y apunta al centro, como en el círculo vertical del ejercicio 13. Si el hilo está inclinado respecto de ese plano, el radio es su proyección sobre él, y sale de la trigonometría del dibujo, no del enunciado.
+
+Con las dos ecuaciones escritas queda disponible un atajo. Si las dos comparten una incógnita, dividir una por la otra la elimina y deja una sola ecuación con lo que se busca. Es lo que pasa en el péndulo cónico, donde la tensión aparece en las dos y la división la borra, dejando una relación limpia entre el ángulo, el radio y la rapidez. La primera etapa del ejemplo resuelto lo usa, y la segunda lo pone a prueba.
+
+\textit{Antes de seguir: en un problema de este tipo, ¿cómo decidís cuál de las dos direcciones es la de equilibrio, sin mirar todavía ninguna fuerza? Contestate mirando el movimiento, que es donde se decide.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué la ecuación de la dirección perpendicular es de equilibrio, si el cuerpo se está moviendo?
+\item Un cuerpo gira en un círculo horizontal colgado de un hilo de 1,0 m que forma 30 grados con la vertical. ¿Cuánto vale el radio de la circunferencia?
+\item ¿Qué tienen que cumplir dos ecuaciones para que dividir una por la otra sirva de algo?
+\end{chequeo}
+
+\begin{bloque}{Cuando además cambia la rapidez}
+Todo lo anterior vale igual si el movimiento circular no es uniforme, y conviene decirlo con todas las letras porque es una duda que aparece sola apenas la rapidez deja de ser constante. La expresión $a_n = v^2/R$ sigue valiendo instante por instante, con la rapidez que el cuerpo tiene en ese instante, y nada en su deducción pidió que $v$ fuera constante: el capítulo 2 la dedujo con la aceleración angular arbitraria, no nula. Lo que se agrega cuando la rapidez cambia es la segunda ecuación, la de la dirección tangencial,
+\[
+\sum F_t = m\,a_t = m\,R\,\gamma ,
+\]
+con $a_t$ y $\gamma$ tal como quedaron definidos en el capítulo 2. Las dos ecuaciones son independientes y se plantean juntas, igual que las dos de recién, solo que ahora ninguna es de equilibrio.
+
+De ahí salen dos lecturas que se usan seguido. La primera es que la fuerza neta deja de apuntar al centro, y su módulo se compone como una hipotenusa, $\lvert\vec F\rvert = m\sqrt{a_t^2 + a_n^2}$, igual que el módulo de la aceleración en el capítulo 2. La segunda es que una cuerda no puede producir componente tangencial, porque tira a lo largo de sí misma y esa dirección es la radial; hace falta un motor, un contacto rugoso o el propio peso. En el círculo vertical es el peso el que la aporta, con $a_t = g\sen\theta$, y por eso la rapidez cambia punto a punto. Ésa es también la razón por la que el enunciado del ejercicio 13 te entrega la rapidez como dato en lugar de pedírtela.
+
+\textit{Antes de seguir: pensá un movimiento circular con $a_t = 0$ y $a_n \neq 0$, y otro con las dos distintas de cero, y decidí en cada caso qué ángulo forma la fuerza neta con el radio.}
+\end{bloque}
+
+\begin{chequeo}
+\item ¿Por qué $a_n = v^2/R$ sigue valiendo en un movimiento circular que está frenando?
+\item Un disco atado a una cuerda gira sobre una mesa lisa aumentando su rapidez. ¿Puede la cuerda ser la responsable de ese aumento?
+\item Si $a_t = 1{,}6$ m/s$^2$ y $a_n = 28{,}8$ m/s$^2$, ¿la fuerza neta apunta al centro? Contestá con un número.
+\end{chequeo}
+
+\section{Ejemplo resuelto}
+
+\begin{ejemplo}[completo]
+Este ejemplo va en tres etapas, cada una con su enunciado, y las tres tratan la misma familia con una pieza más por vez. Es la familia del ejercicio 18 del práctico, el que la cátedra separó como adicional.
+
+\medskip
+\textit{Etapa I. El péndulo cónico.} De un gancho fijo al techo cuelga un hilo de 1.00 m de longitud y masa despreciable, con una pelota de goma de 0.40 kg en su extremo. Se le da un envión y la pelota queda describiendo un círculo horizontal a rapidez constante, con el hilo formando un ángulo constante de 37 grados con la vertical. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$, y que el seno y el coseno de 37 grados valen 0.60 y 0.80 respectivamente. Se solicita determinar el radio de la circunferencia, la tensión del hilo, la velocidad angular y la rapidez de la pelota.
+
+El diagrama de cuerpo aislado va por tu cuenta, que es dinámica consolidada desde el capítulo 3: el peso y la tensión a lo largo del hilo, y ninguna otra. Lo primero es la geometría. La pelota gira en un plano horizontal y el hilo está inclinado, así que el radio es la proyección del hilo sobre ese plano, $R = L\sen\theta = 0{,}60$ m, que no es la longitud del hilo. Con el eje vertical y la dirección radial, y tomando positivo hacia el centro,
+\[
+T\sen\theta = m\,\omega^2 R ,
+\qquad\qquad
+T\cos\theta = m g .
+\]
+La tensión aparece en las dos y es la única incógnita compartida, así que el atajo se aplica. Dividiendo la primera por la segunda y reemplazando $R = L\sen\theta$, el seno se cancela con el seno y queda
+\[
+\tan\theta = \frac{\omega^2 L\sen\theta}{g}
+\qquad\Longrightarrow\qquad
+\omega = \sqrt{\frac{g}{L\cos\theta}} = \sqrt{\frac{10}{0{,}80}}\ \mathrm{rad/s} = 3{,}536\ \mathrm{rad/s} .
+\]
+De la segunda ecuación sale $T = mg/\cos\theta = 4{,}0/0{,}80 = 5{,}00$ N, mayor que el peso de la pelota, que es 4,0 N, y tenía que serlo porque además de sostenerla tiene que curvarle la trayectoria. La rapidez es $v = \omega R = 2{,}121$ m/s, el período vale $2\pi/\omega = 1{,}777$ s y eso son 33,8 vueltas por minuto. La verificación sale de la primera relación: $v^2/(Rg) = 4{,}5/6 = 0{,}75$, que es exactamente $\tan 37^\circ$. Dos observaciones gratis. La masa se canceló en el camino, así que el ángulo no depende de qué cuelgue del hilo. Y el hilo no puede quedar horizontal: con $\theta$ acercándose a 90 grados desaparece la componente vertical de la tensión y no queda nada que sostenga el peso.
+
+\medskip
+\textit{Etapa II. La misma idea, con un apoyo.} En la sala de arribos de un aeropuerto, el plato de la cinta de equipaje es un cono achatado que gira alrededor de un cubo central. La superficie del plato baja hacia afuera formando 37 grados con la horizontal. Una valija de 5.0 kg queda apoyada sobre esa superficie, sujeta por una correa tendida sobre el plato que va desde la valija hasta el cubo central, y el conjunto gira a 12 rpm. La superficie del plato es lisa, y la correa mide 1.50 m desde el cubo hasta la valija, medida sobre el plato. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$, y que el seno y el coseno de 37 grados valen 0.60 y 0.80 respectivamente. Se solicita determinar la rapidez de la valija, la tensión de la correa y la fuerza que el plato ejerce sobre ella.
+
+La geometría y el diagrama van resueltos acá abajo, porque la superficie inclinada que gira es lo genuinamente nuevo del problema.
+
+\begin{center}
+\begin{tikzpicture}[scale=2.4, color=textgray]
+  % eje de giro
+  \draw[rulegray, dashed] (0,0.5) -- (0,-1.6);
+  \node[rulegray, anchor=north] at (0,-1.63) {\footnotesize eje};
+  % superficie del plato, a escala: direccion (0,8 , -0,6)
+  \draw[thick] (0,0) -- (1.68,-1.26);
+  \draw[rulegray] (0,0) -- (1.9,0);
+  \draw[rulegray] (0.22,0) arc (0:-36.87:0.22);
+  \node[rulegray, anchor=west] at (0.27,-0.06) {\footnotesize $\beta$};
+  % cota de R sobre la horizontal
+  \draw[rulegray, <->] (0,0.3) -- (1.2,0.3);
+  \draw[rulegray] (0,0.24) -- (0,0.36);
+  \draw[rulegray] (1.2,0.24) -- (1.2,0.36);
+  \node[rulegray, anchor=south] at (0.6,0.33) {\footnotesize $R = 1{,}20$ m};
+  \draw[rulegray, dashed] (1.2,0.3) -- (1.2,-0.9);
+  % la longitud d se mide sobre la superficie, rotulada a lo largo de ella
+  \node[rulegray, rotate=-36.87, anchor=north, yshift=-2pt] at (0.4,-0.3) {\footnotesize $d = 1{,}50$ m};
+  % valija y fuerzas. Los largos guardan la proporcion de los modulos
+  % calculados en el texto: mg = 50 N, T = 37,58 N, n = 34,32 N.
+  \fill (1.2,-0.9) circle (1.8pt);
+  \draw[very thick, ->] (1.2,-0.9) -- (0.72,-0.54);
+  \node[anchor=south west] at (0.8,-0.66) {$\vec T$};
+  \draw[very thick, ->] (1.2,-0.9) -- (1.53,-0.46);
+  \node[anchor=south west] at (1.5,-0.5) {$\vec n$};
+  \draw[very thick, ->] (1.2,-0.9) -- (1.2,-1.7);
+  \node[anchor=north] at (1.2,-1.72) {$m\vec g$};
+  % componente horizontal de la normal, hacia afuera
+  \draw[rulegray, ->] (1.2,-0.9) -- (1.53,-0.9);
+  \draw[rulegray, dashed] (1.53,-0.46) -- (1.53,-0.9);
+  \node[rulegray, anchor=north west] at (1.3,-0.93) {\footnotesize $n\sen\beta$};
+  % aceleracion normal, corrida y en gris
+  \draw[rulegray, ->] (2.25,-1.5) -- (1.75,-1.5);
+  \node[rulegray, anchor=south] at (2.0,-1.46) {\footnotesize $\vec a_n$};
+  \node[rulegray, anchor=north] at (2.0,-1.56) {\footnotesize no es una fuerza};
+\end{tikzpicture}
+\end{center}
+
+Tres fuerzas cruzan el recorte y ninguna es nueva. La correa tira a lo largo del plato hacia el cubo, la normal es perpendicular a la superficie y el peso es vertical. La aceleración está dibujada aparte y en gris, con la convención de la figura del ascensor del capítulo 3, porque sirve para recordar hacia dónde apunta pero no es una fuerza y no se suma con las otras tres. El radio es la proyección de la correa sobre el plano horizontal del movimiento, $R = d\cos\beta = 1{,}20$ m, y con $\omega = 12$ rpm $= 1{,}2566$ rad/s sale $v = \omega R = 1{,}508$ m/s. El detalle que la figura resuelve y la prosa no puede es hacia dónde apunta la componente horizontal de la normal. Como la superficie baja hacia afuera, la normal se inclina hacia afuera y su componente horizontal apunta en contra del centro, así que en el balance radial la normal resta.
+
+Con radial hacia adentro positivo y $\beta$ medido desde la horizontal, el planteo queda así:
+\[
+T\cos\beta - n\sen\beta = m\,\omega^2 R ,
+\qquad\qquad
+T\sen\beta + n\cos\beta = m g .
+\]
+
+\textit{Antes de seguir: intentá dividir una ecuación por la otra, como recién. Fijate qué pasa.}
+
+No se cancela nada. En la etapa I la tensión era la única incógnita compartida y desaparecía al dividir; acá $T$ y $n$ aparecen en las dos ecuaciones, y el cociente queda con las dos arriba y las dos abajo, más enredado que el original. La condición de aplicabilidad conviene dejarla escrita con todas las letras, porque es la parte transferible: dividir una ecuación por la otra sirve si y solo si comparten exactamente una incógnita. Con dos, la división no elimina nada y hay que resolver el sistema. El caso general es el sistema; la división es el atajo del caso particular.
+
+Y el sistema es un $2\times 2$ lineal en $T$ y $n$, con todo lo demás conocido. Resolvelo vos antes de seguir leyendo, por el método que prefieras y reemplazando los números recién al final. La solución cerrada es
+\[
+T = m\,\omega^2 R\cos\beta + m g\sen\beta ,
+\qquad\qquad
+n = m g\cos\beta - m\,\omega^2 R\sen\beta ,
+\]
+y con $m\omega^2 R = 9{,}475$ N y $mg = 50$ N eso da $T = 37{,}58$ N y $n = 34{,}32$ N. Fijate en la forma del resultado, que es lo único del álgebra que merece comentario. Las dos expresiones son la proyección del par $(mg,\ m\omega^2 R)$ sobre las direcciones de la correa y de la normal, con los signos que la figura anticipa: en la dirección de la correa las dos contribuciones se suman, porque la correa tiene que sostener y curvar a la vez, y en la de la normal se restan, porque la rotación tiende a despegar la valija de la superficie.
+
+El signo de la normal tiene su propio test de detección, y conviene adoptarlo: si te queda $n$ sumando en la ecuación radial, mirá otra vez hacia dónde apunta su componente horizontal. Como chequeo de sentido físico, $n/mg = 0{,}686$, o sea que la valija está apoyada con firmeza y lejos de despegarse, que es lo esperable en una cinta de equipaje que gira despacio.
+
+\medskip
+\textit{Etapa III. Cuando el apoyo deja de trabajar.} El plato se acelera hasta que la valija está a punto de despegarse de la superficie. Se solicita la velocidad angular a la que eso ocurre y la rapidez de la valija en ese momento.
+
+Despegarse significa que la superficie deja de empujar, o sea $n = 0$, y eso colapsa el sistema. La segunda ecuación da $T = mg/\sen\beta$ y la primera $T\cos\beta = m\omega^2 R$, con una sola incógnita compartida, así que el atajo de la etapa I vuelve a servir. Dividiendo y usando $R = d\cos\beta$,
+\[
+\omega_c = \sqrt{\frac{g}{d\,\sen\beta}} = \sqrt{\frac{10}{0{,}90}}\ \mathrm{rad/s} = 3{,}333\ \mathrm{rad/s} ,
+\]
+que son 31,8 vueltas por minuto, y la rapidez en ese instante vale $v_c = \omega_c R = 4{,}00$ m/s. A 12 rpm el plato gira a menos de la mitad de esa velocidad angular, coherente con la normal cómoda que dio la etapa II.
+
+Vale la pena mirar qué quedó. Con la normal anulada la valija cuelga de la correa y nada más, y la correa forma 53 grados con la vertical: es el péndulo cónico de la etapa I con otros números. La fórmula de allá tiene que reproducir esto, y lo hace en un renglón, porque $v_c^2/(Rg) = 16/12 = 4/3$, que es exactamente $\tan 53^\circ$. El atajo que se había roto vuelve a funcionar en el instante exacto en que el problema se reduce a una sola incógnita compartida, y ésa es la lección del ejemplo: la maniobra tiene una condición de uso, y la condición se verifica mirando las ecuaciones, no el enunciado.
+
+Una nota de convención antes de cerrar, para que la figura no te confunda cuando vayas al práctico. El ángulo de este problema está medido desde la horizontal, y por eso el radio salió con un coseno. En el ejercicio 18 el ángulo está marcado en la figura entre el eje vertical y la generatriz del cono, o sea desde el eje, y ahí el radio sale con un seno. Además la figura del práctico no está a escala: dibuja un cono mucho más angosto que el que corresponde al ángulo de su enunciado, así que no leas el ángulo del dibujo.
+\citaEjercicio{Misma estructura que el ejercicio 18 del Práctico 2, que la cátedra separó como ejercicio adicional}
+\end{ejemplo}
+
+\begin{ejemplo}[parcial]
+Una linterna de mano de 0.25 kg cuelga de un cordón de 0.80 m que un guardaparques hace girar en un plano vertical, alrededor de su mano. El ángulo $\theta$ se mide desde el punto más bajo de la circunferencia. Se solicita la tensión del cordón en función del ángulo y de la rapidez que la linterna tiene en ese ángulo, y su valor en cuatro giros independientes, en los que la linterna pasa con una rapidez de módulo 4.0 m/s por el punto más bajo, por los 60 grados, por el costado y por el punto más alto. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+
+El enunciado fija la convención del ángulo, y conviene detenerse en por qué hacía falta que la fijara. Un ángulo con la vertical, sin más, admite dos lecturas: acá $\theta = 0$ es el punto más bajo de la circunferencia, pero podría haber sido el más alto, y con esa lectura el término del peso cambia de signo y la fórmula queda distinta. Cuando el enunciado no la declara, la convención hay que elegirla y dejarla escrita antes de proyectar nada, nunca suponerla.
+
+Sobre la linterna actúan dos fuerzas y nada más, la tensión a lo largo del cordón hacia la mano y el peso. Acá el cordón está en el plano del movimiento y apunta al centro, de modo que su longitud sí es el radio. La rapidez cambia punto a punto, porque el peso tiene componente tangencial, pero eso no afecta la ecuación radial: $a_n = v^2/R$ vale igual, con la rapidez instantánea. Conviene armar la proyección una sola vez y que sirva para toda la vuelta. Con el sentido positivo hacia el centro, la tensión entra siempre positiva, porque apunta al centro esté donde esté la linterna. El peso apunta siempre hacia abajo, y su componente radial vale $-mg\cos\theta$ con $\theta$ medido desde el punto más bajo: negativa abajo, donde el peso se aleja del centro, y positiva arriba, donde apunta hacia él. El coseno se encarga solo del cambio de signo, que es la ventaja de fijar la convención antes de escribir nada:
+\[
+T - mg\cos\theta = m\,\frac{v^2}{R}
+\qquad\Longrightarrow\qquad
+T = m\left(\frac{v^2}{R} + g\cos\theta\right) .
+\]
+
+Fijate que la fórmula tiene dos variables, el ángulo y la rapidez, y que por eso los cuatro casos son cuatro giros distintos y no cuatro puntos de una misma vuelta: en un plano vertical la rapidez cambia a lo largo del recorrido, así que lo que estos cuatro comparten es la rapidez de paso por su punto.
+
+De acá en adelante seguís vos, y son cuentas de reemplazar. Evaluá la tensión en $\theta = 0$, $\theta = 60^\circ$, $\theta = 90^\circ$ y $\theta = 180^\circ$, y explicate qué es lo único que hace variar el resultado entre uno y otro. Verificá además que en el costado la tensión queda igual a $m v^2/R$ sola, sin rastro del peso, y decí por qué tenía que pasar eso. Y hacé la autoverificación de la convención, que es el chequeo más barato del capítulo: con $\theta$ medido desde el punto más bajo, la fórmula tiene que dar el valor máximo en $\theta = 0$ y el mínimo en $\theta = 180^\circ$. Si te da al revés, la convención que usaste no es la que declaraste.
+
+\medskip
+\textit{Más allá de lo que pide el enunciado.} La fórmula que salió contesta una pregunta que el ejercicio no hace. El cordón puede tirar pero no empujar, así que la tensión no puede ser negativa, y la condición $T \geq 0$ en el punto más alto exige
+\[
+\frac{v_{\text{sup}}^2}{R} \geq g
+\qquad\Longrightarrow\qquad
+v_{\text{sup}} \geq \sqrt{g R} ,
+\]
+que para esta linterna son $\sqrt{10 \cdot 0{,}80} = 2{,}828$ m/s. Por debajo de esa rapidez el cordón se afloja antes de llegar arriba y la linterna deja de describir la circunferencia. La pregunta que sigue sola es cuán rápido tiene que ir abajo para llegar arriba con esa rapidez. Ésa no se puede contestar con nada de lo que hay sobre la mesa, y la razón es estructural: no tenés todavía ninguna herramienta que vincule la rapidez del cuerpo en dos puntos distintos de la trayectoria. Todo lo de este capítulo es local, punto por punto. Lo que hace falta es la conservación de la energía, que es justamente lo que estás viendo en clase ahora, en la Guía 3.
+\citaEjercicio{Adaptado del ejercicio 13 del Práctico 2}
+\end{ejemplo}
+
+\section{Errores comunes}
+
+Lo que sigue no es una lista de retos sino de discrepancias concretas entre lo que suele escribirse y lo que dicen las ecuaciones del capítulo. Cada una tiene una manera objetiva de detectarse.
+
+\begin{erroresComunes}
+  \item Dibujar la fuerza centrípeta como una flecha más en el diagrama de cuerpo aislado. La detección son dos preguntas. De qué lado del signo igual va ese término, y la respuesta es del derecho, porque $m\,a_n$ es el $m\vec a$ de la segunda ley. Y si podés nombrar el objeto que la ejerce, porque si no podés, no es una fuerza: las del diagrama tienen todas un objeto detrás, la cuerda, el piso, la Tierra, el resorte.
+  \item Agregar al diagrama una fuerza centrífuga que empuje al cuerpo hacia afuera. Es el mismo test aplicado a un caso donde la sensación juega en contra: dentro de un auto que dobla uno se siente empujado contra la puerta, y sin embargo nadie empuja. El cuerpo tiende a seguir derecho, por la primera ley, y es la puerta la que se interpone y lo empuja hacia el centro. La fuerza centrífuga aparece al describir el movimiento desde el auto que rota, que no es un marco inercial y necesita términos extra que no corresponden a ninguna interacción. Este capítulo entero se plantea desde el piso, donde esos términos no existen.
+  \item Confundir la longitud del hilo con el radio de la circunferencia. Coinciden solamente cuando el hilo está en el plano del movimiento y apunta al centro. Cuando está inclinado, como en el péndulo cónico y en el cono del ejercicio 18, el radio es su proyección sobre el plano del movimiento y resulta siempre menor. Es la misma clase de colisión de símbolos que el capítulo 5 señaló con la $T$ de tensión y la de período, y se detecta preguntándose qué distancia es la que aparece en $m\,v^2/R$, que es la distancia al eje de giro.
+  \item Sumar la componente radial de la normal cuando corresponde restarla, en un cuerpo apoyado sobre una superficie que gira. La normal sale de la superficie, y si la superficie baja hacia afuera, la normal se inclina hacia afuera. La detección es directa: en ese caso, si $n$ queda sumando en la ecuación radial, la componente horizontal quedó apuntando al centro y hay que volver a mirar el dibujo. El signo no es una regla del tema sino una consecuencia de cómo está puesta la superficie: contra la pared del tambor de un lavarropas la normal apunta al centro y suma.
+  \item Reemplazar $\omega$ en revoluciones por minuto dentro de $m\,\omega^2 R$. Las relaciones del capítulo 2 entre $\omega$, $v$ y $R$ valen con el ángulo en radianes y con ninguna otra unidad, y el chequeo no es dimensional, porque el radián no aparece en el análisis de unidades. Conviene mirar la unidad del dato antes de reemplazar. En la misma línea, cuando un enunciado llama frecuencia angular a $\omega$ está nombrando la velocidad angular del capítulo 2, no la frecuencia $f$, que va en hertz.
+  \item Escribir $n = mg$ por costumbre. Eso vale sobre una superficie horizontal sin aceleración vertical, y deja de valer apenas la superficie se inclina o el movimiento tiene componente radial en la vertical. La normal se despeja siempre de las ecuaciones, igual que en el capítulo 3 con la balanza dentro del ascensor.
+  \item Suponer que $a_n = v^2/R$ solo vale si la rapidez es constante. Vale en todo instante de cualquier movimiento circular, con la rapidez de ese instante. Lo que cambia si la rapidez no es constante es que aparece una componente tangencial y la fuerza neta deja de apuntar al centro.
+  \item Usar $\mu_d$ para la rapidez máxima en una curva. Mientras las cubiertas no derrapan el contacto no desliza, así que el rozamiento que actúa es el estático, con su desigualdad, y la rapidez máxima es la del movimiento inminente, donde el estático llega a su techo. Si en el planteo aparece una igualdad con $\mu_d$, la condición que se escribió es la de un auto que ya está derrapando.
+\end{erroresComunes}
+
+\section{Ejercicios}
+
+\subsection{Práctica en bloque}
+
+Los cinco que siguen están ordenados por quién paga la cuota, y ese orden no coincide con el del marco teórico. Los dos primeros tienen una sola fuerza en la dirección radial, para que la ecuación central sea la única dificultad; los tres últimos cambian quién la produce. Antes de calcular nada, hacé el diagrama de cuerpo aislado y anotá de qué lado del signo igual va cada término.
+
+\begin{ejercicio}[quién paga la cuota]{bloque}
+Sobre una mesa de aire, un disco de hockey de 0.25 kg gira describiendo un círculo horizontal atado a una cuerda de 0.40 m fija a un pivote central. El disco da vueltas a rapidez constante y su velocidad tiene módulo 2.0 m/s. La cuerda es de masa despreciable y el rozamiento con la mesa es nulo.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del disco, con las tres fuerzas, e indique cuál de ellas tiene componente en la dirección radial.
+  \item Explique por qué el peso y la reacción de la mesa no aparecen en la ecuación radial, y calcule la tensión de la cuerda.
+  \item Calcule la velocidad angular, la frecuencia y el período, y exprese la frecuencia en revoluciones por minuto.
+  \item La cuerda soporta como máximo 10 N. Calcule la rapidez a la que se corta.
+  \item Se cambia la cuerda por una del doble de longitud, con la misma resistencia. Calcule la nueva rapidez máxima y explique por qué no es el doble.
+  \item Un compañero dibuja en el diagrama de (a) una cuarta flecha rotulada fuerza centrípeta. Indique qué está mal, usando las dos preguntas de detección: de qué lado del igual va ese término, y qué objeto ejerce esa fuerza.
+\end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}[el rozamiento paga la cuota]{bloque}
+Una camioneta toma una curva plana y horizontal de 50 m de radio, en un camino de ripio. El coeficiente de rozamiento estático entre las cubiertas y el ripio es 0.80 y el dinámico es 0.50. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de la camioneta vista de frente, con la dirección de la fuerza de rozamiento claramente indicada.
+  \item Explique por qué el rozamiento que interviene es el estático y no el dinámico, si la camioneta se está moviendo.
+  \item Calcule la máxima rapidez a la que puede tomar la curva sin derrapar, y exprésela en kilómetros por hora.
+  \item Calcule el radio mínimo de una curva que la camioneta pueda tomar a 25 m/s sobre el mismo ripio.
+  \item Indique si la respuesta de (c) cambia cuando la camioneta va cargada, y justifique a partir de la ecuación y no del sentido común.
+  \item Llueve y el coeficiente estático baja a 0.40. Calcule la nueva rapidez máxima y explique por qué no se reduce a la mitad.
+\end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}[el círculo vertical, punto por punto]{bloque}
+En una clase de educación física, una alumna hace girar una pelota de goma de 0.40 kg atada al extremo de una soga de 0.50 m, en un plano vertical y alrededor de su mano. El ángulo $\theta$ se mide desde el punto más bajo de la circunferencia. Los incisos (c), (d) y (e) corresponden a tres lanzamientos distintos, con la rapidez medida en el punto que cada uno indica. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de la pelota en una posición genérica, con el ángulo marcado y la dirección radial indicada.
+  \item Escriba la tensión en función del ángulo y de la rapidez instantánea, explicando por qué $a_n = v^2/R$ sigue valiendo aunque el movimiento no sea uniforme.
+  \item En el punto más bajo la pelota pasa a 4.0 m/s. Calcule la tensión.
+  \item A 60 grados del punto más bajo pasa a 3.5 m/s. Calcule la tensión.
+  \item En el punto más alto pasa a 3.0 m/s. Calcule la tensión y explique por qué es la menor de las tres.
+  \item La soga resiste 25 N. Determine en qué punto de la circunferencia queda más exigida, a igualdad de rapidez de paso, y con qué rapidez en ese punto se alcanzan los 25 N.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 13 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[el resorte paga la cuota]{bloque}
+Sobre una mesa horizontal y lisa, un resorte de masa despreciable tiene un extremo fijo a un pivote. Su longitud natural es 0.60 m y su constante elástica es 80 N/m. Al extremo libre se sujeta un cuerpo de 2.0 kg, que se pone a girar describiendo un círculo horizontal a rapidez constante. El resorte se mantiene siempre estirado y alineado con el radio.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del cuerpo y declare explícitamente la suposición que hace que el peso no aparezca en la ecuación radial.
+  \item Explique por qué la elongación del resorte no es $R$ sino $R - L_0$, y escriba la ecuación radial dejando $R$ a los dos lados.
+  \item El radio del círculo es 1.00 m. Calcule la elongación, la fuerza que hace el resorte y la rapidez del cuerpo.
+  \item Se duplica la rapidez del cuerpo. Escriba la ecuación cuadrática que determina el nuevo radio, resuélvala y explique por qué se descarta una de las dos raíces.
+  \item Calcule la elongación en la situación de (d) y compárela con la longitud natural. Indique qué le pasa al modelo de Hooke.
+  \item Explique por qué duplicar la rapidez no duplica el radio, a partir de la forma de la ecuación de (b). Resuelva después la misma ecuación con longitud natural nula, muestre que en ese caso el radio sí resulta proporcional a la rapidez, e identifique con eso cuál es el término responsable de que no lo sea.
+\end{enumerate}
+\citaEjercicio{Similar al ejercicio 14 del Práctico 2}
+\end{ejercicio}
+
+\begin{ejercicio}[la segunda ecuación]{bloque}
+Un disco de 0.50 kg sobre una mesa de aire está atado por una cuerda de 0.80 m a un pivote central motorizado. El disco parte del reposo y el motor lo hace girar con una aceleración angular constante de 2.0 rad/s$^2$, mediante una varilla que le aplica una fuerza siempre tangente a la trayectoria. La cuerda se mantiene tensa y de longitud constante.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del disco visto desde arriba, separando la dirección radial de la tangencial.
+  \item Calcule la velocidad angular, la rapidez, la aceleración normal y la aceleración tangencial a los 3.0 s.
+  \item Calcule la tensión de la cuerda y la fuerza tangencial en ese instante.
+  \item Calcule el módulo de la fuerza neta sobre el disco y el ángulo que forma con la dirección radial.
+  \item Determine el instante en que la aceleración tangencial y la normal tienen el mismo módulo.
+  \item Explique por qué la cuerda sola no podría producir la aceleración tangencial, cualquiera sea su tensión.
+\end{enumerate}
+\end{ejercicio}
+
+\subsection{Práctica en bloque, ejercicios adicionales}
+
+Los tres que siguen tienen más piezas y menos guía por inciso, que es la diferencia entre el cuerpo de un práctico y su sección de adicionales. En esta materia los adicionales son nivel de parcial, así que el planteo corre por tu cuenta.
+
+\begin{ejercicio}[el cuerpo que gira y el que cuelga]{bloque}
+Sobre una mesa horizontal y lisa hay un agujero en el centro. Un disco de 0.60 kg gira sobre la mesa describiendo un círculo de 0.80 m de radio, atado a un hilo que pasa por el agujero y del que cuelga, por debajo de la mesa, un cuerpo de 0.30 kg. El cuerpo colgante permanece en reposo mientras el disco gira. El hilo es inextensible y de masa despreciable, y se desprecia el rozamiento en el borde del agujero. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de cada uno de los dos cuerpos por separado, con los ejes elegidos en cada caso. No tienen por qué ser los mismos.
+  \item Escriba la ecuación de cada cuerpo e indique cuál es la magnitud que los vincula y por qué.
+  \item Calcule la tensión del hilo y la rapidez del disco.
+  \item Calcule la velocidad angular del disco, su período y su frecuencia en revoluciones por minuto.
+  \item Se tira del hilo desde abajo hasta dejar el radio en 0.40 m, con el mismo cuerpo colgando en reposo. Calcule la nueva rapidez y la nueva velocidad angular, e indique cuál de las dos aumentó.
+  \item Determine qué masa habría que colgar para que el disco girara a 5.0 rad/s con el radio original, y explique qué pasaría con el cuerpo colgante si se colgara una masa mayor que ésa.
+\end{enumerate}
+\citaEjercicio{Similar al problema 2 del Parcial 1 de 2024}
+\end{ejercicio}
+
+\begin{ejercicio}[dos cuerpos en la misma cuerda]{bloque}
+Un plato giratorio liso gira alrededor de un eje vertical. Desde el eje sale un hilo que sujeta un cuerpo A de 0.30 kg situado a 0.40 m del eje, y desde A sale un segundo hilo, alineado con el primero, que sujeta un cuerpo B de 0.20 kg situado a 0.70 m del eje. Los dos cuerpos giran junto con el plato a 5.0 rad/s. Los hilos son de masa despreciable y el rozamiento entre los cuerpos y el plato es nulo.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado de cada cuerpo, prestando atención a cuántos hilos tiran de cada uno y en qué sentido.
+  \item Explique por qué los dos cuerpos tienen la misma velocidad angular pero distinta rapidez, y calcule la rapidez de cada uno.
+  \item Calcule la tensión del tramo exterior y la del tramo interior.
+  \item Indique cuál de los dos tramos está más exigido y justifíquelo sin recurrir a las cuentas, a partir de qué tiene que sostener cada uno.
+  \item Los dos hilos resisten 26 N. Calcule la velocidad angular a la que se corta el primero, indique cuál es, y exprésela en revoluciones por minuto.
+  \item Se intercambian los cuerpos de posición, dejando las mismas distancias al eje y la misma velocidad angular. Calcule las dos tensiones nuevas e indique si el conjunto quedó más o menos exigido.
+\end{enumerate}
+\citaEjercicio{Misma estructura que el ejercicio 7 del Práctico 2, llevada al movimiento circular}
+\end{ejercicio}
+
+\begin{ejercicio}[la curva y lo que va arriba]{bloque}
+Un utilitario de 1200 kg recorre una curva plana y horizontal de 150 m de radio sobre asfalto seco. El coeficiente de rozamiento estático entre las cubiertas y el asfalto es 0.60. En la caja de carga, apoyada sobre el piso y sin atar, viaja una heladera de 80 kg; el coeficiente de rozamiento estático entre la heladera y el piso de la caja es 0.15. Considere que la aceleración de la gravedad es igual a 10 m/s$^2$.
+\begin{enumerate}[label=(\alph*), leftmargin=1.7em, itemsep=1pt, topsep=3pt]
+  \item Realice el diagrama de cuerpo aislado del utilitario visto de frente y el de la heladera, por separado, indicando en cada uno qué superficie ejerce el rozamiento.
+  \item Calcule la máxima rapidez a la que el utilitario puede tomar la curva sin derrapar, y exprésela en kilómetros por hora.
+  \item Calcule la máxima rapidez a la que puede tomarla sin que la heladera se deslice dentro de la caja, y exprésela en kilómetros por hora.
+  \item Indique cuál de las dos condiciones manda y hacia qué lado de la caja se corre la heladera cuando se supera.
+  \item Indique si alguna de las dos respuestas cambia cuando el utilitario viaja vacío o cargado, y justifique a partir de las ecuaciones.
+  \item Llueve y el coeficiente entre cubiertas y asfalto baja a 0.30. Calcule la nueva rapidez máxima del utilitario, indique si cambió cuál de las dos condiciones manda, y diga qué habría que hacer para que mandara la otra.
+\end{enumerate}
+\end{ejercicio}
+
+Un último apunte. El ejercicio 18 del práctico está marcado como adicional, y en esta materia eso significa que la cátedra lo separó del cuerpo principal para tratarlo con nivel de parcial. Tiene la misma estructura que la etapa II del ejemplo resuelto, pero con otro objeto, otros datos y, sobre todo, el ángulo medido desde el eje y no desde la horizontal, de modo que ahí el radio sale con un seno y no con un coseno. No está resuelto en ninguna parte de este capítulo a propósito. Hacelo por tu cuenta, con el enunciado y la figura del práctico, después de haber terminado los tres adicionales. Es la mejor autoevaluación disponible de todo el capítulo, y solo sirve si llegás a él sin haberlo visto resuelto.
+
 \end{document}
