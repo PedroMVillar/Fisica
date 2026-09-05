@@ -1,10 +1,10 @@
 # Física 1 — LCC, FaMAF (UNC)
 
 ![Materia](https://img.shields.io/badge/F%C3%ADsica_1-LCC_%C2%B7_FaMAF_UNC-1f4e79)
-![Apunte](https://img.shields.io/badge/apunte-3_cap%C3%ADtulos_%C2%B7_54_p%C3%A1ginas-2e7d32)
+![Apunte](https://img.shields.io/badge/apunte-4_cap%C3%ADtulos_%C2%B7_77_p%C3%A1ginas-2e7d32)
 ![LaTeX](https://img.shields.io/badge/LaTeX-clase_book-008080?logo=latex&logoColor=white)
 ![Verificación](https://img.shields.io/badge/ejercicios-verificados_por_c%C3%B3digo-6a1b9a?logo=python&logoColor=white)
-![Flashcards](https://img.shields.io/badge/flashcards-86-e07b39?logo=anki&logoColor=white)
+![Flashcards](https://img.shields.io/badge/flashcards-146-e07b39?logo=anki&logoColor=white)
 ![Parcial I](https://img.shields.io/badge/Parcial_I-24_sep_2026-b3261e)
 
 Material de estudio de **Física 1**, cursada 2026. Reúne la bibliografía y los prácticos de la cátedra, los exámenes de años anteriores, y **un apunte teórico propio** que se escribe tema por tema a lo largo de la cursada.
@@ -18,8 +18,9 @@ Vive en [`sintesis/fisica-1/`](./sintesis/fisica-1). Es **un solo documento LaTe
 | Cap. | Tema | Guía | Páginas |
 |---|---|---|---|
 | **1** | Cinemática en una dimensión | 1 | 3–24 |
-| **2** | Dinámica I: las tres leyes de Newton | 2 | 25–37 |
-| **3** | Dinámica II: rozamiento y sistemas acoplados | 2 | 38–54 |
+| **2** | Cinemática en el plano: vectores, tiro parabólico y movimiento circular | 1 | 25–47 |
+| **3** | Dinámica I: las tres leyes de Newton | 2 | 48–60 |
+| **4** | Dinámica II: rozamiento y sistemas acoplados | 2 | 61–77 |
 
 Cada capítulo sigue la misma estructura: motivación · marco teórico en bloques, cada uno con su chequeo de comprensión · ejemplos resueltos con andamiaje decreciente · errores comunes · ejercicios en dos niveles.
 
@@ -31,6 +32,7 @@ Están en los scripts de verificación que acompañan al apunte:
 
 ```
 sintesis/fisica-1/verificacion-cinematica-1d.py
+sintesis/fisica-1/verificacion-cinematica-plano.py
 sintesis/fisica-1/verificacion-dinamica-1.py
 sintesis/fisica-1/verificacion-dinamica-2.py
 ```
@@ -79,16 +81,16 @@ Cobertura del apunte sobre los prácticos:
 | Práctico | Resolvibles | Falta |
 |---|---|---|
 | 0 — Magnitudes y vectores | 0 / 16 | todo |
-| 1 — Cinemática | **7 / 15** | 2D, tiro de proyectil y circular |
+| 1 — Cinemática | **15 / 15** | — |
 | 2 — Dinámica | **11 / 19** | circular con fuerzas, MAS, gravitación |
 | 3 — Trabajo y energía | 0 / 12 | todo |
 
-El ejercicio 12 del Práctico 2 (resortes en serie y paralelo) no lo cubre ninguna de las fuentes disponibles.
+Ninguna de las fuentes disponibles trata la composición de resortes, que es lo que pide el ejercicio 12 del Práctico 2. No es un hueco de fondo: los dos resortes cuelgan en paralelo y sus fuerzas se suman, así que sale de la ley de Hooke más el principio de superposición. Cuando se escriba ese capítulo, va declarado como construcción propia.
 
 ### Material de repaso
 
-- [`flashcards/fisica-1.tsv`](./flashcards) — 86 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
-- [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa de los 33 conceptos cubiertos, en dos paneles.
+- [`flashcards/fisica-1.tsv`](./flashcards) — 146 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `cinematica-2d`, `movimiento-circular`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
+- [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa de los 54 conceptos cubiertos, en un solo panel de 67 × 76 cm, con tres niveles de jerarquía y un color por familia. Se lee en pantalla o se imprime en A1: a esta cantidad de nodos, forzarlo a un A4 bajaría la letra a 2 pt.
 
 ### Carpetas por examen
 
