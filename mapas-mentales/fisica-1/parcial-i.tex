@@ -6,116 +6,154 @@
 %  cada vez que se cierra una síntesis de un tema del Parcial I.
 %  Cualquier edición manual se pierde en la próxima regeneración.
 %
-%  Estado al generar (2026-09-04):
-%    - Temas del Parcial I: 12 · con síntesis aprobada: 3 · pendientes: 9
-%      Cubiertos: Cinemática 1D (Guía 1), Dinámica I y Dinámica II (Guía 2).
-%    - conceptos_ya_cubiertos (fisica-1): 33 — 28 en dificultad basica,
-%      5 en intermedia. Las 5 intermedias tienen veces_reaparecido=1: son
-%      las de Dinámica I que Dinámica II volvió a exigir. Se marcan con
-%      $\star$, NO con color: el color codifica rama, y un color por
-%      concepto individual rompería la lectura del agrupamiento.
+%  Estado al generar (2026-09-05):
+%    - Temas del Parcial I: 12. Con síntesis aprobada: 4 completos
+%      (Cinemática 1D, Cinemática 2D, Dinámica I, Dinámica II) y 1
+%      parcial (aceleración normal/tangencial + movimiento angular
+%      + MCU: falta movimiento relativo). Sin empezar: 7.
+%    - conceptos_ya_cubiertos (fisica-1): 54, en 6 familias —
+%      Cinematica 1D (11), Calculo diferencial aplicado (7),
+%      Calculo integral aplicado (2), Cinematica 2D (8),
+%      Movimiento circular (9), Dinamica newtoniana (17).
+%    - 49 en dificultad basica, 5 en intermedia. Las 5 intermedias
+%      tienen veces_reaparecido=1: son las de Dinámica I que
+%      Dinámica II volvió a exigir. Se marcan con $\star$, NO con
+%      color: el color codifica familia, y un color por concepto
+%      individual rompería la lectura del agrupamiento.
+%    - Los 21 conceptos nuevos (Cinematica 2D + Movimiento circular
+%      + los 4 de álgebra vectorial que entraron a Calculo
+%      diferencial aplicado) son todos primer contacto -> basica,
+%      sin estrella. Es el criterio ya establecido del proyecto:
+%      intermedia se reserva para lo que ya reapareció.
 %
 %  ---------------------------------------------------------------
-%  POR QUÉ AHORA SON DOS PANELES Y NO UN SOLO MAPA
+%  POR QUÉ VUELVE A SER UN SOLO PANEL, Y POR QUÉ EN UN PLIEGO GRANDE
 %  ---------------------------------------------------------------
-%  La vuelta anterior el mapa tenía 17 conceptos y entraba en un solo
-%  tikzpicture. Con 33 ya NO entra, y no es un problema de agrupación:
-%  es el techo de la plantilla. El cálculo de colisión de la vuelta
-%  pasada, llevado a todos los pares de nodos (no solo a los extremos
-%  de cada abanico), da esto con las constantes del preámbulo
-%  (level distance 5.4 y 3.6; sibling angle 50; diámetros 3.6/2.7/2.1):
+%  La vuelta anterior, con 33 conceptos, salió en dos paneles A4
+%  apaisados, y el .tex de entonces dejó anotado el techo: con la
+%  geometría de aquel preámbulo ninguna partición de ramas evitaba
+%  el solapamiento más allá de 21 hojas. Con 54 eso daban tres
+%  paneles o más, que es donde un mapa mental deja de servir.
 %
-%    - Dos hojas hermanas de una misma rama quedan a 2*3.6*sin(25°) =
-%      3.04 cm de centro a centro, o sea 0.94 cm de holgura entre bordes.
-%      Ese 0.94 es el TECHO ABSOLUTO de holgura de cualquier reparto.
-%    - Barriendo todas las particiones de N hojas en 4 a 11 ramas, con
-%      2 a 6 hojas por rama, y todos los órdenes cíclicos de cada una:
-%        N <= 21  ->  hay reparto con holgura positiva
-%        N >= 22  ->  NINGÚN reparto evita el solapamiento
-%      Para N = 33 el mejor caso posible es 4-2-3-4-4-4-4-4-4, y aun así
-%      dos hojas se pisan 0.61 cm. No hay agrupación que lo salve.
+%  Se atacó en tres frentes, y hace falta entender que sólo dos de
+%  ellos mueven la aguja de verdad:
 %
-%  El modelo se validó contra los dos casos documentados en la vuelta
-%  anterior: reproduce +0.94 cm para el reparto 4-3-3-4-3 que compiló
-%  bien, y -0.28 cm para el 4-3-2-4-4 que se pisaba, señalando el mismo
-%  par de hojas entre las dos ramas de 4 contiguas.
+%  (1) TERCER NIVEL DE JERARQUÍA. El mapa pasa de
+%      raíz -> familia -> concepto a
+%      raíz -> familia -> subtema -> concepto.
+%      Esto es lo que hace tratable a una familia grande: los 17
+%      conceptos de Dinámica newtoniana, colgados directo, pedían un
+%      abanico de 16*sibling angle, absurdo. Repartidos en subtemas
+%      de 2 a 4, cada abanico es chico y los abanicos se anidan.
 %
-%  Ante eso, y como las reglas prohíben tocar sibling angle, text width
-%  o las distancias desde el cuerpo, la salida se parte en dos paneles
-%  de una página cada uno, cortados por donde el contenido ya venía
-%  cortado (Guía 1 / Guía 2). Cada panel conserva la relación 1 a 1
-%  entre concepto del JSON y hoja del mapa: no se fusionó ni se omitió
-%  ningún concepto. Ver el reporte al usuario: si se quiere volver a un
-%  panel único habría que subir `level distance` del nivel 1 en el
-%  preámbulo del plugin, que es un cambio aguas arriba, no local.
+%  (2) REPARTO ANGULAR PROPORCIONAL. Éste fue el cambio decisivo, y
+%      no estaba en la lista. \setRamas{n} le da a cada rama 360/n,
+%      o sea la MISMA porción a la familia de 2 conceptos y a la de
+%      17. Con familias tan desparejas eso es lo que hacía chocar
+%      todo: las ramas gordas se desbordaban sobre las flacas
+%      mientras la flaca desperdiciaba su cuña. Ahora el círculo se
+%      divide en 66 slots iguales de 5.45 grados y cada rama recibe
+%      un número IMPAR de slots proporcional a su cantidad de hojas
+%      (queda centrada en su cuña); los slots sobrantes se rellenan
+%      con `child[missing]`, que consume el lugar sin dibujar nada.
+%      Sólo con esto, y sin tocar ninguna distancia, los choques
+%      cayeron de 23 a 17; con las distancias nuevas, a 0.
 %
-%  ---------------------------------------------------------------
-%  PANEL 1 — Cinemática 1D + herramientas de cálculo (16 hojas, 6 ramas)
-%  ---------------------------------------------------------------
-%  Familias del JSON usadas como base del reparto, como corresponde
-%  (esta es la primera vuelta en que el JSON trae familias finas):
-%    "Cinematica 1D" (11) se subdivide en 4 ramas de lectura, porque 11
-%    hojas en una sola rama es ilegible y supera el ~6 recomendado:
-%      "Marco y magnitudes"       -> 3
-%      "Derivadas del movimiento" -> 2
-%      "MRU y MRUV"               -> 3
-%      "Leer y resolver"          -> 3
-%    "Calculo diferencial aplicado" (3) y "Calculo integral aplicado" (2)
-%    entran tal cual, una rama cada una:
-%      "Cálculo diferencial"      -> 3
-%      "Cálculo integral"         -> 2
+%  (3) DISTANCIAS Y ANCHOS MAYORES en el preámbulo (el fix que
+%      estaba identificado y nunca se había aplicado): level 1 de
+%      5.4 a 19cm, text width de nivel 1 de 2.3 a 2.5cm, y valores
+%      nuevos para los niveles 2 y 3. Ayuda, pero por sí solo no
+%      alcanzaba.
 %
-%  ORDEN CÍCLICO: 3-2-3-2-3-3, con las dos ramas de cálculo puestas una
-%  al lado de la otra. Es la primera vez que el mapa incorpora contenido
-%  que no es física sino herramienta matemática, y era la brecha crítica
-%  declarada del lector, así que conviene que se distinga. El orden
-%  además sigue el hilo del capítulo: describir -> derivar ->
-%  [herramientas] -> integrar de vuelta a los modelos -> aplicar.
-%  Holgura mínima verificada: +0.84 cm.
+%  LO QUE NINGUNO DE LOS TRES PUEDE EVITAR, y conviene dejar dicho
+%  para la próxima vuelta: en un mapa radial TODAS las hojas viven
+%  sobre una misma circunferencia, así que el perímetro tiene que
+%  alcanzar para todas y el radio crece de forma LINEAL con la
+%  cantidad de conceptos. El área, entonces, crece con el CUADRADO.
+%  54 hojas de ~2.13cm piden unos 115cm de perímetro útil; con el
+%  empaque real de un árbol (las hojas se agrupan por rama en vez de
+%  repartirse parejo) el mapa mide 62.6 x 63.0cm. Encogerlo a un A4
+%  apaisado significa escala 0.27: la letra de las hojas quedaría en
+%  2.2 pt. No es un problema de agrupación ni de ángulos, es
+%  aritmética de áreas, y la jerarquía de tres niveles no la deroga:
+%  la mejora es de empaque, no de orden de magnitud.
 %
-%  COLORES DEL PANEL 1: no se asignan en el orden de la paleta, sino
-%  eligiendo qué color va en qué posición del ciclo. El primer intento
-%  dejaba "Derivadas del movimiento" en ramaDos (marrón-gris) pegado a
-%  "Cálculo diferencial" en ramaCinco (ocre): en el PDF los dos se
-%  confundían, justo entre la rama de física y la de herramienta que más
-%  importaba separar. Reasignado para que ningún vecino de una rama de
-%  cálculo comparta tono con ella, sin mover ninguna hoja:
-%      pos 1  Marco y magnitudes        ramaUno    azul-gris
-%      pos 2  Derivadas del movimiento  ramaTres   verde-gris
-%      pos 3  Cálculo diferencial       ramaCinco  ocre        <- cálculo
-%      pos 4  Cálculo integral          ramaSeis   teal-gris   <- cálculo
-%      pos 5  MRU y MRUV                ramaCuatro violeta-gris
-%      pos 6  Leer y resolver           ramaDos    marrón-gris
-%  El marrón queda en la posición 6, con vecinos violeta y azul, lejos
-%  del ocre de la posición 3. Sigue habiendo un color por rama y ninguno
-%  por concepto individual.
+%  Por eso el papel deja de ser A4 y pasa a 67 x 73cm (\setLienzo).
+%  Es la única forma de tener UN panel con la letra de las hojas en
+%  ~8 pt, o sea igual de legible que en el mapa de 33 conceptos. El
+%  precio es honesto y hay que saberlo: esto es un pliego, se lee en
+%  pantalla o se imprime en A1; ya no sale de una impresora hogareña.
+%  Si se prefiere volver a algo imprimible en casa, la alternativa
+%  no es "achicar la letra" (eso no cambia nada: achicar la fuente
+%  achica los nodos y el mapa en la misma proporción, la relación
+%  letra/página queda idéntica) sino aceptar tres paneles.
+%
+%  VERIFICACIÓN GEOMÉTRICA (no visual): se volcaron las coordenadas
+%  y el radio real de los 82 nodos y se comprobaron los 3321 pares.
+%  Ningún par se solapa; la holgura mínima es +0.56cm y se da entre
+%  hojas hermanas de un mismo subtema (o sea, es la separación
+%  uniforme que fija `sibling angle` del nivel 3, no una casi
+%  colisión entre ramas: la presión entre ramas vecinas desapareció
+%  con el reparto proporcional). También se verificó nodo contra
+%  arista: ninguna hoja queda a menos de 0.25cm de un conector que
+%  no sea el suyo. Cero Overfull hbox: ningún texto se sale de su
+%  círculo.
 %
 %  ---------------------------------------------------------------
-%  PANEL 2 — Dinámica newtoniana (17 hojas, 5 ramas)
+%  ORDEN DE LAS RAMAS ALREDEDOR DEL CÍRCULO
 %  ---------------------------------------------------------------
-%  Es exactamente el mapa de la vuelta anterior, sin tocar: mismo
-%  reparto 4-3-3-4-3, mismos nombres y mismos colores de rama. Se
-%  conserva a propósito, porque el lector ya viene asociando
-%  azul=leyes y marrón=fuerzas, y romper esa asociación no aportaría
-%  nada. La familia "Dinamica newtoniana" del JSON sigue trayendo los
-%  17 juntos, así que la subdivisión en 5 ramas se mantiene igual.
-%  Holgura mínima verificada: +0.94 cm (el techo de la plantilla).
+%  Sigue el orden real del libro, que cambió con esta síntesis:
+%  1 Cinemática 1D · 2 Cinemática en el plano · 3 Dinámica I ·
+%  4 Dinámica II. La cinemática va ANTES que la dinámica, y así
+%  queda: recorriendo el círculo se lee
+%    Cinemática 1D -> [herramientas de cálculo] -> Cinemática en el
+%    plano -> Movimiento circular -> Dinámica I -> Dinámica II.
 %
-%  NOTA sobre los colores: cada panel usa la paleta desde ramaUno, así
-%  que un mismo color significa cosas distintas en un panel y en otro.
-%  No genera ambigüedad porque son páginas separadas, cada una con su
-%  nodo raíz y sus ramas rotuladas.
+%  Las dos ramas de cálculo no están puestas juntas por prolijidad
+%  sino cada una pegada a quien la usa: "Cálculo integral" cae justo
+%  después de "Cinemática 1D · modelos" (que es donde MRU y MRUV se
+%  deducen integrando) y "Cálculo diferencial" cae justo antes de
+%  "Cinemática en el plano" (que es donde se usan la base ortonormal,
+%  la derivada componente a componente y el producto escalar). Por
+%  eso integral aparece antes que diferencial: manda el consumidor,
+%  no el orden canónico de la matemática.
 %
-%  El mapa muestra SOLO conceptos con síntesis ya escrita. Los 9 temas
-%  restantes del parcial no aparecen como nodos; su ausencia se declara
-%  en el encabezado, que es texto de estado, no contenido inventado.
+%  UNA FAMILIA PUEDE OCUPAR DOS RAMAS. Cinemática 1D (11) y Dinámica
+%  newtoniana (17) son demasiado grandes para una sola cuña, así que
+%  cada una se abre en dos ramas contiguas DEL MISMO COLOR. Esto es
+%  más fiel a la regla de color que el mapa anterior, donde Dinámica
+%  se repartía en cinco ramas de cinco colores distintos: acá un
+%  color = una familia, siempre, y la familia grande se lee como un
+%  sector continuo del mismo tono.
 %
-%  Ya NO aplica la restricción de la vuelta anterior de evitar notación
-%  de derivada e integral: esta síntesis es justamente la que cerró esa
-%  brecha, así que el panel 1 usa la notación con normalidad.
+%  COLORES POR FAMILIA (asignación nueva). Como el orden alrededor
+%  del círculo lo fija el libro, lo único elegible es qué color le
+%  toca a cada familia. Se eligió la asignación que maximiza el
+%  contraste mínimo entre familias VECINAS (distancia en CIE Lab):
+%      Cinemática 1D            ramaUno     azul-gris
+%      Cálculo integral         ramaDos     marrón-gris
+%      Cálculo diferencial      ramaSeis    teal-gris
+%      Cinemática en el plano   ramaCinco   ocre
+%      Movimiento circular      ramaCuatro  violeta-gris
+%      Dinámica newtoniana      ramaTres    verde-gris
+%  El par vecino más parecido queda en dE=20.4, contra dE=12 de la
+%  mejor asignación "temática". Esto evita repetir el problema que
+%  el mapa anterior dejó documentado: ocre y marrón pegados se
+%  confundían en el PDF. Cinemática 1D conserva el azul que ya tenía.
+%  Dinámica cambia de tono porque el esquema viejo (un color por
+%  sub-rama) desapareció junto con la estructura de dos niveles.
+%
+%  El mapa muestra SOLO conceptos con síntesis ya escrita. Los temas
+%  del parcial todavía no cubiertos no aparecen como nodos; su
+%  ausencia se declara en el encabezado, que es texto de estado, no
+%  contenido inventado.
 % ============================================================
 \documentclass[11pt]{article}
 \input{mapa-mental-preamble.tex}
+% 67 x 76cm: el alto sale de sumar el encabezado (~8.5cm) al diámetro natural
+% del mapa (63cm) más márgenes, de modo que `mapaAjustado` NO tenga que
+% encoger nada y las hojas conserven sus 8 pt reales.
+\setLienzo{67cm}{76cm}
 
 \renewcommand{\miNombre}{Pedro Villar}
 \setMateria{Física 1}
@@ -123,130 +161,225 @@
 
 \begin{document}
 
-% ============================================================
-%  PANEL 1 — Cinemática 1D y herramientas de cálculo
-% ============================================================
 \thispagestyle{fancy}
 
+% El encabezado se dimensiona para el pliego, no para un A4: en una hoja de
+% 67cm de ancho, un párrafo a 9 pt ocupando 0.62\textwidth da renglones de
+% ~200 caracteres, imposibles de seguir con la vista. La nota va entonces en
+% una columna de 17cm, que a 12 pt son ~70 caracteres por renglón.
 \begin{center}
-    {\Large\bfseries\color{textgray} Parcial I \textemdash{} Física 1\par}
-    \vspace{0.10cm}
-    {\color{rulegray}\rule{0.5\textwidth}{0.4pt}\par}
-    \vspace{0.12cm}
-    {\small\bfseries\color{textgray}
-        Panel 1 de 2 \textemdash{} Cinemática 1D y herramientas de cálculo
-        (Guía 1)\par}
-    \vspace{0.05cm}
-    {\footnotesize\color{rulegray}
-        Mapa vivo al 4 de septiembre de 2026; el parcial es el 24 (faltan
-        20 días). Sólo figura lo que ya tiene síntesis escrita: 33 conceptos
-        de 3 de los 12 temas del parcial, y los otros 9 todavía no están
-        cubiertos. Va en dos paneles porque 33 conceptos no entran en una
-        sola estrella sin que las hojas se pisen. Las dos ramas en ocre y
-        gris verdoso no son física: son el cálculo diferencial e integral
-        que este capítulo trajo como herramienta.\par}
+    {\fontsize{32}{38}\selectfont\bfseries\color{textgray}
+        Parcial I \textemdash{} Física 1\par}
+    \vspace{0.35cm}
+    {\color{rulegray}\rule{17cm}{0.6pt}\par}
+    \vspace{0.35cm}
+    {\fontsize{17}{21}\selectfont\bfseries\color{textgray}
+        Panel único \textemdash{} 54 conceptos en 6 familias\par}
+    \vspace{0.30cm}
+    \begin{minipage}{17cm}
+    \centering
+    {\fontsize{12}{16}\selectfont\color{rulegray}
+        Mapa vivo al 5 de septiembre de 2026; el parcial es el 24
+        (faltan 19 días). Sólo figura lo que ya tiene síntesis escrita:
+        4 de los 12 temas completos y 1 a medias (de la Guía 1 falta
+        movimiento relativo). Se lee dando la vuelta al círculo, en el
+        orden del libro: cinemática 1D, después el plano, después la
+        dinámica. Las dos ramas de cálculo no son física: son la
+        herramienta matemática, y cada una está puesta al lado del tema
+        que la usa. Un color es una familia; las familias grandes
+        (Cinemática 1D, Dinámica) ocupan dos ramas contiguas del mismo
+        tono. El $\star$ marca los 5 conceptos que ya reaparecieron a
+        mayor dificultad: son el núcleo consolidado.\par}
+    \end{minipage}
 \end{center}
 
-\vspace{0.10cm}
+\vspace{0.15cm}
 
-% La distribución radial la calcula sola la librería mindmap a partir de
-% \setRamas{6} y de la lista de hijos. Acá NO se tocan grow cyclic,
-% sibling angle ni text width: están fijados en el preámbulo. El grupo
-% mantiene el \setRamas local a este panel, para que el panel 2 pueda
-% pedir otra cantidad de ramas sin arrastrar ésta.
-\begingroup
-\setRamas{6}
+% La distribución radial la calcula sola la librería mindmap. Acá NO se tocan
+% grow cyclic, sibling angle ni text width: están fijados en el preámbulo.
+% \setSlots es \setRamas: 66 slots iguales, y cada rama toma un número impar
+% de ellos proporcional a su cantidad de hojas. Los child[missing] son los
+% slots de relleno; consumen ángulo y no dibujan nada.
+\setSlots{66}
 \begin{mapaAjustado}
 \begin{tikzpicture}[mindmap]
-  \node[root concept, concept] {Cinemática 1D}
-    child[concept color=ramaUno] { node[concept] {Marco y magnitudes}
-      child { node[concept] {Sistema de referencia y $x(t)$} }
-      child { node[concept] {Despla\-za\-mien\-to vs. camino} }
-      child { node[concept] {Velocidad media y promedio} }
+  \node[root concept, concept] {Parcial I}
+    % --- Cinem\'atica 1D /  magnitudes : 6 hojas, 7 slots (38.2 grados) ---
+    child[missing]
+    child[missing]
+    child[missing]
+    child[concept color=ramaUno] { node[concept] {Cinem\'atica 1D\\ magnitudes}
+      child { node[concept] {Marco y despla\-za\-mien\-to}
+        child { node[concept] {Sistema de referencia y $x(t)$} }
+        child { node[concept] {Despla\-za\-mien\-to vs.\ camino} }
+        child { node[concept] {Velocidad media y promedio} }
+      }
+      child { node[concept] {Derivadas del movimiento}
+        child { node[concept] {Velocidad: derivada de $x(t)$} }
+        child { node[concept] {Ace\-le\-ra\-ci\'on: segunda derivada} }
+        child { node[concept] {Gr\'aficos $x$, $v$, $a$ juntos} }
+      }
     }
-    child[concept color=ramaTres] { node[concept] {Derivadas del movimiento}
-      child { node[concept] {Velocidad: derivada de $x(t)$} }
-      child { node[concept] {Ace\-le\-ra\-ción: segunda derivada} }
+    child[missing]
+    child[missing]
+    child[missing]
+    % --- Cinem\'atica 1D /  modelos : 5 hojas, 7 slots (38.2 grados) ---
+    child[missing]
+    child[missing]
+    child[missing]
+    child[concept color=ramaUno] { node[concept] {Cinem\'atica 1D\\ modelos}
+      child { node[concept] {MRU y MRUV}
+        child { node[concept] {Deducidos por integraci\'on} }
+        child { node[concept] {Relaci\'on sin tiempo} }
+        child { node[concept] {Ca\'ida libre y tiro vertical} }
+      }
+      child { node[concept] {Resolver situaciones}
+        child { node[concept] {Tramos y continuidad de $v$} }
+        child { node[concept] {Encuentro de dos m\'oviles} }
+      }
     }
-    child[concept color=ramaCinco] { node[concept] {Cálculo diferencial}
-      child { node[concept] {Límite y cociente incremental} }
-      child { node[concept] {Reglas de derivación} }
-      child { node[concept] {Críticos, concavidad, inflexión} }
+    child[missing]
+    child[missing]
+    child[missing]
+    % --- C\'alculo integral : 2 hojas, 3 slots (16.4 grados) ---
+    child[missing]
+    child[concept color=ramaDos] { node[concept] {C\'alculo integral}
+      child { node[concept] {Antiderivada}
+        child { node[concept] {Primitiva y constante $C$} }
+      }
+      child { node[concept] {Integral definida}
+        child { node[concept] {Barrow: la integral es \'area} }
+      }
     }
-    child[concept color=ramaSeis] { node[concept] {Cálculo integral}
-      child { node[concept] {Primitiva y constante $C$} }
-      child { node[concept] {Barrow: la integral es área} }
+    child[missing]
+    % --- C\'alculo diferencial : 7 hojas, 9 slots (49.1 grados) ---
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[concept color=ramaSeis] { node[concept] {C\'alculo diferencial}
+      child { node[concept] {Derivar funciones}
+        child { node[concept] {L\'imite y cociente incremental} }
+        child { node[concept] {Reglas de derivaci\'on} }
+        child { node[concept] {Cr\'iticos, concavidad, inflexi\'on} }
+      }
+      child { node[concept] {\'Algebra vectorial}
+        child { node[concept] {Base ortonormal y componentes} }
+        child { node[concept] {Derivada componente a componente} }
+        child { node[concept] {Producto escalar: alineaci\'on} }
+        child { node[concept] {Perpendicular vs.\ paralelo} }
+      }
     }
-    child[concept color=ramaCuatro] { node[concept] {MRU y MRUV}
-      child { node[concept] {Deducidos por integración} }
-      child { node[concept] {Relación sin tiempo} }
-      child { node[concept] {Caída libre y tiro vertical} }
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    % --- Cinem\'atica en el plano : 8 hojas, 9 slots (49.1 grados) ---
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[concept color=ramaCinco] { node[concept] {Cinem\'atica en el plano}
+      child { node[concept] {Vectores del movimiento}
+        child { node[concept] {Trayectoria y $\vec r(t)$} }
+        child { node[concept] {Posici\'on, despla\-za\-mien\-to, $\vec v_m$} }
+        child { node[concept] {$\vec v$ tangente a la trayectoria} }
+      }
+      child { node[concept] {Aceleraci\'on en el plano}
+        child { node[concept] {$\vec a$ no va con $\vec v$} }
+        child { node[concept] {Componentes tangencial y normal} }
+      }
+      child { node[concept] {Tiro parab\'olico}
+        child { node[concept] {$\vec a$ constante por integraci\'on} }
+        child { node[concept] {Tiro: caso de $\vec a$ constante} }
+        child { node[concept] {Alcance, altura y \'angulo \'optimo} }
+      }
     }
-    child[concept color=ramaDos] { node[concept] {Leer y resolver}
-      child { node[concept] {Tramos y continuidad de $v$} }
-      child { node[concept] {Encuentro de dos móviles} }
-      child { node[concept] {Gráficos $x$, $v$, $a$ juntos} }
-    };
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    % --- Movimiento circular : 9 hojas, 11 slots (60.0 grados) ---
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[concept color=ramaCuatro] { node[concept] {Movimiento circular}
+      child { node[concept] {Magnitudes angulares}
+        child { node[concept] {$\theta$, $\omega$ y $\alpha$} }
+        child { node[concept] {Per\'iodo y frecuencia} }
+        child { node[concept] {Conteo de vueltas} }
+      }
+      child { node[concept] {Base cartesiana y MCU}
+        child { node[concept] {Circular en base cartesiana} }
+        child { node[concept] {Depende del origen elegido} }
+        child { node[concept] {Movimiento circular uniforme} }
+      }
+      child { node[concept] {Polares y centr\'ipeta}
+        child { node[concept] {Polares y versores m\'oviles} }
+        child { node[concept] {Derivada de los versores} }
+        child { node[concept] {$a_c$ en tres formas} }
+      }
+    }
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    % --- Din\'amica /  leyes y fuerzas : 9 hojas, 11 slots (60.0 grados) ---
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[concept color=ramaTres] { node[concept] {Din\'amica\\ leyes y fuerzas}
+      child { node[concept] {Las tres leyes}
+        child { node[concept] {Fuerza: causa del cambio} }
+        child { node[concept] {Primera ley: marco inercial} }
+        child { node[concept] {$\star$ Segunda ley, eje por eje} }
+        child { node[concept] {$\star$ Tercera ley: pares} }
+      }
+      child { node[concept] {Masa y tipos de fuerza}
+        child { node[concept] {Masa inercial} }
+        child { node[concept] {$\star$ Peso, normal y tensi\'on} }
+        child { node[concept] {Ley de Hooke} }
+      }
+      child { node[concept] {C\'omo se plantea}
+        child { node[concept] {$\star$ Diagrama de cuerpo aislado} }
+        child { node[concept] {$\star$ Plano inclinado} }
+      }
+    }
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    % --- Din\'amica /  roce y sistemas : 8 hojas, 9 slots (49.1 grados) ---
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+    child[concept color=ramaTres] { node[concept] {Din\'amica\\ roce y sistemas}
+      child { node[concept] {Roza\-mien\-to}
+        child { node[concept] {Est\'atico: una desigualdad} }
+        child { node[concept] {Din\'amico y coeficientes} }
+        child { node[concept] {Opuesto al deslizamiento} }
+        child { node[concept] {\'Angulo cr\'itico mide $\mu_e$} }
+      }
+      child { node[concept] {Sistemas acoplados}
+        child { node[concept] {V\'inculo cinem\'atico} }
+        child { node[concept] {Signos, cuerpo por cuerpo} }
+        child { node[concept] {Atajo del conjunto y polea} }
+        child { node[concept] {Roce y normales apiladas} }
+      }
+    }
+    child[missing]
+    child[missing]
+    child[missing]
+    child[missing]
+  ;
 \end{tikzpicture}
 \end{mapaAjustado}
-\endgroup
-
-\newpage
-
-% ============================================================
-%  PANEL 2 — Dinámica newtoniana
-% ============================================================
-\thispagestyle{fancy}
-
-\begin{center}
-    {\Large\bfseries\color{textgray} Parcial I \textemdash{} Física 1\par}
-    \vspace{0.10cm}
-    {\color{rulegray}\rule{0.5\textwidth}{0.4pt}\par}
-    \vspace{0.12cm}
-    {\small\bfseries\color{textgray}
-        Panel 2 de 2 \textemdash{} Dinámica newtoniana (Guía 2)\par}
-    \vspace{0.05cm}
-    {\footnotesize\color{rulegray}
-        $\star$ marca los 5 conceptos que Dinámica II volvió a exigir a
-        mayor dificultad: son el núcleo ya consolidado.\par}
-\end{center}
-
-\vspace{0.10cm}
-
-\begingroup
-\setRamas{5}
-\begin{mapaAjustado}
-\begin{tikzpicture}[mindmap]
-  \node[root concept, concept] {Dinámica}
-    child[concept color=ramaUno] { node[concept] {Las tres leyes}
-      child { node[concept] {Fuerza: causa del cambio} }
-      child { node[concept] {Primera ley: marco inercial} }
-      child { node[concept] {$\star$ Segunda ley, eje por eje} }
-      child { node[concept] {$\star$ Tercera ley: pares} }
-    }
-    child[concept color=ramaDos] { node[concept] {Masa y tipos de fuerza}
-      child { node[concept] {Masa inercial} }
-      child { node[concept] {$\star$ Peso, normal y tensión} }
-      child { node[concept] {Ley de Hooke} }
-    }
-    child[concept color=ramaTres] { node[concept] {Cómo se plantea}
-      child { node[concept] {$\star$ Diagrama de cuerpo aislado} }
-      child { node[concept] {$\star$ Plano inclinado} }
-      child { node[concept] {Signos, cuerpo por cuerpo} }
-    }
-    child[concept color=ramaCuatro] { node[concept] {Roza\-mien\-to}
-      child { node[concept] {Estático: una desigualdad} }
-      child { node[concept] {Dinámico y coeficientes} }
-      child { node[concept] {Opuesto al deslizamiento} }
-      child { node[concept] {Ángulo crítico mide $\mu_e$} }
-    }
-    child[concept color=ramaCinco] { node[concept] {Sistemas acoplados}
-      child { node[concept] {Vínculo cinemático} }
-      child { node[concept] {Atajo del conjunto y polea ideal} }
-      child { node[concept] {Roza\-mien\-to y normales apiladas} }
-    };
-\end{tikzpicture}
-\end{mapaAjustado}
-\endgroup
 
 \end{document}

@@ -16,7 +16,31 @@
 %  capítulos), este archivo se reescribe ENTERO cada vez que
 %  generador-mapa-mental corre — nunca se edita a mano un nodo
 %  suelto. La fuente de verdad es mapa-estudio.json, no el .tex.
-% ============================================================
+%
+%  ------------------------------------------------------------
+%  COPIA LOCAL DEL REPO. El original vive en el plugin, en
+%  ~/.claude/skills/syntheca/skills/plantilla-sintesis/latex/.
+%  Esta copia es la que se edita; el plugin NO se toca.
+%
+%  CAMBIOS DE ESTA COPIA respecto de la del plugin (2026-09-05,
+%  al pasar el mapa del Parcial I de 33 a 54 conceptos):
+%    1. Tercer nivel de jerarquía (`level 3 concept`), para que
+%       el mapa sea raíz -> familia -> subtema -> concepto y no
+%       raíz -> familia -> concepto.
+%    2. Distancias y anchos de texto mayores en todos los
+%       niveles (era el fix ya identificado y nunca aplicado).
+%    3. Lienzo configurable con \setLienzo: el diámetro natural
+%       de un mapa radial crece de forma lineal con la cantidad
+%       de hojas, así que el papel no puede ser fijo.
+%    4. Se eliminó `\tikzstyle{every node}=[font=\sffamily]`.
+%       Era un BUG: `every node` se aplica DESPUÉS de los
+%       estilos de nivel, así que pisaba el `font=` de
+%       `level 1/2/3 concept` y todos los nodos salían en
+%       \normalsize. La familia sans ya la garantiza
+%       \familydefault, así que borrarlo no cambia la tipografía
+%       pero devuelve el control del CUERPO de letra por nivel,
+%       que es de donde sale casi toda la capacidad de empaque.
+%  ============================================================
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}   % antes de fontenc, para no caer en fuentes bitmap (Type3)
 \usepackage[T1]{fontenc}
@@ -27,8 +51,22 @@
 \usepackage[table]{xcolor}
 \usepackage{geometry}
 \geometry{top=1.2cm, bottom=1.2cm, left=1cm, right=1cm, landscape}
-% Misma familia sans que el libro. Sin esto, los nodos salen sans (por el
-% every node de abajo) pero el pie de página de fancyhdr sale con serifas.
+
+% ---------- Lienzo ----------
+% Un mapa radial tiene radio proporcional a la cantidad de hojas (todas las
+% hojas viven sobre una misma circunferencia, así que el perímetro tiene que
+% alcanzar para todas). Su ÁREA, entonces, crece con el cuadrado de la
+% cantidad de conceptos: pasar de 17 hojas a 54 no triplica el mapa, lo
+% multiplica por diez. Por eso el papel no puede ser fijo: con A4 apaisado
+% un mapa de 54 conceptos sólo entra encogido a ~0.27, y a esa escala la
+% letra queda en 2 pt. \setLienzo permite que cada mapa declare el papel que
+% su cantidad de conceptos necesita, manteniendo el cuerpo de letra legible.
+% Se llama en el cuerpo, antes de \begin{document}? No: geometry admite
+% reconfiguración, así que se llama justo después de cargar el preámbulo.
+\newcommand{\setLienzo}[2]{\geometry{paperwidth=#1, paperheight=#2, landscape=false,
+  top=1.2cm, bottom=1.2cm, left=1.2cm, right=1.2cm}}
+
+% Misma familia sans que el libro.
 \renewcommand{\familydefault}{\sfdefault}
 
 \definecolor{textgray}{RGB}{60, 60, 60}
@@ -60,69 +98,95 @@
 % ---------- Estilo base de los conceptos (nodos) ----------
 % Nivel raíz: el examen/tema central.
 % Nivel 1: familias de conceptos (ramas, coloreadas).
-% Nivel 2: conceptos individuales (hojas, color heredado de su rama).
+% Nivel 2: subtemas dentro de una familia (heredan el color de la rama).
+% Nivel 3: conceptos individuales (hojas, color heredado de su rama).
 %
-% grow cyclic es obligatorio: sin él las ramas no se distribuyen en
-% círculo, crecen todas hacia abajo y se apilan una sobre otra.
-% Va en ambos niveles para que las hojas también se abran en abanico
-% alrededor de su rama.
+% El nivel 2 es NUEVO. Antes las hojas colgaban directo de la familia y una
+% familia de 17 conceptos abría un abanico de 800°, imposible de acomodar.
+% Con un nivel intermedio la misma familia se reparte en 2 o 3 abanicos
+% chicos, y el ancho angular que necesita cae a menos de la mitad.
+%
+% grow cyclic es obligatorio en los tres niveles: sin él las ramas no se
+% distribuyen en círculo, crecen todas hacia abajo y se apilan.
 %
 % text width fija el ancho de párrafo dentro del círculo; sin él, una
 % etiqueta larga se desborda del nodo o lo infla de forma desproporcionada.
 % minimum size va un poco por encima de text width para que quede aire.
-\tikzstyle{every node}=[font=\sffamily]
+%
+% Las distancias de abajo NO son decorativas: salieron de una búsqueda sobre
+% la grilla (level distance x sibling angle) verificando, para cada
+% combinación, que no hubiera ni un par de nodos con distancia entre centros
+% menor que la suma de sus radios. Cambiar una a ojo rompe esa garantía.
 \tikzset{
   root concept/.style={
     concept color=textgray,
     font=\sffamily\bfseries\Large,
     text=white,
-    minimum size=3.6cm,
-    text width=3.0cm,
+    minimum size=4.4cm,
+    text width=3.6cm,
   },
   level 1 concept/.append style={
     grow cyclic,
     font=\sffamily\bfseries\small,
     text=white,
-    level distance=5.4cm,
-    minimum size=2.7cm,
-    text width=2.3cm,
+    level distance=19cm,
+    minimum size=3.0cm,
+    text width=2.5cm,
   },
   level 2 concept/.append style={
     grow cyclic,
+    font=\sffamily\bfseries\footnotesize,
+    text=white,
+    sibling angle=52,
+    level distance=7.5cm,
+    minimum size=2.45cm,
+    text width=2.0cm,
+  },
+  level 3 concept/.append style={
+    grow cyclic,
     font=\sffamily\scriptsize,
     text=white,
-    % La cuerda entre dos hojas vecinas es 2*d*sin(a/2); con d=3.6cm y a=50
-    % da unos 3cm, por encima del diámetro de la hoja (2.1cm). Con menos
-    % ángulo o menos distancia, las hojas se pisan entre sí.
-    sibling angle=50,
-    level distance=3.6cm,
-    minimum size=2.1cm,
-    text width=1.8cm,
+    % La cuerda entre dos hojas hermanas es 2*d*sin(a/2); con d=4.6cm y a=34
+    % da 2.69cm, contra un diámetro de hoja de ~2.13cm: sobran 0.56cm. Ese
+    % número es la holgura mínima de TODO el mapa (ningún otro par queda más
+    % cerca), así que bajar `sibling angle` o `level distance` acá es lo
+    % primero que lo rompe.
+    sibling angle=34,
+    level distance=4.6cm,
+    minimum size=2.0cm,
+    text width=1.7cm,
   },
 }
 
-% ---------- Número de ramas ----------
-% El ángulo entre ramas de nivel 1 tiene que ser 360/n, y n (cantidad de
-% familias) solo lo sabe el cuerpo del documento. generador-mapa-mental
-% DEBE llamar \setRamas{<n>} antes del tikzpicture. El default de 4 es
-% solo para que el preámbulo compile solo; con otra cantidad de ramas, sin
-% \setRamas el mapa queda volcado hacia un lado.
+% ---------- Número de sectores angulares ----------
+% El ángulo entre hijos de la raíz es 360/n. Con \setRamas{<familias>} todas
+% las ramas reciben la MISMA porción, lo que sólo sirve si todas tienen una
+% cantidad parecida de hojas. Cuando no la tienen (Parcial I: familias de 2 y
+% de 17 conceptos), conviene repartir el círculo en SLOTS iguales y darle a
+% cada rama varios slots, proporcionalmente a su cantidad de hojas: se llama
+% \setRamas{<slots totales>} y en el cuerpo se rellena con `child[missing]`,
+% que consume un slot sin dibujar nada. \setSlots es el mismo comando con el
+% nombre que corresponde a ese uso.
 \newcommand{\setRamas}[1]{%
   \tikzset{level 1 concept/.append style={sibling angle=360/#1}}%
 }
+\let\setSlots\setRamas
 \setRamas{4}
 
 % ---------- Escalado ----------
-% Para que el mapa entre en la página (landscape: casi siempre limita la
-% altura, no el ancho), envolver TODO el tikzpicture en el entorno
-% \begin{mapaAjustado} ... \end{mapaAjustado}, que lo encoge solo si hace
-% falta para respetar ancho Y alto disponibles. NUNCA usar scale=... junto
-% con transform shape: grow cyclic rota el sistema de coordenadas de cada
-% rama y transform shape le aplica esa rotación también al texto, así que
-% la mitad de las etiquetas salen cabeza abajo.
+% Para que el mapa entre en la página, envolver TODO el tikzpicture en el
+% entorno \begin{mapaAjustado} ... \end{mapaAjustado}, que lo encoge sólo si
+% hace falta para respetar ancho Y alto disponibles. NUNCA usar scale=...
+% junto con transform shape: grow cyclic rota el sistema de coordenadas de
+% cada rama y transform shape le aplica esa rotación también al texto, así
+% que la mitad de las etiquetas salen cabeza abajo.
+%
+% Ojo: `mapaAjustado` es una red de seguridad, no un plan. Si el mapa entra
+% sólo gracias a un encogido fuerte, el problema es el lienzo (\setLienzo),
+% porque el encogido se lleva puesto el cuerpo de letra.
 \newenvironment{mapaAjustado}{%
   \begin{center}%
-  \begin{adjustbox}{max size={\linewidth}{0.80\textheight}}%
+  \begin{adjustbox}{max size={\linewidth}{0.88\textheight}}%
 }{%
   \end{adjustbox}%
   \end{center}%
