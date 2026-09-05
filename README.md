@@ -1,10 +1,10 @@
 # Física 1 — LCC, FaMAF (UNC)
 
 ![Materia](https://img.shields.io/badge/F%C3%ADsica_1-LCC_%C2%B7_FaMAF_UNC-1f4e79)
-![Apunte](https://img.shields.io/badge/apunte-4_cap%C3%ADtulos_%C2%B7_77_p%C3%A1ginas-2e7d32)
+![Apunte](https://img.shields.io/badge/apunte-6_cap%C3%ADtulos_%C2%B7_108_p%C3%A1ginas-2e7d32)
 ![LaTeX](https://img.shields.io/badge/LaTeX-clase_book-008080?logo=latex&logoColor=white)
 ![Verificación](https://img.shields.io/badge/ejercicios-verificados_por_c%C3%B3digo-6a1b9a?logo=python&logoColor=white)
-![Flashcards](https://img.shields.io/badge/flashcards-146-e07b39?logo=anki&logoColor=white)
+![Flashcards](https://img.shields.io/badge/flashcards-189-e07b39?logo=anki&logoColor=white)
 ![Parcial I](https://img.shields.io/badge/Parcial_I-24_sep_2026-b3261e)
 
 Material de estudio de **Física 1**, cursada 2026. Reúne la bibliografía y los prácticos de la cátedra, los exámenes de años anteriores, y **un apunte teórico propio** que se escribe tema por tema a lo largo de la cursada.
@@ -21,6 +21,8 @@ Vive en [`sintesis/fisica-1/`](./sintesis/fisica-1). Es **un solo documento LaTe
 | **2** | Cinemática en el plano: vectores, tiro parabólico y movimiento circular | 1 | 25–47 |
 | **3** | Dinámica I: las tres leyes de Newton | 2 | 48–60 |
 | **4** | Dinámica II: rozamiento y sistemas acoplados | 2 | 61–77 |
+| **5** | Fuerza elástica y movimiento armónico simple | 2 | 78–95 |
+| **6** | Dinámica del movimiento circular | 2 | 96–108 |
 
 Cada capítulo sigue la misma estructura: motivación · marco teórico en bloques, cada uno con su chequeo de comprensión · ejemplos resueltos con andamiaje decreciente · errores comunes · ejercicios en dos niveles.
 
@@ -35,9 +37,11 @@ sintesis/fisica-1/verificacion-cinematica-1d.py
 sintesis/fisica-1/verificacion-cinematica-plano.py
 sintesis/fisica-1/verificacion-dinamica-1.py
 sintesis/fisica-1/verificacion-dinamica-2.py
+sintesis/fisica-1/verificacion-mas.py
+sintesis/fisica-1/verificacion-circular-fuerzas.py
 ```
 
-Corren con `python <archivo>` y solo necesitan `sympy`. Cada uno resuelve los ejercicios de su capítulo de forma independiente al texto e imprime el razonamiento, no solo el número. Tenerlos separados es deliberado: para ver un resultado hay que ir a buscarlo.
+Corren con `python <archivo>` y solo necesitan `sympy`. Entre los seis suman 906 chequeos. Cada uno resuelve los ejercicios de su capítulo de forma independiente al texto e imprime el razonamiento, no solo el número. Tenerlos separados es deliberado: para ver un resultado hay que ir a buscarlo.
 
 ### Compilar
 
@@ -82,15 +86,17 @@ Cobertura del apunte sobre los prácticos:
 |---|---|---|
 | 0 — Magnitudes y vectores | 0 / 16 | todo |
 | 1 — Cinemática | **15 / 15** | — |
-| 2 — Dinámica | **11 / 19** | circular con fuerzas, MAS, gravitación |
+| 2 — Dinámica | **16 / 19** | ej. 3, 15 y 16 |
 | 3 — Trabajo y energía | 0 / 12 | todo |
 
-Ninguna de las fuentes disponibles trata la composición de resortes, que es lo que pide el ejercicio 12 del Práctico 2. No es un hueco de fondo: los dos resortes cuelgan en paralelo y sus fuerzas se suman, así que sale de la ley de Hooke más el principio de superposición. Cuando se escriba ese capítulo, va declarado como construcción propia.
+Lo que falta del Práctico 2 son los ejercicios 15 y 16, de gravitación, y el 3, que es una soga **con** masa: el método está en el capítulo 4, pero el apunte sostiene en todo momento que las sogas son ideales, así que hace falta un pasaje que levante esa hipótesis.
+
+Un detalle de procedencia: la composición de resortes que pide el ejercicio 12 no la trata ninguna de las fuentes disponibles. El capítulo 5 la construye desde la ley de Hooke más el principio de superposición, y lo dice en el texto en lugar de atribuírsela a nadie.
 
 ### Material de repaso
 
-- [`flashcards/fisica-1.tsv`](./flashcards) — 146 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `cinematica-2d`, `movimiento-circular`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
-- [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa de los 54 conceptos cubiertos, en un solo panel de 67 × 76 cm, con tres niveles de jerarquía y un color por familia. Se lee en pantalla o se imprime en A1: a esta cantidad de nodos, forzarlo a un A4 bajaría la letra a 2 pt.
+- [`flashcards/fisica-1.tsv`](./flashcards) — 189 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `cinematica-2d`, `movimiento-circular`, `movimiento-armonico-simple`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
+- [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa del Parcial I en un solo panel de 67 × 76 cm, con tres niveles de jerarquía y un color por familia. Se lee en pantalla o se imprime en A1: a esa cantidad de nodos, forzarlo a un A4 bajaría la letra a 2 pt. Refleja los 54 conceptos que había al cerrar el capítulo 4; los capítulos 5 y 6 sumaron 31 más y todavía no se regeneró.
 
 ### Carpetas por examen
 
