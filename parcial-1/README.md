@@ -18,6 +18,7 @@
   - `practico-2-dinamica.pdf` — **Práctico 2 completo (19/19)**, mismo flujo (respuestas crudas en `input/EjNTp2.md`, verificación en `verificacion-practico-2.py`). Las figuras de la guía (planos inclinados, poleas, resortes, cono) están redibujadas en TikZ junto con los diagramas de cuerpo aislado.
   - Práctico 3 — pendiente (cuando salga la versión 2026).
   - **Parciales viejos resueltos** (mismo flujo, un problema por hoja, `verificacion-parcial-1-<año>.py` con sympy):
+    - `parcial-1-2021.pdf` — 28/09/2021 (cuestionario de 5 preguntas + saque de Nadal con impulso, cuña con rozamiento en la mesa, péndulo con choque elástico).
     - `parcial-1-2022.pdf` — 29/09/2022 (honda + choque plástico, plano con polea y rozamiento, resorte + empalme circular + rampa rugosa).
     - `parcial-1-2023.pdf` — 28/09/2023 (cañón vs muralla, cuña con dos planos y rozamiento, resorte en plano inclinado).
     - `parcial-1-2024.pdf` — 26/09/2024 (golf sobre pendiente, masa girando con contrapeso, resorte + rizo con fricción).
