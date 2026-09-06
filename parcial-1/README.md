@@ -18,6 +18,7 @@
   - `practico-2-dinamica.pdf` — **Práctico 2 completo (19/19)**, mismo flujo (respuestas crudas en `input/EjNTp2.md`, verificación en `verificacion-practico-2.py`). Las figuras de la guía (planos inclinados, poleas, resortes, cono) están redibujadas en TikZ junto con los diagramas de cuerpo aislado.
   - Práctico 3 — pendiente (cuando salga la versión 2026).
   - **Parciales viejos resueltos** (mismo flujo, un problema por hoja, `verificacion-parcial-1-<año>.py` con sympy):
+    - `parcial-1-2009.pdf` — 10/09/2009 (viaje por tramos casa-banco-trabajo, plataforma que frena, tiro desde el borde de un acantilado).
     - `parcial-1-2014.pdf` — 02/10/2014 (péndulo + choque elástico + tramo rugoso + caída, doble plano inclinado sin rozamiento).
     - `parcial-1-2017.pdf` — 28/09/2017 (cañón sobre acantilado con dos ángulos, bloque sobre bloque con polea, movimiento circular acelerado). Los dos PDF de 2017 son el mismo examen.
     - `parcial-1-2020.pdf` — 26/11/2020, recuperatorio (bloque sobre bloque con polea, centro de masa de una L, péndulo balístico con cañón de resorte).
