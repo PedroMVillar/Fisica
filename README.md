@@ -5,7 +5,6 @@
 ![LaTeX](https://img.shields.io/badge/LaTeX-clase_book-008080?logo=latex&logoColor=white)
 ![Verificación](https://img.shields.io/badge/ejercicios-verificados_por_c%C3%B3digo-6a1b9a?logo=python&logoColor=white)
 ![Flashcards](https://img.shields.io/badge/flashcards-189-e07b39?logo=anki&logoColor=white)
-![Parcial I](https://img.shields.io/badge/Parcial_I-24_sep_2026-b3261e)
 
 Material de estudio de **Física 1**, cursada 2026. Reúne la bibliografía y los prácticos de la cátedra, los exámenes de años anteriores, y **un apunte teórico propio** que se escribe tema por tema a lo largo de la cursada.
 
@@ -27,6 +26,8 @@ Vive en [`sintesis/fisica-1/`](./sintesis/fisica-1). Es **un solo documento LaTe
 Cada capítulo sigue la misma estructura: motivación · marco teórico en bloques, cada uno con su chequeo de comprensión · ejemplos resueltos con andamiaje decreciente · errores comunes · ejercicios en dos niveles.
 
 El capítulo 1 **construye derivada e integral desde cero**, motivadas por la pregunta física, siguiendo el camino del apunte de la cátedra. Es la parte que más rinde: sin eso, la mitad del Práctico 1 no se puede resolver.
+
+Un detalle de procedencia: la composición de resortes que pide el ejercicio 12 no la trata ninguna de las fuentes disponibles. El capítulo 5 la construye desde la ley de Hooke más el principio de superposición, y lo dice en el texto en lugar de atribuírsela a nadie.
 
 ### Los resultados de los ejercicios no están en el PDF
 
@@ -76,29 +77,12 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 
 ---
 
-## Estado
-
-**Parcial I: 24 de septiembre de 2026** — Guías 0 a 3.
-
-Cobertura del apunte sobre los prácticos:
-
-| Práctico | Resolvibles | Falta |
-|---|---|---|
-| 0 — Magnitudes y vectores | 0 / 16 | todo |
-| 1 — Cinemática | **15 / 15** | — |
-| 2 — Dinámica | **16 / 19** | ej. 3, 15 y 16 |
-| 3 — Trabajo y energía | 0 / 12 | todo |
-
-Lo que falta del Práctico 2 son los ejercicios 15 y 16, de gravitación, y el 3, que es una soga **con** masa: el método está en el capítulo 4, pero el apunte sostiene en todo momento que las sogas son ideales, así que hace falta un pasaje que levante esa hipótesis.
-
-Un detalle de procedencia: la composición de resortes que pide el ejercicio 12 no la trata ninguna de las fuentes disponibles. El capítulo 5 la construye desde la ley de Hooke más el principio de superposición, y lo dice en el texto en lugar de atribuírsela a nadie.
-
-### Material de repaso
+## Material de repaso
 
 - [`flashcards/fisica-1.tsv`](./flashcards) — 189 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `cinematica-2d`, `movimiento-circular`, `movimiento-armonico-simple`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
 - [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa del Parcial I en un solo panel de 67 × 76 cm, con tres niveles de jerarquía y un color por familia. Se lee en pantalla o se imprime en A1: a esa cantidad de nodos, forzarlo a un A4 bajaría la letra a 2 pt. Refleja los 54 conceptos que había al cerrar el capítulo 4; los capítulos 5 y 6 sumaron 31 más y todavía no se regeneró.
 
-### Carpetas por examen
+## Carpetas por examen
 
 `parcial-1/`, `parcial-2/` y `final/` comparten convención:
 
