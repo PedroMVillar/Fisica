@@ -1,0 +1,228 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{hoja-ejercicio}[2026/09/07 v0.1 Hoja apaisada, un ejercicio resuelto por hoja]
+
+% ============================================================
+% Basado en el "LaTeX template for Wireless Foundations
+% conference posters" (UC Berkeley EECS; Graeme / Kumon /
+% A. D. Sarwate).
+%
+% DEL POSTER SE CONSERVA:
+%   - la orientacion apaisada
+%   - el marco azul de esquinas redondeadas alrededor de la hoja
+%   - la cabecera centrada en italica azul + filete grueso debajo
+%     (lo que en el poster era el subtitulo del departamento)
+%   - los titulos de bloque en azul oscuro: \CHead \LHead \RHead \Subhead
+%   - el trabajo del cuerpo en columnas
+%
+% DEL POSTER SE QUITA:
+%   - a0size y la hoja de 40x30 pulgadas  -> ahora A4 apaisada
+%   - pstricks + textpos (obligaban al camino dvips -> ps -> pdf)
+%     -> el marco se dibuja con TikZ y compila directo con pdflatex
+%   - el titulo grande en rojo, los autores y los logos (.eps)
+%   - la bibliografia
+%
+% USO MINIMO:
+%   \documentclass{hoja-ejercicio}
+%   \setpractico{Practico 1 --- Cinematica 1D y 2D}
+%   \begin{document}
+%   \begin{hoja}[3]{15}          % [columnas] {numero de ejercicio}
+%     \begin{ejercicio} ... \end{ejercicio}
+%     \begin{solucion}  ... \end{solucion}
+%   \end{hoja}
+%   \end{document}
+% ============================================================
+
+% ------------------------------------------------------------
+% PAQUETES
+% ------------------------------------------------------------
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{geometry}
+\RequirePackage{xcolor}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{enumitem}
+\RequirePackage{multicol}
+\RequirePackage{fancyhdr}
+\RequirePackage{tikz}
+\usetikzlibrary{calc,arrows.meta}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ------------------------------------------------------------
+% GEOMETRIA
+% A4 apaisada (29.7 x 21 cm). El margen inferior deja lugar al
+% pie de pagina DENTRO del marco.
+% ------------------------------------------------------------
+\geometry{
+  a4paper, landscape,
+  top=2.1cm, bottom=2.4cm, left=2.0cm, right=2.0cm,
+  headheight=14pt, headsep=0.4cm, footskip=1.0cm
+}
+
+% ============================================================
+% PALETA (la del poster de Berkeley)
+% ============================================================
+\definecolor{hojaAzul}{rgb}{0.10,0.10,0.50}  % DarkBlue del poster
+\definecolor{hojaRojo}{rgb}{0.90,0.00,0.10}  % Red del poster
+\definecolor{hojaVerde}{rgb}{0.00,0.45,0.20}
+\definecolor{hojaGris}{gray}{0.45}
+\colorlet{hojaSuave}{hojaAzul!7}
+
+% ============================================================
+% MARCO DE LA HOJA
+% Reemplaza al \psframe de pstricks del poster original.
+% Se dibuja en el fondo de cada pagina; necesita dos pasadas de
+% pdflatex (usa "remember picture").
+% ============================================================
+\newcommand{\hojaMargenMarco}{1cm}
+\newcommand{\hojaGrosorMarco}{2.2pt}
+\newcommand{\hojaRadioMarco}{10pt}
+
+\AddToHook{shipout/background}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \draw[draw=hojaAzul, line width=\hojaGrosorMarco,
+          rounded corners=\hojaRadioMarco]
+      ($(current page.south west)+(\hojaMargenMarco,\hojaMargenMarco)$)
+      rectangle
+      ($(current page.north east)-(\hojaMargenMarco,\hojaMargenMarco)$);
+  \end{tikzpicture}%
+}
+
+% ============================================================
+% CABECERA Y PIE
+% ============================================================
+% Texto del practico, se fija una sola vez en el preambulo.
+\newcommand{\hojaPractico}{}
+\newcommand{\setpractico}[1]{\renewcommand{\hojaPractico}{#1}}
+
+% Texto chico del pie, a la izquierda.
+\newcommand{\hojaPie}{}
+\newcommand{\setpiedepagina}[1]{\renewcommand{\hojaPie}{#1}}
+
+% Numero del ejercicio en curso (lo fija el entorno "hoja").
+\newcommand{\hojaNum}{}
+
+% Estilo por defecto: paginas de CONTINUACION de un ejercicio largo.
+% Llevan arriba a la derecha "Ejercicio N (cont.)".
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[R]{\footnotesize\itshape\color{hojaGris}Ejercicio~\hojaNum\ (cont.)}
+\fancyfoot[L]{\footnotesize\itshape\color{hojaGris}\hojaPie}
+\fancyfoot[R]{\footnotesize\color{hojaGris}\thepage}
+
+% Estilo de la PRIMERA pagina de cada ejercicio: sin cabecera de
+% continuacion, porque ya tiene el titulo grande.
+\fancypagestyle{hojaprimera}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+  \fancyfoot[L]{\footnotesize\itshape\color{hojaGris}\hojaPie}%
+  \fancyfoot[R]{\footnotesize\color{hojaGris}\thepage}%
+}
+
+% Cabecera de la hoja: lo que en el poster era el subtitulo en
+% italica ("Department of ..."), ahora "Ejercicio N --- Practico X".
+\newcommand{\hojaCabecera}[1]{%
+  \begin{center}
+    {\LARGE\itshape\color{hojaAzul} Ejercicio~#1%
+      \ifx\hojaPractico\empty\else\ \textmd{---}\ \hojaPractico\fi\par}
+  \end{center}
+  \vspace{2pt}%
+  {\color{hojaAzul}\hrule height 2pt}%
+  \vspace{12pt}%
+}
+
+% ============================================================
+% ENTORNO "hoja"
+% Una hoja apaisada = un ejercicio. Argumento opcional: cantidad
+% de columnas del cuerpo (2 por defecto; 3 para ejercicios largos).
+% ============================================================
+\setlength{\columnsep}{0.9cm}
+\setlength{\columnseprule}{0.4pt}
+\renewcommand{\columnseprulecolor}{\color{hojaAzul!30}}
+\setlength{\fboxsep}{6pt}
+
+\newenvironment{hoja}[2][2]{%
+  \clearpage
+  \def\hojaNumTmp{#2}\global\let\hojaNum\hojaNumTmp
+
+  \thispagestyle{hojaprimera}%
+  \hojaCabecera{#2}%
+  \begin{multicols}{#1}%
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{4pt plus 1pt}%
+}{%
+  \end{multicols}%
+}
+
+% ============================================================
+% TITULOS DE BLOQUE (los del poster, reescalados a 11pt)
+% ============================================================
+\def\RHead#1{\noindent\hbox to \hsize{\hfil{\large\bfseries\color{hojaAzul} #1}}\par\medskip}
+\def\LHead#1{\noindent{\large\bfseries\color{hojaAzul} #1}\par\medskip}
+\def\CHead#1{\begin{center}\noindent{\large\bfseries\color{hojaAzul} #1}\end{center}}
+\def\Subhead#1{\noindent{\normalsize\bfseries\color{hojaAzul} #1}\par\smallskip}
+
+% ------------------------------------------------------------
+% ROTULO: chip azul con texto blanco en mayusculas, al estilo de
+% los "PROBLEMA PRACTICO" / "GUIA DE SOLUCION" de los libros.
+% ------------------------------------------------------------
+\newcommand{\rotulo}[1]{%
+  \par\addvspace{8pt}%
+  \noindent\colorbox{hojaAzul}{\color{white}\bfseries\footnotesize\MakeUppercase{#1}}%
+  \par\nobreak\vspace{5pt}%
+  \@afterindentfalse\@afterheading\ignorespaces
+}
+
+% ------------------------------------------------------------
+% APARTADO: subtitulo de inciso, con filete fino debajo.
+% Util para (a), (b), (c)... dentro de la resolucion.
+% ------------------------------------------------------------
+\newcommand{\apartado}[1]{%
+  \par\addvspace{7pt}%
+  \noindent{\bfseries\color{hojaAzul}#1}\par\nobreak\vspace{2pt}%
+  {\color{hojaAzul!35}\hrule height 0.5pt}%
+  \nobreak\vspace{4pt}%
+  \@afterindentfalse\@afterheading\ignorespaces
+}
+
+% ============================================================
+% ENTORNOS "ejercicio" Y "solucion"
+% Van adentro de "hoja". El numero del ejercicio ya lo pone la
+% cabecera, asi que aca no lleva argumento.
+% ============================================================
+\newenvironment{ejercicio}{%
+  \rotulo{Enunciado}%
+}{%
+  \par\addvspace{4pt}%
+}
+
+\newenvironment{solucion}{%
+  \rotulo{Resoluci\'on}%
+}{%
+  \par\addvspace{4pt}%
+}
+
+% ============================================================
+% CAJA DE RESULTADO
+% Para que la respuesta final del inciso salte a la vista.
+% ============================================================
+\newcommand{\resultado}[1]{%
+  \par\addvspace{7pt}%
+  \noindent\fcolorbox{hojaAzul}{hojaSuave}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{#1}}%
+  \par\addvspace{7pt}%
+}
+
+% ============================================================
+% FIGURA CENTRADA, con ancho maximo = ancho de columna
+% ============================================================
+\newenvironment{figuracol}{%
+  \par\addvspace{6pt}\begin{center}%
+}{%
+  \end{center}\par\addvspace{6pt}%
+}
+
+\endinput

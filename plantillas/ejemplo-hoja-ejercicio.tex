@@ -1,0 +1,118 @@
+\documentclass{hoja-ejercicio}
+
+% --- Macros propias del practico (vienen del .tex original) ---
+\newcommand{\un}[1]{\,\mathrm{#1}}
+\newcommand{\ms}{\un{m/s}}
+\newcommand{\mss}{\un{m/s^2}}
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\ux}{\hat{\imath}}
+\newcommand{\uy}{\hat{\jmath}}
+\DeclareMathOperator{\sen}{sen}
+
+\setpractico{Práctico 1 --- Cinemática 1D y 2D}
+\setpiedepagina{Física 1 --- Lic. en Ciencias de la Computación --- 2026}
+
+\begin{document}
+
+\begin{hoja}[2]{15}
+
+\begin{ejercicio}
+En un partido de fútbol femenino, que se juega sobre piso de arena, una jugadora se encuentra frente al arco y nota que éste está desguarnecido. Patea la pelota con una velocidad inicial de módulo igual a $24\ms$, formando un ángulo de $30^\circ$ con la horizontal, intentando convertir el gol. Debido a que existe un fuerte viento, la pelota experimenta tanto la aceleración de la gravedad como una aceleración horizontal de $2\mss$ en sentido opuesto a su dirección de movimiento. Sabiendo que el arco tiene $2.44\un{m}$ de altura y está ubicado a $45\un{m}$ de donde parte la pelota, y que al impactar en la arena la pelota no se desplaza horizontalmente:
+\begin{enumerate}[label=(\alph*), leftmargin=*, itemsep=1pt, topsep=3pt]
+\item Dibuje un esquema de la situación y el sistema de coordenadas elegido.
+\item Escriba los vectores aceleración, velocidad y posición de la pelota mientras la pelota está en vuelo.
+\item Calcule la altura máxima que alcanza la pelota.
+\item Determine si la jugadora logra convertir el gol. Realice todos los cálculos necesarios para justificar su respuesta.
+\item Si no hubiese existido la aceleración horizontal provocada por el viento, ¿la jugadora habría convertido el gol? Realice todos los cálculos necesarios para justificar su respuesta.
+\item En el esquema del ítem (a), grafique cualitativamente la trayectoria en el caso de que existe aceleración horizontal y dibuje los vectores velocidad y aceleración en dos puntos cualquiera de la misma.
+\end{enumerate}
+Considere que la aceleración de la gravedad es igual a $10\mss$.
+\end{ejercicio}
+
+\begin{solucion}
+
+\apartado{(a) Esquema y sistema de coordenadas}
+Origen en el punto donde se patea la pelota, sobre la arena; eje $x$ horizontal hacia el arco, eje $y$ vertical hacia arriba; $t=0$ en el puntapié. El arco es un segmento vertical en $x=45\un{m}$ entre $y=0$ y $y=2.44\un{m}$. El viento produce una aceleración constante hacia $-x$.
+
+\begin{figuracol}
+\begin{tikzpicture}
+\begin{axis}[
+    width=11.6cm, height=6.2cm,
+    xmin=0, xmax=52, ymin=0, ymax=9,
+    xtick={0,10,20,30,40,45,50}, ytick={0,2.44,5,7.2},
+    xticklabel style={font=\tiny,/pgf/number format/fixed}, yticklabel style={font=\tiny,/pgf/number format/fixed},
+    grid=both, grid style={dashed, gray!50},
+    xlabel={$x$ [m]}, ylabel={$y$ [m]}, label style={font=\small},
+    legend style={font=\scriptsize, at={(0.97,0.97)}, anchor=north east},
+    axis lines=left,
+]
+\addplot[domain=0:2.4, samples=60, hojaAzul, line width=1.5pt] ({20.785*x - x^2},{12*x - 5*x^2});
+\addlegendentry{con viento ($a_x=-2\mss$)}
+\addplot[domain=0:2.4, samples=60, hojaRojo!80!black, dashed, line width=1.2pt] ({20.785*x},{12*x - 5*x^2});
+\addlegendentry{sin viento}
+\draw[line width=2.5pt, black] (axis cs:45,0) -- (axis cs:45,2.44);
+\node[font=\scriptsize, above right] at (axis cs:45,2.6) {arco};
+\draw[->, thick, hojaAzul] (axis cs:8.15,4.0) -- (axis cs:16.1,7.2) node[right, font=\scriptsize] {$\vv v$};
+\draw[->, thick, hojaRojo!80!black] (axis cs:8.15,4.0) -- (axis cs:7.35,0) node[pos=0.5, left, font=\scriptsize] {$\vv a$};
+\draw[->, thick, hojaAzul] (axis cs:23.5,7.2) -- (axis cs:30.9,7.2) node[right, font=\scriptsize] {$\vv v$};
+\draw[->, thick, hojaRojo!80!black] (axis cs:23.5,7.2) -- (axis cs:22.7,3.2) node[below, font=\scriptsize] {$\vv a$};
+\addplot[only marks, mark=*, mark size=1.6pt, black] coordinates {(8.15,4.0) (23.5,7.2) (44.12,0) (45,2.54)};
+\end{axis}
+\end{tikzpicture}
+\end{figuracol}
+
+\apartado{(b) Vectores}
+Condiciones iniciales: $\vv r_0=\vv 0$ y
+\[
+v_{0x} = 24\cos 30^\circ = 12\sqrt3\approx 20.78\ms,
+\]
+\[
+v_{0y} = 24\sen 30^\circ = 12\ms .
+\]
+La aceleración es constante en ambos ejes (gravedad hacia abajo y viento hacia $-x$), así que integro dos veces componente a componente:
+\begin{align*}
+\vv a(t) &= -2\,\ux - 10\,\uy,\\
+\vv v(t) &= (12\sqrt3 - 2t)\,\ux + (12-10t)\,\uy,\\
+\vv r(t) &= (12\sqrt3\,t - t^2)\,\ux + (12t - 5t^2)\,\uy .
+\end{align*}
+
+\apartado{(c) Altura máxima}
+Ocurre cuando $v_y=0$: $12-10t=0\Rightarrow t=1.2\un{s}$.
+\[
+y_{\max} = 12(1.2) - 5(1.2)^2 = 7.2\un{m}.
+\]
+En ese instante $x=20.78\cdot1.2-1.44\approx 23.5\un{m}$.
+
+\apartado{(d) ¿Es gol con viento?}
+Primero veo cuánto dura el vuelo: $y=0 \Rightarrow t(12-5t)=0 \Rightarrow t_v = 2.4\un{s}$. La pelota toca la arena en
+\[
+x(2.4) = 12\sqrt3\cdot 2.4 - 2.4^2 \approx 44.1\un{m} < 45\un{m}.
+\]
+Cae $0.9\un{m}$ antes de la línea del arco y, según el enunciado, al impactar no sigue avanzando. Otra forma de verlo: para llegar a $x=45$ haría falta $t^2-12\sqrt3\,t+45=0\Rightarrow t\approx 2.46\un{s} > t_v$, instante en que $y\approx -0.7\un{m}$ (ya estaría bajo el suelo).
+
+\resultado{\textbf{No hay gol}: la pelota se queda corta, cae a $44.1\un{m}$ del punto de partida.}
+
+\apartado{(e) ¿Y sin viento?}
+Ahora $a_x=0$ y el eje $x$ es un MRU: $x(t)=12\sqrt3\,t$. El tiempo de vuelo no cambia ($2.4\un{s}$, depende sólo del eje $y$). Llega a la línea del arco en
+\[
+t_{\text{arco}} = \frac{45}{12\sqrt3}\approx 2.165\un{s} < 2.4\un{s},
+\]
+o sea que sigue en el aire, y a esa altura
+\[
+y(2.165) = 12(2.165) - 5(2.165)^2 \approx 2.54\un{m} > 2.44\un{m}.
+\]
+
+\resultado{\textbf{Tampoco es gol}: pasa unos $10\un{cm}$ \emph{por encima} del travesaño. El viento acorta el alcance de $49.9\un{m}$ a $44.1\un{m}$; para convertir haría falta una situación intermedia.}
+
+\apartado{(f) Trayectoria con viento y vectores}
+La curva ya no es una parábola simétrica: como $v_x$ disminuye durante el vuelo, la subida es más ``tendida'' y la bajada más empinada; el punto más alto está más cerca del punto de caída que del de partida ($23.5\un{m}$ de $44.1$). En el gráfico de (a) están dibujados los vectores en dos puntos:
+\begin{itemize}[leftmargin=*, itemsep=1pt, topsep=3pt]
+\item En $t=0.4\un{s}$ (subiendo, en $x\approx 8.2\un{m}$, $y=4\un{m}$): $\vv v=(20.0,\,8)\ms$ apunta hacia arriba y adelante, tangente a la curva; $\vv a=(-2,-10)\mss$ hacia abajo y hacia atrás. Es el mismo $\vv a$ en todo el vuelo.
+\item En el punto más alto ($t=1.2\un{s}$): $\vv v = 18.4\,\ux\ \ms$, horizontal; $\vv a=(-2,-10)\mss$. A diferencia del tiro parabólico común, acá $\vv v$ y $\vv a$ no son perpendiculares (forman $\approx 101^\circ$) porque la componente $a_x$ sigue frenando la pelota.
+\end{itemize}
+
+\end{solucion}
+
+\end{hoja}
+
+\end{document}
