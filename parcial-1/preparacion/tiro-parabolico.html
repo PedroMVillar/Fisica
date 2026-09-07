@@ -1,0 +1,335 @@
+<title>Laboratorio de Tiro Parabólico</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --paper:#F6F7FB; --panel:#FFFFFF; --ink:#1F2433; --ink-2:#4B5268; --ink-3:#8A90A6;
+  --line:#D9DDEA; --accent:#5B6FB8; --accent-soft:#DDE3F5; --accent-ink:#2F3F80;
+  --vel:#2F5FB3; --acc:#9C2B2B; --ok:#3C7A4E; --warn:#A8671B; --ghost:#B9BFD6;
+  --grid:#E6E8F1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#151821; --panel:#1C2030; --ink:#E8EAF3; --ink-2:#B4B9CC; --ink-3:#7E859C;
+    --line:#2E3447; --accent:#8FA2E6; --accent-soft:#2A3352; --accent-ink:#C3CDF2;
+    --vel:#7FA6F0; --acc:#E07A7A; --ok:#7CC48F; --warn:#E0A85A; --ghost:#4A516A;
+    --grid:#262B3C;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#151821; --panel:#1C2030; --ink:#E8EAF3; --ink-2:#B4B9CC; --ink-3:#7E859C;
+  --line:#2E3447; --accent:#8FA2E6; --accent-soft:#2A3352; --accent-ink:#C3CDF2;
+  --vel:#7FA6F0; --acc:#E07A7A; --ok:#7CC48F; --warn:#E0A85A; --ghost:#4A516A;
+  --grid:#262B3C;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Source Sans 3",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15.5px;line-height:1.5}
+header{padding:22px 28px 10px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:28px;margin:0;letter-spacing:-.01em}
+header p{margin:0;color:var(--ink-2);max-width:62ch}
+.eyebrow{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+main{display:grid;grid-template-columns:320px minmax(0,1fr) 400px;gap:20px;padding:18px 28px 40px;width:100%}
+.wide{grid-column:1/-1}
+.right{display:grid;gap:16px;align-content:start;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto}
+@media (max-width:1300px){main{grid-template-columns:320px minmax(0,1fr)}.right{position:static;max-height:none;grid-column:2}}
+@media (max-width:980px){main{grid-template-columns:1fr}.right{grid-column:1}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px}
+.panel h2{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:17px;margin:0 0 10px}
+.ctrl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;margin:8px 0}
+.ctrl label{font-weight:600;font-size:14px}
+.ctrl output{font-family:"STIX Two Text",Georgia,serif;font-variant-numeric:tabular-nums;color:var(--accent-ink);font-size:15px;text-align:right;min-width:78px}
+.ctrl input[type=range]{grid-column:1/3;width:100%;accent-color:var(--accent);margin:0}
+.ctrl small{grid-column:1/3;color:var(--ink-3);font-size:12.5px;line-height:1.35}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.chip{font-weight:400;background:transparent;border-radius:999px;padding:4px 11px;font-size:13.5px}
+button.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.stage{display:grid;gap:16px}
+canvas{display:block;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+#traj{aspect-ratio:16/8.4;max-height:520px}
+.plots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:760px){.plots{grid-template-columns:1fr}}
+.plots canvas{aspect-ratio:4/3}
+.timebar{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.timebar input{width:100%;accent-color:var(--accent);margin:0}
+.timebar output{font-family:"STIX Two Text",Georgia,serif;font-variant-numeric:tabular-nums;min-width:110px;text-align:right}
+.f{font-family:"STIX Two Text",Georgia,serif;font-size:16px}
+.f i{font-style:italic}
+.f sub,.f sup{font-size:.72em;line-height:0}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;line-height:1.15}
+.frac span:first-child{border-bottom:1px solid currentColor;padding:0 3px}
+.frac span:last-child{padding:0 3px}
+.eqs{display:grid;gap:9px}
+.eq{display:grid;grid-template-columns:1fr;gap:2px;padding:8px 10px;border-left:3px solid var(--accent-soft);background:color-mix(in srgb,var(--accent-soft) 35%,transparent)}
+.eq .f{color:var(--ink)}
+.eq .num{color:var(--accent-ink)}
+.eq small{color:var(--ink-2);font-size:12.5px;line-height:1.35}
+.res{display:grid;grid-template-columns:1fr;gap:2px 12px;font-variant-numeric:tabular-nums}
+.res dt{color:var(--ink-2);font-size:13px;margin-top:6px}
+.res dd{margin:0;font-family:"STIX Two Text",Georgia,serif;color:var(--ink);font-size:15.5px}
+.res dd.ok{color:var(--ok)} .res dd.bad{color:var(--acc)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);padding:0 4px}
+.legend span::before{content:"";display:inline-block;width:22px;height:3px;margin-right:6px;vertical-align:middle;border-radius:2px;background:var(--c)}
+.exp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.exp article{border:1px solid var(--line);border-radius:6px;padding:12px 14px;background:var(--panel)}
+.exp h3{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:16px;margin:0 0 6px}
+.exp p{margin:0 0 10px;color:var(--ink-2);font-size:14px}
+.note{color:var(--ink-2);font-size:13.5px;margin:6px 0 0}
+.verdict{font-weight:600}
+@media (prefers-reduced-motion: reduce){.anim{transition:none}}
+</style>
+
+<header>
+  <div>
+    <div class="eyebrow">Física 1 · FaMAF · Cinemática en el plano</div>
+    <h1>Laboratorio de Tiro Parabólico</h1>
+  </div>
+  <p>Un solo modelo, <span class="f"><i>a</i> = (<i>a<sub>x</sub></i>, −<i>g</i>)</span> constante, cubre el tiro horizontal, el oblicuo y el vertical. Mové los controles y mirá cómo cambian a la vez la trayectoria, las funciones <span class="f"><i>x</i>(<i>t</i>)</span>, <span class="f"><i>y</i>(<i>t</i>)</span> y los números de las fórmulas.</p>
+</header>
+
+<main>
+  <aside class="stage">
+    <section class="panel">
+      <h2>Condiciones iniciales</h2>
+      <div class="ctrl"><label for="v0">Rapidez inicial <span class="f"><i>v</i><sub>0</sub></span></label><output id="v0o"></output><input type="range" id="v0" min="1" max="60" step="0.5" value="24"></div>
+      <div class="ctrl"><label for="ang">Ángulo <span class="f">α</span> con la horizontal</label><output id="ango"></output><input type="range" id="ang" min="0" max="90" step="1" value="30"><small>0° es tiro horizontal, 90° tiro vertical.</small></div>
+      <div class="ctrl"><label for="h0">Altura de salida <span class="f"><i>h</i></span></label><output id="h0o"></output><input type="range" id="h0" min="0" max="60" step="0.5" value="0"></div>
+      <div class="ctrl"><label for="g">Gravedad <span class="f"><i>g</i></span></label><output id="go"></output><input type="range" id="g" min="1" max="20" step="0.1" value="10"><small>La cátedra usa 9.8; varios parciales dicen "considere 10".</small></div>
+      <div class="ctrl"><label for="ax">Aceleración horizontal <span class="f"><i>a<sub>x</sub></i></span></label><output id="axo"></output><input type="range" id="ax" min="-6" max="6" step="0.5" value="-2"><small>El viento del Ej. 15. Con 0 el eje <i>x</i> es un MRU puro.</small></div>
+      <div class="ctrl"><label for="obx">Obstáculo: distancia</label><output id="obxo"></output><input type="range" id="obx" min="0" max="200" step="1" value="45"></div>
+      <div class="ctrl"><label for="obh">Obstáculo: altura</label><output id="obho"></output><input type="range" id="obh" min="0" max="30" step="0.1" value="2.44"><small>Con altura 0 no se dibuja. Sirve para el arco, la muralla, la red.</small></div>
+    </section>
+
+    <section class="panel">
+      <h2>Escenarios de la carpeta</h2>
+      <div class="row" id="scen"></div>
+      <p class="note">Cada botón carga los datos del ejercicio; compará lo que ves con tu resolución.</p>
+    </section>
+  </aside>
+
+  <section class="stage">
+    <canvas id="traj"></canvas>
+    <div class="legend"><span style="--c:var(--accent)">trayectoria</span><span style="--c:var(--vel)">velocidad <span class="f"><i>v</i></span> y componentes</span><span style="--c:var(--acc)">aceleración <span class="f"><i>a</i></span></span><span style="--c:var(--ghost)">trayectoria de comparación</span></div>
+    <div class="timebar">
+      <div class="row"><button class="primary" id="play">Reproducir</button><button id="reset">Inicio</button></div>
+      <input type="range" id="tt" min="0" max="1" step="0.001" value="0" aria-label="tiempo">
+      <output id="tto"></output>
+    </div>
+    <div class="plots">
+      <canvas id="px"></canvas><canvas id="py"></canvas><canvas id="pvy"></canvas>
+    </div>
+
+  </section>
+
+  <aside class="right">
+    <div class="panel">
+      <h2>Resultados derivados</h2>
+      <dl class="res" id="res"></dl>
+      <p class="note" id="obnote"></p>
+    </div>
+    <div class="panel">
+      <h2>Las fórmulas, con los números de ahora</h2>
+      <div class="eqs" id="eqs"></div>
+    </div>
+  </aside>
+
+  <section class="panel wide">
+    <h2>Experimentos</h2>
+    <div class="exp" id="exp"></div>
+    <p class="note">Cada experimento carga una configuración y deja dibujada en gris una segunda trayectoria para comparar. <button class="chip" id="clearghost">Quitar comparación</button></p>
+  </section>
+</main>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const S={v0:24,ang:30,h0:0,g:10,ax:-2,obx:45,obh:2.44};
+let ghost=null, t=0, playing=false, raf=null, lastTs=0;
+
+const inputs=['v0','ang','h0','g','ax','obx','obh'];
+inputs.forEach(k=>{ $(k).addEventListener('input',()=>{S[k]=parseFloat($(k).value); t=Math.min(t,flight(S).tf); render();}); });
+
+function deg(a){return a*Math.PI/180}
+function comps(P){const a=deg(P.ang);return {vx0:P.v0*Math.cos(a),vy0:P.v0*Math.sin(a)}}
+function pos(P,t){const c=comps(P);return {x:c.vx0*t+0.5*P.ax*t*t, y:P.h0+c.vy0*t-0.5*P.g*t*t, vx:c.vx0+P.ax*t, vy:c.vy0-P.g*t}}
+function flight(P){
+  const c=comps(P);
+  // y(t)=0 -> 0.5 g t^2 - vy0 t - h0 = 0
+  const disc=c.vy0*c.vy0+2*P.g*P.h0;
+  const tf=(c.vy0+Math.sqrt(Math.max(disc,0)))/P.g;
+  const tmax=c.vy0>0?c.vy0/P.g:0;
+  const ymax=P.h0+(c.vy0>0?c.vy0*c.vy0/(2*P.g):0);
+  const end=pos(P,tf);
+  return {tf:Math.max(tf,1e-6),tmax,ymax,xf:end.x,vxf:end.vx,vyf:end.vy,c};
+}
+function fmt(v,d){const n=Math.abs(v)<1e-9?0:v;return n.toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+
+// ---------- canvas helpers
+function setup(cv){const r=cv.getBoundingClientRect();const dpr=window.devicePixelRatio||1;cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w:r.width,h:r.height}}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+function niceStep(range,target){const raw=range/target;const p=Math.pow(10,Math.floor(Math.log10(raw)));const m=raw/p;const s=m<1.5?1:m<3.5?2:m<7.5?5:10;return s*p}
+
+function drawTraj(){
+  const cv=$('traj');const {ctx,w,h}=setup(cv);
+  const P=S,F=flight(P);
+  let xmax=Math.max(F.xf,P.obx*(P.obh>0?1:0),1)*1.08; let xmin=0;
+  if(ghost){const G=flight(ghost);xmax=Math.max(xmax,G.xf*1.08)}
+  // x could go negative with wind; sample
+  const N=200;let ylim=Math.max(F.ymax,P.obh,P.h0,1)*1.15;
+  if(ghost){ylim=Math.max(ylim,flight(ghost).ymax*1.15)}
+  for(let i=0;i<=N;i++){const p=pos(P,F.tf*i/N);xmin=Math.min(xmin,p.x);xmax=Math.max(xmax,p.x*1.08)}
+  const pad={l:52,r:24,t:18,b:40};
+  const sx=(w-pad.l-pad.r)/(xmax-xmin), sy=(h-pad.t-pad.b)/ylim;
+  const X=x=>pad.l+(x-xmin)*sx, Y=y=>h-pad.b-y*sy;
+  ctx.clearRect(0,0,w,h);
+  // grid + axes
+  ctx.strokeStyle=css('--grid');ctx.lineWidth=1;ctx.font='11px "Source Sans 3", sans-serif';ctx.fillStyle=css('--ink-3');
+  const stx=niceStep(xmax-xmin,8), sty=niceStep(ylim,5);
+  for(let x=Math.ceil(xmin/stx)*stx;x<=xmax;x+=stx){ctx.beginPath();ctx.moveTo(X(x),pad.t);ctx.lineTo(X(x),h-pad.b);ctx.stroke();ctx.textAlign='center';ctx.fillText(fmt(x,0),X(x),h-pad.b+14)}
+  for(let y=0;y<=ylim;y+=sty){ctx.beginPath();ctx.moveTo(pad.l,Y(y));ctx.lineTo(w-pad.r,Y(y));ctx.stroke();ctx.textAlign='right';ctx.fillText(fmt(y,0),pad.l-6,Y(y)+4)}
+  ctx.fillStyle=css('--ink-2');ctx.textAlign='left';ctx.fillText('x [m]',w-pad.r-34,h-pad.b+28);ctx.fillText('y [m]',pad.l-40,pad.t+2);
+  // ground
+  ctx.strokeStyle=css('--ink-2');ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(pad.l,Y(0));ctx.lineTo(w-pad.r,Y(0));ctx.stroke();
+  // ghost
+  if(ghost){const G=flight(ghost);ctx.strokeStyle=css('--ghost');ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();for(let i=0;i<=N;i++){const p=pos(ghost,G.tf*i/N);i?ctx.lineTo(X(p.x),Y(p.y)):ctx.moveTo(X(p.x),Y(p.y))}ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=css('--ink-3');ctx.font='12px "Source Sans 3", sans-serif';ctx.textAlign='left';ctx.fillText(ghost.label||'comparación',X(pos(ghost,G.tf*0.5).x)+6,Y(pos(ghost,G.tf*0.5).y)-6);}
+  // obstacle
+  if(P.obh>0){ctx.strokeStyle=css('--ink');ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(X(P.obx),Y(0));ctx.lineTo(X(P.obx),Y(P.obh));ctx.stroke();ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(X(P.obx)-6,Y(P.obh));ctx.lineTo(X(P.obx)+6,Y(P.obh));ctx.stroke();
+    ctx.fillStyle=css('--ink-2');ctx.font='12px "Source Sans 3", sans-serif';ctx.textAlign='center';ctx.fillText(fmt(P.obh,2)+' m',X(P.obx),Y(P.obh)-8)}
+  // launch platform
+  if(P.h0>0){ctx.fillStyle=css('--accent-soft');ctx.fillRect(pad.l-10,Y(P.h0),12,Y(0)-Y(P.h0))}
+  // trajectory (full, faint) + travelled
+  ctx.strokeStyle=css('--accent');ctx.lineWidth=1.2;ctx.globalAlpha=.45;ctx.beginPath();for(let i=0;i<=N;i++){const p=pos(P,F.tf*i/N);i?ctx.lineTo(X(p.x),Y(p.y)):ctx.moveTo(X(p.x),Y(p.y))}ctx.stroke();ctx.globalAlpha=1;
+  ctx.lineWidth=2.4;ctx.beginPath();const M=Math.max(2,Math.round(N*t/F.tf));for(let i=0;i<=M;i++){const p=pos(P,t*i/M);i?ctx.lineTo(X(p.x),Y(p.y)):ctx.moveTo(X(p.x),Y(p.y))}ctx.stroke();
+  // apex + landing markers
+  if(F.tmax>0){const a=pos(P,F.tmax);dot(ctx,X(a.x),Y(a.y),3,css('--ink-3'))}
+  // vectors at current point
+  const p=pos(P,t);const vs=Math.min(60/Math.max(P.v0,1),4)* (w/700);
+  const px=X(p.x),py=Y(p.y);
+  // velocity components dashed
+  ctx.setLineDash([4,4]);ctx.strokeStyle=css('--vel');ctx.lineWidth=1.3;
+  ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px+p.vx*vs,py);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,py-p.vy*vs);ctx.stroke();ctx.setLineDash([]);
+  arrow(ctx,px,py,px+p.vx*vs,py-p.vy*vs,css('--vel'),2.2);
+  const as=vs*1.6;arrow(ctx,px,py,px+P.ax*as,py+P.g*as,css('--acc'),2.2);
+  ctx.font='13px "STIX Two Text", serif';ctx.fillStyle=css('--vel');ctx.textAlign='left';ctx.fillText('v',px+p.vx*vs+6,py-p.vy*vs);ctx.fillStyle=css('--acc');ctx.fillText('a',px+P.ax*as+6,py+P.g*as+4);
+  dot(ctx,px,py,5,css('--ink'));
+}
+function dot(ctx,x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}
+function arrow(ctx,x0,y0,x1,y1,c,lw){const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy);if(L<2)return;ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=lw;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();const ux=dx/L,uy=dy/L,s=7;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x1-s*ux+s*.5*uy,y1-s*uy-s*.5*ux);ctx.lineTo(x1-s*ux-s*.5*uy,y1-s*uy+s*.5*ux);ctx.closePath();ctx.fill()}
+
+function drawPlot(id,label,fn,ghostFn){
+  const cv=$(id);const {ctx,w,h}=setup(cv);const F=flight(S);
+  const pad={l:44,r:12,t:24,b:30};
+  const N=120;let lo=0,hi=0;const pts=[];for(let i=0;i<=N;i++){const tt=F.tf*i/N;const v=fn(tt);pts.push([tt,v]);lo=Math.min(lo,v);hi=Math.max(hi,v)}
+  let gpts=null;if(ghost&&ghostFn){const G=flight(ghost);gpts=[];for(let i=0;i<=N;i++){const tt=G.tf*i/N;const v=ghostFn(tt);gpts.push([tt,v]);lo=Math.min(lo,v);hi=Math.max(hi,v)}}
+  if(hi-lo<1e-6){hi=lo+1}
+  const tmaxAxis=ghost?Math.max(F.tf,flight(ghost).tf):F.tf;
+  const range=hi-lo;lo-=range*.08;hi+=range*.08;
+  const X=tt=>pad.l+(tt/tmaxAxis)*(w-pad.l-pad.r), Y=v=>pad.t+(hi-v)/(hi-lo)*(h-pad.t-pad.b);
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle=css('--grid');ctx.lineWidth=1;ctx.fillStyle=css('--ink-3');ctx.font='10.5px "Source Sans 3", sans-serif';
+  const sty=niceStep(hi-lo,4);for(let v=Math.ceil(lo/sty)*sty;v<=hi;v+=sty){ctx.beginPath();ctx.moveTo(pad.l,Y(v));ctx.lineTo(w-pad.r,Y(v));ctx.stroke();ctx.textAlign='right';ctx.fillText(fmt(v,0),pad.l-5,Y(v)+3)}
+  const stt=niceStep(tmaxAxis,4);for(let tt=0;tt<=tmaxAxis;tt+=stt){ctx.beginPath();ctx.moveTo(X(tt),pad.t);ctx.lineTo(X(tt),h-pad.b);ctx.stroke();ctx.textAlign='center';ctx.fillText(fmt(tt,1),X(tt),h-pad.b+12)}
+  if(lo<0&&hi>0){ctx.strokeStyle=css('--ink-3');ctx.beginPath();ctx.moveTo(pad.l,Y(0));ctx.lineTo(w-pad.r,Y(0));ctx.stroke()}
+  ctx.fillStyle=css('--ink-2');ctx.textAlign='left';ctx.font='13px "STIX Two Text", serif';ctx.fillText(label,pad.l,14);ctx.font='10.5px "Source Sans 3", sans-serif';ctx.textAlign='right';ctx.fillText('t [s]',w-pad.r,h-pad.b+24);
+  if(gpts){ctx.strokeStyle=css('--ghost');ctx.lineWidth=1.8;ctx.setLineDash([5,4]);ctx.beginPath();gpts.forEach((p,i)=>i?ctx.lineTo(X(p[0]),Y(p[1])):ctx.moveTo(X(p[0]),Y(p[1])));ctx.stroke();ctx.setLineDash([])}
+  ctx.strokeStyle=css('--accent');ctx.lineWidth=2;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(X(p[0]),Y(p[1])):ctx.moveTo(X(p[0]),Y(p[1])));ctx.stroke();
+  // time cursor
+  ctx.strokeStyle=css('--ink-3');ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(X(t),pad.t);ctx.lineTo(X(t),h-pad.b);ctx.stroke();ctx.setLineDash([]);
+  dot(ctx,X(t),Y(fn(t)),4.5,css('--ink'));
+  ctx.fillStyle=css('--ink');ctx.font='12px "STIX Two Text", serif';ctx.textAlign='left';const lab=fmt(fn(t),1);const lx=Math.min(X(t)+8,w-pad.r-34);ctx.fillText(lab,lx,Y(fn(t))-8);
+}
+
+// ---------- formulas
+function F_(a,b){return `<span class="frac"><span>${a}</span><span>${b}</span></span>`}
+function eqBlock(title,sym,num,why){return `<div class="eq"><span class="f">${sym}</span><span class="f num">${num}</span><small>${why}</small></div>`}
+function renderEqs(){
+  const P=S,F=flight(P),c=F.c;const g=fmt(P.g,1);
+  const html=[
+    eqBlock('a','<i>a</i>(<i>t</i>) = <i>a<sub>x</sub></i> î − <i>g</i> ĵ',`= ${fmt(P.ax,1)} î − ${g} ĵ &nbsp;[m/s²]`,'Constante: la gravedad hacia abajo y, si hay viento, una componente horizontal. Es el único dato físico; el resto se integra.'),
+    eqBlock('v','<i>v</i>(<i>t</i>) = (<i>v</i><sub>0</sub> cos α + <i>a<sub>x</sub> t</i>) î + (<i>v</i><sub>0</sub> sen α − <i>g t</i>) ĵ',`= (${fmt(c.vx0,2)} ${P.ax<0?'−':'+'} ${fmt(Math.abs(P.ax),1)}<i>t</i>) î + (${fmt(c.vy0,2)} − ${g}<i>t</i>) ĵ`,`Integrar <i>a</i> una vez. Las constantes son las componentes de <i>v</i><sub>0</sub>: ${fmt(P.v0,1)}·cos ${P.ang}° = ${fmt(c.vx0,2)} y ${fmt(P.v0,1)}·sen ${P.ang}° = ${fmt(c.vy0,2)}.`),
+    eqBlock('r','<i>r</i>(<i>t</i>) = (<i>v</i><sub>0</sub> cos α <i>t</i> + ½ <i>a<sub>x</sub> t</i>²) î + (<i>h</i> + <i>v</i><sub>0</sub> sen α <i>t</i> − ½ <i>g t</i>²) ĵ',`= (${fmt(c.vx0,2)}<i>t</i> ${P.ax<0?'−':'+'} ${fmt(Math.abs(P.ax)/2,2)}<i>t</i>²) î + (${fmt(P.h0,1)} + ${fmt(c.vy0,2)}<i>t</i> − ${fmt(P.g/2,2)}<i>t</i>²) ĵ`,'Integrar otra vez. Las constantes son la posición inicial: <i>x</i>(0) = 0 e <i>y</i>(0) = <i>h</i>. Cada eje es un problema de una dimensión; sólo comparten el reloj.'),
+    eqBlock('tmax','Altura máxima: <i>v<sub>y</sub></i>(<i>t</i><sub>máx</sub>) = 0 ⇒ <i>t</i><sub>máx</sub> = '+F_('<i>v</i><sub>0</sub> sen α','<i>g</i>')+', &nbsp; <i>y</i><sub>máx</sub> = <i>h</i> + '+F_('(<i>v</i><sub>0</sub> sen α)²','2<i>g</i>'),`<i>t</i><sub>máx</sub> = ${fmt(c.vy0,2)}/${g} = ${fmt(F.tmax,2)} s, &nbsp; <i>y</i><sub>máx</sub> = ${fmt(P.h0,1)} + ${fmt(c.vy0,2)}²/${fmt(2*P.g,1)} = ${fmt(F.ymax,2)} m`,'En el punto más alto sólo se anula la componente vertical; la velocidad total es horizontal y la aceleración sigue siendo −<i>g</i>.'),
+    eqBlock('tf','Llegada al piso: <i>y</i>(<i>t<sub>f</sub></i>) = 0 ⇒ ½ <i>g t<sub>f</sub></i>² − <i>v</i><sub>0</sub> sen α <i>t<sub>f</sub></i> − <i>h</i> = 0',`<i>t<sub>f</sub></i> = ${F_(`${fmt(c.vy0,2)} + √(${fmt(c.vy0,2)}² + 2·${g}·${fmt(P.h0,1)})`,g)} = ${fmt(F.tf,2)} s`,'Cuadrática en <i>t</i>; la raíz negativa es anterior al lanzamiento. Si <i>h</i> = 0 queda <i>t<sub>f</sub></i> = 2<i>v</i><sub>0</sub> sen α / <i>g</i>, el doble de <i>t</i><sub>máx</sub>.'),
+    eqBlock('xf','Alcance: <i>x<sub>f</sub></i> = <i>x</i>(<i>t<sub>f</sub></i>)',`= ${fmt(c.vx0,2)}·${fmt(F.tf,2)} ${P.ax<0?'−':'+'} ${fmt(Math.abs(P.ax)/2,2)}·${fmt(F.tf,2)}² = ${fmt(F.xf,2)} m`,'Con <i>a<sub>x</sub></i> = 0 y <i>h</i> = 0 se reduce a <i>v</i><sub>0</sub>² sen 2α / <i>g</i>, máximo en 45°.'),
+  ].join('');
+  $('eqs').innerHTML=html;
+}
+function renderRes(){
+  const P=S,F=flight(P);const vf=Math.hypot(F.vxf,F.vyf),af=Math.atan2(F.vyf,F.vxf)*180/Math.PI;
+  const p=pos(P,t);const sp=Math.hypot(p.vx,p.vy);
+  $('res').innerHTML=`
+   <dt>Tiempo de vuelo</dt><dd>${fmt(F.tf,2)} s</dd>
+   <dt>Alcance horizontal</dt><dd>${fmt(F.xf,2)} m</dd>
+   <dt>Altura máxima</dt><dd>${fmt(F.ymax,2)} m &nbsp;(en t = ${fmt(F.tmax,2)} s)</dd>
+   <dt>Velocidad al llegar</dt><dd>(${fmt(F.vxf,2)}, ${fmt(F.vyf,2)}) m/s · |v| = ${fmt(vf,2)} m/s · ${fmt(af,1)}°</dd>
+   <dt>En este instante, t = ${fmt(t,2)} s</dt><dd>r = (${fmt(p.x,2)}, ${fmt(p.y,2)}) m · v = (${fmt(p.vx,2)}, ${fmt(p.vy,2)}) · |v| = ${fmt(sp,2)} m/s</dd>`;
+  let note='';
+  if(P.obh>0){
+    // time when x = obx
+    const c=F.c;let tob=null;
+    if(Math.abs(P.ax)<1e-9){tob=c.vx0>0?P.obx/c.vx0:null}
+    else{const A=0.5*P.ax,B=c.vx0,C=-P.obx;const d=B*B-4*A*C;if(d>=0){const r1=(-B+Math.sqrt(d))/(2*A),r2=(-B-Math.sqrt(d))/(2*A);const cand=[r1,r2].filter(r=>r>=0).sort((a,b)=>a-b);tob=cand.length?cand[0]:null}}
+    if(tob===null||tob>F.tf){note=`<span class="verdict" style="color:var(--acc)">No llega al obstáculo:</span> cae en x = ${fmt(F.xf,2)} m, antes de los ${fmt(P.obx,0)} m.`}
+    else{const yob=pos(P,tob).y;note=yob>P.obh?`<span class="verdict" style="color:var(--ok)">Pasa por encima:</span> en x = ${fmt(P.obx,0)} m (t = ${fmt(tob,2)} s) está a ${fmt(yob,2)} m, el obstáculo mide ${fmt(P.obh,2)} m.`:`<span class="verdict" style="color:var(--acc)">Impacta:</span> en x = ${fmt(P.obx,0)} m (t = ${fmt(tob,2)} s) está a ${fmt(yob,2)} m, por debajo de los ${fmt(P.obh,2)} m.`}
+  }
+  $('obnote').innerHTML=note;
+}
+function renderCtrls(){
+  $('v0o').value=fmt(S.v0,1)+' m/s';$('ango').value=S.ang+'°';$('h0o').value=fmt(S.h0,1)+' m';$('go').value=fmt(S.g,1)+' m/s²';$('axo').value=fmt(S.ax,1)+' m/s²';$('obxo').value=fmt(S.obx,0)+' m';$('obho').value=fmt(S.obh,2)+' m';
+  inputs.forEach(k=>{$(k).value=S[k]});
+  const F=flight(S);$('tt').max=F.tf;$('tt').value=t;$('tto').value='t = '+fmt(t,2)+' s / '+fmt(F.tf,2)+' s';
+}
+function render(){renderCtrls();drawTraj();drawPlot('px','x(t) [m]',tt=>pos(S,tt).x,ghost?tt=>pos(ghost,tt).x:null);drawPlot('py','y(t) [m]',tt=>pos(S,tt).y,ghost?tt=>pos(ghost,tt).y:null);drawPlot('pvy','vₙ(t) [m/s]'.replace('ₙ','y'),tt=>pos(S,tt).vy,ghost?tt=>pos(ghost,tt).vy:null);renderEqs();renderRes()}
+
+// ---------- time / animation
+$('tt').addEventListener('input',()=>{t=parseFloat($('tt').value);stop();render()});
+function stop(){playing=false;$('play').textContent='Reproducir';if(raf)cancelAnimationFrame(raf);raf=null}
+function step(ts){if(!playing)return;const dt=(ts-lastTs)/1000;lastTs=ts;const F=flight(S);t+=dt*0.6;if(t>=F.tf){t=F.tf;render();stop();return}render();raf=requestAnimationFrame(step)}
+$('play').addEventListener('click',()=>{if(playing){stop();return}const F=flight(S);if(t>=F.tf-1e-6)t=0;playing=true;$('play').textContent='Pausa';lastTs=performance.now();raf=requestAnimationFrame(step)});
+$('reset').addEventListener('click',()=>{stop();t=0;render()});
+$('clearghost').addEventListener('click',()=>{ghost=null;render()});
+
+// ---------- scenarios
+const scen=[
+  {n:'Ej. 15 TP1 · gol con viento',p:{v0:24,ang:30,h0:0,g:10,ax:-2,obx:45,obh:2.44}},
+  {n:'Ej. 15 sin viento',p:{v0:24,ang:30,h0:0,g:10,ax:0,obx:45,obh:2.44}},
+  {n:'Ej. 9 TP1 · bala horizontal',p:{v0:25,ang:0,h0:44,g:9.8,ax:0,obx:0,obh:0}},
+  {n:'Ej. 7 TP1 · piedra vertical',p:{v0:8.85,ang:90,h0:0,g:9.8,ax:0,obx:0,obh:0}},
+  {n:'Parcial 2023 · muralla',p:{v0:250,ang:30,h0:0,g:10,ax:0,obx:5000,obh:5}},
+  {n:'Parcial 2021 · saque de Nadal',p:{v0:50.25,ang:-5.71,h0:2.5,g:9.8,ax:0,obx:11.9,obh:0.914}},
+  {n:'Parcial 2022 · chicle a 45°',p:{v0:9.9,ang:45,h0:1,g:9.8,ax:0,obx:5,obh:3.5}},
+];
+scen.forEach(s=>{const b=document.createElement('button');b.className='chip';b.textContent=s.n;b.addEventListener('click',()=>{stop();ghost=null;Object.assign(S,s.p);clampRanges();t=0;render();[...document.querySelectorAll('#scen .chip')].forEach(x=>x.classList.toggle('on',x===b))});$('scen').appendChild(b)});
+function clampRanges(){ // widen sliders when a scenario exceeds them
+  $('v0').max=Math.max(60,S.v0);$('obx').max=Math.max(200,S.obx);$('h0').max=Math.max(60,S.h0);$('ang').min=Math.min(0,S.ang);$('obh').max=Math.max(30,S.obh);
+}
+
+// ---------- experiments
+const exps=[
+  {t:'Ángulos complementarios',d:'Con <i>h</i> = 0 y sin viento, α y 90° − α tienen el mismo alcance (sen 2α es el mismo) pero distinto tiempo de vuelo y altura. Acá: 30° contra 60°.',
+   run(){Object.assign(S,{v0:24,ang:30,h0:0,g:10,ax:0,obx:0,obh:0});ghost={...S,ang:60,label:'60°'}}},
+  {t:'El alcance máximo es a 45°',d:'Sólo si cae al mismo nivel del que salió. Compará 45° con 30° a igual rapidez.',
+   run(){Object.assign(S,{v0:24,ang:45,h0:0,g:10,ax:0,obx:0,obh:0});ghost={...S,ang:30,label:'30°'}}},
+  {t:'Desde una altura, 45° ya no es el óptimo',d:'Con <i>h</i> = 44 m el ángulo que más lejos llega es menor que 45°. Compará 45° con 30°: gana el más bajo.',
+   run(){Object.assign(S,{v0:25,ang:30,h0:44,g:9.8,ax:0,obx:0,obh:0});ghost={...S,ang:45,label:'45°'}}},
+  {t:'El tiempo de caída no depende de la rapidez horizontal',d:'Tiro horizontal desde 44 m con 25 m/s y con 50 m/s: mismo <i>t<sub>f</sub></i> = 3.0 s, doble alcance. Es la independencia de los movimientos (Ej. 9 f).',
+   run(){Object.assign(S,{v0:25,ang:0,h0:44,g:9.8,ax:0,obx:0,obh:0});ghost={...S,v0:50,label:'50 m/s'}}},
+  {t:'El viento rompe la simetría',d:'Con <i>a<sub>x</sub></i> = −2 la subida es más tendida que la bajada y el vértice ya no está en la mitad del recorrido. Compará con el mismo tiro sin viento.',
+   run(){Object.assign(S,{v0:24,ang:30,h0:0,g:10,ax:-2,obx:45,obh:2.44});ghost={...S,ax:0,label:'sin viento'}}},
+  {t:'g = 9.8 contra g = 10',d:'Mismo tiro, dos gravedades: fijate cuánto cambian el alcance y la altura. Es el margen de error que introduce redondear.',
+   run(){Object.assign(S,{v0:24,ang:30,h0:0,g:9.8,ax:0,obx:0,obh:0});ghost={...S,g:10,label:'g = 10'}}},
+];
+exps.forEach(e=>{const a=document.createElement('article');a.innerHTML=`<h3>${e.t}</h3><p>${e.d}</p>`;const b=document.createElement('button');b.textContent='Cargar';b.addEventListener('click',()=>{stop();e.run();clampRanges();t=0;render();[...document.querySelectorAll('#scen .chip')].forEach(x=>x.classList.remove('on'))});a.appendChild(b);$('exp').appendChild(a)});
+
+window.addEventListener('resize',render);
+if(window.matchMedia){window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render)}
+new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+document.fonts&&document.fonts.ready.then(render);
+document.querySelector('#scen .chip').classList.add('on');
+render();
+})();
+</script>

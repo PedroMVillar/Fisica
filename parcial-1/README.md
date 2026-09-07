@@ -28,6 +28,8 @@
     - `parcial-1-2024.pdf` — 26/09/2024 (golf sobre pendiente, masa girando con contrapeso, resorte + rizo con fricción).
     - `parcial-1-2025.pdf` — 25/09/2025 (3 problemas: pelota con viento, loma + choque elástico + resorte, bloques apilados con polea).
 - [`preparacion/`](./preparacion) — plan de estudio, formulario y material de repaso.
+  - `dudas-y-consultas.pdf` — dudas puntuales que van surgiendo al estudiar, una por hoja, con su respuesta.
+  - `tiro-parabolico.html` — **laboratorio interactivo de tiro parabólico** (abrir en el navegador, no necesita nada más). Controles de rapidez, ángulo, altura, gravedad, viento y obstáculo; animación de la trayectoria con los vectores velocidad y aceleración, gráficos sincronizados de x(t), y(t), v_y(t), las fórmulas con los números actuales, y escenarios cargados de los prácticos y parciales.
 
 ## Relación con el apunte
 
