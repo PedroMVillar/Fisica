@@ -58,6 +58,11 @@ CLAUDE.local.md
 # --- Previews PNG generados al compilar (regenerables) ---
 **/outputs/
 
+# --- Generadores de assets ---
+# El banner (assets/banner.svg) si se versiona: es lo que muestra el
+# README. El script que lo produce, no.
+assets/*.py
+
 # --- syntheca: zona de trabajo temporal para ingestas ---
 _inbox/*
 !_inbox/.gitkeep

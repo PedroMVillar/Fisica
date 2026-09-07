@@ -1,4 +1,4 @@
-# Física 1 — LCC, FaMAF (UNC)
+![Física 1 — Licenciatura en Ciencias de la Computación, FaMAF, UNC](./assets/banner.svg)
 
 ![Materia](https://img.shields.io/badge/F%C3%ADsica_1-LCC_%C2%B7_FaMAF_UNC-1f4e79)
 ![Apunte](https://img.shields.io/badge/apunte-6_cap%C3%ADtulos_%C2%B7_108_p%C3%A1ginas-2e7d32)
