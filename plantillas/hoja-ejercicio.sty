@@ -55,8 +55,8 @@
 % ------------------------------------------------------------
 \geometry{
   a4paper, landscape,
-  top=2.1cm, bottom=2.4cm, left=2.0cm, right=2.0cm,
-  headheight=14pt, headsep=0.4cm, footskip=1.0cm
+  top=1.4cm, bottom=2.05cm, left=2.0cm, right=2.0cm,
+  headheight=0pt, headsep=0pt, footskip=0.9cm
 }
 
 % ============================================================
@@ -103,14 +103,17 @@
 \newcommand{\hojaNum}{}
 
 % Estilo por defecto: paginas de CONTINUACION de un ejercicio largo.
-% Llevan arriba a la derecha "Ejercicio N (cont.)".
+% Llevan en el pie "Ejercicio N (cont.)" junto al numero de pagina.
+% Va en el pie y no arriba a proposito: una cabecera corriente obliga
+% a reservar margen superior en TODAS las hojas, incluida la primera,
+% que no la usa, y ahi es donde se quiere el maximo de alto util.
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
-\fancyhead[R]{\footnotesize\itshape\color{hojaGris}Ejercicio~\hojaNum\ (cont.)}
 \fancyfoot[L]{\footnotesize\itshape\color{hojaGris}\hojaPie}
-\fancyfoot[R]{\footnotesize\color{hojaGris}\thepage}
+\fancyfoot[R]{\footnotesize\color{hojaGris}%
+  \textit{Ejercicio~\hojaNum\ (cont.)}\quad\thepage}
 
 % Estilo de la PRIMERA pagina de cada ejercicio: sin cabecera de
 % continuacion, porque ya tiene el titulo grande.
@@ -125,13 +128,11 @@
 % Cabecera de la hoja: lo que en el poster era el subtitulo en
 % italica ("Department of ..."), ahora "Ejercicio N --- Practico X".
 \newcommand{\hojaCabecera}[1]{%
-  \begin{center}
-    {\LARGE\itshape\color{hojaAzul} Ejercicio~#1%
-      \ifx\hojaPractico\empty\else\ \textmd{---}\ \hojaPractico\fi\par}
-  \end{center}
+  {\centering\Large\bfseries\color{hojaAzul}%
+    Ejercicio~#1\ifx\hojaPractico\empty\else\ ---\ \hojaPractico\fi\par}%
   \vspace{2pt}%
-  {\color{hojaAzul}\hrule height 2pt}%
-  \vspace{12pt}%
+  {\color{hojaAzul}\hrule height 1.6pt}%
+  \vspace{5pt}%
 }
 
 % ============================================================
