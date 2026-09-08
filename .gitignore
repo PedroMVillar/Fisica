@@ -25,6 +25,11 @@ CLAUDE.local.md
 *.sty
 **/input/
 
+# --- Plantilla de terceros de la que se derivo hoja-ejercicio ---
+# Es material de referencia, no del repo: son ~7 MB de logos .eps que
+# ya no se usan. Lo que se versiona es plantillas/hoja-ejercicio.*
+plantillas/LaTeX_template_for_Wireless_Foundations_conference_posters/
+
 # --- Excepciones: el apunte de syntheca y la plantilla compartida ---
 !sintesis/**/*.tex
 !mapas-mentales/**/*.tex
