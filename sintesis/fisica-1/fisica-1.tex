@@ -6,6 +6,13 @@
 % escribir; ninguna es decorativa.
 \usepackage{tikz}
 
+% Unico color que se suma a la paleta gris del documento: separa lo que es
+% DIBUJO de lo que es EXPLICACION del dibujo dentro de las figuras.
+\definecolor{anotacion}{RGB}{31, 84, 140}
+% Gris intermedio para lineas auxiliares que hay que poder seguir con la
+% vista: rulegray es demasiado claro para eso.
+\colorlet{auxgray}{black!45}
+
 % La catedra y el castellano escriben "sen", no "sin". Se sostiene en todo
 % el capitulo.
 \newcommand{\sen}{\operatorname{sen}}
@@ -112,6 +119,39 @@ x(t) = \tfrac13\,\tfrac{\mathrm{m}}{\mathrm{s^3}}\,t^3 - 1\,\tfrac{\mathrm{m}}{\
 \]
 Escrito así, el chequeo dimensional se hace solo: cada término tiene que dar metros, y si alguno no da, el error está a la vista antes de reemplazar ningún número. Pesa bastante a la hora de escribir, así que de acá en adelante las unidades van en los datos y en los resultados, con el compromiso tácito de que $t$ se mide en segundos y $x$ en metros salvo que se diga otra cosa.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0, color=textgray, every node/.style={font=\footnotesize}]
+  \draw[rulegray, ->] (-4.3,0) -- (4.6,0);
+  \node[anchor=west] at (4.65,0) {$x$};
+  \foreach \x in {-4,-3,-2,-1,0,1,2,3,4} {
+    \draw[rulegray] (\x,-0.09) -- (\x,0.09);
+  }
+  % Origen
+  \draw[very thick] (0,-0.16) -- (0,0.16);
+  \node[anchor=north] at (0,-0.22) {$O$};
+
+  % Dos puntos sobre la recta
+  \fill (-2,0) circle (2.2pt);
+  \fill (3,0) circle (2.2pt);
+  \node[anchor=south] at (-2,0.16) {$A$};
+  \node[anchor=south] at (3,0.16)  {$B$};
+  \node[rulegray, anchor=north] at (-2,-0.15) {$x_A=-2$};
+  \node[rulegray, anchor=north] at (3,-0.15)  {$x_B=3$};
+
+  % Distancia
+  \draw[very thick, anotacion, <->] (-2,-1.05) -- (3,-1.05);
+  \node[anotacion, anchor=north] at (0.5,-1.15)
+    {$d_{AB}=\lvert x_B-x_A\rvert = 5$\quad siempre positiva};
+
+  % Sentido positivo
+  \draw[very thick, ->] (2.6,0.95) -- (4.1,0.95);
+  \node[anchor=east] at (2.5,0.95) {sentido positivo elegido};
+  \node[anotacion, anchor=south, align=center] at (0,1.55)
+    {El origen y el sentido son arbitrarios, pero se eligen una sola vez
+     y no se tocan más.};
+\end{tikzpicture}
+\end{center}
+
 \textit{Antes de seguir: elegí un pasillo de tu casa, poné el origen en una punta y decí cuál es tu coordenada parado en el medio; después mové el origen a la otra punta, repetí la cuenta, y verificá que la distancia entre esos dos lugares no cambió.}
 \end{bloque}
 
@@ -142,6 +182,40 @@ con igualdad únicamente cuando el móvil no invirtió el sentido de la marcha e
 
 Calcular $d$ exige, entonces, saber dónde el móvil dio la vuelta, y eso es lo que todavía no sabemos encontrar en general. La herramienta que lo resuelve aparece unos bloques más adelante, y trae una sorpresa: no todos los instantes en que el móvil parece detenerse son instantes en los que da la vuelta.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.05, color=textgray,
+                    every node/.style={font=\footnotesize}]
+  \draw[rulegray, dashed] (0,0.15) -- (0,1.5);
+  \draw[rulegray, dashed] (2,0.15) -- (2,2.25);
+  \draw[rulegray, dashed] (5,0.15) -- (5,2.25);
+
+  \draw[rulegray, ->] (-0.8,0) -- (6.7,0);
+  \node[anchor=west] at (6.75,0) {$x\ [\mathrm{m}]$};
+  \foreach \x in {0,1,2,3,4,5,6} {
+    \draw[rulegray] (\x,-0.1) -- (\x,0.1);
+    \node[rulegray, anchor=north] at (\x,-0.14) {\x};
+  }
+
+  \fill (0,0) circle (2pt);
+  \fill (5,0) circle (2pt);
+  \fill (2,0) circle (2pt);
+  \node[anchor=east] at (-0.12,0.45) {inicio};
+  \node[anchor=west] at (2.12,0.45)  {fin};
+  \node[anchor=west] at (5.12,0.45)  {acá da la vuelta};
+
+  \draw[very thick, ->] (0,1.5) -- (5,1.5);
+  \node[anchor=south] at (2.5,1.62) {ida: $5\,\mathrm{m}$};
+  \draw[very thick, ->] (5,2.25) -- (2,2.25);
+  \node[anchor=south] at (3.5,2.37) {vuelta: $3\,\mathrm{m}$};
+
+  \draw[very thick, anotacion, ->] (0,-0.95) -- (2,-0.95);
+  \node[anotacion, anchor=north west] at (2.2,-0.77)
+    {$\Delta x = 2 - 0 = 2\,\mathrm{m}$\quad solo mira los extremos};
+  \node[anchor=north west] at (-0.8,-1.6)
+    {$d = 5 + 3 = 8\,\mathrm{m}$\quad suma los dos tramos, nunca resta};
+\end{tikzpicture}
+\end{center}
+
 \textit{Antes de seguir: explicá con tus palabras por qué el cuentakilómetros de un auto no puede bajar nunca, y decí cuál de las dos magnitudes mediría un aparato que sí pudiera bajar.}
 \end{bloque}
 
@@ -169,6 +243,42 @@ Sobre los nombres conviene una aclaración, porque no todos los textos usan los 
 Ahora, la observación que motiva todo lo que sigue. Tomá un movimiento cualquiera y calculá su velocidad media en dos intervalos distintos: en general te van a dar dos números distintos. Eso no es un defecto de la definición, es su naturaleza. La velocidad media es una propiedad del intervalo, no del instante. Hay un solo caso en que el número no depende del intervalo elegido, y es cuando el gráfico de $x(t)$ es una recta, porque todas las secantes de una recta se superponen con ella y tienen su misma pendiente.
 
 Para todo lo demás, preguntar cuál es la velocidad de un móvil sin decir en qué intervalo no tiene respuesta con esta herramienta. Y sin embargo el velocímetro contesta esa pregunta cada décima de segundo, sin que nadie le declare ningún intervalo. Ahí está la insuficiencia, y de ahí sale el bloque que viene.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, color=textgray, every node/.style={font=\footnotesize}]
+  \draw[rulegray, ->] (-0.2,0) -- (6.2,0);
+  \node[anchor=west] at (6.25,0) {$t\ [\mathrm{s}]$};
+  \draw[rulegray, ->] (0,-0.2) -- (0,5.9);
+  \node[anchor=south] at (0,5.95) {$x\ [\mathrm{m}]$};
+  \foreach \t in {1,2,3,4,5} {
+    \draw[rulegray] (\t,-0.09) -- (\t,0.09);
+    \node[rulegray, anchor=north] at (\t,-0.13) {\t};
+  }
+  \foreach \y/\lab in {2/2, 5/5} {
+    \draw[rulegray] (-0.09,\y) -- (0.09,\y);
+    \node[rulegray, anchor=east] at (-0.13,\y) {\lab};
+  }
+
+  % El mismo viaje de la figura del bloque anterior, ahora como x(t)
+  \draw[very thick, smooth] plot coordinates
+    {(0,0) (0.8,1.9) (1.6,3.4) (2.4,4.6) (3,5) (3.6,4.6) (4.3,3.3) (5,2)};
+
+  % Secante entre los extremos
+  \draw[very thick, anotacion] (-0.25,-0.1) -- (5.6,2.24);
+  \fill (0,0) circle (2.2pt);
+  \fill (5,2) circle (2.2pt);
+
+  \draw[rulegray, dashed] (5,0) -- (5,2);
+  \draw[rulegray, dashed] (0,2) -- (5,2);
+
+  \node[anotacion, anchor=north west, align=left, text width=6.1cm] at (0.15,-0.55)
+    {la pendiente de esta secante es la velocidad media:
+     $\bar v=\Delta x/\Delta t = 2/5 = 0{,}40\ \mathrm{m/s}$};
+  \node[anchor=north west, align=left, text width=4.6cm] at (3.55,5.95)
+    {el camino recorrido ($8\,\mathrm{m}$) no se ve en la pendiente:
+     $\langle V\rangle = 8/5 = 1{,}6\ \mathrm{m/s}$};
+\end{tikzpicture}
+\end{center}
 
 \textit{Antes de seguir: pensá dos intervalos distintos dentro de un mismo viaje en colectivo para los que la velocidad media te dé números muy distintos, y decí cuál es el único caso en que eso no puede pasar.}
 \end{bloque}
@@ -217,6 +327,71 @@ Esto ya no depende del intervalo. Depende solo del instante, que es justamente l
 El caso del movimiento rectilíneo uniforme cae solo. Si $a_2 = 0$, la velocidad media vale $a_1$ para cualquier intervalo y la instantánea también vale $a_1$: las dos coinciden, y coinciden porque ya no había ninguna dependencia del intervalo que eliminar. Ese es el único movimiento en el que la distinción entre las dos velocidades no importa.
 
 La lectura geométrica cierra el argumento. Cada velocidad media es la pendiente de una secante; a medida que $\Delta t$ se achica, el segundo punto se desliza sobre la curva hacia el primero y la secante se va apoyando cada vez más sobre la curva. En el límite queda la recta tangente. La velocidad instantánea en $t_1$ es la pendiente de la recta tangente al gráfico de $x(t)$ en $t_1$, y eso permite medirla con una regla sobre un gráfico, sin ninguna cuenta.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.15, color=textgray,
+                    every node/.style={font=\footnotesize}]
+
+  % ================= PANEL IZQUIERDO: una sola secante =================
+  \begin{scope}
+    \draw[rulegray, ->] (-0.15,0) -- (3.5,0);
+    \node[anchor=west] at (3.55,0) {$t$};
+    \draw[rulegray, ->] (0,-0.15) -- (0,2.75);
+    \node[anchor=south] at (0,2.8) {$x$};
+
+    % Construccion del cociente incremental
+    \draw[rulegray, dashed] (1.2,0.36) -- (3.0,0.36);
+    \draw[rulegray, dashed] (3.0,0.36) -- (3.0,2.25);
+    \node[auxgray, anchor=north] at (2.1,0.28) {$\Delta t$};
+    \node[auxgray, anchor=west]  at (3.06,1.30) {$\Delta x$};
+
+    % La secante, una sola
+    \draw[very thick, auxgray] (1.0,-0.05) -- (3.65,3.196);
+
+    % Curva
+    \draw[very thick, domain=0:3.2, samples=70, variable=\x, smooth]
+          plot ({\x}, {0.25*\x*\x});
+
+    \fill (1.2,0.36) circle (2pt);
+    \fill (3.0,2.25) circle (2pt);
+    \node[anchor=south east] at (1.12,0.46) {$P$};
+    \node[anchor=north west] at (3.07,2.18) {$Q$};
+
+    \node[auxgray, anchor=north west, align=left, text width=4.3cm] at (-0.35,-0.72)
+      {la recta que une $P$ con $Q$ es la \textbf{secante}: su pendiente
+       es $\Delta x/\Delta t$, la velocidad media};
+  \end{scope}
+
+  % ================= PANEL DERECHO: el mismo dibujo con Dt chico =======
+  \begin{scope}[xshift=5.3cm]
+    \draw[rulegray, ->] (-0.15,0) -- (3.5,0);
+    \node[anchor=west] at (3.55,0) {$t$};
+    \draw[rulegray, ->] (0,-0.15) -- (0,2.75);
+    \node[anchor=south] at (0,2.8) {$x$};
+
+    \draw[rulegray, dashed] (1.2,0.36) -- (1.65,0.36);
+    \draw[rulegray, dashed] (1.65,0.36) -- (1.65,0.6806);
+    \node[auxgray, anchor=north] at (1.44,0.28) {$\Delta t$};
+
+    % La misma secante, ahora corta: casi se superpone con la tangente
+    \draw[very thick, auxgray] (0.8,0.011) -- (2.15,1.074);
+    % Tangente en P
+    \draw[very thick, anotacion] (0.55,-0.03) -- (3.2,1.56);
+
+    \draw[very thick, domain=0:3.2, samples=70, variable=\x, smooth]
+          plot ({\x}, {0.25*\x*\x});
+
+    \fill (1.2,0.36) circle (2pt);
+    \fill (1.65,0.6806) circle (1.8pt);
+    \node[anchor=south east] at (1.12,0.46) {$P$};
+    \node[auxgray, anchor=south east] at (1.62,0.75) {$Q$};
+
+    \node[anotacion, anchor=north west, align=left, text width=4.3cm] at (-0.35,-0.72)
+      {al achicar $\Delta t$, $Q$ se acerca a $P$ y la secante se apoya
+       en la \textbf{tangente}: su pendiente es $v(t)$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
 
 \textit{Antes de seguir: explicá con tus palabras por qué la simplificación por $\Delta t$ que hicimos arriba sería ilegal si $\Delta t$ valiera cero, y por qué el límite nos autoriza a hacerla igual.}
 \end{bloque}
@@ -290,6 +465,39 @@ Traducido a movimiento, esto significa que un móvil puede tener velocidad nula 
 Cuando $x''(t_c)$ también da cero y hace falta decidir, el criterio general es seguir derivando hasta encontrar la primera derivada que no se anule en ese punto: si el orden de esa derivada es par hay extremo, y si es impar hay inflexión. No lo vamos a usar en ningún ejercicio de esta guía, y queda anotado por completitud.
 
 \textit{Antes de seguir: dibujá a mano una $x(t)$ que tenga un instante con velocidad nula sin cambio de sentido y otra que tenga un instante con velocidad nula con cambio de sentido, y marcá en cada una qué hace la concavidad.}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, color=textgray, every node/.style={font=\footnotesize}]
+  % ---------- Panel izquierdo: maximo ----------
+  \begin{scope}
+    \draw[rulegray, ->] (-0.2,0) -- (4.1,0); \node[anchor=west] at (4.15,0) {$t$};
+    \draw[rulegray, ->] (0,-0.2) -- (0,3.2); \node[anchor=south] at (0,3.25) {$x$};
+    \draw[very thick, domain=0.15:3.7, samples=70, variable=\x, smooth]
+          plot ({\x}, {2.4-0.35*(\x-2)*(\x-2)});
+    \draw[anotacion, very thick] (1.0,2.4) -- (3.0,2.4);
+    \fill (2,2.4) circle (2.2pt);
+    \draw[rulegray, dashed] (2,0) -- (2,2.4);
+    \node[rulegray, anchor=north] at (2,-0.1) {$t_c$};
+    \node[anotacion, anchor=north west, align=left, text width=4.4cm] at (-0.35,-0.6)
+      {$v$ se anula \textbf{y cambia de signo}: máximo. El móvil llega, se detiene
+       y vuelve.};
+  \end{scope}
+  % ---------- Panel derecho: inflexion ----------
+  \begin{scope}[xshift=5.6cm]
+    \draw[rulegray, ->] (-0.2,0) -- (4.1,0); \node[anchor=west] at (4.15,0) {$t$};
+    \draw[rulegray, ->] (0,-0.2) -- (0,3.2); \node[anchor=south] at (0,3.25) {$x$};
+    \draw[very thick, domain=0.15:3.7, samples=70, variable=\x, smooth]
+          plot ({\x}, {1.5+0.26*(\x-2)*(\x-2)*(\x-2)});
+    \draw[anotacion, very thick] (1.0,1.5) -- (3.0,1.5);
+    \fill (2,1.5) circle (2.2pt);
+    \draw[rulegray, dashed] (2,0) -- (2,1.5);
+    \node[rulegray, anchor=north] at (2,-0.1) {$t_c$};
+    \node[anotacion, anchor=north west, align=left, text width=4.4cm] at (-0.35,-0.6)
+      {$v$ se anula y \textbf{no} cambia de signo: inflexión. El móvil frena, se
+       detiene un instante y sigue para el mismo lado.};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
 \end{bloque}
 
 \begin{chequeo}
@@ -373,6 +581,29 @@ Y esa integral definida es el área encerrada entre la curva y el eje horizontal
 Eso tiene retorno inmediato cuando el dato viene en forma de gráfico y no de fórmula: si $v(t)$ es una recta, el área es un triángulo o un trapecio, y se calcula con geometría de la escuela sin integrar nada. El área bajo una curva se define formalmente aproximándola por rectángulos cada vez más finos; esa construcción no se usa acá y no hace falta para calcular ninguna de las áreas de esta guía, que son todas de figuras elementales.
 
 Con esto el capítulo queda simétrico. Para bajar de $x$ a $v$ y de $v$ a $a$ se leen pendientes; para subir de $a$ a $v$ y de $v$ a $x$ se leen áreas.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, color=textgray, every node/.style={font=\footnotesize}]
+  \draw[rulegray, ->] (-0.2,0) -- (5.0,0); \node[anchor=west] at (5.05,0) {$t$};
+  \draw[rulegray, ->] (0,-0.2) -- (0,4.6); \node[anchor=south] at (0,4.65) {$x$};
+
+  % Familia de primitivas: misma pendiente, distinta constante
+  \foreach \c in {0.4, 1.7, 3.0} {
+    \draw[auxgray, dashed] (0,\c) -- (4.3,\c+1.29);
+  }
+  % La que elige el dato
+  \draw[very thick] (0,2.35) -- (4.3,3.64);
+  \fill (0,2.35) circle (2.4pt);
+  \node[anchor=east] at (-0.12,2.35) {$x_0$};
+
+  \node[auxgray, anchor=west, align=left, text width=5.2cm] at (4.45,1.15)
+    {todas tienen la misma $v(t)$: son primitivas de la misma función y difieren
+     en una constante};
+  \node[anotacion, anchor=west, align=left, text width=5.2cm] at (4.45,3.3)
+    {el dato de posición es el que elige una sola de todas ellas};
+  \draw[anotacion] (4.35,3.3) -- (3.4,3.37);
+\end{tikzpicture}
+\end{center}
 
 \textit{Antes de seguir: explicá por qué dos personas que eligen primitivas distintas de la misma $v(t)$ obtienen igual el mismo desplazamiento entre dos instantes.}
 \end{bloque}
@@ -483,6 +714,46 @@ Un cuerpo que se suelta es el caso $v_0 = 0$; un cuerpo lanzado hacia arriba es 
 
 Sobre el valor de $g$: en este material se usa el que fija la cátedra en sus enunciados, con la frase textual que vas a ver en la guía y en el parcial, considere que la aceleración de la gravedad es igual a 10 m/s$^2$. En las deducciones se lo deja como $g$, simbólico, y se reemplaza recién al final, entre otras cosas porque algunos resultados no dependen de su valor y eso solo se ve si no se lo reemplaza antes de tiempo.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0, color=textgray,
+                    every node/.style={font=\footnotesize}]
+
+  % El eje explicito: es la convencion que hace que la aceleracion valga -g
+  \draw[rulegray, ->] (-3.7,0.1) -- (-3.7,2.9);
+  \node[rulegray, anchor=south] at (-3.7,2.95) {$y$};
+  \node[rulegray, anchor=west]  at (-3.62,2.5) {$+$};
+
+  % --- Tres instantes del mismo lanzamiento ---
+  \foreach \cx in {-2.6, 0, 2.6} {
+    \draw[rulegray, dashed] (\cx,0.1) -- (\cx,2.9);
+    \fill (\cx,1.3) circle (2.4pt);
+    % La aceleracion: identica en los tres
+    \draw[very thick, anotacion, ->] (\cx+0.5,1.35) -- (\cx+0.5,0.55);
+    \node[anotacion, anchor=west] at (\cx+0.58,0.95) {$a$};
+  }
+
+  % --- Subiendo ---
+  \draw[very thick, ->] (-2.6,1.42) -- (-2.6,2.75);
+  \node[anchor=east] at (-2.7,2.1) {$v>0$};
+
+  % --- Punto mas alto ---
+  \node[anchor=south east] at (-0.1,1.42) {$v=0$};
+
+  % --- Bajando ---
+  \draw[very thick, ->] (2.6,1.18) -- (2.6,0.05);
+  \node[anchor=east] at (2.5,0.6) {$v<0$};
+
+  \node[anchor=north] at (-2.6,-0.55) {subiendo};
+  \node[anchor=north] at (0,-0.55)    {punto más alto};
+  \node[anchor=north] at (2.6,-0.55)  {bajando};
+
+  % --- La unica idea de la figura ---
+  \node[anotacion, anchor=north, align=center] at (0,-1.25)
+    {Con el eje positivo hacia arriba, la flecha azul vale $a=-g$ en los tres
+     instantes.\\ También arriba, donde $v$ se anula.};
+\end{tikzpicture}
+\end{center}
+
 \textit{Antes de seguir: rehacé las dos expresiones de arriba eligiendo el eje positivo hacia abajo y el origen en el punto de lanzamiento, y verificá que el instante del punto más alto te dé el mismo número.}
 \end{bloque}
 
@@ -508,6 +779,51 @@ De todo esto sale una jerarquía de suavidad que conviene tener escrita, porque 
 Queda un cuidado operativo. Cuando se resuelve una ecuación usando la expresión de un tramo, las soluciones que caigan fuera del intervalo de validez de ese tramo hay que descartarlas, y conviene descartarlas por escrito. Son raíces matemáticamente correctas de una ecuación que en esa región no describe el movimiento.
 
 \textit{Antes de seguir: dibujá a mano una $a(t)$ con un salto y, debajo, la $v(t)$ y la $x(t)$ que le corresponden, cuidando que ninguna de las tres viole la jerarquía de arriba.}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, color=textgray,
+                    every node/.style={font=\footnotesize}]
+  % ---------- a(t): salta de 1 a 2 ----------
+  \draw[rulegray, ->] (-0.2,6.2) -- (3.4,6.2); \node[anchor=west] at (3.45,6.2) {$t$};
+  \draw[rulegray, ->] (0,6.0) -- (0,7.6);      \node[anchor=south] at (0,7.65) {$a$};
+  \draw[very thick] (0,6.7) -- (1.5,6.7);
+  \draw[very thick] (1.5,7.2) -- (3.0,7.2);
+  \draw[auxgray, dotted] (1.5,6.7) -- (1.5,7.2);
+  \fill[white, draw=textgray] (1.5,6.7) circle (1.8pt);
+  \fill (1.5,7.2) circle (1.8pt);
+  \node[rulegray, anchor=east] at (-0.08,6.7) {$1$};
+  \node[rulegray, anchor=east] at (-0.08,7.2) {$2$};
+  \node[anotacion, anchor=west, align=left, text width=5.0cm] at (3.7,6.95)
+    {la aceleración \textbf{sí} puede saltar};
+
+  % ---------- v(t): continua, y duplica su pendiente ----------
+  \draw[rulegray, ->] (-0.2,3.4) -- (3.4,3.4); \node[anchor=west] at (3.45,3.4) {$t$};
+  \draw[rulegray, ->] (0,3.2) -- (0,5.2);      \node[anchor=south] at (0,5.25) {$v$};
+  \draw[very thick] (0,3.75) -- (1.5,4.1);
+  \draw[very thick] (1.5,4.1) -- (3.0,4.8);
+  \fill (1.5,4.1) circle (1.8pt);
+  \node[rulegray, anchor=east] at (-0.08,3.75) {$1$};
+  \node[rulegray, anchor=east] at (-0.08,4.1)  {$2$};
+  \node[rulegray, anchor=east] at (-0.08,4.8)  {$4$};
+  \node[anotacion, anchor=west, align=left, text width=5.0cm] at (3.7,4.35)
+    {la velocidad \textbf{no} salta, pero acá duplica su pendiente: punto anguloso};
+
+  % ---------- x(t): parabolica por tramos, sin pico ----------
+  \draw[rulegray, ->] (-0.2,0.4) -- (3.4,0.4); \node[anchor=west] at (3.45,0.4) {$t$};
+  \draw[rulegray, ->] (0,0.2) -- (0,2.75);     \node[anchor=south] at (0,2.8) {$x$};
+  \draw[very thick, smooth] plot coordinates
+    {(0,0.4) (0.375,0.518) (0.75,0.6625) (1.125,0.833) (1.5,1.03)
+     (1.875,1.266) (2.25,1.555) (2.625,1.896) (3.0,2.29)};
+  \fill (1.5,1.03) circle (1.8pt);
+  \node[anotacion, anchor=west, align=left, text width=5.0cm] at (3.7,1.35)
+    {la posición no salta \textbf{ni} tiene punto anguloso: un pico en $x$ sería
+     una velocidad que salta};
+
+  % ---------- Empalme ----------
+  \draw[rulegray, dashed] (1.5,0.3) -- (1.5,7.45);
+  \node[rulegray, anchor=north] at (1.5,0.28) {$t_1$};
+\end{tikzpicture}
+\end{center}
 \end{bloque}
 
 \begin{chequeo}
@@ -528,6 +844,40 @@ Ese paso es el montaje, y es el ritual que conviene volver reflejo en este capí
 Conviene tener presente que el encuentro es la intersección de las dos gráficas de $x(t)$, y no la intersección de las trayectorias. Dos autos que recorren la misma ruta tienen trayectorias que se superponen todo el tiempo y no por eso chocan; lo que hace falta es que coincidan en posición y en instante a la vez, y eso es lo que ve el gráfico.
 
 Tres advertencias más, que salen de mirar la ecuación antes de resolverla. Si los dos móviles van con movimiento uniforme y la misma velocidad, las dos gráficas son rectas paralelas y no se cortan nunca: no hay encuentro, y conviene detectarlo antes de plantear nada, porque al igualar aparece una igualdad imposible entre las dos posiciones iniciales. Si una de las funciones es cuadrática, la ecuación puede tener dos soluciones, una o ninguna, y las dos soluciones pueden ser físicamente válidas las dos, así que no hay que quedarse con la primera que aparezca. Y si alguna función está definida por tramos, cada tramo se plantea por separado y las raíces que caigan fuera de su intervalo se descartan explícitamente.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, color=textgray, every node/.style={font=\footnotesize}]
+  % ---------- Panel izquierdo: hay encuentro ----------
+  \begin{scope}
+    \draw[rulegray, ->] (-0.2,0) -- (4.1,0); \node[anchor=west] at (4.15,0) {$t$};
+    \draw[rulegray, ->] (0,-0.2) -- (0,3.4); \node[anchor=south] at (0,3.45) {$x$};
+    \draw[very thick] (0,2.6) -- (3.7,0.75);
+    \node[anchor=west] at (3.05,1.15) {$x_A$};
+    \draw[very thick, anotacion, domain=0:3.3, samples=60, variable=\x, smooth]
+          plot ({\x}, {0.2+0.22*\x*\x});
+    \node[anotacion, anchor=west] at (3.38,2.6) {$x_B$};
+    \fill (2.357,1.422) circle (2.4pt);
+    \draw[rulegray, dashed] (2.357,0) -- (2.357,1.422) -- (0,1.422);
+    \node[rulegray, anchor=north] at (2.357,-0.1) {$t_e$};
+    \node[rulegray, anchor=east] at (-0.12,1.422) {$x_e$};
+    \node[anchor=north west, align=left, text width=4.4cm] at (-0.35,-0.6)
+      {el encuentro es la intersección de las dos $x(t)$, no de las trayectorias:
+       hace falta coincidir en lugar \textbf{y} en instante};
+  \end{scope}
+  % ---------- Panel derecho: no hay encuentro ----------
+  \begin{scope}[xshift=5.6cm]
+    \draw[rulegray, ->] (-0.2,0) -- (4.1,0); \node[anchor=west] at (4.15,0) {$t$};
+    \draw[rulegray, ->] (0,-0.2) -- (0,3.4); \node[anchor=south] at (0,3.45) {$x$};
+    \draw[very thick] (0,0.5) -- (3.5,2.6);
+    \draw[very thick] (0,1.4) -- (3.5,3.5);
+    \node[anchor=north west] at (3.1,2.4) {$x_A$};
+    \node[anchor=north west] at (3.1,3.3) {$x_B$};
+    \node[anotacion, anchor=north west, align=left, text width=4.4cm] at (-0.35,-0.6)
+      {misma velocidad: rectas paralelas. Nunca se cortan, y al igualar aparece
+       una igualdad imposible entre las posiciones iniciales};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
 
 \textit{Antes de seguir: contá cuántas veces, en los problemas que ya resolviste alguna vez, igualaste dos posiciones sin haber escrito primero de dónde salía el cero de tiempo de cada una.}
 \end{bloque}
