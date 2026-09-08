@@ -84,8 +84,6 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 
 ### Hojas resumen
 
-Una hoja apaisada por tema, a tres columnas, con la plantilla [`hoja-ejercicio`](./plantillas). No son teoría general: cada una está armada mirando qué pide la guía sobre ese tema, y cierra con una receta de resolución.
-
 | Hoja | Tema | Cubre |
 |---|---|---|
 | [`resumen-tiro-parabolico.pdf`](./parcial-1/preparacion) | Tiro parabólico | Práctico 1, ejercicios 9, 10 y 15 |
