@@ -82,6 +82,15 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 - [`flashcards/fisica-1.tsv`](./flashcards) — 189 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `cinematica-2d`, `movimiento-circular`, `movimiento-armonico-simple`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
 - [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa del Parcial I en un solo panel de 67 × 76 cm, con tres niveles de jerarquía y un color por familia. Se lee en pantalla o se imprime en A1: a esa cantidad de nodos, forzarlo a un A4 bajaría la letra a 2 pt. Refleja los 54 conceptos que había al cerrar el capítulo 4; los capítulos 5 y 6 sumaron 31 más y todavía no se regeneró.
 
+### Hojas resumen
+
+Una hoja apaisada por tema, a tres columnas, con la plantilla [`hoja-ejercicio`](./plantillas). No son teoría general: cada una está armada mirando qué pide la guía sobre ese tema, y cierra con una receta de resolución.
+
+| Hoja | Tema | Cubre |
+|---|---|---|
+| [`resumen-tiro-parabolico.pdf`](./parcial-1/preparacion) | Tiro parabólico | Práctico 1, ejercicios 9, 10 y 15 |
+| [`resumen-movimiento-circular.pdf`](./parcial-1/preparacion) | Movimiento circular | Práctico 1, ejercicios 11 a 14 |
+
 ## Carpetas por examen
 
 `parcial-1/`, `parcial-2/` y `final/` comparten convención:
