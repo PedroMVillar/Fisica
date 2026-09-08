@@ -58,7 +58,7 @@ pdflatex fisica-1.tex && pdflatex fisica-1.tex   # dos pasadas, por el índice
 | Carpeta | Contenido |
 |---|---|
 | [`bibliografia/apunte-catedra/`](./bibliografia/apunte-catedra) | *Introducción a la Física* — Wolfenson, Trincavelli y Serra (FaMAF, 2ª ed. 2021). El texto de los propios docentes. Cubre toda la cinemática y construye el cálculo desde cero |
-| [`bibliografia/bibliografia-extra/`](./bibliografia/bibliografia-extra) | Serway & Jewett, *Física para Ciencias e Ingeniería* vol. 2 |
+| [`bibliografia/bibliografia-extra/`](./bibliografia/bibliografia-extra) | Serway & Jewett, *Física para Ciencias e Ingeniería* vol. 2. También Sears & Zemansky, *Física universitaria* vols. 1 y 2 (14.ª ed.), Alonso & Finn vol. 2 y Serway vol. 1, que por tamaño quedan solo en disco |
 | [`parcial-1/practicos/`](./parcial-1/practicos) | Las cuatro guías de prácticos (0 a 3), todas en su versión 2026 |
 | [`examenes-viejos/`](./examenes-viejos) | 17 parciales (2009–2025) y 9 finales (2008–2026) |
 | [`plantillas/`](./plantillas) | Plantillas LaTeX propias: `resumen-teorico` (apunte y resoluciones, A4 vertical) y `hoja-ejercicio` (ficha A4 apaisada, un ejercicio por ficha; `ejemplo-hoja-ejercicio.pdf` es la muestra) |
@@ -102,7 +102,7 @@ Con [**syntheca**](https://github.com/PedroMVillar/syntheca), un plugin para Cla
 
 La infraestructura de ese pipeline **no está versionada**: quedan fuera `skills/` (fuentes ingeridas, banco de ejercicios y ficha de perfil), `scripts/`, `mapa-estudio.json` y `_inbox/`. Se versiona el producto — el apunte, las flashcards, los mapas mentales y los scripts de verificación.
 
-También quedan fuera los dos PDF de bibliografía que superan los 50 MB (Alonso & Finn, y Serway vol. 1).
+También quedan fuera los cuatro PDF de bibliografía que superan el umbral de aviso de GitHub, 50 MB: Alonso & Finn vol. 2, Serway vol. 1 y los dos Sears & Zemansky.
 
 ---
 
