@@ -88,6 +88,8 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 |---|---|---|
 | [`resumen-tiro-parabolico.pdf`](./parcial-1/preparacion) | Tiro parabólico | Práctico 1, ejercicios 9, 10 y 15 |
 | [`resumen-movimiento-circular.pdf`](./parcial-1/preparacion) | Movimiento circular | Práctico 1, ejercicios 11 a 14 |
+| [`resumen-cuerpo-aislado.pdf`](./parcial-1/preparacion) | Diagrama de cuerpo aislado | Práctico 2, ejercicios 1 a 4, 6, 9 y 10 |
+| [`resumen-sistemas-acoplados.pdf`](./parcial-1/preparacion) | Sistemas de cuerpos acoplados | Práctico 2, ejercicios 4, 5, 7, 10 y 19 |
 
 ## Carpetas por examen
 
