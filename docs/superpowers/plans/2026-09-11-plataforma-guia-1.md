@@ -1424,7 +1424,7 @@ function widgetGalileo(pagina) {
   const widget = crearWidget({
     pagina, canvas,
     margen: { L: 58, R: 24, T: 38, B: 42 },
-    encuadre: () => ({ xMax: Math.max(X0 + vx * tf(), 10) * 1.1, yMax: altura * 1.12 }),
+    encuadre: () => ({ xMax: Math.max((X0 + vx * tf()) * 1.1, 10), yMax: altura * 1.12 }),
     dibujar: (ctx, l) => pintar(ctx, l, escena.t),
   });
 
@@ -1528,6 +1528,12 @@ también el primero que se arrastra.
 - Produce: `widgetTriangulo(pagina)`.
 
 - [ ] **Paso 1: copiar el marcado**
+
+Ojo con la costura, que no es una regresión sino el precio de cortar el diseño por
+secciones: el `<div>` de texto que la Tarea 7 cerró con `padding:0 24px 80px` es el
+mismo que en el diseño sigue hasta la sección 03. Al insertar esta sección hay que
+deshacer ese cierre y devolverle su `padding:0 24px`, igual que la Tarea 7 deshizo el
+de la Tarea 6. El `80px` vuelve recién en el último bloque del ensayo.
 
 Copiar byte a byte las líneas 132 a 168 del diseño: el `<h2>` de la sección 03, su
 párrafo, la `<section>` con el canvas `w3-cv` —que lleva `cursor:grab`—, los dos botones
