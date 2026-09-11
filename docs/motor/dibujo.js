@@ -28,7 +28,7 @@
 //    - `eje` sin `etiquetaX`/`etiquetaY` no toca ninguno de los tres. Con
 //      alguna etiqueta, dibuja marcas y rótulos con `texto` y queda en el
 //      estado que haya dejado la última llamada (rótulo de y si hay
-//      `etiquetaY`, si no el de x, si no la última marca).
+//      `etiquetaY`, si no el de x).
 //    - `cuerpo` y `traza` no tocan ninguno de los tres.
 //
 // De las tres reglas, la 2 está fijada por prueba en test/dibujo.test.js, que
@@ -183,7 +183,7 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY } = {}) {
     }
   }
   const sy = paso(l.yMax - l.yMin);
-  for (let y = Math.ceil((l.yMin || sy) / sy) * sy; y <= l.yMax + 1e-6; y += sy) {
+  for (let y = Math.ceil(l.yMin / sy) * sy; y <= l.yMax + 1e-6; y += sy) {
     if (Math.abs(y) < 1e-9) continue;
     ctx.strokeStyle = color;
     ctx.beginPath();

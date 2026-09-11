@@ -175,6 +175,13 @@ test('curva arranca en t0 y termina en t1', () => {
   assert.equal(c.ops.filter(o => o[0] === 'lineTo').at(-1)[1], l.px(8));
 });
 
+test('curva muestrea en 140 pasos por defecto', () => {
+  const l = crearLienzo({ ancho: 100, alto: 100, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  curva(c, l, t => [t, t], 0, 10, { color: '#000' });
+  assert.equal(c.ops.filter(o => o[0] === 'lineTo').length, 140);
+});
+
 test('eje sin etiquetas dibuja solo los dos ejes, como antes', () => {
   const l = crearLienzo({ ancho: 100, alto: 100, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
   const c = ctxFalso();
@@ -191,5 +198,16 @@ test('eje con etiquetas escribe las marcas y los dos rotulos', () => {
   assert.ok(textos.includes('y [m]'));
   // paso de 2 en x (10 / 5) y de 1 en y (5 / 5), sin escribir el cero
   assert.ok(textos.includes('2') && textos.includes('4'));
+  assert.ok(!textos.includes('0'));
+});
+
+test('eje con yMin negativo rotula marcas negativas y positivas, y no el cero', () => {
+  const l = crearLienzo({ ancho: 300, alto: 200, xMin: 0, xMax: 10, yMin: -10, yMax: 10 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666', etiquetaX: 'x [m]', etiquetaY: 'y [m]' });
+  const textos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
+  // paso de 2 en y (20 / 5): marcas de -10 a 10 salteando el cero.
+  assert.ok(textos.includes('-10') && textos.includes('-2'));
+  assert.ok(textos.includes('2') && textos.includes('10'));
   assert.ok(!textos.includes('0'));
 });
