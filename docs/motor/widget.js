@@ -2,8 +2,13 @@ import { crearLienzo } from './lienzo.js';
 
 // Fabrica un widget: mide su canvas, arma el lienzo y delega el dibujo. La medicion
 // replica al literal el `view()` del archivo de diseno (docs/plataforma/diseno/Tiro
-// parabolico.dc.html:357-374): alto acotado entre 215 y 430 px y devicePixelRatio
-// acotado a 2.
+// parabolico.dc.html:357-374): alto acotado entre `altoMin` y `altoMax` (default 215 y
+// 430 px, los del archivo de diseno) y devicePixelRatio acotado a 2.
+//
+// `altoMin`/`altoMax` existen para el widget que apila varios paneles en un mismo
+// canvas: el piso y el techo de un canvas suelto no le alcanzan (un panel se queda sin
+// alto para su curva), y la constante no puede vivir escondida en cada pagina -- se
+// pide como parametro del motor.
 //
 // `escalaUniforme` (default true) decide como se reparte el area util entre los dos
 // ejes:
@@ -14,10 +19,14 @@ import { crearLienzo } from './lienzo.js';
 // - false: cada eje se escala por separado, llenando su dimension del area util. Es lo
 //   que pide un grafico de una magnitud contra el tiempo, donde no hay nada fisico que
 //   igualar entre segundos y metros. El alto sale de la proporcion 16:8 que el sistema
-//   de diseno fija para el canvas (brief.md 6.4, `aspect-ratio:16/8`), con el mismo
-//   acotado entre 215 y 430 px.
-export function crearWidget({ pagina, canvas, margen, encuadre, dibujar, dpr, escalaUniforme = true }) {
+//   de diseno fija para el canvas (brief.md 6.4, `aspect-ratio:16/8`), acotado igual
+//   que el camino uniforme.
+export function crearWidget({
+  pagina, canvas, margen, encuadre, dibujar, dpr, escalaUniforme = true,
+  altoMin = 215, altoMax = 430,
+}) {
   let l = null;
+  const acotarAlto = v => Math.round(Math.max(altoMin, Math.min(altoMax, v)));
 
   const api = {
     canvas,
@@ -30,9 +39,8 @@ export function crearWidget({ pagina, canvas, margen, encuadre, dibujar, dpr, es
       const { xMin = 0, xMax, yMin = 0, yMax } = encuadre();
       const anchoUtil = ancho - margen.L - margen.R;
       const alto = escalaUniforme
-        ? Math.round(Math.max(215, Math.min(430,
-            margen.T + margen.B + anchoUtil * ((yMax - yMin) / (xMax - xMin)))))
-        : Math.round(Math.max(215, Math.min(430, ancho / 2)));
+        ? acotarAlto(margen.T + margen.B + anchoUtil * ((yMax - yMin) / (xMax - xMin)))
+        : acotarAlto(ancho / 2);
 
       const escala = dpr ?? Math.min(2, globalThis.devicePixelRatio || 1);
       canvas.style.aspectRatio = 'auto';

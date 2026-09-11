@@ -198,6 +198,13 @@ test('escalaUniforme:false calcula escalas independientes que llenan cada dimens
 
 // Con escalaUniforme:false no hay estiramiento que corregir (a diferencia del camino
 // uniforme): el lienzo reporta el encuadre pedido exacto, sin desvio.
+//
+// OJO: esta prueba, sola, no distingue escalaUniforme:false de una implementacion
+// ausente -- el camino uniforme YA reporta bordes pedidos exactos (es lo que prueba
+// "el lienzo reporta el encuadre pedido..." mas arriba), asi que un widget.js viejo
+// que ignorara escalaUniforme por completo la pasaria igual. Queda como prueba de
+// regresion de la rama nueva (si algun dia esta rama empieza a estirar, esto lo
+// atrapa), no como evidencia de que la rama exista.
 test('escalaUniforme:false reporta los bordes pedidos, exactos', () => {
   const p = crearPagina({ documento: documentoFalso() });
   const cv = canvasFalso(800, 400);
@@ -236,6 +243,60 @@ test('escalaUniforme:false acota el alto entre 215 y 430 px', () => {
   });
   wAncho.repintar();
   assert.equal(Math.round(parseFloat(ancho.style.height)), 430);
+});
+
+// Los dos casos de arriba caen tan afuera de [215, 430] que cualquier formula monotona
+// -la real (ancho/2), una con /3, o la del camino uniforme basada en el aspecto del
+// encuadre- acota igual al mismo piso o techo: no fijan la formula, solo el acotado.
+// Este caso usa un ancho que NO se acota (700 -> 350, adentro del rango) para que
+// solo ancho/2 lo pase; un "me olvide del /2" o un "es /3" dan otro numero y fallan.
+test('escalaUniforme:false: el alto sin acotar sale de ancho/2', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(700, 100);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 }, escalaUniforme: false,
+    encuadre: () => ({ xMax: 1, yMax: 1 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  assert.equal(Math.round(parseFloat(cv.style.height)), 350);
+});
+
+// Sin pasar altoMin/altoMax, siguen siendo 215 y 430 -- los del archivo de diseno.
+test('altoMin y altoMax por defecto son 215 y 430', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+
+  const angosto = canvasFalso(200, 100);
+  const wAngosto = crearWidget({
+    pagina: p, canvas: angosto, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 },
+    encuadre: () => ({ xMax: 1, yMax: 1 }),
+    dibujar: () => {},
+  });
+  wAngosto.repintar();
+  assert.equal(Math.round(parseFloat(angosto.style.height)), 215);
+
+  const ancho = canvasFalso(2000, 100);
+  const wAncho = crearWidget({
+    pagina: p, canvas: ancho, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 },
+    encuadre: () => ({ xMax: 1, yMax: 1 }),
+    dibujar: () => {},
+  });
+  wAncho.repintar();
+  assert.equal(Math.round(parseFloat(ancho.style.height)), 430);
+});
+
+// altoMin mas alto que el default se respeta de verdad: un widget que apila paneles
+// puede pedir un piso propio en vez de heredar el de un canvas suelto.
+test('un altoMin mayor que 215 se respeta', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(200, 100);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 }, altoMin: 285,
+    encuadre: () => ({ xMax: 1, yMax: 1 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  assert.equal(Math.round(parseFloat(cv.style.height)), 285);
 });
 
 // Esta prueba mira que el encuadre se RELEA, no que se reporte sin estirar (eso lo fija
