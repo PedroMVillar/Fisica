@@ -57,5 +57,16 @@ export function crearPagina({ documento = globalThis.document } = {}) {
       });
     },
   };
+
+  // Los widgets pintan texto en el canvas y el canvas se pinta pocas veces: si las
+  // tipografias de la pagina todavia no llegaron, los rotulos quedan en la fuente de
+  // respaldo PARA SIEMPRE, porque despues nadie repinta. Un repintado cuando
+  // `fonts.ready` resuelve cierra esa carrera. En Node (pruebas) no hay
+  // `documento.fonts`, y en navegadores viejos puede no haber `ready`: por eso las dos
+  // guardas.
+  if (documento.fonts && typeof documento.fonts.ready?.then === 'function') {
+    documento.fonts.ready.then(() => api.repintarTodo());
+  }
+
   return api;
 }
