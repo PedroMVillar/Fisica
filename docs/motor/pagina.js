@@ -65,7 +65,12 @@ export function crearPagina({ documento = globalThis.document } = {}) {
   // `documento.fonts`, y en navegadores viejos puede no haber `ready`: por eso las dos
   // guardas.
   if (documento.fonts && typeof documento.fonts.ready?.then === 'function') {
-    documento.fonts.ready.then(() => api.repintarTodo());
+    documento.fonts.ready
+      .then(() => api.repintarTodo())
+      // Sin esto, un widget que lance en su `dibujar` queda como rechazo no manejado:
+      // un error de consola sin traza a quien lo causo. Se relanza fuera de la cadena
+      // para que llegue a window.onerror con su pila entera.
+      .catch(error => setTimeout(() => { throw error; }, 0));
   }
 
   return api;

@@ -90,16 +90,13 @@ export function crearEscena({ dibujar, duracion, velocidad = 1, alCambiar = () =
       if (typeof requestAnimationFrame === 'function') {
         // El origen del reloj se fija ACÁ, en el instante de la llamada, y no
         // en el primer frame. Si se fijara en el primer frame, ese frame
-        // valdría siempre dt = 0, y una escena que se reconstruye a mitad de
-        // la animación regalaría un frame congelado cada vez. El ensayo de
-        // tiro parabólico rehace la escena en cada evento `input` del slider
-        // —la duración se fija al crearla—, y `input` en un range dispara por
-        // píxel de recorrido: con un mouse de alta tasa de sondeo o con el
-        // dedo puede superar los 60 Hz y entonces *todos* los frames del
-        // arrastre serían de dt cero, con el reloj clavado. Fijando el origen
-        // en reproducir(), el tiempo transcurrido entre la reconstrucción y el
-        // frame siguiente se cuenta igual, como en el tick compartido del
-        // diseño.
+        // valdría siempre dt = 0: cada `reproducir()` regalaría un frame
+        // congelado. Con un solo play al principio casi no se nota, pero el
+        // botón alterna pausar/seguir, y ahí cada "Seguir" pierde hasta un
+        // frame entero. Fijando el origen acá, el tiempo que pasa entre la
+        // llamada y el frame siguiente se cuenta igual, como en el tick
+        // compartido del diseño, y `reproducir()` sale gratis por más veces
+        // que se lo llame.
         tAnterior = ahoraDelReloj();
         idAnimacion = requestAnimationFrame(paso);
       }

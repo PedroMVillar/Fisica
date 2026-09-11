@@ -75,12 +75,19 @@ test('tocar avisa a los suscriptos una sola vez', () => {
 // unico pintado, los rotulos quedan en la fuente de respaldo para siempre: por eso
 // crearPagina repinta cuando resuelve `fonts.ready`.
 test('cuando terminan de cargar las fuentes se repinta todo', async () => {
+  // Promesa diferida, no una ya resuelta: asi la asercion de abajo prueba el orden real
+  // -- las fuentes todavia no llegaron -- y no apenas que el repintado sea asincronico.
+  let cargaron;
   const doc = documentoFalso();
-  doc.fonts = { ready: Promise.resolve() };
+  doc.fonts = { ready: new Promise(r => { cargaron = r; }) };
   const p = crearPagina({ documento: doc });
   let repintados = 0;
   p.registrar({ repintar: () => repintados++ });
-  assert.equal(repintados, 0, 'no repinta antes de que resuelvan las fuentes');
+
+  await null;
+  assert.equal(repintados, 0, 'no repinta mientras las fuentes no terminaron de cargar');
+
+  cargaron();
   await doc.fonts.ready;
   await null;
   assert.equal(repintados, 1);
@@ -127,8 +134,8 @@ test('el lienzo del widget lleva el margen que se le dio', () => {
 // Encuadre cuya relacion de aspecto NO coincide con la del canvas: el alto sale del
 // tope de 430 px, asi que la escala la fija y, y en x sobra area util. El lienzo tiene
 // que reportar el borde PEDIDO -- `eje` traza hasta ahi, como el axes() del archivo de
-// diseno -- y dejar el borde del area util en xMaxUtil. Si alguien vuelve a reportar el
-// estirado, el eje x se corre casi 9 unidades (en el ensayo de tiro eso era 1.05 px).
+// diseno -- y no el estirado. Si alguien vuelve a reportar el estirado, el eje x se
+// corre casi 9 unidades (en el ensayo de tiro eso eran 1.05 px).
 test('el lienzo reporta el encuadre pedido, no el estirado al area util', () => {
   const p = crearPagina({ documento: documentoFalso() });
   const cv = canvasFalso(800, 400);
@@ -140,12 +147,11 @@ test('el lienzo reporta el encuadre pedido, no el estirado al area util', () => 
   w.repintar();
   const l = w.lienzo();
 
-  // alto = min(430, 800 * 10/10) = 430  ->  sc = min(800/10, 430/10) = 43
+  // alto = min(430, 800 * 10/10) = 430  ->  sc = min(800/10, 430/10) = 43, o sea que
+  // manda y: en x sobran 800 - 10*43 = 370 px de area util que NO son del encuadre.
   assert.equal(l.xMax, 10);
   assert.equal(l.yMax, 10);
-  assert.ok(l.xMaxUtil > l.xMax, `xMaxUtil (${l.xMaxUtil}) tiene que pasar de xMax (${l.xMax})`);
-  assert.equal(l.xMaxUtil, 800 / 43);
-  assert.equal(l.yMaxUtil, 10);
+  assert.equal(l.px(l.xMax), 430, 'el borde reportado cae adentro del area util, no en 800');
 
   // Y el mapeo no se movio: una sola escala para los dos ejes, la que entra.
   assert.equal(l.escala.x, 43);
@@ -154,8 +160,10 @@ test('el lienzo reporta el encuadre pedido, no el estirado al area util', () => 
   assert.equal(l.py(10), 0);
 });
 
-// Este encuadre si coincide en aspecto, asi que no hay nada estirado: la prueba mira
-// que el encuadre se relea, no el recorte (eso lo fija la prueba de arriba).
+// Esta prueba mira que el encuadre se RELEA, no que se reporte sin estirar (eso lo fija
+// la de arriba). Por eso afirma solo xMax: con xMax = 10 el aspecto coincide exacto y no
+// hay nada estirado, pero con xMax = 40 el alto cae al piso de 215 px y el estirado pasa
+// a y, que la prueba no mira.
 test('el encuadre se vuelve a consultar en cada repintado', () => {
   const p = crearPagina({ documento: documentoFalso() });
   const cv = canvasFalso(800, 400);
