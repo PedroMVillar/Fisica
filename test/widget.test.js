@@ -160,6 +160,84 @@ test('el lienzo reporta el encuadre pedido, no el estirado al area util', () => 
   assert.equal(l.py(10), 0);
 });
 
+// Sin pasar la opcion, escalaUniforme tiene que seguir valiendo true: mismo encuadre
+// de la prueba de arriba (aspecto que NO coincide con el del canvas), misma escala
+// unica para los dos ejes.
+test('escalaUniforme por defecto es true: el comportamiento de hoy no cambia', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 },
+    encuadre: () => ({ xMax: 10, yMax: 10 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  const l = w.lienzo();
+  assert.equal(l.escala.x, l.escala.y);
+});
+
+// Con escalaUniforme:false cada eje llena su propia dimension del area util: las dos
+// escalas salen distintas cuando los rangos lo piden (aca 10 s de ancho contra 5 m de
+// alto), y cada una toca justo el borde opuesto -- px(xMax) en `ancho - margen.R`,
+// py(yMax) en `margen.T`.
+test('escalaUniforme:false calcula escalas independientes que llenan cada dimension', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const margen = { L: 60, R: 20, T: 30, B: 40 };
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen, escalaUniforme: false,
+    encuadre: () => ({ xMax: 10, yMax: 5 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  const l = w.lienzo();
+  assert.notEqual(l.escala.x, l.escala.y);
+  assert.equal(l.px(l.xMax), 800 - margen.R, 'px(xMax) llena hasta el borde derecho del area util');
+  assert.equal(l.py(l.yMax), margen.T, 'py(yMax) llena hasta el borde superior del area util');
+});
+
+// Con escalaUniforme:false no hay estiramiento que corregir (a diferencia del camino
+// uniforme): el lienzo reporta el encuadre pedido exacto, sin desvio.
+test('escalaUniforme:false reporta los bordes pedidos, exactos', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 }, escalaUniforme: false,
+    encuadre: () => ({ xMin: 1, xMax: 11, yMin: 2, yMax: 7 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  const l = w.lienzo();
+  assert.equal(l.xMin, 1);
+  assert.equal(l.xMax, 11);
+  assert.equal(l.yMin, 2);
+  assert.equal(l.yMax, 7);
+});
+
+// El alto sale de la proporcion 16:8 del sistema de diseno (ancho/2), pero sigue
+// acotado entre 215 y 430 px igual que en el camino uniforme.
+test('escalaUniforme:false acota el alto entre 215 y 430 px', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+
+  const angosto = canvasFalso(200, 100);
+  const wAngosto = crearWidget({
+    pagina: p, canvas: angosto, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 }, escalaUniforme: false,
+    encuadre: () => ({ xMax: 1, yMax: 1 }),
+    dibujar: () => {},
+  });
+  wAngosto.repintar();
+  assert.equal(Math.round(parseFloat(angosto.style.height)), 215);
+
+  const ancho = canvasFalso(2000, 100);
+  const wAncho = crearWidget({
+    pagina: p, canvas: ancho, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 }, escalaUniforme: false,
+    encuadre: () => ({ xMax: 1, yMax: 1 }),
+    dibujar: () => {},
+  });
+  wAncho.repintar();
+  assert.equal(Math.round(parseFloat(ancho.style.height)), 430);
+});
+
 // Esta prueba mira que el encuadre se RELEA, no que se reporte sin estirar (eso lo fija
 // la de arriba). Por eso afirma solo xMax: con xMax = 10 el aspecto coincide exacto y no
 // hay nada estirado, pero con xMax = 40 el alto cae al piso de 215 px y el estirado pasa
