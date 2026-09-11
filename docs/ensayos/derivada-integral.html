@@ -124,15 +124,29 @@ function widgetSecante(pagina) {
     // El triángulo de la pendiente: delta t abajo, delta x al costado.
     punteado(ctx, l.px(T_P), l.py(x(T_P)), l.px(tQ), l.py(x(T_P)), { color: p.blueSoft });
     punteado(ctx, l.px(tQ), l.py(x(T_P)), l.px(tQ), l.py(x(tQ)), { color: p.blueSoft });
-    texto(ctx, 'Δt', (l.px(T_P) + l.px(tQ)) / 2, l.py(x(T_P)) + 15,
-      { color: p.blue, alineacion: 'center' });
-    texto(ctx, 'Δx', l.px(tQ) + 8, (l.py(x(T_P)) + l.py(x(tQ))) / 2,
-      { color: p.blue });
+
+    // Los rotulos del triangulo se ocultan cuando el cateto no da para escribirlos.
+    // Con Delta t chico los dos puntos colapsan y "Dt", "Dx" y "Q" se encinan; el
+    // segmento sigue dibujado y el valor exacto vive en las lecturas de abajo.
+    const CATETO_MINIMO = 28;
+    const catetoT = Math.abs(l.px(tQ) - l.px(T_P));
+    const catetoX = Math.abs(l.py(x(tQ)) - l.py(x(T_P)));
+    if (catetoT >= CATETO_MINIMO) {
+      texto(ctx, 'Δt', (l.px(T_P) + l.px(tQ)) / 2, l.py(x(T_P)) + 15,
+        { color: p.blue, alineacion: 'center' });
+    }
+    if (catetoX >= CATETO_MINIMO) {
+      texto(ctx, 'Δx', l.px(tQ) + 8, (l.py(x(T_P)) + l.py(x(tQ))) / 2,
+        { color: p.blue });
+    }
 
     cuerpo(ctx, l, [T_P, x(T_P)], { radio: 5.5, color: p.ink });
     cuerpo(ctx, l, [tQ, x(tQ)], { radio: 5, color: p.blue });
-    texto(ctx, 'P', l.px(T_P) - 14, l.py(x(T_P)) - 8, { color: p.ink });
-    texto(ctx, 'Q', l.px(tQ) + 9, l.py(x(tQ)) - 9, { color: p.blue });
+    // P arriba y a la izquierda, Q abajo y a la derecha: Q *es* el cruce de la secante
+    // con la curva, asi que cualquier desplazamiento hacia arriba lo deja debajo de una
+    // de las dos lineas, y P arriba se despega de la fila de numeros del eje.
+    texto(ctx, 'P', l.px(T_P) - 16, l.py(x(T_P)) - 12, { color: p.ink });
+    texto(ctx, 'Q', l.px(tQ) + 12, l.py(x(tQ)) + 18, { color: p.blue });
 
     // Tres decimales en la pendiente y en la diferencia, no dos: con dos, en el mínimo
     // del slider la diferencia se muestra 0.00 y la página afirma justo lo contrario
