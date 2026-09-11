@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { crearLienzo } from '../docs/motor/lienzo.js';
-import { vector, cuerpo, traza, eje, huella } from '../docs/motor/dibujo.js';
+import { vector, cuerpo, traza, eje } from '../docs/motor/dibujo.js';
 
 function ctxFalso() {
   const ops = [];
@@ -45,28 +45,20 @@ test('vector ignora rotulo sin cambiar lo que dibuja (rotulo aun no implementado
 
 test('cuerpo dibuja un arco cerrado en la posicion', () => {
   const c = ctxFalso();
-  cuerpo(c, L, [50, 25], { radio: 4 });
+  cuerpo(c, L, [50, 25], { radio: 4, color: '#16151a' });
   const arco = c.ops.find(o => o[0] === 'arc');
   assert.deepEqual(arco.slice(1, 4), [400, 200, 4]);
 });
 
 test('traza recorre todos los puntos', () => {
   const c = ctxFalso();
-  traza(c, L, [[0, 0], [50, 25], [100, 0]]);
+  traza(c, L, [[0, 0], [50, 25], [100, 0]], { color: '#8e8a80' });
   assert.equal(c.ops.filter(o => o[0] === 'lineTo').length, 2);
-});
-
-test('huella dibuja un arco chico en la posicion con el color por defecto', () => {
-  const c = ctxFalso();
-  huella(c, L, [50, 25]);
-  const arco = c.ops.find(o => o[0] === 'arc');
-  assert.deepEqual(arco.slice(1, 4), [400, 200, 2.5]);
-  assert.equal(c.fillStyle, '#8e8a80');
 });
 
 test('eje traza la horizontal en py(0) y la vertical en px(0), dentro de los limites del lienzo', () => {
   const c = ctxFalso();
-  eje(c, L);
+  eje(c, L, { color: '#dcd8ce' });
   const moves = c.ops.filter(o => o[0] === 'moveTo');
   const lines = c.ops.filter(o => o[0] === 'lineTo');
   assert.equal(moves.length, 2);
@@ -76,6 +68,27 @@ test('eje traza la horizontal en py(0) y la vertical en px(0), dentro de los lim
   assert.deepEqual(moves[1].slice(1), [0, 400]);
   assert.deepEqual(lines[1].slice(1), [0, 0]);
 });
+
+// --- El color es obligatorio y no tiene valor por defecto ---------------
+//
+// Un default seria una copia mas de la paleta, escondida en un modulo que no
+// sabe que existen los temas: podria desviarse en silencio de
+// docs/estilos/base.css y pintaria colores de tema claro sobre una pagina
+// oscura. Estas pruebas fijan que omitirlo no dibuje "algo" sino que falle.
+
+for (const [nombre, llamar] of [
+  ['vector', (c, opt) => vector(c, L, [0, 0], [50, 0], opt)],
+  ['cuerpo', (c, opt) => cuerpo(c, L, [50, 25], { radio: 4, ...opt })],
+  ['traza', (c, opt) => traza(c, L, [[0, 0], [50, 25]], opt)],
+  ['eje', (c, opt) => eje(c, L, opt)],
+]) {
+  test(`${nombre} falla si se omite el color`, () => {
+    const c = ctxFalso();
+    assert.throws(() => llamar(c, undefined), /falta el color/);
+    assert.throws(() => llamar(c, {}), /falta el color/);
+    assert.deepEqual(c.ops, [], 'tiene que fallar antes de dibujar nada');
+  });
+}
 
 test('cuerpo deja el arco como trazado actual: no cierra ni reabre el path despues del fill', () => {
   // El ensayo de tiro parabolico dibuja los puntos huecos rellenando con

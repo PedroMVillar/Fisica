@@ -1,4 +1,40 @@
+// Primitivas de dibujo sobre un lienzo (motor/lienzo.js).
+//
+// CONTRATO DE ESTADO DEL CONTEXTO — leer antes de tocar nada acá.
+//
+// 1. Ninguna primitiva hace save()/restore(). Todas escriben `strokeStyle`,
+//    `fillStyle` y/o `lineWidth` sobre el contexto y los dejan escritos: el
+//    que llama es el dueño del estado y quien tiene que reponerlo si le
+//    importa. Es a propósito —un save/restore por primitiva, con un widget
+//    que dibuja decenas por frame, es puro costo—, y el ensayo ya está escrito
+//    contando con eso.
+// 2. `cuerpo` deja el arco como trazado actual: no hace closePath() ni vuelve
+//    a abrir el path después del fill. Los puntos huecos del ensayo son un
+//    `cuerpo` relleno con el color de fondo seguido de un ctx.stroke() propio
+//    que contornea ese mismo arco. Un beginPath()/closePath() de más al final
+//    los convierte en discos sin borde.
+// 3. Nada acá toca `setLineDash`, `globalAlpha`, `font` ni las transformadas:
+//    lo que el llamador deje puesto es lo que se usa.
+//
+// Las dos reglas de arriba están fijadas por pruebas en test/dibujo.test.js;
+// si se cambian, esas pruebas se caen, que es la idea.
+//
+// `color` es obligatorio en todas las primitivas y no tiene valor por defecto.
+// Un default sería una cuarta copia de la paleta —que vive en
+// docs/estilos/base.css, copiada del archivo de diseño— escondida en un módulo
+// que no sabe que existen los temas: se desviaría en silencio y pintaría
+// colores de tema claro sobre una página oscura. El color sale siempre de los
+// tokens CSS leídos por el widget.
+
 const PUNTA = 9;
+
+function exigirColor(color, primitiva) {
+  if (typeof color !== 'string' || color === '') {
+    throw new TypeError(
+      `${primitiva}: falta el color. Es obligatorio y sin default: pasalo desde los tokens CSS del widget.`
+    );
+  }
+}
 
 // La firma real de las opciones es { color, grosor }. El rotulo todavia no
 // esta implementado: dibujar texto en canvas exige elegir tipografia, cuerpo
@@ -6,6 +42,7 @@ const PUNTA = 9;
 // que lo necesita (el triangulo de v0, plan 2), no aca. Si se pasa `rotulo`
 // hoy, se acepta y se ignora sin romper nada; ver prueba en dibujo.test.js.
 export function vector(ctx, l, desde, hasta, { color, grosor = 2 } = {}) {
+  exigirColor(color, 'vector');
   const [x1, y1] = l.p(desde);
   const [x2, y2] = l.p(hasta);
   const dx = x2 - x1, dy = y2 - y1;
@@ -27,7 +64,8 @@ export function vector(ctx, l, desde, hasta, { color, grosor = 2 } = {}) {
   ctx.fill();
 }
 
-export function cuerpo(ctx, l, punto, { radio = 4, color = '#16151a' } = {}) {
+export function cuerpo(ctx, l, punto, { radio = 4, color } = {}) {
+  exigirColor(color, 'cuerpo');
   const [x, y] = l.p(punto);
   ctx.fillStyle = color;
   ctx.beginPath();
@@ -35,11 +73,8 @@ export function cuerpo(ctx, l, punto, { radio = 4, color = '#16151a' } = {}) {
   ctx.fill();
 }
 
-export function huella(ctx, l, punto, { radio = 2.5, color = '#8e8a80' } = {}) {
-  cuerpo(ctx, l, punto, { radio, color });
-}
-
-export function traza(ctx, l, puntos, { color = '#1b4fd4', grosor = 2 } = {}) {
+export function traza(ctx, l, puntos, { color, grosor = 2 } = {}) {
+  exigirColor(color, 'traza');
   if (puntos.length < 2) return;
   ctx.strokeStyle = color;
   ctx.lineWidth = grosor;
@@ -53,7 +88,8 @@ export function traza(ctx, l, puntos, { color = '#1b4fd4', grosor = 2 } = {}) {
   ctx.stroke();
 }
 
-export function eje(ctx, l, { color = '#dcd8ce' } = {}) {
+export function eje(ctx, l, { color } = {}) {
+  exigirColor(color, 'eje');
   ctx.strokeStyle = color;
   ctx.lineWidth = 1;
   ctx.beginPath();
