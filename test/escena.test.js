@@ -157,6 +157,35 @@ test('reiniciar() cancela el frame agendado con su id exacto y un frame huerfano
   }
 });
 
+test('reconstruir la escena a mitad de la animacion no congela el reloj', () => {
+  // El ensayo de tiro parabolico rehace la escena en cada evento `input` del
+  // slider (la duracion se fija al crearla) y devuelve la escena nueva al
+  // instante en que iba la vieja. Si el origen del reloj se fijara recien en
+  // el primer frame de la escena nueva, ese frame valdria dt = 0; y como
+  // `input` puede dispararse mas seguido que los frames, TODOS los frames del
+  // arrastre serian de dt cero y el tiempo no avanzaria nunca.
+  const stub = instalarStubRaf();
+  try {
+    const vieja = crearEscena({ dibujar() {}, duracion: 3 });
+    vieja.reproducir();
+    vieja.avanzar(1);
+    vieja.pausar();                     // lo que hace rehacerEscena()
+
+    const nueva = crearEscena({ dibujar() {}, duracion: 3 });
+    nueva.reproducir();
+    nueva.avanzar(vieja.t);             // se la devuelve al mismo instante
+    assert.equal(nueva.t, 1);
+
+    const [, paso] = [...stub.callbacksPorId.entries()].at(-1);
+    paso(performance.now() + 16);       // el primer frame despues de rehacerla
+
+    assert.ok(nueva.t > 1, `el reloj quedo congelado en t = ${nueva.t}`);
+    assert.equal(nueva.estado, 'reproduciendo');
+  } finally {
+    stub.restaurar();
+  }
+});
+
 test('el loop topea el salto de un frame en 0.05 s (pestaña en segundo plano)', () => {
   const stub = instalarStubRaf();
   try {

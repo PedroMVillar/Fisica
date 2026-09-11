@@ -17,6 +17,15 @@
 // punto de entrada manual y respeta el dt que le pasan.
 const SALTO_MAXIMO = 0.05;
 
+// Lectura del mismo reloj que usa requestAnimationFrame para marcar sus frames:
+// en el navegador, el timestamp que recibe el callback de rAF y performance.now()
+// comparten origen. Si no hay performance (entorno pelado), devuelve null y el
+// loop cae en el comportamiento de antes: fija el origen en el primer frame.
+const ahoraDelReloj = () =>
+  typeof performance !== 'undefined' && typeof performance.now === 'function'
+    ? performance.now()
+    : null;
+
 export function crearEscena({ dibujar, duracion, alCambiar = () => {} }) {
   let t = 0;
   let estado = 'reposo';
@@ -44,7 +53,9 @@ export function crearEscena({ dibujar, duracion, alCambiar = () => {} }) {
       return;
     }
     if (tAnterior === null) tAnterior = ahora;
-    const dt = Math.min(SALTO_MAXIMO, (ahora - tAnterior) / 1000);
+    // El piso en 0 es por si el origen y el timestamp del frame no vinieran del
+    // mismo reloj: un dt negativo haría retroceder el tiempo.
+    const dt = Math.min(SALTO_MAXIMO, Math.max(0, (ahora - tAnterior) / 1000));
     tAnterior = ahora;
     api.avanzar(dt);
     if (estado === 'reproduciendo') {
@@ -64,7 +75,19 @@ export function crearEscena({ dibujar, duracion, alCambiar = () => {} }) {
       // Sin navegador (pruebas) no hay requestAnimationFrame: el reloj lo
       // mueve quien llame a avanzar(dt) a mano.
       if (typeof requestAnimationFrame === 'function') {
-        tAnterior = null;
+        // El origen del reloj se fija ACÁ, en el instante de la llamada, y no
+        // en el primer frame. Si se fijara en el primer frame, ese frame
+        // valdría siempre dt = 0, y una escena que se reconstruye a mitad de
+        // la animación regalaría un frame congelado cada vez. El ensayo de
+        // tiro parabólico rehace la escena en cada evento `input` del slider
+        // —la duración se fija al crearla—, y `input` en un range dispara por
+        // píxel de recorrido: con un mouse de alta tasa de sondeo o con el
+        // dedo puede superar los 60 Hz y entonces *todos* los frames del
+        // arrastre serían de dt cero, con el reloj clavado. Fijando el origen
+        // en reproducir(), el tiempo transcurrido entre la reconstrucción y el
+        // frame siguiente se cuenta igual, como en el tick compartido del
+        // diseño.
+        tAnterior = ahoraDelReloj();
         idAnimacion = requestAnimationFrame(paso);
       }
     },
