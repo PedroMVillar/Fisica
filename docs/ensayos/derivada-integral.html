@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script del ensayo es `type="module"` y se difiere hasta después del
+// parseo, así que aplicar el tema desde ahí regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahí la excepción abortaría el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>Derivada e integral, vistas · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div style="max-width:680px;margin:0 auto;padding:56px 24px 0;display:flex;flex-direction:column;gap:0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ensayo 1 · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Derivada e integral, vistas</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">La velocidad es la pendiente y el desplazamiento es el área: la misma relación leída en dos direcciones.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Un gráfico de posición contra tiempo parece decir una sola cosa: dónde está el móvil en cada instante. Dice dos más, y son las que los ejercicios piden: cuán rápido va, y cómo cambia esa rapidez. Las dos están ahí, en la forma de la curva, antes de que aparezca ninguna fórmula.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Este ensayo tiene un solo objetivo: que puedas mirar una curva y leerle la velocidad sin calcular nada, y mirar una curva de velocidad y leerle el desplazamiento del mismo modo.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · La pendiente que se afila</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Elegí dos instantes y marcá en el gráfico dónde está el móvil en cada uno. La velocidad media entre esos dos instantes no es otra cosa que la pendiente de la recta que une los dos puntos: cuánto cambió la posición dividido cuánto tardó en cambiar. Hasta ahí no hay nada que no sepas. Lo interesante empieza cuando el segundo punto se acerca al primero, porque la recta que los une va girando y su pendiente va a alguna parte. A esa parte adonde va la llamamos velocidad instantánea. Mové el slider hasta el fondo y mirá el número.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">De la secante a la tangente</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— achicá Δt y mirá el número de la pendiente, no la recta.</span>
+    </div>
+    <canvas id="w1-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Δt <output id="w1-dt-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0.600 s</output></span>
+        <input id="w1-dt" type="range" min="0.001" max="0.8" step="0.001" value="0.6" style="width:100%">
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>Δt <b id="w1-dt-lec" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.600 s</b></span>
+      <span>pendiente PQ <b id="w1-pend" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">7.440 m/s</b></span>
+      <span>velocidad en P <b id="w1-lim" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.84 m/s</b></span>
+      <span>diferencia <b id="w1-error" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">3.600 m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Mirá las dos últimas lecturas. La pendiente de PQ se acerca a 3.84 y la diferencia se hace cada vez más chica, pero nunca da cero: siempre queda algo. Y no es un defecto de la cuenta ni del redondeo. Con Δt = 0 los dos puntos serían el mismo punto, Δx también sería cero, y la división 0/0 no existe. Así que la velocidad instantánea no es «la pendiente cuando Δt vale cero» —ahí no hay ninguna pendiente que calcular— sino el número al que la pendiente se acerca mientras Δt se achica. Eso es un límite: el nombre del acercamiento, no el del punto final.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Ese acercamiento el apunte lo escribe <i>v</i> = d<i>x</i>/d<i>t</i>. La <i>d</i> no es un número chiquito que multiplica: es la marca de que la cuenta Δ<i>x</i>/Δ<i>t</i> ya se hizo con Δ<i>t</i> yendo a cero. Y no es adorno teórico. El ejercicio 1 del práctico da exactamente esta curva, <i>x</i>(<i>t</i>) = −3 + 2<i>t</i><sup>3</sup>, y pide velocidades instantáneas leídas del gráfico: en <i>t</i> = 0 la curva está horizontal, así que la velocidad es 0; en <i>t</i> = 0.8 s vale 3.84 m/s, que es el número que acabás de ver aparecer solo.</p>
+
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 1, pp. 3–24 · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 1 a 8</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget } from '../motor/widget.js';
+import { eje, curva, cuerpo, punteado, texto } from '../motor/dibujo.js';
+import { deslizador } from '../motor/controles.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+/* ---------- widget 1: de la secante a la tangente ---------- */
+
+// No anima: igual que el widget 3 del ensayo de tiro, no tiene reloj ni `crearEscena`.
+// Arranca quieto y sólo se redibuja cuando el lector mueve el slider.
+function widgetSecante(pagina) {
+  // La curva del ejercicio 1 del práctico 1. La velocidad instantánea en t = 0.8 vale
+  // exactamente 3.84 m/s según parcial-1/soluciones/verificacion-practico-1.py
+  // ("v(0) = 0   v(0.8) = 3.84 m/s"): x'(t) = 6t², con t = 0.8 da 6 · 0.64 = 3.84.
+  const x = t => -3 + 2 * t ** 3;
+  const T_P = 0.8;
+  const V_P = 3.84;
+
+  // Arranca lejos a propósito: con Δt = 0.6 la secante se ve claramente distinta de la
+  // tangente, y recién por eso achicarla significa algo.
+  let dt = 0.6;
+
+  const widget = crearWidget({
+    pagina, canvas: el('w1-cv'),
+    margen: { L: 62, R: 24, T: 38, B: 42 },
+    encuadre: () => ({ xMin: -1, xMax: 1.6, yMin: -5.5, yMax: 6 }),
+    dibujar: pintar,
+  });
+
+  function pintar(ctx, l) {
+    const p = pagina.paleta();
+    eje(ctx, l, { color: p.rule, colorTexto: p.dim, etiquetaX: 't [s]', etiquetaY: 'x [m]' });
+    curva(ctx, l, t => [t, x(t)], l.xMin, l.xMax, { color: p.graph, grosor: 1.8 });
+
+    const tQ = T_P + dt;
+    const pendiente = (x(tQ) - x(T_P)) / dt;
+
+    // La secante se dibuja larga a propósito, cruzando el encuadre: así se ve cómo gira
+    // alrededor de P en vez de parecer un segmento que se acorta.
+    const recta = t => [t, x(T_P) + pendiente * (t - T_P)];
+    curva(ctx, l, recta, l.xMin, l.xMax, { color: p.blue, grosor: 1.6 });
+
+    // El triángulo de la pendiente: delta t abajo, delta x al costado.
+    punteado(ctx, l.px(T_P), l.py(x(T_P)), l.px(tQ), l.py(x(T_P)), { color: p.blueSoft });
+    punteado(ctx, l.px(tQ), l.py(x(T_P)), l.px(tQ), l.py(x(tQ)), { color: p.blueSoft });
+    texto(ctx, 'Δt', (l.px(T_P) + l.px(tQ)) / 2, l.py(x(T_P)) + 15,
+      { color: p.blue, alineacion: 'center' });
+    texto(ctx, 'Δx', l.px(tQ) + 8, (l.py(x(T_P)) + l.py(x(tQ))) / 2,
+      { color: p.blue });
+
+    cuerpo(ctx, l, [T_P, x(T_P)], { radio: 5.5, color: p.ink });
+    cuerpo(ctx, l, [tQ, x(tQ)], { radio: 5, color: p.blue });
+    texto(ctx, 'P', l.px(T_P) - 14, l.py(x(T_P)) - 8, { color: p.ink });
+    texto(ctx, 'Q', l.px(tQ) + 9, l.py(x(tQ)) - 9, { color: p.blue });
+
+    // Tres decimales en la pendiente y en la diferencia, no dos: con dos, en el mínimo
+    // del slider la diferencia se muestra 0.00 y la página afirma justo lo contrario
+    // —que nunca llega a cero—. Con tres se lee 0.005, que es el valor real y el que
+    // hace el punto. `velocidad en P` queda con los dos decimales del script de
+    // verificación, que es de donde sale el número.
+    leer('w1-dt-lec', dt.toFixed(3) + ' s');
+    leer('w1-pend', pendiente.toFixed(3) + ' m/s');
+    leer('w1-lim', V_P.toFixed(2) + ' m/s');
+    leer('w1-error', Math.abs(pendiente - V_P).toFixed(3) + ' m/s');
+  }
+
+  deslizador({
+    entrada: el('w1-dt'), salida: el('w1-dt-out'),
+    formato: v => v.toFixed(3) + ' s', pagina,
+    alCambiar: v => { dt = v; widget.repintar(); },
+  });
+}
+
+/* ---------- tema ---------- */
+
+function tema(pagina) {
+  const sincronizar = () => {
+    el('tp-theme').textContent =
+      document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
+  };
+  el('tp-theme').onclick = () => {
+    const oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (oscuro) document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', 'dark');
+    // Si el almacenamiento está bloqueado, la preferencia no se recuerda, pero
+    // el tema de esta visita tiene que cambiar igual: sin el try/catch la
+    // excepción cortaba acá y el canvas se quedaba con la paleta vieja.
+    try { localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark'); } catch (e) {}
+    pagina.olvidarPaleta();
+    sincronizar();
+    pagina.repintarTodo();
+  };
+  // El tema ya quedó aplicado por el script del <head>; acá sólo se rotula.
+  sincronizar();
+}
+
+/* ---------- arranque ---------- */
+
+const pagina = crearPagina({ documento: document });
+widgetSecante(pagina);
+tema(pagina);
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
