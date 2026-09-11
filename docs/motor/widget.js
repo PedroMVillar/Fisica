@@ -92,3 +92,49 @@ export function crearWidget({
   pagina.registrar(api);
   return api;
 }
+
+// Arma los lienzos de un widget que apila N paneles verticales dentro de un mismo
+// canvas, compartiendo el eje horizontal: los tres gráficos sincronizados de
+// derivada-integral.html y el widget "Dibujá tu x(t)" del mismo ensayo son los dos
+// casos de hoy, y hasta esta extracción cada uno llevaba su propia copia de esta
+// aritmética -- 20 líneas idénticas salvo el nombre de dos variables.
+//
+// `lienzo` es el lienzo EXTERIOR del widget (el que devuelve `crearWidget`), con un
+// encuadre vertical de `yMax: paneles.length` -- una unidad por panel; así
+// `lienzo.py(0) - lienzo.py(paneles.length)` da el alto útil total en píxeles a
+// repartir entre las franjas, y dividirlo por `paneles.length` da el alto de cada
+// una. `margen` son los márgenes horizontales compartidos (`L`, `R`); el margen
+// vertical de cada franja lo calcula esta función. `hueco` es el aire que se le
+// agrega al margen superior de cada franja para que el rótulo del eje Y de `eje()`
+// (que cuelga por encima de su techo) no caiga encima del panel de arriba -- ver el
+// comentario de `HUECO_ROTULO` en los dos widgets que la llaman, que documentan de
+// dónde sale ese número. `paneles` es la lista de descriptores, uno por franja, cada
+// uno con al menos `yMin`/`yMax` (el rango vertical de esa franja); el widget que
+// llama decide qué más lleva cada uno (color, etiqueta, función...) y lo recibe de
+// vuelta intacto en `panel`.
+//
+// Devuelve, por cada elemento de `paneles`, en el mismo orden:
+// - `panel`: el descriptor original, sin tocar.
+// - `techo`: el borde superior de esa franja, en píxeles de canvas.
+// - `alturaPanel`: el alto en píxeles de cada franja (igual para las N).
+// - `lp`: el lienzo de esa franja, ya armado con `crearLienzo`, con el rango
+//   vertical propio del panel y el rango horizontal compartido del lienzo exterior.
+export function panelesApilados({ lienzo, margen, hueco, paneles }) {
+  const n = paneles.length;
+  const alturaPanel = (lienzo.py(0) - lienzo.py(n)) / n;
+  const techoStack = lienzo.py(n);
+  return paneles.map((panel, i) => {
+    const techo = techoStack + i * alturaPanel;
+    return {
+      panel, techo, alturaPanel,
+      lp: crearLienzo({
+        ancho: lienzo.ancho, alto: lienzo.alto,
+        margen: {
+          L: margen.L, R: margen.R,
+          T: techo + hueco, B: lienzo.alto - techo - alturaPanel + 10,
+        },
+        xMin: lienzo.xMin, xMax: lienzo.xMax, yMin: panel.yMin, yMax: panel.yMax,
+      }),
+    };
+  });
+}

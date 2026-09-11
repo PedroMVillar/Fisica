@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { crearPagina } from '../docs/motor/pagina.js';
-import { crearWidget } from '../docs/motor/widget.js';
+import { crearWidget, panelesApilados } from '../docs/motor/widget.js';
+import { crearLienzo } from '../docs/motor/lienzo.js';
 
 // Documento falso: lo mínimo que pagina.js y widget.js le piden al DOM.
 function documentoFalso({ tokens = {} } = {}) {
@@ -455,4 +456,93 @@ test('progreso() sin elemento no hace nada y no lanza', () => {
   const p = crearPagina({ documento: documentoFalso() });
   assert.doesNotThrow(() => p.progreso(null));
   assert.doesNotThrow(() => p.progreso(undefined));
+});
+
+// --- panelesApilados: geometria de un widget que apila N paneles verticales -----
+//
+// `lienzo` es el lienzo EXTERIOR del widget (el que arma crearWidget), con un
+// encuadre vertical de `yMax: n` -- una unidad por panel. Estas pruebas construyen
+// ese lienzo exterior a mano con crearLienzo, del mismo modo en que lo arma
+// crearWidget, para no depender de un canvas ni de crearWidget en las aserciones.
+
+function lienzoExterior({ ancho = 800, alto = 400, n = 3 } = {}) {
+  return crearLienzo({
+    ancho, alto, margen: { L: 60, R: 20, T: 20, B: 34 },
+    xMin: 0, xMax: 6, yMin: 0, yMax: n,
+  });
+}
+
+test('panelesApilados devuelve tantas franjas como paneles se le piden', () => {
+  const l = lienzoExterior({ n: 4 });
+  const paneles = [{ yMin: 0, yMax: 1 }, { yMin: 0, yMax: 1 }, { yMin: 0, yMax: 1 }, { yMin: 0, yMax: 1 }];
+  const capas = panelesApilados({ lienzo: l, margen: { L: 60, R: 20 }, hueco: 23, paneles });
+  assert.equal(capas.length, 4);
+});
+
+// Sin superposicion ni huecos entre franjas, y las N cubren el alto util completo:
+// del techo del area util del lienzo exterior (l.py(n)) al piso (l.py(0)), sin que
+// sobre ni falte espacio. A proposito con CUATRO paneles, no tres: una aritmetica que
+// hardcodee "3" en vez de `paneles.length` (facil de escribir sin querer, viniendo de
+// los dos widgets que solo apilaban 3) pasaria la prueba de arriba igual -- `.map`
+// itera los 4 elementos la pida quien la pida -- pero fallaria esta, porque
+// `alturaPanel` saldria calculado para 3 franjas y la cuarta se saldria del piso del
+// area util (o, con 3 paneles reales, sobraria un hueco al final que esta prueba con
+// n=3 no distinguiria del redondeo).
+test('panelesApilados: las franjas no se superponen y cubren el alto util', () => {
+  const l = lienzoExterior({ n: 4 });
+  const paneles = [{ yMin: 0, yMax: 1 }, { yMin: -1, yMax: 1 }, { yMin: -2, yMax: 2 }, { yMin: -3, yMax: 3 }];
+  const capas = panelesApilados({ lienzo: l, margen: { L: 60, R: 20 }, hueco: 23, paneles });
+
+  // assert.ok con una tolerancia de punto flotante, no assert.equal: la aritmetica
+  // encadena divisiones y sumas (alturaPanel = .../n, techo = techoStack + i*altura),
+  // y eso deja un resto de redondeo de un par de unidades en el ultimo bit (~1e-13)
+  // que no tiene nada que ver con que las franjas encajen o no.
+  const cerca = (a, b, mensaje) => assert.ok(Math.abs(a - b) < 1e-9, `${mensaje}: ${a} vs ${b}`);
+
+  cerca(capas[0].techo, l.py(4), 'la primera franja arranca en el techo del area util');
+  for (let i = 1; i < capas.length; i++) {
+    cerca(capas[i].techo, capas[i - 1].techo + capas[i - 1].alturaPanel,
+      `la franja ${i} arranca exactamente donde termina la anterior`);
+  }
+  const ultima = capas[capas.length - 1];
+  cerca(ultima.techo + ultima.alturaPanel, l.py(0), 'la ultima franja termina en el piso del area util');
+});
+
+test('panelesApilados: cada lienzo reporta el rango vertical de su panel y el horizontal compartido', () => {
+  const l = lienzoExterior({ n: 3 });
+  const paneles = [{ yMin: 0, yMax: 10 }, { yMin: -12, yMax: 12 }, { yMin: -30, yMax: 30 }];
+  const capas = panelesApilados({ lienzo: l, margen: { L: 60, R: 20 }, hueco: 23, paneles });
+  capas.forEach(({ lp, panel }, i) => {
+    assert.equal(lp.yMin, paneles[i].yMin);
+    assert.equal(lp.yMax, paneles[i].yMax);
+    assert.equal(lp.xMin, l.xMin, 'el rango horizontal es el del lienzo exterior, compartido por todas las franjas');
+    assert.equal(lp.xMax, l.xMax);
+    assert.equal(panel, paneles[i], 'el descriptor original vuelve intacto, no una copia');
+  });
+});
+
+test('panelesApilados: el hueco se aplica al margen superior de cada franja', () => {
+  const l = lienzoExterior({ n: 3 });
+  const paneles = [{ yMin: 0, yMax: 10 }, { yMin: -12, yMax: 12 }, { yMin: -30, yMax: 30 }];
+  const hueco = 23;
+  const capas = panelesApilados({ lienzo: l, margen: { L: 60, R: 20 }, hueco, paneles });
+  capas.forEach(({ techo, lp }) => {
+    assert.equal(lp.margen.T, techo + hueco);
+  });
+  // Con otro hueco cambia el margen superior en la misma medida: no es un numero que
+  // panelesApilados eligio por su cuenta, es el que se le paso.
+  const capasOtroHueco = panelesApilados({ lienzo: l, margen: { L: 60, R: 20 }, hueco: 0, paneles });
+  capasOtroHueco.forEach(({ techo, lp }) => {
+    assert.equal(lp.margen.T, techo);
+  });
+});
+
+test('panelesApilados: el margen horizontal de cada franja es el que se le paso', () => {
+  const l = lienzoExterior({ n: 3 });
+  const paneles = [{ yMin: 0, yMax: 10 }, { yMin: -12, yMax: 12 }, { yMin: -30, yMax: 30 }];
+  const capas = panelesApilados({ lienzo: l, margen: { L: 62, R: 24 }, hueco: 23, paneles });
+  capas.forEach(({ lp }) => {
+    assert.equal(lp.margen.L, 62);
+    assert.equal(lp.margen.R, 24);
+  });
 });
