@@ -163,6 +163,10 @@ try {
     <li>Desplazamiento y camino recorrido sólo coinciden si el móvil no se dio vuelta.</li>
   </ol>
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="../index.html">Portada</a>
+    <a href="tiro-parabolico.html">Ensayo 2 · Tiro parabólico</a>
+  </div>
   <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 1, pp. 3–24 · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 1 a 8</a></p>
 </div>
 
@@ -173,6 +177,7 @@ import { eje, curva, cuerpo, punteado, texto, traza, COLGADO_ROTULO_EJE } from '
 import { deslizador, boton } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
 import { derivar, derivarMuestras, suavizar, integrar } from '../fisica/calculo.js';
+import { conectarTema } from '../motor/tema.js';
 
 const el = id => document.getElementById(id);
 const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
@@ -641,29 +646,6 @@ function widgetArea(pagina) {
   });
 }
 
-/* ---------- tema ---------- */
-
-function tema(pagina) {
-  const sincronizar = () => {
-    el('tp-theme').textContent =
-      document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
-  };
-  el('tp-theme').onclick = () => {
-    const oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (oscuro) document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme', 'dark');
-    // Si el almacenamiento está bloqueado, la preferencia no se recuerda, pero
-    // el tema de esta visita tiene que cambiar igual: sin el try/catch la
-    // excepción cortaba acá y el canvas se quedaba con la paleta vieja.
-    try { localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark'); } catch (e) {}
-    pagina.olvidarPaleta();
-    sincronizar();
-    pagina.repintarTodo();
-  };
-  // El tema ya quedó aplicado por el script del <head>; acá sólo se rotula.
-  sincronizar();
-}
-
 /* ---------- arranque ---------- */
 
 const pagina = crearPagina({ documento: document });
@@ -671,7 +653,7 @@ widgetSecante(pagina);
 widgetPaneles(pagina);
 widgetDibujar(pagina);
 widgetArea(pagina);
-tema(pagina);
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
 pagina.observar();
 pagina.progreso(el('tp-prog'));
 pagina.repintarTodo();

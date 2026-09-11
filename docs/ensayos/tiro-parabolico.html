@@ -207,6 +207,11 @@ try {
     <li>Buscá cuál de las dos columnas te da el tiempo, y pasalo a la otra.</li>
   </ol>
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="derivada-integral.html">Ensayo 1 · Derivada e integral, vistas</a>
+    <a href="../index.html">Portada</a>
+    <a href="movimiento-circular.html">Ensayo 3 · Movimiento circular</a>
+  </div>
   <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 2, pp. 25–47 · <a href="../../parcial-1/preparacion/resumen-tiro-parabolico.pdf">hoja resumen</a> · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 9, 10 y 15</a> · g = 9.8 m/s²</p>
 </div>
 
@@ -218,6 +223,7 @@ import { eje, curva, cuerpo, vectorPx, punteado, texto } from '../motor/dibujo.j
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
 import { crearTiro } from '../fisica/tiro.js';
+import { conectarTema } from '../motor/tema.js';
 
 const el = id => document.getElementById(id);
 
@@ -763,29 +769,6 @@ function widgetViento(pagina) {
   pulso();
 }
 
-/* ---------- tema ---------- */
-
-function tema(pagina) {
-  const sincronizar = () => {
-    el('tp-theme').textContent =
-      document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
-  };
-  el('tp-theme').onclick = () => {
-    const oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (oscuro) document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme', 'dark');
-    // Si el almacenamiento está bloqueado, la preferencia no se recuerda, pero
-    // el tema de esta visita tiene que cambiar igual: sin el try/catch la
-    // excepción cortaba acá y el canvas se quedaba con la paleta vieja.
-    try { localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark'); } catch (e) {}
-    pagina.olvidarPaleta();
-    sincronizar();
-    pagina.repintarTodo();
-  };
-  // El tema ya quedó aplicado por el script del <head>; acá sólo se rotula.
-  sincronizar();
-}
-
 /* ---------- arranque ---------- */
 
 const pagina = crearPagina({ documento: document });
@@ -793,7 +776,7 @@ widgetSombras(pagina);
 widgetGalileo(pagina);
 widgetTriangulo(pagina);
 widgetViento(pagina);
-tema(pagina);
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
 pagina.observar();
 pagina.progreso(el('tp-prog'));
 pagina.repintarTodo();
