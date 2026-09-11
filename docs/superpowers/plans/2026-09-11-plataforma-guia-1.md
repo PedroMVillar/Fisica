@@ -1837,12 +1837,15 @@ bloque del ejercicio 4 de `parcial-1/soluciones/verificacion-practico-1.py`, des
 la línea que imprime `x_max`:
 
 ```python
-    t_vuelta = solve(Eq(x4.subs(t, T), x4.subs(t, 0)), T)
-    t_v = max([s for s in t_vuelta if s > 0])
-    camino = 2 * (x4.subs(t, Rational(17, 10)) - x4.subs(t, 0))
-    print(f"  x(t) vuelve a x(0) en t = {float(t_v):.1f} s")
-    print(f"  desplazamiento en [0, {float(t_v):.1f}] = 0 m   camino = {float(camino):.1f} m")
+t_vuelta = sp.solve(sp.Eq(x4, x4.subs(t, 0)), t)
+t_v = max([s for s in t_vuelta if s > 0])
+camino = 2 * (x4.subs(t, Rational(17, 10)) - x4.subs(t, 0))
+print(f"  x(t) vuelve a x(0) en t = {float(t_v):.1f} s")
+print(f"  desplazamiento en [0, {float(t_v):.1f}] = 0 m   camino = {float(camino):.1f} m")
 ```
+
+Usá el estilo que el archivo ya tiene —`sp.Eq`, `sp.solve`, `Rational` importado directo—
+y no introduzcas símbolos auxiliares: `x4` ya depende de `t`.
 
 Correr `python parcial-1/soluciones/verificacion-practico-1.py` y anotar la salida:
 tiene que decir `t = 3.4 s` y `camino = 28.9 m`. Si no coincide, **no seguir**: el número
@@ -1995,14 +1998,23 @@ export function derivarMuestras(puntos) {
 }
 
 export function suavizar(puntos, ventana = 5) {
+  // Promedio movil con ventana simetrica tambien en los bordes: en vez de recortar
+  // la ventana contra el borde —lo que sesga el promedio y curva una recta— se
+  // extiende la serie por reflexion impar alrededor del punto extremo. Esa
+  // extension es la unica que deja una recta exactamente igual tras suavizar, que
+  // es lo que la prueba `suavizar no mueve una recta` exige: si se recorta, el
+  // primer punto de una rampa se corre y el panel de velocidad deja de ser plano.
+  const n = puntos.length;
   const r = Math.floor(ventana / 2);
+  const valor = i => {
+    if (i < 0) return 2 * puntos[0][1] - puntos[Math.min(-i, n - 1)][1];
+    if (i >= n) return 2 * puntos[n - 1][1] - puntos[Math.max(2 * (n - 1) - i, 0)][1];
+    return puntos[i][1];
+  };
   return puntos.map(([t], i) => {
-    let suma = 0, cuenta = 0;
-    for (let k = Math.max(0, i - r); k <= Math.min(puntos.length - 1, i + r); k++) {
-      suma += puntos[k][1];
-      cuenta++;
-    }
-    return [t, suma / cuenta];
+    let suma = 0;
+    for (let k = i - r; k <= i + r; k++) suma += valor(k);
+    return [t, suma / (2 * r + 1)];
   });
 }
 ```
