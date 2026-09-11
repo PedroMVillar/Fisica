@@ -14,6 +14,11 @@ a{color:var(--blue);text-decoration:none;border-bottom:1px solid var(--blue-soft
 a:hover{color:var(--red);border-bottom-color:var(--red)}
 input[type=range]{accent-color:var(--blue);background:transparent}
 button{font-family:"JetBrains Mono",ui-monospace,monospace}
+/* Las franjas de widget son width:100% con padding lateral, asi que sin esto
+   suman 40 px de mas y la pagina desborda en pantallas angostas. Va acotado a
+   `section` a proposito: un `box-sizing` global cambiaria el ancho util de las
+   columnas de texto, que hoy calculan su padding por fuera del max-width. */
+section { box-sizing: border-box; }
 @keyframes tp-pulse{
   0%,100%{box-shadow:0 0 0 0 rgba(27,79,212,0)}
   50%{box-shadow:0 0 0 7px rgba(27,79,212,.16)}
