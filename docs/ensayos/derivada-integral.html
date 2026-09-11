@@ -56,7 +56,6 @@ try {
       </label>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
-      <span>Δt <b id="w1-dt-lec" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.600 s</b></span>
       <span>pendiente PQ <b id="w1-pend" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">7.440 m/s</b></span>
       <span>velocidad en P <b id="w1-lim" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.84 m/s</b></span>
       <span>diferencia <b id="w1-error" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">3.600 m/s</b></span>
@@ -66,7 +65,7 @@ try {
 
 <div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Mirá las dos últimas lecturas. La pendiente de PQ se acerca a 3.84 y la diferencia se hace cada vez más chica, pero nunca da cero: siempre queda algo. Y no es un defecto de la cuenta ni del redondeo. Con Δt = 0 los dos puntos serían el mismo punto, Δx también sería cero, y la división 0/0 no existe. Así que la velocidad instantánea no es «la pendiente cuando Δt vale cero» —ahí no hay ninguna pendiente que calcular— sino el número al que la pendiente se acerca mientras Δt se achica. Eso es un límite: el nombre del acercamiento, no el del punto final.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Ese acercamiento el apunte lo escribe <i>v</i> = d<i>x</i>/d<i>t</i>. La <i>d</i> no es un número chiquito que multiplica: es la marca de que la cuenta Δ<i>x</i>/Δ<i>t</i> ya se hizo con Δ<i>t</i> yendo a cero. Y no es adorno teórico. El ejercicio 1 del práctico da exactamente esta curva, <i>x</i>(<i>t</i>) = −3 + 2<i>t</i><sup>3</sup>, y pide velocidades instantáneas leídas del gráfico: en <i>t</i> = 0 la curva está horizontal, así que la velocidad es 0; en <i>t</i> = 0.8 s vale 3.84 m/s, que es el número que acabás de ver aparecer solo.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Ese acercamiento el apunte lo escribe <i>v</i> = d<i>x</i>/d<i>t</i>. La <i>d</i> no es un número chiquito que multiplica: es la marca de que la cuenta Δ<i>x</i>/Δ<i>t</i> ya se hizo con Δ<i>t</i> yendo a cero. Y no es adorno teórico. El ejercicio 1 del práctico da exactamente esta curva, <i>x</i>(<i>t</i>) = −3 + 2<i>t</i><sup>3</sup>, y pide velocidades instantáneas leídas del gráfico: en <i>t</i> = 0 la curva está horizontal, así que la velocidad es 0; en <i>t</i> = 0.8 s vale 3.84 m/s, que es el número al que viste llegar la pendiente.</p>
 
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 1, pp. 3–24 · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 1 a 8</a></p>
@@ -92,6 +91,22 @@ function widgetSecante(pagina) {
   const x = t => -3 + 2 * t ** 3;
   const T_P = 0.8;
   const V_P = 3.84;
+
+  // Cuanto cuelga el rotulo "Q" por debajo de su punto. Es la unica fuente del numero:
+  // el umbral de "Dx" lo usa para decidir si el rotulo entra sin tocarlo, asi que
+  // moverlo mueve el umbral solo, en vez de dejarlo mal en silencio.
+  const Q_ABAJO = 18;
+  // Los dos umbrales del triangulo no preguntan lo mismo, y por eso no son el mismo
+  // numero: cada uno pregunta si el rotulo entra en su cateto Y ADEMAS queda libre de
+  // los rotulos vecinos.
+  // - "Dt" no tiene vecino: cuelga 15 px debajo del segmento horizontal, con el eje
+  //   lejos, asi que le alcanza con que el texto entre.
+  // - "Dx" va en el punto medio del cateto vertical y "Q" a Q_ABAJO debajo del punto,
+  //   asi que los separa cateto/2 - Q_ABAJO. Para que no se toquen hace falta
+  //   cateto >= 2 * (Q_ABAJO + holgura); la holgura son 14 px, el alto del glifo que
+  //   dibuja `texto` (11 px por defecto) mas un poco de aire.
+  const CATETO_T_MINIMO = 28;
+  const CATETO_X_MINIMO = 2 * (Q_ABAJO + 14);
 
   // Arranca lejos a propósito: con Δt = 0.6 la secante se ve claramente distinta de la
   // tangente, y recién por eso achicarla significa algo.
@@ -125,19 +140,10 @@ function widgetSecante(pagina) {
     punteado(ctx, l.px(T_P), l.py(x(T_P)), l.px(tQ), l.py(x(T_P)), { color: p.blueSoft });
     punteado(ctx, l.px(tQ), l.py(x(T_P)), l.px(tQ), l.py(x(tQ)), { color: p.blueSoft });
 
-    // Los rotulos del triangulo se ocultan cuando el cateto no da para escribirlos.
-    // Con Delta t chico los dos puntos colapsan y "Dt", "Dx" y "Q" se encinan; el
-    // segmento sigue dibujado y el valor exacto vive en las lecturas de abajo.
-    //
-    // Los dos umbrales no preguntan lo mismo, y por eso no son el mismo numero: cada
-    // uno pregunta si el rotulo entra en su cateto Y ADEMAS queda libre de los rotulos
-    // vecinos. "Dx" va en el punto medio del cateto vertical y "Q" a 18 px debajo del
-    // punto, asi que los separa la mitad del cateto menos 18: para que no se toquen con
-    // glifos de 11 px hace falta un cateto de ~64 px. El horizontal no tiene vecino
-    // ("Dt" cuelga 15 px debajo del segmento, con el eje lejos), asi que le alcanza con
-    // que el texto entre.
-    const CATETO_T_MINIMO = 28;
-    const CATETO_X_MINIMO = 64;
+    // Los rotulos del triangulo se ocultan cuando el cateto no da para escribirlos
+    // (los umbrales y su derivacion, arriba). Con Delta t chico los dos puntos colapsan
+    // y "Dt", "Dx" y "Q" se encinan; el segmento sigue dibujado y el valor exacto vive
+    // en las lecturas de abajo.
     const catetoT = Math.abs(l.px(tQ) - l.px(T_P));
     const catetoX = Math.abs(l.py(x(tQ)) - l.py(x(T_P)));
     if (catetoT >= CATETO_T_MINIMO) {
@@ -155,14 +161,17 @@ function widgetSecante(pagina) {
     // con la curva, asi que cualquier desplazamiento hacia arriba lo deja debajo de una
     // de las dos lineas, y P arriba se despega de la fila de numeros del eje.
     texto(ctx, 'P', l.px(T_P) - 16, l.py(x(T_P)) - 20, { color: p.ink });
-    texto(ctx, 'Q', l.px(tQ) + 12, l.py(x(tQ)) + 18, { color: p.blue });
+    texto(ctx, 'Q', l.px(tQ) + 12, l.py(x(tQ)) + Q_ABAJO, { color: p.blue });
 
     // Tres decimales en la pendiente y en la diferencia, no dos: con dos, en el mínimo
     // del slider la diferencia se muestra 0.00 y la página afirma justo lo contrario
     // —que nunca llega a cero—. Con tres se lee 0.005, que es el valor real y el que
     // hace el punto. `velocidad en P` queda con los dos decimales del script de
     // verificación, que es de donde sale el número.
-    leer('w1-dt-lec', dt.toFixed(3) + ' s');
+    //
+    // Que la diferencia nunca dé cero se apoya tambien en el min="0.001" del slider:
+    // con un minimo mas chico la pantalla mostraria 0.000 y contradiria al parrafo de
+    // cierre. Los dos numeros van juntos.
     leer('w1-pend', pendiente.toFixed(3) + ' m/s');
     leer('w1-lim', V_P.toFixed(2) + ' m/s');
     leer('w1-error', Math.abs(pendiente - V_P).toFixed(3) + ' m/s');
