@@ -45,8 +45,9 @@ test('ejercicio 13: sin velocidad angular constante no hay periodo', () => {
 });
 
 // Ejercicio 14: x = sen(wt), y = cos(wt) + 1, con w = 2 pi. Es un circulo de radio 1
-// centrado en (0, 1), recorrido en sentido horario desde el punto mas alto.
-const ej14 = () => crearCircular({ R: 1, omega0: 2 * Math.PI, centro: [0, 1] });
+// centrado en (0, 1), recorrido en sentido horario desde el punto mas alto: theta0 = pi/2
+// y omega0 negativa, porque cos(pi/2 - wt) = sen(wt) y sen(pi/2 - wt) = cos(wt).
+const ej14 = () => crearCircular({ R: 1, omega0: -2 * Math.PI, theta0: Math.PI / 2, centro: [0, 1] });
 
 test('ejercicio 14: la rapidez es 2 pi y no cambia', () => {
   const c = ej14();
@@ -107,4 +108,16 @@ test('ejercicio 12: la aceleracion centripeta de la Tierra es 6.0e-3 m/s^2', () 
   const R = 150e9, v = 30e3;
   const c = crearCircular({ R, omega0: v / R });
   cerca(c.aN(0), 6.0e-3, 1e-5);
+});
+
+test('sin velocidad angular ni aceleracion angular no hay periodo (no divide por cero)', () => {
+  const c = crearCircular({ R: 1, omega0: 0 });
+  assert.equal(c.periodo, null);
+  assert.equal(c.frecuencia, null);
+});
+
+test('vueltasEn no depende de theta0: rota la fase, no la cuenta de vueltas', () => {
+  const conFase = crearCircular({ R: 1, omega0: 2 * Math.PI, theta0: 1.7 });
+  const sinFase = crearCircular({ R: 1, omega0: 2 * Math.PI, theta0: 0 });
+  for (const t of [0, 0.37, 2, 5.5]) cerca(conFase.vueltasEn(t), sinFase.vueltasEn(t));
 });
