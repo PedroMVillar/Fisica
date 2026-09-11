@@ -87,3 +87,16 @@ test('suavizar conserva la cantidad de puntos y los tiempos', () => {
   assert.equal(s.length, m.length);
   for (const [i, [t]] of s.entries()) cerca(t, m[i][0], 1e-12);
 });
+
+test('suavizar no mueve una recta aunque la ventana pida mas puntos de los que hay (n=3, ventana=7)', () => {
+  const recta = t => 3 + 2 * t;
+  const m = [0, 1, 2].map(t => [t, recta(t)]);
+  const s = suavizar(m, 7);
+  for (const [i, [, y]] of s.entries()) cerca(y, m[i][1], 1e-9);
+});
+
+test('suavizar no revienta ni se cuelga con un solo punto', () => {
+  const s = suavizar([[0, 5]]);
+  assert.equal(s.length, 1);
+  cerca(s[0][1], 5, 1e-9);
+});

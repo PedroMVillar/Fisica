@@ -43,13 +43,17 @@ export function derivarMuestras(puntos) {
 export function suavizar(puntos, ventana = 5) {
   // Promedio movil con ventana simetrica tambien en los bordes: en vez de recortar
   // la ventana contra el borde (lo que sesga el promedio y curva una recta), se
-  // extiende la serie por reflexion impar alrededor del punto extremo. Esa
-  // extension es la unica que deja una recta exactamente igual tras suavizar.
+  // extiende la serie por reflexion impar alrededor del punto extremo. El pliegue
+  // es recursivo (no se acota al primer rebote) porque con pocos puntos frente al
+  // radio pedido un solo rebote no alcanza a volver al rango valido: hay que seguir
+  // reflejando hasta caer dentro. Con el pliegue recursivo la extension es exacta
+  // para una recta sea cual sea la relacion entre el radio de ventana y n.
   const n = puntos.length;
   const r = Math.floor(ventana / 2);
   const valor = i => {
-    if (i < 0) return 2 * puntos[0][1] - puntos[Math.min(-i, n - 1)][1];
-    if (i >= n) return 2 * puntos[n - 1][1] - puntos[Math.max(2 * (n - 1) - i, 0)][1];
+    if (n === 1) return puntos[0][1];
+    if (i < 0) return 2 * puntos[0][1] - valor(-i);
+    if (i > n - 1) return 2 * puntos[n - 1][1] - valor(2 * (n - 1) - i);
     return puntos[i][1];
   };
   return puntos.map(([t], i) => {
