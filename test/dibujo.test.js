@@ -1,27 +1,18 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { crearLienzo } from '../docs/motor/lienzo.js';
-import { vector, cuerpo, traza, eje } from '../docs/motor/dibujo.js';
+import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva } from '../docs/motor/dibujo.js';
 
 function ctxFalso() {
   const ops = [];
-  const c = { ops, strokeStyle: '', fillStyle: '', lineWidth: 0 };
-  for (const m of ['beginPath','moveTo','lineTo','stroke','fill','arc','closePath','save','restore','translate','rotate']) {
+  const c = { ops, strokeStyle: '', fillStyle: '', lineWidth: 0, font: '', textAlign: '' };
+  for (const m of ['beginPath','moveTo','lineTo','stroke','fill','arc','closePath','save','restore','translate','rotate','setLineDash','fillText']) {
     c[m] = (...a) => ops.push([m, ...a]);
   }
   return c;
 }
 
 const L = crearLienzo({ ancho: 800, alto: 400, xMin: 0, xMax: 100, yMin: 0, yMax: 50 });
-
-test('vector traza una linea del origen al destino en pixeles', () => {
-  const c = ctxFalso();
-  vector(c, L, [0, 0], [50, 0], { color: '#1b4fd4' });
-  const move = c.ops.find(o => o[0] === 'moveTo');
-  const line = c.ops.find(o => o[0] === 'lineTo');
-  assert.deepEqual(move.slice(1), [0, 400]);
-  assert.deepEqual(line.slice(1), [400, 400]);
-});
 
 test('vector usa el color que se le pasa', () => {
   const c = ctxFalso();
@@ -33,14 +24,6 @@ test('vector de largo nulo no dibuja nada', () => {
   const c = ctxFalso();
   vector(c, L, [5, 5], [5, 5], { color: '#1b4fd4' });
   assert.equal(c.ops.length, 0);
-});
-
-test('vector ignora rotulo sin cambiar lo que dibuja (rotulo aun no implementado)', () => {
-  const sinRotulo = ctxFalso();
-  vector(sinRotulo, L, [0, 0], [50, 0], { color: '#1b4fd4' });
-  const conRotulo = ctxFalso();
-  vector(conRotulo, L, [0, 0], [50, 0], { color: '#1b4fd4', rotulo: 'v' });
-  assert.deepEqual(conRotulo.ops, sinRotulo.ops);
 });
 
 test('cuerpo dibuja un arco cerrado en la posicion', () => {
@@ -99,4 +82,114 @@ test('cuerpo deja el arco como trazado actual: no cierra ni reabre el path despu
   const c = ctxFalso();
   cuerpo(c, L, [50, 25], { radio: 4, color: '#f2f0ea' });
   assert.deepEqual(c.ops.map(o => o[0]), ['beginPath', 'arc', 'fill']);
+});
+
+test('vectorPx no dibuja nada si el largo es menor a un pixel', () => {
+  const c = ctxFalso();
+  vectorPx(c, 10, 10, 10.4, 10, { color: '#000' });
+  assert.deepEqual(c.ops, []);
+});
+
+test('vectorPx frena el asta antes de la punta, no la corre hasta el extremo', () => {
+  const c = ctxFalso();
+  vectorPx(c, 0, 0, 100, 0, { color: '#000', punta: 10 });
+  const linea = c.ops.find(o => o[0] === 'lineTo');
+  // 100 - cos(0) * 10 * 0.85
+  assert.ok(Math.abs(linea[1] - 91.5) < 1e-9, `asta hasta ${linea[1]}`);
+});
+
+test('vectorPx acota la punta a la mitad del largo', () => {
+  const c = ctxFalso();
+  vectorPx(c, 0, 0, 6, 0, { color: '#000', punta: 20 });
+  const linea = c.ops.find(o => o[0] === 'lineTo');
+  // hd = min(20, 6 * 0.5) = 3  ->  6 - 3 * 0.85
+  assert.ok(Math.abs(linea[1] - 3.45) < 1e-9, `asta hasta ${linea[1]}`);
+});
+
+test('vectorPx pinta la cabeza con fill y la deja cerrada', () => {
+  const c = ctxFalso();
+  vectorPx(c, 0, 0, 50, 0, { color: '#000' });
+  const nombres = c.ops.map(o => o[0]);
+  assert.ok(nombres.includes('closePath'));
+  assert.ok(nombres.includes('fill'));
+});
+
+test('vectorPx aplica los guiones al asta y los limpia despues', () => {
+  const c = ctxFalso();
+  vectorPx(c, 0, 0, 50, 0, { color: '#000', guiones: [4, 4] });
+  const dashes = c.ops.filter(o => o[0] === 'setLineDash').map(o => o[1]);
+  assert.deepEqual(dashes[0], [4, 4]);
+  assert.deepEqual(dashes.at(-1), []);
+});
+
+test('vectorPx dibuja el rotulo cuando se lo pide, y no cuando no', () => {
+  const con = ctxFalso();
+  vectorPx(con, 0, 0, 50, 0, { color: '#000', rotulo: 'v' });
+  const sin = ctxFalso();
+  vectorPx(sin, 0, 0, 50, 0, { color: '#000' });
+  const textos = con.ops.filter(o => o[0] === 'fillText');
+  assert.equal(textos.length, 1);
+  assert.equal(textos[0][1], 'v');
+  assert.equal(sin.ops.filter(o => o[0] === 'fillText').length, 0);
+});
+
+test('vector convierte coordenadas fisicas y delega en vectorPx', () => {
+  const l = crearLienzo({ ancho: 100, alto: 100, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const enFisicas = ctxFalso();
+  vector(enFisicas, l, [0, 0], [5, 0], { color: '#000' });
+  const enPixeles = ctxFalso();
+  vectorPx(enPixeles, l.px(0), l.py(0), l.px(5), l.py(0), { color: '#000' });
+  assert.deepEqual(enFisicas.ops, enPixeles.ops);
+});
+
+test('punteado traza con guiones y los limpia', () => {
+  const c = ctxFalso();
+  punteado(c, 0, 0, 10, 10, { color: '#000' });
+  const dashes = c.ops.filter(o => o[0] === 'setLineDash').map(o => o[1]);
+  assert.deepEqual(dashes[0], [2, 4]);
+  assert.deepEqual(dashes.at(-1), []);
+});
+
+test('texto escribe en mono y respeta la alineacion', () => {
+  const c = ctxFalso();
+  texto(c, 'hola', 5, 7, { color: '#000', alineacion: 'right' });
+  const t = c.ops.find(o => o[0] === 'fillText');
+  assert.deepEqual([t[1], t[2], t[3]], ['hola', 5, 7]);
+  assert.equal(c.textAlign, 'right');
+  assert.ok(/JetBrains Mono/.test(c.font));
+});
+
+test('curva muestrea la funcion y traza n+1 puntos', () => {
+  const l = crearLienzo({ ancho: 100, alto: 100, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  curva(c, l, t => [t, t], 0, 10, { color: '#000', n: 4 });
+  assert.equal(c.ops.filter(o => o[0] === 'moveTo').length, 1);
+  assert.equal(c.ops.filter(o => o[0] === 'lineTo').length, 4);
+});
+
+test('curva arranca en t0 y termina en t1', () => {
+  const l = crearLienzo({ ancho: 100, alto: 100, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  curva(c, l, t => [t, 0], 2, 8, { color: '#000', n: 6 });
+  assert.equal(c.ops.find(o => o[0] === 'moveTo')[1], l.px(2));
+  assert.equal(c.ops.filter(o => o[0] === 'lineTo').at(-1)[1], l.px(8));
+});
+
+test('eje sin etiquetas dibuja solo los dos ejes, como antes', () => {
+  const l = crearLienzo({ ancho: 100, alto: 100, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000' });
+  assert.equal(c.ops.filter(o => o[0] === 'fillText').length, 0);
+});
+
+test('eje con etiquetas escribe las marcas y los dos rotulos', () => {
+  const l = crearLienzo({ ancho: 300, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 5 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666', etiquetaX: 'x [m]', etiquetaY: 'y [m]' });
+  const textos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
+  assert.ok(textos.includes('x [m]'));
+  assert.ok(textos.includes('y [m]'));
+  // paso de 2 en x (10 / 5) y de 1 en y (5 / 5), sin escribir el cero
+  assert.ok(textos.includes('2') && textos.includes('4'));
+  assert.ok(!textos.includes('0'));
 });
