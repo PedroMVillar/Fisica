@@ -129,8 +129,7 @@ try {
 
 <script type="module">
 import { crearPagina } from '../motor/pagina.js';
-import { crearWidget } from '../motor/widget.js';
-import { crearLienzo } from '../motor/lienzo.js';
+import { crearWidget, panelesApilados } from '../motor/widget.js';
 import { eje, curva, cuerpo, punteado, texto, traza, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
 import { deslizador, boton } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
@@ -307,26 +306,9 @@ function widgetPaneles(pagina) {
   // cursor tiene que usar EXACTAMENTE el mismo mapeo horizontal que ellos. El lienzo
   // que devuelve crearWidget no sirve para eso: cuando el alto choca contra el tope de
   // 430 px, su xMax deja de ser T1 y el cursor quedaria corrido respecto de las curvas.
-  const lienzosPanel = l => {
-    const alturaPanel = (l.py(0) - l.py(3)) / 3;
-    const arriba = l.py(3);
-    return PANELES.map((panel, i) => {
-      const tope = arriba + i * alturaPanel;
-      return {
-        panel,
-        arriba,
-        alturaPanel,
-        lp: crearLienzo({
-          ancho: l.ancho, alto: l.alto,
-          margen: {
-            L: MARGEN.L, R: MARGEN.R,
-            T: tope + HUECO_ROTULO, B: l.alto - tope - alturaPanel + 10,
-          },
-          xMin: T0, xMax: T1, yMin: panel.yMin, yMax: panel.yMax,
-        }),
-      };
-    });
-  };
+  const lienzosPanel = l => panelesApilados({
+    lienzo: l, margen: { L: MARGEN.L, R: MARGEN.R }, hueco: HUECO_ROTULO, paneles: PANELES,
+  });
 
   function pintar(ctx, l) {
     const p = pagina.paleta();
@@ -352,8 +334,8 @@ function widgetPaneles(pagina) {
     // El cursor compartido: una sola linea vertical que cruza los tres paneles. Es
     // literalmente el argumento del widget dibujado, y por eso su x sale del lienzo de
     // un panel y no del lienzo del widget.
-    const { lp: primero, arriba, alturaPanel } = capas[0];
-    punteado(ctx, primero.px(cursor), arriba, primero.px(cursor), arriba + 3 * alturaPanel,
+    const { lp: primero, techo, alturaPanel } = capas[0];
+    punteado(ctx, primero.px(cursor), techo, primero.px(cursor), techo + 3 * alturaPanel,
       { color: p.blueSoft, guiones: [3, 4] });
 
     leer('w2-t', cursor.toFixed(2) + ' s');
@@ -418,26 +400,9 @@ function widgetDibujar(pagina) {
   // Igual que en el widget 2: los lienzos se arman aparte porque el trazado a mano
   // tiene que escribir en el mismo sistema en que se dibuja el panel de arriba, y el
   // lienzo del widget no lo garantiza.
-  const lienzosPanel = l => {
-    const alturaPanel = (l.py(0) - l.py(3)) / 3;
-    const arriba = l.py(3);
-    return RANGOS.map((r, i) => {
-      const tope = arriba + i * alturaPanel;
-      return {
-        rango: r,
-        arriba,
-        alturaPanel,
-        lp: crearLienzo({
-          ancho: l.ancho, alto: l.alto,
-          margen: {
-            L: MARGEN.L, R: MARGEN.R,
-            T: tope + HUECO_ROTULO, B: l.alto - tope - alturaPanel + 10,
-          },
-          xMin: T0, xMax: T1, yMin: r.yMin, yMax: r.yMax,
-        }),
-      };
-    });
-  };
+  const lienzosPanel = l => panelesApilados({
+    lienzo: l, margen: { L: MARGEN.L, R: MARGEN.R }, hueco: HUECO_ROTULO, paneles: RANGOS,
+  });
 
   function pintar(ctx, l) {
     const p = pagina.paleta();
@@ -454,12 +419,12 @@ function widgetDibujar(pagina) {
     ];
 
     const capas = lienzosPanel(l);
-    capas.forEach(({ rango, lp }, i) => {
+    capas.forEach(({ panel, lp }, i) => {
       // El eje de tiempo se rotula una sola vez, en el panel de abajo: los tres lo
       // comparten, y repetirlo tres veces lo deja flotando en mitad de los graficos.
       const esElDeAbajo = i === capas.length - 1;
       eje(ctx, lp, {
-        color: p.rule, colorTexto: p.dim, etiquetaY: rango.etiqueta,
+        color: p.rule, colorTexto: p.dim, etiquetaY: panel.etiqueta,
         marcasX: esElDeAbajo,
         ...(esElDeAbajo ? { etiquetaX: 't [s]' } : {}),
       });
@@ -482,8 +447,8 @@ function widgetDibujar(pagina) {
     });
 
     if (!hayTrazo) {
-      const { lp, arriba, alturaPanel } = capas[0];
-      texto(ctx, 'dibujá acá arriba con el mouse', lp.px((T0 + T1) / 2), arriba + alturaPanel / 2,
+      const { lp, techo, alturaPanel } = capas[0];
+      texto(ctx, 'dibujá acá arriba con el mouse', lp.px((T0 + T1) / 2), techo + alturaPanel / 2,
         { color: p.dim, px: 12, peso: 400, alineacion: 'center' });
     }
   }
