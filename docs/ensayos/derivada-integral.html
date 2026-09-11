@@ -463,7 +463,22 @@ function widgetDibujar(pagina) {
         marcasX: esElDeAbajo,
         ...(esElDeAbajo ? { etiquetaX: 't [s]' } : {}),
       });
+      // Un trazo a mano muy brusco puede derivar a un valor fuera del rango del
+      // panel (por ejemplo una aceleracion que supera los +-30 m/s2 del encuadre), y
+      // sin recorte esa traza se dibuja encima del panel vecino: recortar es
+      // responsabilidad de quien define la caja (este widget), no de `traza()`, que
+      // no recorta por contrato y tiene otros llamadores que no quieren ese recorte.
+      // El recorte NO envuelve a `eje()`: su rotulo de eje Y cuelga a proposito por
+      // encima de esta caja de margenes, en el hueco que HUECO_ROTULO le dejo mas
+      // arriba (la correccion de la tarea 12); recortar tambien el eje se comeria
+      // ese rotulo. El save/restore envuelve solo el dibujo de la traza de este
+      // panel, como pide el contrato de estado de dibujo.js.
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(lp.margen.L, lp.margen.T, lp.ancho - lp.margen.L - lp.margen.R, lp.alto - lp.margen.T - lp.margen.B);
+      ctx.clip();
       traza(ctx, lp, series[i].pts, { color: series[i].color, grosor: 1.8 });
+      ctx.restore();
     });
 
     if (!hayTrazo) {
