@@ -71,6 +71,44 @@ try {
 <div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Que <i>v</i> quede siempre sobre <i>θ̂</i> no es un detalle del dibujo: es la definición misma de movimiento circular. La partícula se mueve sobre una circunferencia, así que en cada instante lo único que puede cambiar es su ángulo, nunca su distancia al centro — y la dirección que acompaña ese cambio de ángulo es, por construcción, <i>θ̂</i>. Por eso la posición y la velocidad son perpendiculares en todo momento, sea cual sea <i>ω</i>: es el inciso (d) del ejercicio 11, y no depende de que el movimiento sea uniforme. La aceleración, ya vas a ver, no tiene esa suerte.</p>
 
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · Los dos trabajos de la aceleración</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">La aceleración de un movimiento circular general hace dos trabajos que conviene no mezclar. La componente que apunta hacia el centro —la normal, o centrípeta— no cambia la rapidez de la partícula: sólo tuerce la dirección de <i>v</i> lo justo para mantenerla sobre la circunferencia. La componente que va en la dirección del movimiento —la tangencial— es la única capaz de acelerar o frenar a la partícula, y no mueve un grado la dirección de nada. Mirá la flecha roja de abajo: con <i>γ</i> = 0 apunta exactamente al centro, porque no hay tangencial. Apenas <i>γ</i> deja de ser cero, esa misma flecha se inclina hacia adelante.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">aₜ y aₙ</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— subí γ apenas y mirá el ángulo de abajo dejar de ser 90°.</span>
+    </div>
+    <canvas id="w2-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w2-play" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper);background:var(--blue);border:none;border-radius:2px;padding:9px 16px;cursor:pointer">Reproducir</button>
+        <button id="w2-reset" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Reiniciar</button>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">velocidad angular ω <output id="w2-omega-out" style="color:var(--ink);font-variant-numeric:tabular-nums">2.0 rad/s</output></span>
+        <input id="w2-omega" type="range" min="0" max="6" step="0.1" value="2" style="width:100%">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--red)">aceleración angular γ <output id="w2-gamma-out" style="font-variant-numeric:tabular-nums">0.0 rad/s²</output></span>
+        <input id="w2-gamma" type="range" min="0" max="4" step="0.1" value="0" style="width:100%;accent-color:var(--red)">
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>rapidez <b id="w2-rap" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">3.00 m/s</b></span>
+      <span>aₜ <b id="w2-at" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.00 m/s²</b></span>
+      <span>aₙ <b id="w2-an" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">6.00 m/s²</b></span>
+      <span>ángulo <b id="w2-ang" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">90.0°</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con <i>γ</i> = 0 el ángulo entre <i>v</i> y <i>a</i> marca 90° exactos en todo el recorrido, y la rapidez que leés arriba no se mueve un milímetro: es el movimiento circular uniforme, y es la única situación donde velocidad y aceleración son perpendiculares. Subí <i>γ</i> a 4 sobre este mismo radio de 1.5 m y la tangencial queda fija en 6 m/s² —no depende de <i>ω</i>, sólo de <i>γ</i> y de <i>R</i>— mientras la normal crece con el cuadrado de la velocidad angular: en <i>t</i> = 5 s ya vale 600 m/s² contra esos mismos 6, así que la aceleración total es prácticamente toda normal, 600.03 m/s², y la flecha roja apunta casi exacto al centro. Que la normal domine no quiere decir que la tangencial haya desaparecido: quiere decir que la rapidez cambia despacio comparada con lo rápido que cambia la dirección.</p>
+
   <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">04 · Qué miden el período y la frecuencia</h2>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">El período <i>T</i> y la frecuencia <i>f</i> no son dos ideas: son la misma idea contada al revés. <i>T</i> contesta «¿cuánto tarda una vuelta?» y se mide en segundos; <i>f</i> contesta «¿cuántas vueltas entran en un segundo?» y se mide en hertz. Una es la inversa de la otra, <i>f</i> = 1/<i>T</i>, y el ejercicio 11 las pide por nombre en su inciso (c). Abajo hay dos partículas girando a distinta velocidad angular: contá cuántas veces pasa cada una por su punto de partida mientras la otra todavía no completó una vuelta.</p>
 </div>
@@ -230,6 +268,121 @@ function widgetVersores(pagina) {
   pulso();
 }
 
+/* ---------- widget 2: at y an ---------- */
+
+function widgetAceleraciones(pagina) {
+  const R = 1.5;
+  let omega0 = 2, gamma = 0;
+  const movil = () => crearCircular({ R, omega0, gamma });
+
+  const canvas = el('w2-cv');
+  const widget = crearWidget({
+    pagina, canvas,
+    margen: { L: 40, R: 130, T: 30, B: 30 },
+    // Encuadre cuadrado, escala uniforme: mismo motivo que el widget 1. El margen
+    // derecho es mas ancho que el de ese widget porque aca hay que dejarle aire a los
+    // rotulos de aₙ, aₜ y a, que caen bien afuera del circulo cuando la normal crece.
+    centrar: true,
+    encuadre: () => ({ xMin: -2.4, xMax: 2.4, yMin: -2.4, yMax: 2.4 }),
+    dibujar: (ctx, l) => pintar(ctx, l, escena.t),
+  });
+
+  let enReposo = true;
+  const rotular = () => rotuloReproducir(el('w2-play'), escena, enReposo);
+
+  const escena = crearEscena({
+    dibujar: () => widget.repintar(),
+    // 5 s, no 3: es el instante que pide la verificacion del ejercicio 13 (R=1.5,
+    // omega0=0, gamma=4 -> aT=6, aN=600 en t=5s), asi que la ventana tiene que
+    // llegar hasta ahi.
+    duracion: 5,
+    velocidad: 0.6,
+    alCambiar: rotular,
+  });
+
+  function pintar(ctx, l, t) {
+    const p = pagina.paleta();
+    const c = movil();
+    const [px, py] = l.p(c.pos(t));
+    const [ox, oy] = l.p([0, 0]);
+
+    eje(ctx, l, { color: p.rule });
+    curva(ctx, l, s => [R * Math.cos(s), R * Math.sin(s)], 0, 2 * Math.PI,
+      { color: p.graph, guiones: [3, 5], grosor: 1.2 });
+
+    const [vx, vy] = c.vel(t);
+    const kv = 22;
+    vectorPx(ctx, px, py, px + vx * kv, py - vy * kv,
+      { color: p.blue, grosor: 2.2, punta: 10, rotulo: 'v' });
+
+    // Las dos componentes primero, en tenue, y la total encima: asi se ve que la total
+    // es la suma de las dos y no una tercera flecha independiente.
+    const ka = 6;
+    const [rx, ry] = c.versorR(t);
+    const [tx, ty] = c.versorTheta(t);
+    const aN = c.aN(t), aT = c.aT(t);
+    ctx.globalAlpha = 0.45;
+    vectorPx(ctx, px, py, px - rx * aN * ka, py + ry * aN * ka,
+      { color: p.red, grosor: 1.4, punta: 7, rotulo: 'aₙ', rdy: 12 });
+    vectorPx(ctx, px, py, px + tx * aT * ka, py - ty * aT * ka,
+      { color: p.red, grosor: 1.4, punta: 7, rotulo: 'aₜ', rdy: -12 });
+    ctx.globalAlpha = 1;
+    const [ax, ay] = c.aTotalVector(t);
+    vectorPx(ctx, px, py, px + ax * ka, py - ay * ka,
+      { color: p.red, grosor: 2.4, punta: 11, rotulo: 'a' });
+
+    punteado(ctx, ox, oy, px, py, { color: p.rule });
+    cuerpo(ctx, l, c.pos(t), { radio: 5.5, color: p.ink });
+
+    // El angulo entre v y a: 90 grados exactos mientras gamma sea cero, y es la
+    // lectura que contesta el inciso (e) del ejercicio 11.
+    const cosAng = (vx * ax + vy * ay) / (Math.hypot(vx, vy) * Math.hypot(ax, ay) || 1);
+    const grados = Math.acos(Math.min(1, Math.max(-1, cosAng))) * 180 / Math.PI;
+
+    leer('w2-rap', c.rapidez(t).toFixed(2) + ' m/s');
+    leer('w2-at', aT.toFixed(2) + ' m/s²');
+    leer('w2-an', aN.toFixed(2) + ' m/s²');
+    leer('w2-ang', grados.toFixed(1) + '°');
+  }
+
+  deslizador({
+    entrada: el('w2-omega'), salida: el('w2-omega-out'), pagina,
+    formato: v => v.toFixed(1) + ' rad/s',
+    alCambiar: v => { omega0 = v; widget.repintar(); },
+  });
+  deslizador({
+    entrada: el('w2-gamma'), salida: el('w2-gamma-out'), pagina,
+    formato: v => v.toFixed(1) + ' rad/s²',
+    alCambiar: v => { gamma = v; widget.repintar(); },
+  });
+  boton({
+    elemento: el('w2-play'), pagina,
+    alApretar: () => {
+      if (escena.estado === 'reproduciendo') {
+        escena.pausar();
+      } else {
+        if (enReposo || escena.t >= escena.duracion - 1e-6) {
+          enReposo = false;
+          escena.reiniciar();
+        }
+        escena.reproducir();
+      }
+      rotular();
+    },
+  });
+  boton({
+    elemento: el('w2-reset'),
+    alApretar: () => { enReposo = true; escena.reiniciar(); rotular(); },
+  });
+
+  rotular();
+  const pulso = () => {
+    el('w2-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
+  };
+  pagina.alTocar(pulso);
+  pulso();
+}
+
 /* ---------- widget 4: período y frecuencia ---------- */
 
 function widgetPeriodo(pagina) {
@@ -383,6 +536,7 @@ function tema(pagina) {
 
 const pagina = crearPagina({ documento: document });
 widgetVersores(pagina);
+widgetAceleraciones(pagina);
 widgetPeriodo(pagina);
 tema(pagina);
 pagina.observar();
