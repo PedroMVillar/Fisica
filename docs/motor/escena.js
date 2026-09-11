@@ -26,9 +26,11 @@ const ahoraDelReloj = () =>
     ? performance.now()
     : null;
 
-export function crearEscena({ dibujar, duracion, alCambiar = () => {} }) {
+export function crearEscena({ dibujar, duracion, velocidad = 1, alCambiar = () => {} }) {
   let t = 0;
   let estado = 'reposo';
+  let dur = duracion;
+  let vel = velocidad;
   let idAnimacion = null;
   let tAnterior = null;
 
@@ -69,6 +71,17 @@ export function crearEscena({ dibujar, duracion, alCambiar = () => {} }) {
   const api = {
     get t() { return t; },
     get estado() { return estado; },
+    get duracion() { return dur; },
+    set duracion(v) {
+      dur = v;
+      if (t > dur) { t = dur; dibujar(t); }
+    },
+    get velocidad() { return vel; },
+    set velocidad(v) { vel = v; },
+    ir(nuevo) {
+      t = Math.min(dur, Math.max(0, nuevo));
+      dibujar(t);
+    },
     reproducir() {
       if (estado === 'reproduciendo') return;
       pasarA('reproduciendo');
@@ -103,8 +116,8 @@ export function crearEscena({ dibujar, duracion, alCambiar = () => {} }) {
     },
     avanzar(dt) {
       if (estado !== 'reproduciendo') return;
-      t = Math.min(t + dt, duracion);
-      if (t >= duracion) {
+      t = Math.min(t + dt * vel, dur);
+      if (t >= dur) {
         detenerLoop();
         pasarA('pausado');
       }

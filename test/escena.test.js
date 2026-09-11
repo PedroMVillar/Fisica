@@ -206,3 +206,75 @@ test('el loop topea el salto de un frame en 0.05 s (pestaña en segundo plano)',
     stub.restaurar();
   }
 });
+
+test('velocidad escala lo que avanza el reloj', () => {
+  const e = crearEscena({ dibujar() {}, duracion: 10, velocidad: 0.5 });
+  e.reproducir();
+  e.avanzar(2);
+  assert.equal(e.t, 1);
+});
+
+test('velocidad por defecto es 1 y no cambia el comportamiento viejo', () => {
+  const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.reproducir();
+  e.avanzar(2);
+  assert.equal(e.t, 2);
+});
+
+test('la velocidad no le pasa por encima al guard: en reposo el reloj no se mueve', () => {
+  const e = crearEscena({ dibujar() {}, duracion: 10, velocidad: 4 });
+  e.avanzar(2);
+  assert.equal(e.t, 0);
+});
+
+test('cambiar velocidad a mitad de camino no mueve el reloj, solo su ritmo', () => {
+  const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.reproducir();
+  e.avanzar(2);
+  e.velocidad = 0.25;
+  assert.equal(e.t, 2);
+  e.avanzar(2);
+  assert.equal(e.t, 2.5);
+});
+
+test('duracion es escribible y recorta el reloj si se acorta', () => {
+  const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.reproducir();
+  e.avanzar(8);
+  e.duracion = 3;
+  assert.equal(e.duracion, 3);
+  assert.equal(e.t, 3);
+});
+
+test('alargar la duracion no mueve el reloj', () => {
+  const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.reproducir();
+  e.avanzar(4);
+  e.duracion = 20;
+  assert.equal(e.t, 4);
+});
+
+test('ir(t) salta a un instante y repinta sin cambiar el estado', () => {
+  let pintados = 0;
+  const e = crearEscena({ dibujar() { pintados++; }, duracion: 10 });
+  const antes = pintados;
+  e.ir(6.5);
+  assert.equal(e.t, 6.5);
+  assert.equal(e.estado, 'reposo');
+  assert.equal(pintados, antes + 1);
+});
+
+test('ir(t) acota a [0, duracion]', () => {
+  const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.ir(-5);
+  assert.equal(e.t, 0);
+  e.ir(999);
+  assert.equal(e.t, 10);
+});
+
+test('ir(t) recibe el instante que dibujar tiene que pintar', () => {
+  const vistos = [];
+  const e = crearEscena({ dibujar(t) { vistos.push(t); }, duracion: 10 });
+  e.ir(3);
+  assert.equal(vistos.at(-1), 3);
+});
