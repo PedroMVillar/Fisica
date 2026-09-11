@@ -3023,7 +3023,12 @@ function widgetPeriodo(pagina) {
 
   const escena = crearEscena({
     dibujar: () => widget.repintar(),
-    duracion: 2,                 // dos segundos: una vuelta de A y dos de B
+    // La ventana es el periodo del movil lento, recalculada cuando cambia un slider:
+    // asi A da exactamente una vuelta siempre, con cualquier velocidad angular, y B da
+    // las que diga la relacion entre las dos. Con una ventana fija de dos segundos la
+    // cuenta se rompe —A daria dos vueltas, no una— y con velocidades bajas no se veria
+    // ni una vuelta entera.
+    duracion: movilA().periodo,
     velocidad: 0.5,
     alCambiar: () => rotuloReproducir(document.getElementById('w4-play'), escena, enReposo),
   });
