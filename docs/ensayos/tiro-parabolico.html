@@ -86,353 +86,215 @@ try {
 </div>
 
 <script type="module">
-import { crearLienzo } from '../motor/lienzo.js';
-import { eje, traza, cuerpo } from '../motor/dibujo.js';
-import { crearTiro } from '../fisica/tiro.js';
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
+import { eje, curva, cuerpo, vectorPx, punteado, texto } from '../motor/dibujo.js';
+import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
+import { crearTiro } from '../fisica/tiro.js';
 
-// El diseño reproduce a 0.75 (su prop `velocidadReproduccion`). La escena no
-// tiene control de velocidad, así que su reloj cuenta segundos de pantalla y el
-// tiempo físico es 0.75 de ese reloj; por eso la duración es tVuelo / 0.75.
-const VELOCIDAD = 0.75;
-// Fracción del vuelo en la que el widget queda quieto al cargar (`rest()` del diseño).
-const FRACCION_REPOSO = 0.35;
-// Márgenes en píxeles del recuadro del widget 1 (`view(..., {L,R,T,B})` del diseño).
-const MARGEN = { L: 62, R: 24, T: 38, B: 42 };
-
-const cv = document.getElementById('w1-cv');
-const ctx = cv.getContext('2d');
 const el = id => document.getElementById(id);
-const set = (id, v) => { const e = el(id); if (e) e.textContent = v; };
-const leer = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
-let paleta = null;
-const pal = () => paleta || (paleta = {
-  paper: leer('--paper'), band: leer('--band'), ink: leer('--ink'), dim: leer('--dim'),
-  rule: leer('--rule'), blue: leer('--blue'), blueSoft: leer('--blue-soft'),
-  red: leer('--red'), graph: leer('--graph'),
-});
+/* ---------- widget 1: las dos sombras ---------- */
 
-let tiro = crearTiro({ v0: 24, alfaGrados: 50 });
-let huellas = el('w1-stamps').checked;
-let enReposo = true;
+function widgetSombras(pagina) {
+  // Fracción del vuelo en la que el widget queda quieto al cargar (`rest()` del diseño).
+  const FRACCION_REPOSO = 0.35;
+  // Márgenes en píxeles del recuadro del widget 1 (`view(..., {L,R,T,B})` del diseño).
+  const MARGEN = { L: 62, R: 24, T: 38, B: 42 };
+  // El diseño reproduce a 0.75 (su prop `velocidadReproduccion`). La escena lleva esa
+  // velocidad adentro, así que su reloj ya cuenta segundos físicos y `dibujar` no
+  // convierte nada.
+  const VELOCIDAD = 0.75;
 
-const tReposo = () => FRACCION_REPOSO * tiro.tVuelo;
-const duracionReloj = () => tiro.tVuelo / VELOCIDAD;
+  const set = (id, v) => { const e = el(id); if (e) e.textContent = v; };
 
-/* ---------- primitivas que el diseño dibuja a mano ---------- */
+  let tiro = crearTiro({ v0: 24, alfaGrados: 50 });
+  let huellas = el('w1-stamps').checked;
+  let enReposo = true;
+  let escena = null;
 
-const mono = (px, peso) => {
-  ctx.font = (peso || 400) + ' ' + px + 'px "JetBrains Mono", ui-monospace, monospace';
-};
-
-// Paso de la grilla: 1, 2 o 5 por década, apuntando a unas cinco marcas.
-function pasoGrilla(rango) {
-  const crudo = rango / 5;
-  const p = Math.pow(10, Math.floor(Math.log10(crudo)));
-  const n = crudo / p;
-  return (n >= 5 ? 5 : n >= 2 ? 2 : 1) * p;
-}
-
-function medir(xTope, yTope) {
-  const ancho = cv.getBoundingClientRect().width ||
-    (cv.parentElement ? cv.parentElement.getBoundingClientRect().width : 0);
-  if (!ancho) return null;
-  const util = ancho - MARGEN.L - MARGEN.R;
-  const alto = Math.round(Math.max(215, Math.min(430, MARGEN.T + MARGEN.B + util * (yTope / xTope))));
-  cv.style.aspectRatio = 'auto';
-  cv.style.height = alto + 'px';
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
-  cv.width = Math.round(ancho * dpr);
-  cv.height = Math.round(alto * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, ancho, alto);
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
-  const sc = Math.min(util / xTope, (alto - MARGEN.T - MARGEN.B) / yTope);
-  // Un solo lienzo cubre el canvas entero con escala uniforme (kx = ky = sc):
-  // los márgenes quedan fuera del primer cuadrante, así px(0) = L y py(0) = alto - B.
-  const l = crearLienzo({
-    ancho, alto,
-    xMin: -MARGEN.L / sc, xMax: (ancho - MARGEN.L) / sc,
-    yMin: -MARGEN.B / sc, yMax: (alto - MARGEN.B) / sc,
+  const encuadre = () => ({
+    xMax: Math.max(tiro.alcance, 2) * 1.08,
+    yMax: Math.max(tiro.yMax, 1) * 1.28,
   });
-  return { l, sc, xTope, yTope };
-}
 
-function ejes(v, rotuloX, rotuloY) {
-  const { l, sc, xTope, yTope } = v, p = pal();
-  // `eje` traza de (xMin,0) a (xMax,0) y de (0,yMin) a (0,yMax). Para obtener
-  // exactamente los dos segmentos del diseño —de 0 a xTope y de 0 a yTope— se le
-  // pasa un lienzo acotado a ese rectángulo y se lleva el contexto a su esquina.
-  const lEje = crearLienzo({
-    ancho: xTope * sc, alto: yTope * sc,
-    xMin: 0, xMax: xTope, yMin: 0, yMax: yTope,
+  // Punto hueco: `cuerpo` deja el arco como trazado actual, así que el stroke
+  // siguiente contornea ese mismo círculo (relleno --band, borde de color).
+  function punto(ctx, l, centro, radio, color, { hueco = false, band } = {}) {
+    if (!hueco) return cuerpo(ctx, l, centro, { radio, color });
+    cuerpo(ctx, l, centro, { radio, color: band });
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+  }
+
+  function pintar(ctx, l, pagina) {
+    const p = pagina.paleta();
+    // Quieto, el widget muestra el instante representativo; andando, el reloj de
+    // la escena, que ya está en segundos físicos.
+    const t = enReposo ? FRACCION_REPOSO * tiro.tVuelo : escena.t;
+    const { xMax: xTope, yMax: yTope } = encuadre();
+    const k = l.escala.x * 0.42;
+
+    // `crearWidget` estira el lienzo hasta llenar el área útil: en el eje que no
+    // manda, l.xMax/l.yMax quedan un poco más allá del encuadre pedido (acá, con
+    // v₀ = 24 y α = 50°, 62.596 m contra 62.513 m: 1.05 px de más). El diseño
+    // traza los ejes hasta el encuadre (su `axes()` usa v.xmax/v.ymax), así que
+    // `eje` recibe el mismo lienzo recortado a esos topes: mismo px/py, sólo
+    // otro rango. El día que widget.js deje de estirar el encuadre, esta línea
+    // se borra y queda `eje(ctx, l, ...)`.
+    const lEje = { ...l, xMax: xTope, yMax: yTope };
+    eje(ctx, lEje, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', etiquetaY: 'y [m]' });
+    curva(ctx, l, tiro.pos, 0, tiro.tVuelo, { color: p.graph, grosor: 1.2, guiones: [3, 5] });
+    curva(ctx, l, tiro.pos, 0, t, { color: p.graph, grosor: 1.8 });
+
+    // Las huellas: una cada 0.2 s sobre cada eje. Las de abajo quedan equiespaciadas;
+    // las de la izquierda se juntan cerca del vértice. Eso es todo el widget.
+    if (huellas) {
+      const n = Math.max(1, Math.round(tiro.tVuelo / 0.2));
+      for (let i = 0; i <= n; i++) {
+        const s = (i * tiro.tVuelo) / n;
+        if (s > t + 1e-9) break;
+        const [qx, qy] = tiro.pos(s);
+        ctx.strokeStyle = p.blue; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.75;
+        ctx.beginPath();
+        ctx.moveTo(l.px(qx), l.py(0) - 4); ctx.lineTo(l.px(qx), l.py(0) + 4); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(l.px(0) - 4, l.py(qy)); ctx.lineTo(l.px(0) + 4, l.py(qy)); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    const [cx, cy] = tiro.pos(t);
+    const X = l.px(cx), Y = l.py(cy);
+    punteado(ctx, X, Y, X, l.py(0), { color: p.blueSoft });
+    punteado(ctx, X, Y, l.px(0), Y, { color: p.blueSoft });
+    punto(ctx, l, [cx, 0], 4.5, p.blue, { hueco: true, band: p.band });
+    punto(ctx, l, [0, cy], 4.5, p.blue, { hueco: true, band: p.band });
+
+    const vy = tiro.vel(t)[1];
+    vectorPx(ctx, X, Y, X + tiro.v0x * k, Y, { color: p.blue, grosor: 1.6, punta: 7 });
+    vectorPx(ctx, X, Y, X, Y - vy * k, { color: p.blue, grosor: 1.6, punta: 7 });
+    vectorPx(ctx, X, Y, X, Y + 24, { color: p.red, grosor: 1.6, punta: 7 });
+    texto(ctx, 'vₓ', X + (tiro.v0x * k) / 2, Y - 10, { color: p.blue, alineacion: 'center' });
+    texto(ctx, 'v_y', X - 9, Y - (vy * k) / 2 + 4, { color: p.blue, alineacion: 'right' });
+    texto(ctx, 'g', X - 8, Y + 22, { color: p.red, alineacion: 'right' });
+    punto(ctx, l, [cx, cy], 5.5, p.ink);
+
+    texto(ctx, 'paso constante', l.px(xTope * 0.5), l.py(0) + 31,
+      { color: p.dim, px: 10, peso: 400, alineacion: 'center' });
+    ctx.save();
+    ctx.translate(16, l.py(yTope * 0.5));
+    ctx.rotate(-Math.PI / 2);
+    texto(ctx, 'frena y vuelve', 0, 0, { color: p.dim, px: 10, peso: 400, alineacion: 'center' });
+    ctx.restore();
+
+    set('w1-t', t.toFixed(2) + ' s');
+    set('w1-x', cx.toFixed(1) + ' m');
+    set('w1-y', Math.max(0, cy).toFixed(1) + ' m');
+    set('w1-vx', tiro.v0x.toFixed(1) + ' m/s');
+    set('w1-vy', vy.toFixed(1) + ' m/s');
+  }
+
+  const widget = crearWidget({
+    pagina, canvas: el('w1-cv'), margen: MARGEN, encuadre, dibujar: pintar,
   });
-  ctx.save();
-  ctx.translate(l.px(0), l.py(yTope));
-  eje(ctx, lEje, { color: p.rule });
-  ctx.restore();
-  ctx.lineWidth = 1;
 
-  ctx.fillStyle = p.dim; mono(10);
-  const sx = pasoGrilla(xTope);
-  for (let x = 0; x <= xTope + 1e-6; x += sx) {
-    ctx.strokeStyle = p.rule;
-    ctx.beginPath(); ctx.moveTo(l.px(x), l.py(0)); ctx.lineTo(l.px(x), l.py(0) + 4); ctx.stroke();
-    if (Math.abs(x) > 1e-9) {
-      ctx.textAlign = 'center';
-      ctx.fillText(String(Math.round(x * 10) / 10), l.px(x), l.py(0) + 16);
-    }
-  }
-  const sy = pasoGrilla(yTope);
-  for (let y = sy; y <= yTope + 1e-6; y += sy) {
-    ctx.strokeStyle = p.rule;
-    ctx.beginPath(); ctx.moveTo(l.px(0), l.py(y)); ctx.lineTo(l.px(0) - 4, l.py(y)); ctx.stroke();
-    ctx.textAlign = 'right';
-    ctx.fillText(String(Math.round(y * 10) / 10), l.px(0) - 8, l.py(y) + 3.5);
-  }
-  ctx.textAlign = 'right'; mono(10, 500);
-  ctx.fillText(rotuloX, l.px(xTope), l.py(0) + 28);
-  ctx.textAlign = 'left';
-  ctx.fillText(rotuloY, l.px(0) - 34, l.py(yTope) - 15);
-}
+  const rotular = () => rotuloReproducir(el('w1-play'), escena, enReposo);
 
-// Flecha en píxeles. `vector` (motor/dibujo.js) no sirve todavía para este
-// widget, por dos clases de razones.
-//
-// De interfaz: el diseño necesita coordenadas en píxeles, no extremos físicos
-// —la flecha de g mide 24 px fijos y v_y mide vy·sc·0.42, ninguna de las dos
-// es un punto del espacio del problema—, más las opciones `head`, `dash`,
-// `width` y el rótulo (`label`/`ldx`/`ldy`/`lAlign`) que `vector` no tiene.
-//
-// De corrección, y esto es lo que el plan 2 tiene que arreglar en `vector`:
-// (a) corre el asta hasta la punta en vez de frenarla en 0.85·hd, así que el
-// triángulo queda montado sobre la línea; y (b) corta en `largo < 1e-9` en vez
-// del `len < 1` del diseño, de modo que en el ápice, donde v_y → 0, dibujaría
-// una punta de 9 px colgando de un asta de menos de un píxel — justo el
-// artefacto que el diseño suprime. (El tamaño de punta no es una diferencia:
-// el default de `arrow` en el diseño también es 9; el 7 sale de las opciones
-// con que `drawW1` lo llama.)
-function flecha(x1, y1, x2, y2, color, { grosor = 2, punta = 9, guiones = [] } = {}) {
-  const dx = x2 - x1, dy = y2 - y1, largo = Math.hypot(dx, dy);
-  if (largo < 1) return;
-  const hd = Math.min(punta, largo * 0.5), a = Math.atan2(dy, dx);
-  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = grosor;
-  ctx.setLineDash(guiones);
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2 - Math.cos(a) * hd * 0.85, y2 - Math.sin(a) * hd * 0.85);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.beginPath();
-  ctx.moveTo(x2, y2);
-  ctx.lineTo(x2 - Math.cos(a - 0.42) * hd, y2 - Math.sin(a - 0.42) * hd);
-  ctx.lineTo(x2 - Math.cos(a + 0.42) * hd, y2 - Math.sin(a + 0.42) * hd);
-  ctx.closePath(); ctx.fill();
-}
+  escena = crearEscena({
+    dibujar: () => widget.repintar(),
+    duracion: tiro.tVuelo,
+    velocidad: VELOCIDAD,
+    alCambiar: rotular,
+  });
 
-function punteado(x1, y1, x2, y2, color) {
-  ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
-  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-  ctx.setLineDash([]);
-}
-
-function punto(l, centro, radio, color, hueco) {
-  if (!hueco) return cuerpo(ctx, l, centro, { radio, color });
-  // `cuerpo` deja el arco como trazado actual: el stroke siguiente contornea ese
-  // mismo círculo, que es el punto hueco del diseño (relleno --band, borde de color).
-  cuerpo(ctx, l, centro, { radio, color: pal().band });
-  ctx.strokeStyle = color; ctx.lineWidth = 1.6; ctx.stroke();
-}
-
-function camino(l, f, t0, t1, color, { grosor = 1.6, guiones = [] } = {}) {
-  const n = 140, puntos = [];
-  for (let i = 0; i <= n; i++) puntos.push(f(t0 + ((t1 - t0) * i) / n));
-  ctx.setLineDash(guiones);
-  traza(ctx, l, puntos, { color, grosor });
-  ctx.setLineDash([]);
-}
-
-/* ---------- widget 1 ---------- */
-
-function pintar(t) {
-  const p = pal();
-  const v = medir(Math.max(tiro.alcance, 2) * 1.08, Math.max(tiro.yMax, 1) * 1.28);
-  if (!v) return;
-  const l = v.l;
-  ejes(v, 'x [m]', 'y [m]');
-  camino(l, tiro.pos, 0, tiro.tVuelo, p.graph, { grosor: 1.2, guiones: [3, 5] });
-  camino(l, tiro.pos, 0, t, p.graph, { grosor: 1.8 });
-
-  // Las huellas: una cada 0.2 s sobre cada eje. Las de abajo quedan equiespaciadas;
-  // las de la izquierda se juntan cerca del vértice. Eso es todo el widget.
-  if (huellas) {
-    const n = Math.max(1, Math.round(tiro.tVuelo / 0.2));
-    for (let i = 0; i <= n; i++) {
-      const s = (i * tiro.tVuelo) / n;
-      if (s > t + 1e-9) break;
-      const [qx, qy] = tiro.pos(s);
-      ctx.strokeStyle = p.blue; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.75;
-      ctx.beginPath();
-      ctx.moveTo(l.px(qx), l.py(0) - 4); ctx.lineTo(l.px(qx), l.py(0) + 4); ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(l.px(0) - 4, l.py(qy)); ctx.lineTo(l.px(0) + 4, l.py(qy)); ctx.stroke();
-      ctx.globalAlpha = 1;
-    }
-  }
-
-  const [cx, cy] = tiro.pos(t);
-  const X = l.px(cx), Y = l.py(cy);
-  punteado(X, Y, X, l.py(0), p.blueSoft);
-  punteado(X, Y, l.px(0), Y, p.blueSoft);
-  punto(l, [cx, 0], 4.5, p.blue, true);
-  punto(l, [0, cy], 4.5, p.blue, true);
-
-  const vy = tiro.vel(t)[1], k = v.sc * 0.42;
-  flecha(X, Y, X + tiro.v0x * k, Y, p.blue, { grosor: 1.6, punta: 7 });
-  flecha(X, Y, X, Y - vy * k, p.blue, { grosor: 1.6, punta: 7 });
-  flecha(X, Y, X, Y + 24, p.red, { grosor: 1.6, punta: 7 });
-  mono(11, 500); ctx.fillStyle = p.blue;
-  ctx.textAlign = 'center'; ctx.fillText('vₓ', X + (tiro.v0x * k) / 2, Y - 10);
-  ctx.textAlign = 'right'; ctx.fillText('v_y', X - 9, Y - (vy * k) / 2 + 4);
-  ctx.fillStyle = p.red; ctx.textAlign = 'right'; ctx.fillText('g', X - 8, Y + 22);
-  punto(l, [cx, cy], 5.5, p.ink);
-
-  ctx.fillStyle = p.dim; mono(10);
-  ctx.textAlign = 'center';
-  ctx.fillText('paso constante', l.px(v.xTope * 0.5), l.py(0) + 31);
-  ctx.save();
-  ctx.translate(16, l.py(v.yTope * 0.5));
-  ctx.rotate(-Math.PI / 2);
-  ctx.textAlign = 'center';
-  ctx.fillText('frena y vuelve', 0, 0);
-  ctx.restore();
-
-  set('w1-t', t.toFixed(2) + ' s');
-  set('w1-x', cx.toFixed(1) + ' m');
-  set('w1-y', Math.max(0, cy).toFixed(1) + ' m');
-  set('w1-vx', tiro.v0x.toFixed(1) + ' m/s');
-  set('w1-vy', vy.toFixed(1) + ' m/s');
-}
-
-/* ---------- escena y controles ---------- */
-
-// Quieto, el widget muestra el instante representativo; andando, el reloj de la
-// escena llevado a tiempo físico.
-const dibujar = tReloj => pintar(enReposo ? tReposo() : tReloj * VELOCIDAD);
-
-function rotularBoton() {
-  el('w1-play').textContent = escena.estado === 'reproduciendo'
-    ? 'Pausar'
-    : (!enReposo && escena.t > 0 ? 'Seguir' : 'Reproducir');
-}
-
-let escena = crearEscena({ dibujar, duracion: duracionReloj(), alCambiar: rotularBoton });
-
-const repintar = () => dibujar(escena.t);
-
-// La duración de la escena se fija al crearla, así que un cambio de v₀ o de α
-// obliga a rehacerla. Si venía andando o pausada, se la devuelve al mismo
-// instante para no perder el vuelo en curso, como hace el diseño. El reloj no
-// se reinicia al rehacerla: `reproducir()` fija su origen en el instante de la
-// llamada (ver motor/escena.js), así que arrastrar el slider —que dispara
-// `input` más seguido que los frames— no congela el tiempo.
-function rehacerEscena() {
-  const tReloj = escena.t;
-  const estadoPrevio = escena.estado;
-  if (estadoPrevio === 'reproduciendo') escena.pausar();
-  escena = crearEscena({ dibujar, duracion: duracionReloj(), alCambiar: rotularBoton });
-  if (estadoPrevio === 'reposo') {
-    escena.reiniciar();
-  } else {
-    escena.reproducir();
-    escena.avanzar(tReloj);
-    if (estadoPrevio === 'pausado') escena.pausar();
-  }
-  rotularBoton();
-}
-
-function primerContacto() {
-  el('w1-play').style.animation = '';
-}
-
-el('w1-play').onclick = () => {
-  primerContacto();
-  if (escena.estado === 'reproduciendo') {
-    escena.pausar();
-  } else {
-    if (enReposo || escena.t >= duracionReloj() - 1e-6) {
-      enReposo = false;
-      escena.reiniciar();
-    }
-    escena.reproducir();
-  }
-  rotularBoton();
-};
-
-el('w1-reset').onclick = () => {
-  enReposo = true;
-  escena.reiniciar();
-  rotularBoton();
-};
-
-for (const [id, salida, fmt] of [
-  ['w1-v0', 'w1-v0-out', v => v.toFixed(1) + ' m/s'],
-  ['w1-ang', 'w1-ang-out', v => Math.round(v) + '°'],
-]) {
-  el(id).oninput = () => {
-    set(salida, fmt(parseFloat(el(id).value)));
-    primerContacto();
+  // Cambiar v₀ o α sólo mueve la duración: la escena ya no se rehace, así que
+  // arrastrar un slider no puede congelar el reloj.
+  function recalcular() {
     tiro = crearTiro({
       v0: parseFloat(el('w1-v0').value),
       alfaGrados: parseFloat(el('w1-ang').value),
     });
-    rehacerEscena();
+    escena.duracion = tiro.tVuelo;
+    escena.ir(enReposo ? FRACCION_REPOSO * tiro.tVuelo : escena.t);
+    rotular();
+  }
+
+  deslizador({
+    entrada: el('w1-v0'), salida: el('w1-v0-out'), pagina,
+    formato: v => v.toFixed(1) + ' m/s', alCambiar: recalcular,
+  });
+  deslizador({
+    entrada: el('w1-ang'), salida: el('w1-ang-out'), pagina,
+    formato: v => Math.round(v) + '°', alCambiar: recalcular,
+  });
+  casilla({
+    entrada: el('w1-stamps'), pagina,
+    alCambiar: v => { huellas = v; widget.repintar(); },
+  });
+  boton({
+    elemento: el('w1-play'), pagina,
+    alApretar: () => {
+      if (escena.estado === 'reproduciendo') {
+        escena.pausar();
+      } else {
+        if (enReposo || escena.t >= escena.duracion - 1e-6) {
+          enReposo = false;
+          escena.reiniciar();
+        }
+        escena.reproducir();
+      }
+      rotular();
+    },
+  });
+  boton({
+    elemento: el('w1-reset'), pagina,
+    alApretar: () => { enReposo = true; escena.reiniciar(); rotular(); },
+  });
+
+  // Arranca quieto, en un estado representativo, y el botón late hasta el primer toque.
+  escena.reiniciar();
+  rotular();
+  const pulso = () => {
+    el('w1-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
   };
+  pagina.alTocar(pulso);
+  pulso();
 }
 
-el('w1-stamps').onchange = () => {
-  huellas = el('w1-stamps').checked;
-  primerContacto();
-  repintar();
-};
+/* ---------- tema ---------- */
 
-/* ---------- tema y barra de progreso ---------- */
-
-function sincronizarTema() {
-  el('tp-theme').textContent =
-    document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
+function tema(pagina) {
+  const sincronizar = () => {
+    el('tp-theme').textContent =
+      document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
+  };
+  el('tp-theme').onclick = () => {
+    const oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (oscuro) document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', 'dark');
+    // Si el almacenamiento está bloqueado, la preferencia no se recuerda, pero
+    // el tema de esta visita tiene que cambiar igual: sin el try/catch la
+    // excepción cortaba acá y el canvas se quedaba con la paleta vieja.
+    try { localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark'); } catch (e) {}
+    pagina.olvidarPaleta();
+    sincronizar();
+    pagina.repintarTodo();
+  };
+  // El tema ya quedó aplicado por el script del <head>; acá sólo se rotula.
+  sincronizar();
 }
 
-el('tp-theme').onclick = () => {
-  const oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
-  if (oscuro) document.documentElement.removeAttribute('data-theme');
-  else document.documentElement.setAttribute('data-theme', 'dark');
-  // Si el almacenamiento está bloqueado, la preferencia no se recuerda, pero
-  // el tema de esta visita tiene que cambiar igual: sin el try/catch la
-  // excepción cortaba acá y el canvas se quedaba con la paleta vieja.
-  try { localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark'); } catch (e) {}
-  paleta = null;
-  sincronizarTema();
-  repintar();
-};
+/* ---------- arranque ---------- */
 
-// El tema ya quedó aplicado por el script del <head>; acá sólo se rotula.
-sincronizarTema();
-
-window.onscroll = () => {
-  const barra = el('tp-prog');
-  const max = document.documentElement.scrollHeight - window.innerHeight;
-  barra.style.width = (max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0) + '%';
-};
-
-new ResizeObserver(() => repintar()).observe(cv.parentElement);
-
-// Arranca quieto, en un estado representativo, y el botón late hasta el primer toque.
-escena.reiniciar();
-rotularBoton();
-el('w1-play').style.animation = 'tp-pulse 2.4s ease-in-out infinite';
+const pagina = crearPagina({ documento: document });
+widgetSombras(pagina);
+tema(pagina);
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
 </script>
 </body>
 </html>
