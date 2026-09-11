@@ -2073,8 +2073,11 @@ git commit -m "feat(plataforma): calculo numerico, contrastado con el practico 1
 - Referencia de sistema: `docs/plataforma/diseno/Tiro parabolico.dc.html`
 
 **Interfaces:**
-- Consume: `crearPagina`, `crearWidget`, `crearLienzo`, `deslizador`, `casilla`, `boton`,
-  `eje`, `curva`, `cuerpo`, `punteado`, `texto`, `vectorPx`, `derivar`.
+- Consume: `crearPagina`, `crearWidget`, `deslizador`, `eje`, `curva`, `cuerpo`,
+  `punteado`, `texto`. El widget es estático y no dibuja vectores, así que no usa
+  `crearEscena`, `boton`, `casilla` ni `vectorPx`; y la velocidad instantánea en P no
+  sale de `derivar` sino del número que imprime `verificacion-practico-1.py`, porque la
+  restricción global es que el valor **sea** el del script y no una aproximación.
 - Produce: el archivo del ensayo con `widgetSecante(pagina)`.
 
 - [ ] **Paso 1: armar el esqueleto del ensayo**
@@ -3507,30 +3510,51 @@ enlaces reales a los tres ensayos.
 **Si el diseño todavía no llegó**, esta tarea se limita a los pasos 2 a 5 y la portada
 queda como está. No se inventa una portada nueva para adelantarse.
 
-- [ ] **Paso 2: enlazar los tres ensayos entre sí**
+- [ ] **Paso 2: que la portada enlace los tres ensayos**
+
+Esto va **aunque el diseño de la portada no haya llegado** y el paso 1 se haya salteado.
+Hoy `docs/index.html` lista los seis ensayos pero sólo el de tiro tiene enlace; los otros
+dos existen y no se puede llegar a ellos desde ningún lado. Los que siguen sin existir
+quedan como están, sin enlace y en `--dim`.
+
+- [ ] **Paso 3: sacar `tema()` de los ensayos a un módulo**
+
+Los tres ensayos repiten el mismo bloque de veinte líneas —leer el tema, alternarlo,
+persistirlo, rotular el botón y repintar—, copiado carácter a carácter. Con tres copias
+ya conviene, y el brief del proyecto tiene seis ensayos: mudalo a `docs/motor/tema.js`
+como `conectarTema({ pagina, boton, documento })` y dejá en cada ensayo la llamada.
+
+El script bloqueante del `<head>` **no** se muda: tiene que seguir corriendo antes del
+primer pintado y no puede depender de un módulo diferido.
+
+Verificá que los tres ensayos queden con el bitmap de sus canvas idéntico antes y después
+—hash de `toDataURL()`, con el caché de Chrome desactivado y un control negativo—, y que
+el tema siga persistiendo entre páginas.
+
+- [ ] **Paso 4: enlazar los tres ensayos entre sí**
 
 Al pie de cada ensayo, antes de la línea de fuentes, una fila con el anterior y el
 siguiente en el orden de lectura —1 → 2 → 3—, con la tipografía mono de interfaz y en
 `--dim`, y un enlace a la portada. El primero no lleva anterior y el tercero no lleva
 siguiente.
 
-- [ ] **Paso 3: actualizar el README**
+- [ ] **Paso 5: actualizar el README**
 
 La viñeta de la plataforma que ya existe en "Material de repaso" pasa a nombrar los tres
 ensayos que hay. Una línea, sobria: el dueño ya avisó que no hace falta explicar todo en
 el README.
 
-- [ ] **Paso 4: recorrer las cuatro páginas**
+- [ ] **Paso 6: recorrer las cuatro páginas**
 
 Portada, tres ensayos, doce widgets. Comprobar: ningún enlace roto; el tema elegido
 sobrevive a navegar entre las cuatro; ningún widget se anima solo; y a 400 px de ancho
 ninguna página desborda en horizontal.
 
-- [ ] **Paso 5: correr la suite y commitear**
+- [ ] **Paso 7: correr la suite y commitear**
 
 ```bash
 node --test "test/**/*.test.js"
-git add docs/index.html docs/ensayos README.md
+git add docs/index.html docs/ensayos docs/motor/tema.js README.md
 git commit -m "feat(plataforma): portada y navegacion entre los ensayos de la guia 1"
 ```
 
