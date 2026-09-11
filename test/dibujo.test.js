@@ -211,3 +211,32 @@ test('eje con yMin negativo rotula marcas negativas y positivas, y no el cero', 
   assert.ok(textos.includes('2') && textos.includes('10'));
   assert.ok(!textos.includes('0'));
 });
+
+test('eje cuelga la etiqueta del eje x del piso del encuadre, no del cero', () => {
+  // Con yMin negativo, py(0) cae en el medio del grafico: si la etiqueta se colgara de
+  // ahi, se superpondria con la curva y con los numeros de las marcas. Tiene que
+  // quedar debajo de py(yMin), en el margen inferior.
+  const l = crearLienzo({
+    ancho: 300, alto: 200, xMin: 0, xMax: 10, yMin: -10, yMax: 10,
+    margen: { L: 30, R: 10, T: 10, B: 20 },
+  });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666', etiquetaX: 'x [m]', etiquetaY: 'y [m]' });
+  const rotulo = c.ops.find(o => o[0] === 'fillText' && o[1] === 'x [m]');
+  assert.ok(rotulo, 'no se escribio la etiqueta del eje x');
+  assert.equal(rotulo[3], l.py(l.yMin) + 28);
+  assert.ok(rotulo[3] > l.py(0), 'la etiqueta quedo colgada del cero y no del piso');
+});
+
+test('eje con yMin = 0 deja la etiqueta del eje x donde estaba', () => {
+  // El ensayo de tiro parabolico encuadra siempre desde yMin = 0: su etiqueta no se
+  // puede mover ni un pixel.
+  const l = crearLienzo({
+    ancho: 300, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10,
+    margen: { L: 30, R: 10, T: 10, B: 20 },
+  });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666', etiquetaX: 'x [m]' });
+  const rotulo = c.ops.find(o => o[0] === 'fillText' && o[1] === 'x [m]');
+  assert.equal(rotulo[3], l.py(0) + 28);
+});

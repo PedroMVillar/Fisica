@@ -194,7 +194,13 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY } = {}) {
       { color: colorTexto, px: 10, peso: 400, alineacion: 'right' });
   }
   if (etiquetaX) {
-    texto(ctx, etiquetaX, l.px(l.xMax), l.py(0) + 28,
+    // La etiqueta cuelga del PISO del encuadre, no del eje. En el diseno los dos
+    // coinciden porque ahi todo encuadre arranca en yMin = 0 y debajo del eje solo hay
+    // margen. Con un encuadre que baja de cero -- una x(t) que vale -3 en t = 0, por
+    // ejemplo -- "debajo del eje" cae en el medio del grafico, y la etiqueta termina
+    // encima de la curva y de los numeros de las marcas. Con yMin = 0 la posicion es
+    // exactamente la misma de antes.
+    texto(ctx, etiquetaX, l.px(l.xMax), l.py(l.yMin) + 28,
       { color: colorTexto, px: 10, alineacion: 'right' });
   }
   if (etiquetaY) {
