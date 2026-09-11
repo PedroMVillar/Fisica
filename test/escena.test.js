@@ -193,7 +193,10 @@ test('el loop topea el salto de un frame en 0.05 s (pestaña en segundo plano)',
     e.reproducir();
     const [, paso] = [...stub.callbacksPorId.entries()][0];
 
-    paso(0);            // primer frame: fija el origen del reloj, dt = 0
+    // El origen del reloj ya lo fijó reproducir(), así que este timestamp
+    // sintético queda muy por detrás y da un dt negativo: el piso Math.max(0, …)
+    // lo lleva a cero. El tope de 0.05 s se afirma en el frame siguiente.
+    paso(0);
     assert.equal(e.t, 0);
 
     paso(10_000);       // vuelta de un segundo plano de 10 s sin frames

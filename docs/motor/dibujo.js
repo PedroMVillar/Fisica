@@ -16,8 +16,14 @@
 // 3. Nada acá toca `setLineDash`, `globalAlpha`, `font` ni las transformadas:
 //    lo que el llamador deje puesto es lo que se usa.
 //
-// Las dos reglas de arriba están fijadas por pruebas en test/dibujo.test.js;
-// si se cambian, esas pruebas se caen, que es la idea.
+// De las tres reglas, la 2 está fijada por prueba en test/dibujo.test.js, que
+// afirma que `cuerpo` emite exactamente ['beginPath', 'arc', 'fill'] — o sea
+// que también fija la regla 1, pero sólo para `cuerpo`. Nadie afirma hoy la
+// ausencia de save()/restore() en `vector`, `traza` ni `eje`, y la regla 3 se
+// sostiene nada más que porque el contexto falso de las pruebas no tiene
+// setLineDash ni font, así que una llamada reventaría la suite por accidente.
+// Si alguna de esas reglas pasa a ser load-bearing para un widget nuevo,
+// escribile su prueba antes de apoyarte en ella.
 //
 // `color` es obligatorio en todas las primitivas y no tiene valor por defecto.
 // Un default sería una cuarta copia de la paleta —que vive en
