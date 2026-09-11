@@ -109,6 +109,51 @@ try {
 <div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con <i>γ</i> = 0 el ángulo entre <i>v</i> y <i>a</i> marca 90° exactos en todo el recorrido, y la rapidez que leés arriba no se mueve un milímetro: es el movimiento circular uniforme, y es la única situación donde velocidad y aceleración son perpendiculares. Subí <i>γ</i> a 4 sobre este mismo radio de 1.5 m y la tangencial queda fija en 6 m/s² —no depende de <i>ω</i>, sólo de <i>γ</i> y de <i>R</i>— mientras la normal crece con el cuadrado de la velocidad angular: en <i>t</i> = 5 s ya vale 600 m/s² contra esos mismos 6, así que la aceleración total es prácticamente toda normal, 600.03 m/s², y la flecha roja apunta casi exacto al centro. Que la normal domine no quiere decir que la tangencial haya desaparecido: quiere decir que la rapidez cambia despacio comparada con lo rápido que cambia la dirección.</p>
 
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · De las ecuaciones al círculo</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Un movimiento circular no siempre viene anunciado. A veces llega como dos ecuaciones sueltas, una para <i>x</i>(<i>t</i>) y otra para <i>y</i>(<i>t</i>), sin ningún <i>R</i> ni ningún <i>ω</i> a la vista, y hay que reconocer la circunferencia escondida ahí adentro. Es exactamente lo que pide el ejercicio 14: <i>x</i>(<i>t</i>) = sen(<i>ωt</i>), <i>y</i>(<i>t</i>) = cos(<i>ωt</i>) + 1, con <i>ω</i> = 2π rad/s. Escribí las dos expresiones en los campos de abajo —ya están cargadas con ese par— y mirá qué trayectoria dibujan.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 3</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">De las ecuaciones al círculo</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— cambiá un 2 por un 3 y fijate si sigue siendo una circunferencia.</span>
+    </div>
+    <canvas id="w3-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="w3-ej14" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Ej. 14</button>
+        <button id="w3-elipse" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Elipse</button>
+        <button id="w3-recta" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Recta</button>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">x(t)</span>
+        <input id="w3-x" type="text" value="sen(2 * pi * t)" spellcheck="false" style="box-sizing:border-box;width:100%;font:400 13px/1.3 'JetBrains Mono',monospace;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:8px 10px">
+        <span id="w3-x-err" style="display:block;min-height:14px;font:400 11px/1.3 'JetBrains Mono',monospace;color:var(--red)"></span>
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">y(t)</span>
+        <input id="w3-y" type="text" value="cos(2 * pi * t) + 1" spellcheck="false" style="box-sizing:border-box;width:100%;font:400 13px/1.3 'JetBrains Mono',monospace;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:8px 10px">
+        <span id="w3-y-err" style="display:block;min-height:14px;font:400 11px/1.3 'JetBrains Mono',monospace;color:var(--red)"></span>
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">t <output id="w3-t-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0.00</output></span>
+        <input id="w3-t" type="range" min="0" max="1" step="0.01" value="0" style="width:100%">
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>t <b id="w3-t-val" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00</b></span>
+      <span>x(t) <b id="w3-x-val" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00 m</b></span>
+      <span>y(t) <b id="w3-y-val" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">2.00 m</b></span>
+      <span>distancia al centro <b id="w3-dist" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.00 m</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">El par del ejercicio 14 arranca en (0, 2) —arriba del centro (0, 1), no al costado— y gira en sentido horario: apenas <i>t</i> crece, <i>x</i> se hace positiva mientras <i>y</i> todavía baja, así que el cuerpo se mueve hacia la derecha y hacia abajo, el sentido de las agujas del reloj. La lectura que lo prueba es la cuarta: la distancia al centro que mejor ajusta la curva se queda clavada en 1.00 m para cualquier <i>t</i> que muevas, porque el candidato a centro es siempre el mismo punto (0, 1) y todo punto de la curva está a esa misma distancia. Probá <code>Elipse</code> y esa lectura empieza a moverse; probá <code>Recta</code> y ni siquiera hay un círculo que ajustarle a una línea. Es la misma idea del ejercicio: frente a un par de ecuaciones paramétricas, la prueba de que hay una circunferencia no es que «se vea redondo», es que esa distancia no dependa de <i>t</i>.</p>
+
   <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">04 · Qué miden el período y la frecuencia</h2>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">El período <i>T</i> y la frecuencia <i>f</i> no son dos ideas: son la misma idea contada al revés. <i>T</i> contesta «¿cuánto tarda una vuelta?» y se mide en segundos; <i>f</i> contesta «¿cuántas vueltas entran en un segundo?» y se mide en hertz. Una es la inversa de la otra, <i>f</i> = 1/<i>T</i>, y el ejercicio 11 las pide por nombre en su inciso (c). Abajo hay dos partículas girando a distinta velocidad angular: contá cuántas veces pasa cada una por su punto de partida mientras la otra todavía no completó una vuelta.</p>
 </div>
@@ -146,6 +191,15 @@ try {
 
 <div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La ventana de tiempo dura lo mismo que un período de la partícula más lenta —la que tenga menor velocidad angular, sea azul o roja— así que ésa completa siempre exactamente una vuelta, no importa cuánto muevas los sliders. La otra completa las que le tocan según la relación entre las dos velocidades. Con los valores por defecto la lenta es la azul: su ω vale 2π rad/s, así que su período es exactamente 1 s y su frecuencia 1 Hz —el mismo valor que arroja el ejercicio 14— y la roja, al doble de velocidad angular, da dos vueltas por cada una de la azul. Si invertís los sliders y la azul pasa a ser la rápida, los papeles se cambian solos: la ventana se acomoda a la roja, que vuelve a cerrar su única vuelta. Ninguna de las dos lecturas depende de qué tan grande sea la circunferencia: <i>T</i> y <i>f</i> son propiedades de ω, no del radio.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para resolver 11 a 14</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>Separá siempre «cuánto» de «hacia dónde»: la rapidez la cambia sólo <i>a</i><sub>t</sub>.</li>
+    <li>En el uniforme, <i>a</i><sub>t</sub> = 0 y toda la aceleración apunta al centro. No es que no haya aceleración: es que no cambia la rapidez.</li>
+    <li><i>v</i> = <i>ω</i><i>R</i> y <i>a</i><sub>n</sub> = <i>ω</i>²<i>R</i> = <i>v</i>²/<i>R</i>. Si en el enunciado hay rpm, pasalas a rad/s antes de tocar nada.</li>
+    <li>Frente a dos ecuaciones paramétricas, calculá la distancia al centro candidato. Si no depende de <i>t</i>, es una circunferencia.</li>
+    <li><i>T</i> = 2π/<i>ω</i> y <i>f</i> = 1/<i>T</i>. Son la misma información dicha de dos maneras.</li>
+  </ol>
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 2, pp. 25–47 · <a href="../../parcial-1/preparacion/resumen-movimiento-circular.pdf">hoja resumen</a> · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 11 a 14</a></p>
 </div>
@@ -155,6 +209,7 @@ import { crearPagina } from '../motor/pagina.js';
 import { crearWidget } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
 import { crearCircular } from '../fisica/circular.js';
+import { compilar } from '../fisica/expresion.js';
 import { eje, curva, cuerpo, punteado, vectorPx } from '../motor/dibujo.js';
 import { deslizador, boton, rotuloReproducir } from '../motor/controles.js';
 
@@ -460,6 +515,147 @@ function widgetAceleraciones(pagina) {
   pulso();
 }
 
+/* ---------- widget 3: de las ecuaciones al circulo ---------- */
+
+// Cuantos puntos se muestrean entre t=0 y t=1 para dibujar la curva y para ajustarle
+// un circulo. 61 alcanza de sobra para que la curva se vea lisa y el ajuste, que
+// promedia sobre todos los puntos, sea estable.
+const N_MUESTRAS = 61;
+
+// Ajuste de circulo por minimos cuadrados (metodo algebraico de Kasa): busca el
+// centro (a, b) que minimiza la suma de (dist(punto, centro) - R)^2 para algun R, sin
+// fijar R de antemano. Se plantea como un sistema lineal en (a, b, c = R^2-a^2-b^2):
+// cada punto (x, y) aporta la ecuacion 2ax + 2by + c = x^2+y^2, y se resuelve el
+// sistema normal 3x3 por Cramer. Con puntos EXACTAMENTE colineales (la "Recta") la
+// matriz sale singular -dos filas iguales, porque x e y son la misma muestra- y no
+// hay ningun circulo finito que ajuste una linea recta: se devuelve null, y quien
+// llama lo interpreta como "esta trayectoria no tiene círculo que ajustarle", que es
+// la respuesta correcta, no un defecto del ajuste.
+function ajustarCirculo(fx, fy, n = N_MUESTRAS) {
+  let sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0, sxz = 0, syz = 0, sz = 0;
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1);
+    const x = fx(t), y = fy(t);
+    const z = x * x + y * y;
+    sx += x; sy += y; sxx += x * x; syy += y * y; sxy += x * y;
+    sxz += x * z; syz += y * z; sz += z;
+  }
+  const A = [
+    [4 * sxx, 4 * sxy, 2 * sx],
+    [4 * sxy, 4 * syy, 2 * sy],
+    [2 * sx, 2 * sy, n],
+  ];
+  const b = [2 * sxz, 2 * syz, sz];
+  const det = m => m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
+                  - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
+                  + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+  const D = det(A);
+  if (!Number.isFinite(D) || Math.abs(D) < 1e-9) return null;
+  const conColumna = (m, col, v) => m.map((fila, i) => fila.map((x, j) => (j === col ? v[i] : x)));
+  const a = det(conColumna(A, 0, b)) / D;
+  const bb = det(conColumna(A, 1, b)) / D;
+  return [a, bb];
+}
+
+function widgetEcuaciones(pagina) {
+  const elX = el('w3-x'), elY = el('w3-y'), elT = el('w3-t');
+  const errX = el('w3-x-err'), errY = el('w3-y-err');
+
+  // La ultima trayectoria valida: se actualiza SOLO cuando las dos expresiones
+  // compilan a la vez. Un tipeo a mitad de camino en cualquiera de los dos campos
+  // dispara un mensaje de error en ese campo (en --red) pero el par (fx, fy) que se
+  // dibuja sigue siendo el ultimo que compilo entero: el canvas nunca se queda en
+  // blanco por una expresion a medio escribir.
+  let fx = null, fy = null;
+
+  const canvas = el('w3-cv');
+  const widget = crearWidget({
+    pagina, canvas,
+    margen: { L: 40, R: 40, T: 30, B: 30 },
+    // Encuadre fijo, no ajustado a cada trayectoria: reescalar cada vez que el lector
+    // tipea deformaria la lectura visual de "es circulo o no" (un circulo reescalado
+    // para llenar el canvas se ve tan redondo como una elipse reescalada para llenar
+    // el mismo canvas). El rango cubre los tres presets con margen: el circulo del
+    // ejercicio 14 (x en [-1,1], y en [0,2]), la elipse (x en [-2,2], y en [-1,1]) y
+    // la recta (x e y en [0,1]). `centrar` con escala uniforme (el default de
+    // crearWidget) es el mismo mecanismo que usa el widget 1 para que un circulo real
+    // se vea redondo y no ovalado.
+    centrar: true,
+    encuadre: () => ({ xMin: -2.2, xMax: 2.2, yMin: -1.7, yMax: 2.7 }),
+    dibujar: (ctx, l) => pintar(ctx, l, parseFloat(elT.value)),
+  });
+
+  function pintar(ctx, l, t) {
+    const p = pagina.paleta();
+    eje(ctx, l, { color: p.rule });
+    if (!fx || !fy) return;
+    curva(ctx, l, s => [fx(s), fy(s)], 0, 1, { color: p.graph, grosor: 1.6 });
+
+    const [px, py] = l.p([fx(t), fy(t)]);
+    // El centro candidato -el que mejor ajusta la curva muestreada- es la pieza que
+    // delata la figura: la cuarta lectura de abajo (distancia al centro) se calcula
+    // contra ESTE punto, nunca contra el origen, y por eso se queda fija solo cuando
+    // la trayectoria es de verdad una circunferencia.
+    const centro = ajustarCirculo(fx, fy);
+    let distancia = null;
+    if (centro) {
+      const [cx, cy] = centro;
+      const [ox, oy] = l.p([cx, cy]);
+      punteado(ctx, ox, oy, px, py, { color: p.rule });
+      cuerpo(ctx, l, [cx, cy], { radio: 3, color: p.dim });
+      distancia = Math.hypot(fx(t) - cx, fy(t) - cy);
+    }
+    cuerpo(ctx, l, [fx(t), fy(t)], { radio: 5.5, color: p.ink });
+
+    leer('w3-t-val', t.toFixed(2));
+    leer('w3-x-val', fx(t).toFixed(2) + ' m');
+    leer('w3-y-val', fy(t).toFixed(2) + ' m');
+    leer('w3-dist', distancia === null ? '— (sin círculo)' : distancia.toFixed(2) + ' m');
+  }
+
+  function actualizar() {
+    const rx = compilar(elX.value);
+    const ry = compilar(elY.value);
+    errX.textContent = rx.ok ? '' : rx.error;
+    errY.textContent = ry.ok ? '' : ry.error;
+    // Solo se reemplaza la trayectoria dibujada cuando LAS DOS compilan a la vez: si
+    // una sola compilara ya se perderia la mitad del par y el punto (x(t), y(t))
+    // dejaria de tener sentido.
+    if (rx.ok && ry.ok) { fx = rx.f; fy = ry.f; }
+    widget.repintar();
+  }
+
+  function preset(x, y) {
+    elX.value = x;
+    elY.value = y;
+    actualizar();
+  }
+
+  elX.addEventListener('input', () => { pagina.tocar(); actualizar(); });
+  elY.addEventListener('input', () => { pagina.tocar(); actualizar(); });
+  deslizador({
+    entrada: elT, salida: el('w3-t-out'), pagina,
+    formato: v => v.toFixed(2),
+    alCambiar: () => widget.repintar(),
+  });
+  boton({
+    elemento: el('w3-ej14'), pagina,
+    alApretar: () => preset('sen(2 * pi * t)', 'cos(2 * pi * t) + 1'),
+  });
+  boton({
+    elemento: el('w3-elipse'), pagina,
+    alApretar: () => preset('2 * sen(2 * pi * t)', 'cos(2 * pi * t)'),
+  });
+  boton({
+    elemento: el('w3-recta'), pagina,
+    alApretar: () => preset('t', 't'),
+  });
+
+  // Precargado y quieto: nada anima solo al cargar. El ejercicio 14 ya viene escrito
+  // en los dos campos desde el HTML; esto solo lo compila y lo dibuja la primera vez.
+  actualizar();
+}
+
 /* ---------- widget 4: período y frecuencia ---------- */
 
 function widgetPeriodo(pagina) {
@@ -614,6 +810,7 @@ function tema(pagina) {
 const pagina = crearPagina({ documento: document });
 widgetVersores(pagina);
 widgetAceleraciones(pagina);
+widgetEcuaciones(pagina);
 widgetPeriodo(pagina);
 tema(pagina);
 pagina.observar();
