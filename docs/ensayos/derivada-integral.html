@@ -94,9 +94,34 @@ try {
   </div>
 </section>
 
-<div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
+<div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Donde <i>x</i> tiene su máximo —<i>t</i> = 1.7 s, <i>x</i> = 17.45 m— la velocidad vale cero, porque ahí la curva de posición está horizontal: no hay pendiente que leer. Arrastrá el cursor hasta esa cima y mirá el punto azul del panel del medio: cae justo sobre el cero.</p>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">La aceleración, en cambio, no se entera de nada de eso: es constante y negativa, −10 m/s², en todo el recorrido. Se ve en que <i>v</i> es una recta que baja sin pausa y en que <i>x</i> es una parábola con la concavidad siempre hacia abajo. El ejercicio 4 cobra justo esta distinción: velocidad cero no es lo mismo que aceleración cero. En la cima de la curva, el móvil deja de avanzar un instante, pero nunca deja de frenar.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · Dibujá vos</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Trazá con el mouse cualquier historia de posición que se te ocurra: arrancá quieto y acelerá, andá y frená, volvé sobre tus pasos. Mirá qué les pasa a los dos gráficos de abajo mientras lo hacés. No hay una curva correcta —ni una incorrecta—: el punto es justamente ver, en el momento, qué le hace tu trazo a la velocidad y a la aceleración.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 3</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Dibujá tu x(t)</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— dibujá un tramo horizontal y mirá el panel del medio.</span>
+    </div>
+    <canvas id="w3-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="w3-limpiar" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Limpiar</button>
+        <button id="w3-p-quieto" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Arranca quieto</button>
+        <button id="w3-p-frena" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Sube y vuelve</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Lo que acabás de descubrir dibujando son las mismas tres lecturas que este ensayo viene mostrando con fórmulas: un tramo horizontal en <i>x</i> da velocidad cero, porque no hay pendiente que leer; un tramo recto e inclinado da velocidad constante y aceleración cero, porque la pendiente no cambia; y sólo cuando la curva se dobla —cuando pasa de una recta a otra— aparece una aceleración distinta de cero. Es exactamente la lectura que pide el ejercicio 2, con su <i>x</i>(<i>t</i>) definida a trozos: cada tramo recto es un tramo de velocidad constante, y los quiebres entre tramos son donde vive la aceleración.</p>
 
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 1, pp. 3–24 · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 1 a 8</a></p>
@@ -106,10 +131,10 @@ try {
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget } from '../motor/widget.js';
 import { crearLienzo } from '../motor/lienzo.js';
-import { eje, curva, cuerpo, punteado, texto, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { eje, curva, cuerpo, punteado, texto, traza, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
 import { deslizador, boton } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
-import { derivar } from '../fisica/calculo.js';
+import { derivar, derivarMuestras, suavizar } from '../fisica/calculo.js';
 
 const el = id => document.getElementById(id);
 const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
@@ -353,6 +378,173 @@ function widgetPaneles(pagina) {
   });
 }
 
+/* ---------- widget 3: dibujá tu x(t) ---------- */
+
+// No anima: como los otros dos, arranca quieto y sólo redibuja al arrastrar o al
+// apretar un preset.
+function widgetDibujar(pagina) {
+  const T0 = 0, T1 = 6, N = 120;
+  // El estado es una grilla fija de N + 1 alturas: el lector pinta alturas, no puntos
+  // sueltos, y asi la funcion nunca deja de ser una funcion aunque el mouse vuelva atras.
+  let alturas = new Array(N + 1).fill(5);
+  let hayTrazo = false;
+
+  const tDe = i => T0 + ((T1 - T0) * i) / N;
+  const muestras = () => alturas.map((y, i) => [tDe(i), y]);
+
+  const canvas = el('w3-cv');
+  // Mismo esquema de tres paneles que el widget 2, y por las mismas razones. Las tres
+  // constantes son las mismas de ahi, incluido el hueco derivado: el rotulo del eje
+  // vertical cuelga COLGADO_ROTULO_EJE por encima del techo de su panel, y un glifo de
+  // 10 px sube unos 8 px mas sobre su linea de base.
+  const MARGEN = { L: 62, R: 24, T: 20, B: 34 };
+  const HUECO_ROTULO = COLGADO_ROTULO_EJE + 8;
+  const ALTO_PANEL_MINIMO = 95 + HUECO_ROTULO;
+  const widget = crearWidget({
+    pagina, canvas,
+    margen: MARGEN,
+    escalaUniforme: false,
+    altoMin: 3 * ALTO_PANEL_MINIMO + MARGEN.T + MARGEN.B,
+    encuadre: () => ({ xMin: T0, xMax: T1, yMin: 0, yMax: 3 }),
+    dibujar: pintar,
+  });
+
+  const RANGOS = [
+    { etiqueta: 'x [m]', yMin: 0, yMax: 10 },
+    { etiqueta: 'v [m/s]', yMin: -12, yMax: 12 },
+    { etiqueta: 'a [m/s²]', yMin: -30, yMax: 30 },
+  ];
+
+  // Igual que en el widget 2: los lienzos se arman aparte porque el trazado a mano
+  // tiene que escribir en el mismo sistema en que se dibuja el panel de arriba, y el
+  // lienzo del widget no lo garantiza.
+  const lienzosPanel = l => {
+    const alturaPanel = (l.py(0) - l.py(3)) / 3;
+    const arriba = l.py(3);
+    return RANGOS.map((r, i) => {
+      const tope = arriba + i * alturaPanel;
+      return {
+        rango: r,
+        arriba,
+        alturaPanel,
+        lp: crearLienzo({
+          ancho: l.ancho, alto: l.alto,
+          margen: {
+            L: MARGEN.L, R: MARGEN.R,
+            T: tope + HUECO_ROTULO, B: l.alto - tope - alturaPanel + 10,
+          },
+          xMin: T0, xMax: T1, yMin: r.yMin, yMax: r.yMax,
+        }),
+      };
+    });
+  };
+
+  function pintar(ctx, l) {
+    const p = pagina.paleta();
+    // Se suaviza dos veces: una antes de la primera derivada y otra antes de la
+    // segunda, porque cada derivada amplifica el ruido del trazo a mano. Sin el
+    // segundo suavizado el panel de aceleración es una pared de picos.
+    const suaves = suavizar(muestras(), 7);
+    const vel = derivarMuestras(suaves);
+    const acel = derivarMuestras(suavizar(vel, 7));
+    const series = [
+      { pts: suaves, color: p.ink },
+      { pts: vel, color: p.blue },
+      { pts: acel, color: p.red },
+    ];
+
+    const capas = lienzosPanel(l);
+    capas.forEach(({ rango, lp }, i) => {
+      // El eje de tiempo se rotula una sola vez, en el panel de abajo: los tres lo
+      // comparten, y repetirlo tres veces lo deja flotando en mitad de los graficos.
+      const esElDeAbajo = i === capas.length - 1;
+      eje(ctx, lp, {
+        color: p.rule, colorTexto: p.dim, etiquetaY: rango.etiqueta,
+        marcasX: esElDeAbajo,
+        ...(esElDeAbajo ? { etiquetaX: 't [s]' } : {}),
+      });
+      traza(ctx, lp, series[i].pts, { color: series[i].color, grosor: 1.8 });
+    });
+
+    if (!hayTrazo) {
+      const { lp, arriba, alturaPanel } = capas[0];
+      texto(ctx, 'dibujá acá arriba con el mouse', lp.px((T0 + T1) / 2), arriba + alturaPanel / 2,
+        { color: p.dim, px: 12, peso: 400, alineacion: 'center' });
+    }
+  }
+
+  // El arrastre escribe en la grilla, y rellena los indices que el puntero se salteo
+  // cuando el mouse va rapido: sin esto, mover rapido deja huecos con el valor viejo y
+  // la derivada dispara.
+  let ultimoIndice = null;
+  const escribir = (t, y) => {
+    const i = Math.round(((t - T0) / (T1 - T0)) * N);
+    if (i < 0 || i > N) return;
+    const alt = Math.min(10, Math.max(0, y));
+    if (ultimoIndice === null || Math.abs(i - ultimoIndice) <= 1) {
+      alturas[i] = alt;
+    } else {
+      const paso = i > ultimoIndice ? 1 : -1;
+      const desde = alturas[ultimoIndice];
+      const n = Math.abs(i - ultimoIndice);
+      for (let k = 1; k <= n; k++) {
+        alturas[ultimoIndice + k * paso] = desde + ((alt - desde) * k) / n;
+      }
+    }
+    ultimoIndice = i;
+    hayTrazo = true;
+    widget.repintar();
+  };
+
+  // El arrastre trabaja sobre el lienzo del panel de arriba, no sobre el del widget:
+  // lo que el lector dibuja son metros de posicion, no las tres unidades del encuadre.
+  arrastrable({
+    canvas, pagina,
+    lienzo: () => { const l = widget.lienzo(); return l && lienzosPanel(l)[0].lp; },
+    alArrastrar: escribir,
+  });
+  // `ultimoIndice` vuelve a null al soltar: si no, el trazo siguiente interpola desde
+  // donde terminó el anterior y aparece una rampa que el lector nunca dibujó.
+  canvas.addEventListener('pointerup', () => { ultimoIndice = null; });
+  canvas.addEventListener('pointercancel', () => { ultimoIndice = null; });
+
+  boton({
+    elemento: el('w3-limpiar'), pagina,
+    alApretar: () => {
+      alturas = new Array(N + 1).fill(5);
+      hayTrazo = false;
+      ultimoIndice = null;
+      widget.repintar();
+    },
+  });
+  boton({
+    elemento: el('w3-p-quieto'), pagina,
+    alApretar: () => {
+      // Tramo quieto en 3 m hasta t = 3 s, y de ahi en mas acelera.
+      alturas = alturas.map((_, i) => {
+        const t = tDe(i);
+        return t < 3 ? 3 : Math.min(10, 3 + 0.6 * (t - 3) ** 2);
+      });
+      hayTrazo = true;
+      ultimoIndice = null;
+      widget.repintar();
+    },
+  });
+  boton({
+    elemento: el('w3-p-frena'), pagina,
+    alApretar: () => {
+      // Parabola que sube desde 1 m hasta 9 m en t = 3 s y vuelve a 1 m en t = 6 s.
+      alturas = alturas.map((_, i) => {
+        const t = tDe(i);
+        return Math.max(0, Math.min(10, 1 + 8 * (1 - ((t - 3) / 3) ** 2)));
+      });
+      hayTrazo = true;
+      ultimoIndice = null;
+      widget.repintar();
+    },
+  });
+}
+
 /* ---------- tema ---------- */
 
 function tema(pagina) {
@@ -381,6 +573,7 @@ function tema(pagina) {
 const pagina = crearPagina({ documento: document });
 widgetSecante(pagina);
 widgetPaneles(pagina);
+widgetDibujar(pagina);
 tema(pagina);
 pagina.observar();
 pagina.progreso(el('tp-prog'));
