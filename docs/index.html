@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
 <title>Ensayos interactivos · Física 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +19,10 @@
 <body>
 
 <div style="max-width:680px;margin:0 auto;padding:56px 24px 80px;display:flex;flex-direction:column;gap:0">
-  <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Física 1</span>
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
   <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Ensayos interactivos</h1>
   <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Construir la intuición la primera vez que un concepto no cierra: lo que ni el apunte ni las hojas resumen hacen bien.</p>
   <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
@@ -46,5 +56,26 @@
   </div>
 </div>
 
+<script>
+function sincronizarTema() {
+  var b = document.getElementById('tp-theme');
+  if (!b) return;
+  b.textContent =
+    document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
+}
+
+var btnTema = document.getElementById('tp-theme');
+if (btnTema) {
+  btnTema.onclick = function () {
+    var oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (oscuro) document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', 'dark');
+    try { localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark'); } catch (e) {}
+    sincronizarTema();
+  };
+}
+
+sincronizarTema();
+</script>
 </body>
 </html>
