@@ -139,6 +139,9 @@ const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
 
 // Traducción literal de `ground()` del diseño (Tiro parabolico.dc.html:431-437):
 // una línea horizontal en `color` más rayitas de 6 px cada 9 px con globalAlpha 0.5.
+// El diseño recibe `xmin` como parámetro opcional (por defecto 0); acá se lee `l.xMin`
+// directo del lienzo. Es equivalente sólo mientras ningún `encuadre()` fije un `xMin`
+// distinto de cero — ninguno de los widgets de este ensayo lo hace.
 function suelo(ctx, l, color) {
   const y = l.py(0), x0 = l.px(l.xMin), x1 = l.px(l.xMax);
   ctx.strokeStyle = color;
@@ -193,11 +196,13 @@ function widgetSombras(pagina) {
 
   // `crearWidget` pasa la página como tercer argumento; acá se omite y se usa la del
   // cierre, que es el mismo objeto, para no sombrearla.
-  function pintar(ctx, l) {
+  //
+  // `t` llega como parámetro, alimentado siempre por `escena.t`: el reloj de la escena
+  // nunca miente sobre qué instante se está mostrando (igual que el widget 2). En
+  // reposo, es `alReposo()` quien mueve el reloj de verdad con `escena.ir(...)` — acá no
+  // hay ninguna sustitución.
+  function pintar(ctx, l, t) {
     const p = pagina.paleta();
-    // Quieto, el widget muestra el instante representativo; andando, el reloj de
-    // la escena, que ya está en segundos físicos.
-    const t = enReposo ? FRACCION_REPOSO * tiro.tVuelo : escena.t;
     const k = l.escala.x * 0.42;
 
     eje(ctx, l, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', etiquetaY: 'y [m]' });
@@ -253,7 +258,8 @@ function widgetSombras(pagina) {
   }
 
   const widget = crearWidget({
-    pagina, canvas: el('w1-cv'), margen: MARGEN, encuadre, dibujar: pintar,
+    pagina, canvas: el('w1-cv'), margen: MARGEN, encuadre,
+    dibujar: (ctx, l) => pintar(ctx, l, escena.t),
   });
 
   const rotular = () => rotuloReproducir(el('w1-play'), escena, enReposo);
@@ -265,6 +271,15 @@ function widgetSombras(pagina) {
     alCambiar: rotular,
   });
 
+  // Mueve el reloj de verdad al instante de reposo cuando corresponde, y siempre
+  // sincroniza la duración con `tiro`. No repinta por sí sola cuando `!enReposo`
+  // (`escena.duracion` sólo repinta si el nuevo tope obliga a recortar `t`): quien
+  // llama es responsable de pedir el repintado.
+  const alReposo = () => {
+    escena.duracion = tiro.tVuelo;
+    if (enReposo) escena.ir(FRACCION_REPOSO * tiro.tVuelo);
+  };
+
   // Cambiar v₀ o α sólo mueve la duración: la escena ya no se rehace, así que
   // arrastrar un slider no puede congelar el reloj.
   function recalcular() {
@@ -272,8 +287,8 @@ function widgetSombras(pagina) {
       v0: parseFloat(el('w1-v0').value),
       alfaGrados: parseFloat(el('w1-ang').value),
     });
-    escena.duracion = tiro.tVuelo;
-    escena.ir(enReposo ? FRACCION_REPOSO * tiro.tVuelo : escena.t);
+    alReposo();
+    widget.repintar();
     rotular();
   }
 
@@ -307,13 +322,18 @@ function widgetSombras(pagina) {
   // Sin `pagina` a propósito: en el diseño, el handler de reset es el único que no
   // llama a `firstTouch()` (Tiro parabolico.dc.html:297, contra los sliders en :286,
   // la casilla en :293 y toggle() en :326). El pulso sobrevive a un Reiniciar.
+  // `alReposo()` después de `reiniciar()` es lo que deja el reloj en 0.35 · tVuelo y no
+  // en cero: el diseño reinicia al instante de reposo, no al origen
+  // (Tiro parabolico.dc.html:297, `s.t = this.rest(k)`).
   boton({
     elemento: el('w1-reset'),
-    alApretar: () => { enReposo = true; escena.reiniciar(); rotular(); },
+    alApretar: () => { enReposo = true; escena.reiniciar(); alReposo(); rotular(); },
   });
 
-  // Arranca quieto, en un estado representativo, y el botón late hasta el primer toque.
-  escena.reiniciar();
+  // Arranca quieto en 0.35 · tVuelo, no en t = 0. `crearEscena` ya nace en reposo con el
+  // reloj en cero y sin loop corriendo, así que alcanza con `alReposo()`; no hace falta
+  // `escena.reiniciar()`, que repintaría de más en t = 0 para nada.
+  alReposo();
   rotular();
   const pulso = () => {
     el('w1-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
@@ -343,7 +363,7 @@ function widgetGalileo(pagina) {
   const widget = crearWidget({
     pagina, canvas: el('w2-cv'),
     margen: { L: 58, R: 24, T: 38, B: 42 },
-    encuadre: () => ({ xMax: Math.max(X0 + vx * tf(), 10) * 1.1, yMax: altura * 1.12 }),
+    encuadre: () => ({ xMax: Math.max((X0 + vx * tf()) * 1.1, 10), yMax: altura * 1.12 }),
     dibujar: (ctx, l) => pintar(ctx, l, escena.t),
   });
 
@@ -430,9 +450,10 @@ function widgetGalileo(pagina) {
     alApretar: () => { enReposo = true; escena.reiniciar(); alReposo(); rotular(); },
   });
 
-  // Arranca quieto en 0.35 · tVuelo, no en t = 0: `escena.reiniciar()` deja el reloj en
-  // cero y `alReposo()` lo reubica en el instante representativo sin salir de reposo.
-  escena.reiniciar();
+  // Arranca quieto en 0.35 · tVuelo, no en t = 0. `crearEscena` ya nace en reposo con el
+  // reloj en cero y sin loop corriendo, así que alcanza con `alReposo()` para llevarlo al
+  // instante representativo; no hace falta `escena.reiniciar()`, que repintaría de más en
+  // t = 0 para nada.
   alReposo();
   rotular();
   const pulso = () => {
