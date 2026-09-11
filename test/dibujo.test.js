@@ -228,6 +228,27 @@ test('eje cuelga la etiqueta del eje x del piso del encuadre, no del cero', () =
   assert.ok(rotulo[3] > l.py(0), 'la etiqueta quedo colgada del cero y no del piso');
 });
 
+test('eje con marcasX:false omite los numeros del eje horizontal pero conserva los del vertical', () => {
+  // xMax=10 (paso 2: marcas 2,4,6,8,10) e yMax=5 (paso 1: marcas 1,2,3,4,5). "6", "8" y
+  // "10" son exclusivas de x; "1", "3" y "5" son exclusivas de y -- eligiendolas asi la
+  // prueba no se confunde con el "2" y el "4" que comparten los dos ejes.
+  const l = crearLienzo({ ancho: 300, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 5 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666', etiquetaY: 'y [m]', marcasX: false });
+  const textos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
+  assert.ok(!textos.includes('6') && !textos.includes('8') && !textos.includes('10'),
+    'no tendria que escribir ningun numero del eje horizontal');
+  assert.ok(textos.includes('1') && textos.includes('3') && textos.includes('5'),
+    'los numeros del eje vertical tienen que seguir apareciendo');
+});
+
+test('eje sin colorTexto no escribe nada, aunque pidan marcas y etiquetas', () => {
+  const l = crearLienzo({ ancho: 300, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 5 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', etiquetaX: 'x [m]', etiquetaY: 'y [m]', marcasX: true, marcasY: true });
+  assert.equal(c.ops.filter(o => o[0] === 'fillText').length, 0);
+});
+
 test('eje con yMin = 0 deja la etiqueta del eje x donde estaba', () => {
   // El ensayo de tiro parabolico encuadra siempre desde yMin = 0: su etiqueta no se
   // puede mover ni un pixel.

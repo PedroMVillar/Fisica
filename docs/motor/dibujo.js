@@ -156,7 +156,23 @@ function paso(rango) {
 
 // Las marcas y rótulos son el `axes()` del diseño
 // (docs/plataforma/diseno/Tiro parabolico.dc.html:376-401).
-export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY } = {}) {
+//
+// `marcasX`/`marcasY` (default true) gobiernan cada bucle de marcas -y el numero que
+// cuelga de cada una- por separado. Existen por el widget de los tres paneles de
+// derivada-integral.html: ahi los tres paneles comparten el eje temporal, asi que ese
+// eje se rotula una sola vez, en el panel de abajo, y los otros dos piden `marcasX:
+// false` para no repetir los mismos numeros tres veces (y, en los paneles con yMin
+// negativo, flotando en la mitad del grafico en vez de al pie).
+//
+// La guarda temprana es `!colorTexto`, no `!etiquetaX && !etiquetaY`: pedir las marcas
+// de un eje sin su rotulo de palabra (`marcasX: true` sin `etiquetaX`) tiene que
+// dibujar igual los numeros, y antes la ausencia de las dos etiquetas cortaba la
+// funcion entera antes de llegar a los bucles. Sigue siendo compatible con todo
+// llamador de hoy: quien pasa las dos etiquetas pasa tambien `colorTexto` (los cuatro
+// widgets de tiro-parabolico.html y el widget 1 de derivada-integral.html), asi que
+// entra igual que antes; quien pasa solo `color` no pasa `colorTexto`, asi que sigue
+// saliendo despues de trazar nada mas que las dos lineas.
+export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX = true, marcasY = true } = {}) {
   exigirColor(color, 'eje');
   ctx.strokeStyle = color;
   ctx.lineWidth = 1;
@@ -166,32 +182,35 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY } = {}) {
   ctx.moveTo(l.px(0), l.py(l.yMin));
   ctx.lineTo(l.px(0), l.py(l.yMax));
   ctx.stroke();
-  if (!etiquetaX && !etiquetaY) return;
-  exigirColor(colorTexto, 'eje (colorTexto)');
+  if (!colorTexto) return;
 
-  const sx = paso(l.xMax - l.xMin);
-  for (let x = Math.ceil(l.xMin / sx) * sx; x <= l.xMax + 1e-6; x += sx) {
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(l.px(x), l.py(0));
-    ctx.lineTo(l.px(x), l.py(0) + 4);
-    ctx.stroke();
-    // El cero no se rotula: se lee del cruce de los ejes y ahi choca con el de y.
-    if (Math.abs(x) > 1e-9) {
-      texto(ctx, String(Math.round(x * 10) / 10), l.px(x), l.py(0) + 16,
-        { color: colorTexto, px: 10, peso: 400, alineacion: 'center' });
+  if (marcasX) {
+    const sx = paso(l.xMax - l.xMin);
+    for (let x = Math.ceil(l.xMin / sx) * sx; x <= l.xMax + 1e-6; x += sx) {
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(l.px(x), l.py(0));
+      ctx.lineTo(l.px(x), l.py(0) + 4);
+      ctx.stroke();
+      // El cero no se rotula: se lee del cruce de los ejes y ahi choca con el de y.
+      if (Math.abs(x) > 1e-9) {
+        texto(ctx, String(Math.round(x * 10) / 10), l.px(x), l.py(0) + 16,
+          { color: colorTexto, px: 10, peso: 400, alineacion: 'center' });
+      }
     }
   }
-  const sy = paso(l.yMax - l.yMin);
-  for (let y = Math.ceil(l.yMin / sy) * sy; y <= l.yMax + 1e-6; y += sy) {
-    if (Math.abs(y) < 1e-9) continue;
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(l.px(0), l.py(y));
-    ctx.lineTo(l.px(0) - 4, l.py(y));
-    ctx.stroke();
-    texto(ctx, String(Math.round(y * 10) / 10), l.px(0) - 8, l.py(y) + 3.5,
-      { color: colorTexto, px: 10, peso: 400, alineacion: 'right' });
+  if (marcasY) {
+    const sy = paso(l.yMax - l.yMin);
+    for (let y = Math.ceil(l.yMin / sy) * sy; y <= l.yMax + 1e-6; y += sy) {
+      if (Math.abs(y) < 1e-9) continue;
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(l.px(0), l.py(y));
+      ctx.lineTo(l.px(0) - 4, l.py(y));
+      ctx.stroke();
+      texto(ctx, String(Math.round(y * 10) / 10), l.px(0) - 8, l.py(y) + 3.5,
+        { color: colorTexto, px: 10, peso: 400, alineacion: 'right' });
+    }
   }
   if (etiquetaX) {
     // La etiqueta cuelga del PISO del encuadre, no del eje. En el diseno los dos
