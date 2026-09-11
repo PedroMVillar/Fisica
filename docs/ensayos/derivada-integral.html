@@ -101,6 +101,10 @@ function widgetSecante(pagina) {
     pagina, canvas: el('w1-cv'),
     margen: { L: 62, R: 24, T: 38, B: 42 },
     encuadre: () => ({ xMin: -1, xMax: 1.6, yMin: -5.5, yMax: 6 }),
+    // Segundos contra metros: no hay nada fisico que igualar entre los dos ejes, y con
+    // una sola escala el encuadre entraba en el 10 % del ancho util. Cada eje llena su
+    // dimension; el alto lo fija la proporcion 16:8 del sistema de diseno.
+    escalaUniforme: false,
     dibujar: pintar,
   });
 
