@@ -1802,6 +1802,42 @@ git commit -m "feat(plataforma): seccion 04, el viento y el cierre del ensayo de
 
 ---
 
+### Tarea 10b: Escala no uniforme y altos parametrizables
+
+*Tarea insertada durante la ejecución, a partir de un bloqueo real de la Tarea 11.*
+
+`crearWidget` usaba una sola escala para los dos ejes. Es correcto en el ensayo de tiro
+—los dos ejes son metros, y una parábola tiene que verse como una parábola— pero este
+ensayo grafica magnitudes **contra tiempo**, y ahí esa regla no significa nada físico.
+Medido sobre un canvas de 880 px:
+
+| widget | ejes | ratio | usa del ancho útil |
+|---|---|---|---|
+| tiro, widget 1 | m × m | 0.35 | 100.0 % |
+| derivada, la secante | s × m | 4.42 | 10.0 % |
+| derivada, los paneles | s × — | 0.88 | 53.7 % |
+| derivada, el área | s × m/s | 11.18 | 3.9 % |
+
+**Archivos:**
+- Modificar: `docs/motor/widget.js`
+- Prueba: `test/widget.test.js`
+
+**Interfaces:**
+- Produce: `crearWidget({ ..., escalaUniforme = true, altoMin = 215, altoMax = 430 })`.
+  Con `escalaUniforme: false` el alto sale de la proporción 16:8 del sistema de diseño
+  (`ancho / 2`, brief §6.4) acotada entre `altoMin` y `altoMax`, las dos escalas se
+  calculan independientes y cada una llena su dimensión, y el lienzo reporta los bordes
+  pedidos exactos — con escala no uniforme la distinción entre pedido y estirado
+  desaparece. `altoMin`/`altoMax` existen porque el widget de tres paneles apilados no
+  entra en el piso de 215: cada panel quedaría en 54 px, casi enteros consumidos por el
+  rótulo y la fila de números.
+
+El camino uniforme no cambia ni un píxel, y eso se verifica comparando el bitmap de los
+cuatro canvas del ensayo de tiro por hash, con el caché de Chrome desactivado y un
+control negativo que confirme que la comparación no es vacía.
+
+---
+
 ## Fase C — el ensayo de derivada e integral
 
 Es el ensayo más valioso de los seis: el capítulo 1 del apunte construye el cálculo
