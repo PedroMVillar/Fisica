@@ -44,6 +44,8 @@ export function crearPagina({ documento = globalThis.document } = {}) {
       tocada = true;
       for (const fn of suscriptos) fn();
     },
+    // Consumida por la Tarea 6: decide si arrancar el pulso del boton "Reproducir"
+    // al cargar (no lo arranca si el lector ya toco algo).
     tocada() { return tocada; },
     alTocar(fn) { suscriptos.push(fn); },
     progreso(elemento) {

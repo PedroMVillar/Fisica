@@ -141,3 +141,117 @@ test('crear un widget lo registra en la pagina', () => {
   });
   assert.equal(p.widgets().length, 1);
 });
+
+// --- Cobertura de observar() y progreso() sin DOM real -----------------
+//
+// Node no tiene ResizeObserver ni addEventListener/onscroll en el global: estas
+// pruebas stubean ambos para fijar la superficie de seguridad que once widgets
+// mas en la misma pagina necesitan -- observar() no debe lanzar sin
+// ResizeObserver, no debe acumular observadores vivos en llamadas repetidas, y
+// observa el padre del canvas (el que cambia de tamano), no el canvas.
+// progreso() tiene que colgarse de addEventListener('scroll', ...) y no volver
+// jamas al viejo `window.onscroll = ...`, que un solo widget que lo reasigne le
+// pisa el evento a todos los demas.
+
+function instalarStubResizeObserver() {
+  const original = globalThis.ResizeObserver;
+  const instancias = [];
+  class FalsoResizeObserver {
+    constructor(cb) {
+      this.cb = cb;
+      this.observados = [];
+      this.desconectado = false;
+      instancias.push(this);
+    }
+    observe(el) { this.observados.push(el); }
+    disconnect() { this.desconectado = true; }
+  }
+  globalThis.ResizeObserver = FalsoResizeObserver;
+  return {
+    instancias,
+    restaurar() {
+      if (original === undefined) delete globalThis.ResizeObserver;
+      else globalThis.ResizeObserver = original;
+    },
+  };
+}
+
+test('observar() sin ResizeObserver no lanza', () => {
+  const original = globalThis.ResizeObserver;
+  try {
+    delete globalThis.ResizeObserver;
+    const p = crearPagina({ documento: documentoFalso() });
+    assert.doesNotThrow(() => p.observar());
+  } finally {
+    if (original === undefined) delete globalThis.ResizeObserver;
+    else globalThis.ResizeObserver = original;
+  }
+});
+
+test('observar() dos veces no deja dos observadores vivos', () => {
+  const stub = instalarStubResizeObserver();
+  try {
+    const p = crearPagina({ documento: documentoFalso() });
+    const cv = canvasFalso();
+    p.registrar({ canvas: cv, repintar: () => {} });
+    p.observar();
+    p.observar();
+    assert.equal(stub.instancias.length, 2);
+    assert.equal(stub.instancias[0].desconectado, true);
+    assert.equal(stub.instancias[1].desconectado, false);
+  } finally {
+    stub.restaurar();
+  }
+});
+
+test('observar() observa el padre de cada canvas registrado, no el canvas', () => {
+  const stub = instalarStubResizeObserver();
+  try {
+    const p = crearPagina({ documento: documentoFalso() });
+    const cv = canvasFalso();
+    p.registrar({ canvas: cv, repintar: () => {} });
+    p.observar();
+    const [instancia] = stub.instancias;
+    assert.equal(instancia.observados.length, 1);
+    assert.equal(instancia.observados[0], cv.parentElement);
+  } finally {
+    stub.restaurar();
+  }
+});
+
+test('progreso() sin addEventListener no lanza', () => {
+  const original = globalThis.addEventListener;
+  try {
+    delete globalThis.addEventListener;
+    const p = crearPagina({ documento: documentoFalso() });
+    assert.doesNotThrow(() => p.progreso({ style: {} }));
+  } finally {
+    if (original === undefined) delete globalThis.addEventListener;
+    else globalThis.addEventListener = original;
+  }
+});
+
+test('progreso() usa addEventListener("scroll", ...) y no toca onscroll', () => {
+  const originalAEL = globalThis.addEventListener;
+  const originalOnscroll = globalThis.onscroll;
+  const eventos = [];
+  try {
+    globalThis.addEventListener = nombre => eventos.push(nombre);
+    globalThis.onscroll = undefined;
+    const p = crearPagina({ documento: documentoFalso() });
+    p.progreso({ style: {} });
+    assert.deepEqual(eventos, ['scroll']);
+    assert.equal(globalThis.onscroll, undefined);
+  } finally {
+    if (originalAEL === undefined) delete globalThis.addEventListener;
+    else globalThis.addEventListener = originalAEL;
+    if (originalOnscroll === undefined) delete globalThis.onscroll;
+    else globalThis.onscroll = originalOnscroll;
+  }
+});
+
+test('progreso() sin elemento no hace nada y no lanza', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  assert.doesNotThrow(() => p.progreso(null));
+  assert.doesNotThrow(() => p.progreso(undefined));
+});
