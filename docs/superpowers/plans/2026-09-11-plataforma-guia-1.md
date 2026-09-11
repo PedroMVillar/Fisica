@@ -3122,7 +3122,13 @@ inclina hacia adelante.
 
 - [ ] **Paso 2: escribir el widget**
 
-Los valores por defecto son los del ejercicio 13: `R = 1.5`, `ω₀ = 0`, `γ = 4`.
+El radio es el del ejercicio 13, `R = 1.5`. Pero los valores por defecto de los dos
+sliders son `ω₀ = 2` y `γ = 0`, **no** los del ejercicio: con `ω₀ = 0` la partícula
+arranca quieta, la rapidez es cero y el ángulo entre velocidad y aceleración queda
+indefinido, que es un pésimo estado de apertura. Además el widget enseña por
+contraste —con `γ = 0` el ángulo marca 90° exactos, y se despega apenas se sube γ—,
+así que arrancar en `γ = 0` es lo que hace visible el argumento. El escenario del
+ejercicio 13 se alcanza moviendo los controles, y el texto de cierre lo cita.
 
 ```js
 function widgetAceleraciones(pagina) {
@@ -3141,7 +3147,10 @@ function widgetAceleraciones(pagina) {
 
   const escena = crearEscena({
     dibujar: () => widget.repintar(),
-    duracion: 3,
+    // Cinco segundos porque la lectura del ejercicio 13 que el texto cita es en
+    // t = 5 s, y crearEscena acota el reloj a la duracion: con menos, ese instante
+    // no se alcanza nunca.
+    duracion: 5,
     velocidad: 0.6,
     alCambiar: () => rotuloReproducir(document.getElementById('w2-play'), escena, enReposo),
   });
@@ -3171,7 +3180,7 @@ function widgetAceleraciones(pagina) {
     vectorPx(ctx, px, py, px - rx * aN * ka, py + ry * aN * ka,
       { color: p.red, grosor: 1.4, punta: 7, rotulo: 'aₙ', rdy: 12 });
     vectorPx(ctx, px, py, px + tx * aT * ka, py - ty * aT * ka,
-      { color: p.red, grosor: 1.4, punta: 7, rotulo: 'a_t', rdy: -12 });
+      { color: p.red, grosor: 1.4, punta: 7, rotulo: 'aₜ', rdy: -12 });
     ctx.globalAlpha = 1;
     const [ax, ay] = c.aTotalVector(t);
     vectorPx(ctx, px, py, px + ax * ka, py - ay * ka,
