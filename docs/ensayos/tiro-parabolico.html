@@ -3,6 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script del ensayo es `type="module"` y se difiere hasta después del
+// parseo, así que aplicar el tema desde ahí regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahí la excepción abortaría el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
 <title>Tiro parabólico · Física 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -185,8 +198,22 @@ function ejes(v, rotuloX, rotuloY) {
   ctx.fillText(rotuloY, l.px(0) - 34, l.py(yTope) - 15);
 }
 
-// Flecha en píxeles: la punta del diseño es más chica que la de `vector`
-// (7 contra 9) y el asta se corta antes de la punta, así que se dibuja acá.
+// Flecha en píxeles. `vector` (motor/dibujo.js) no sirve todavía para este
+// widget, por dos clases de razones.
+//
+// De interfaz: el diseño necesita coordenadas en píxeles, no extremos físicos
+// —la flecha de g mide 24 px fijos y v_y mide vy·sc·0.42, ninguna de las dos
+// es un punto del espacio del problema—, más las opciones `head`, `dash`,
+// `width` y el rótulo (`label`/`ldx`/`ldy`/`lAlign`) que `vector` no tiene.
+//
+// De corrección, y esto es lo que el plan 2 tiene que arreglar en `vector`:
+// (a) corre el asta hasta la punta en vez de frenarla en 0.85·hd, así que el
+// triángulo queda montado sobre la línea; y (b) corta en `largo < 1e-9` en vez
+// del `len < 1` del diseño, de modo que en el ápice, donde v_y → 0, dibujaría
+// una punta de 9 px colgando de un asta de menos de un píxel — justo el
+// artefacto que el diseño suprime. (El tamaño de punta no es una diferencia:
+// el default de `arrow` en el diseño también es 9; el 7 sale de las opciones
+// con que `drawW1` lo llama.)
 function flecha(x1, y1, x2, y2, color, { grosor = 2, punta = 9, guiones = [] } = {}) {
   const dx = x2 - x1, dy = y2 - y1, largo = Math.hypot(dx, dy);
   if (largo < 1) return;
@@ -307,7 +334,10 @@ const repintar = () => dibujar(escena.t);
 
 // La duración de la escena se fija al crearla, así que un cambio de v₀ o de α
 // obliga a rehacerla. Si venía andando o pausada, se la devuelve al mismo
-// instante para no perder el vuelo en curso, como hace el diseño.
+// instante para no perder el vuelo en curso, como hace el diseño. El reloj no
+// se reinicia al rehacerla: `reproducir()` fija su origen en el instante de la
+// llamada (ver motor/escena.js), así que arrastrar el slider —que dispara
+// `input` más seguido que los frames— no congela el tiempo.
 function rehacerEscena() {
   const tReloj = escena.t;
   const estadoPrevio = escena.estado;
@@ -379,15 +409,16 @@ el('tp-theme').onclick = () => {
   const oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
   if (oscuro) document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', 'dark');
-  localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark');
+  // Si el almacenamiento está bloqueado, la preferencia no se recuerda, pero
+  // el tema de esta visita tiene que cambiar igual: sin el try/catch la
+  // excepción cortaba acá y el canvas se quedaba con la paleta vieja.
+  try { localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark'); } catch (e) {}
   paleta = null;
   sincronizarTema();
   repintar();
 };
 
-if (localStorage.getItem('tp-theme') === 'dark') {
-  document.documentElement.setAttribute('data-theme', 'dark');
-}
+// El tema ya quedó aplicado por el script del <head>; acá sólo se rotula.
 sincronizarTema();
 
 window.onscroll = () => {
