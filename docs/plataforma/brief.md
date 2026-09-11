@@ -131,7 +131,9 @@ tipo de contenido donde ver la construcción vale más que leerla.
 > cambia la rapidez.
 
 **Cubre:** Guía 1, ejercicios 11 a 14.
-**Fuentes:** apunte cap. 2 y cap. 6 (pp. 96–108); hoja
+**Fuentes:** apunte cap. 2 (pp. 25–47), que es donde vive la cinemática del
+movimiento circular; el cap. 6 (pp. 96–108) es la *dinámica* del mismo tema y
+corresponde a la Guía 2, no a este ensayo. Hoja
 `resumen-movimiento-circular.pdf`; `practico-1-cinematica.pdf` ej. 11–14.
 
 **Widgets:**
