@@ -29,13 +29,14 @@ export function boton({ elemento, alApretar, pagina }) {
   });
 }
 
-// El rotulo distingue "pausado a mitad de camino" (Seguir) de "pausado justo al
-// final" (Reproducir): crearEscena() lleva ambos casos al mismo estado 'pausado'
-// (avanzar() para en t === duracion), asi que la unica forma de diferenciarlos
-// es comparar t contra duracion, como en docs/plataforma/diseno/Tiro parabolico.dc.html.
-export function rotuloReproducir(elemento, escena) {
+// Traduccion literal del label() del diseno
+// (docs/plataforma/diseno/Tiro parabolico.dc.html:319-323):
+//   s.playing ? 'Pausar' : (!s.rest && s.t > 0 ? 'Seguir' : 'Reproducir')
+// `enReposo` es el `s.rest` del diseno. No sale de la escena porque crearEscena no
+// distingue "en reposo mostrando un instante representativo" de "pausado a mitad":
+// esa distincion la lleva el ensayo, que es quien decide cuando salir del reposo.
+export function rotuloReproducir(elemento, escena, enReposo) {
   if (!elemento) return;
   if (escena.estado === 'reproduciendo') { elemento.textContent = 'Pausar'; return; }
-  const aMitad = escena.t > 0 && escena.t < escena.duracion - 1e-6;
-  elemento.textContent = aMitad ? 'Seguir' : 'Reproducir';
+  elemento.textContent = !enReposo && escena.t > 0 ? 'Seguir' : 'Reproducir';
 }

@@ -44,26 +44,36 @@ test('la casilla avisa booleanos', () => {
   assert.deepEqual(vistos, [false]);
 });
 
-test('el rotulo del boton dice Reproducir en reposo', () => {
+test('el rotulo del boton dice Reproducir en reposo, aunque el reloj no este en cero', () => {
+  // El estado de reposo de los widgets NO es t = 0: es un instante representativo
+  // del vuelo. Sin el tercer argumento esto diria "Seguir" al cargar la pagina.
   const b = { textContent: '' };
-  rotuloReproducir(b, { estado: 'reposo', t: 0, duracion: 10 });
+  rotuloReproducir(b, { estado: 'reposo', t: 1.3, duracion: 3.7 }, true);
   assert.equal(b.textContent, 'Reproducir');
 });
 
 test('el rotulo dice Pausar mientras reproduce', () => {
   const b = { textContent: '' };
-  rotuloReproducir(b, { estado: 'reproduciendo', t: 3, duracion: 10 });
+  rotuloReproducir(b, { estado: 'reproduciendo', t: 3, duracion: 10 }, false);
   assert.equal(b.textContent, 'Pausar');
 });
 
 test('el rotulo dice Seguir si esta pausado a mitad de camino', () => {
   const b = { textContent: '' };
-  rotuloReproducir(b, { estado: 'pausado', t: 3, duracion: 10 });
+  rotuloReproducir(b, { estado: 'pausado', t: 3, duracion: 10 }, false);
   assert.equal(b.textContent, 'Seguir');
 });
 
-test('el rotulo vuelve a Reproducir si esta pausado al final', () => {
+test('el rotulo dice Seguir tambien al final, como el diseno', () => {
+  // El diseno no distingue "pausado a mitad" de "terminado": las dos dicen Seguir,
+  // y apretar el boton reinicia desde cero. No se corrige, se copia.
   const b = { textContent: '' };
-  rotuloReproducir(b, { estado: 'pausado', t: 10, duracion: 10 });
+  rotuloReproducir(b, { estado: 'pausado', t: 10, duracion: 10 }, false);
+  assert.equal(b.textContent, 'Seguir');
+});
+
+test('el rotulo dice Reproducir si el reloj esta en cero y no se reprodujo nada', () => {
+  const b = { textContent: '' };
+  rotuloReproducir(b, { estado: 'reposo', t: 0, duracion: 10 }, false);
   assert.equal(b.textContent, 'Reproducir');
 });
