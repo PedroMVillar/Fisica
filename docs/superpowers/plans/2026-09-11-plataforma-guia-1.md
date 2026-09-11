@@ -207,21 +207,35 @@ arrastrable.
 
 Agregar al final de `test/escena.test.js`:
 
+Ojo con una cosa antes de escribirlas: `avanzar(dt)` arranca con el guard
+`if (estado !== 'reproduciendo') return;`, que es comportamiento aprobado y está fijado
+por la prueba `no avanza el tiempo mientras no se reproduce`. **Ese guard se queda.** Por
+eso toda prueba que espere que el reloj se mueva tiene que llamar `reproducir()` antes.
+
 ```js
 test('velocidad escala lo que avanza el reloj', () => {
   const e = crearEscena({ dibujar() {}, duracion: 10, velocidad: 0.5 });
+  e.reproducir();
   e.avanzar(2);
   assert.equal(e.t, 1);
 });
 
 test('velocidad por defecto es 1 y no cambia el comportamiento viejo', () => {
   const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.reproducir();
   e.avanzar(2);
   assert.equal(e.t, 2);
 });
 
+test('la velocidad no le pasa por encima al guard: en reposo el reloj no se mueve', () => {
+  const e = crearEscena({ dibujar() {}, duracion: 10, velocidad: 4 });
+  e.avanzar(2);
+  assert.equal(e.t, 0);
+});
+
 test('cambiar velocidad a mitad de camino no mueve el reloj, solo su ritmo', () => {
   const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.reproducir();
   e.avanzar(2);
   e.velocidad = 0.25;
   assert.equal(e.t, 2);
@@ -231,6 +245,7 @@ test('cambiar velocidad a mitad de camino no mueve el reloj, solo su ritmo', () 
 
 test('duracion es escribible y recorta el reloj si se acorta', () => {
   const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.reproducir();
   e.avanzar(8);
   e.duracion = 3;
   assert.equal(e.duracion, 3);
@@ -239,6 +254,7 @@ test('duracion es escribible y recorta el reloj si se acorta', () => {
 
 test('alargar la duracion no mueve el reloj', () => {
   const e = crearEscena({ dibujar() {}, duracion: 10 });
+  e.reproducir();
   e.avanzar(4);
   e.duracion = 20;
   assert.equal(e.t, 4);
@@ -286,9 +302,16 @@ el tope de `SALTO_MAXIMO` ni `detenerLoop`, que quedan exactamente como están:
    `let dur = duracion;` y `let vel = velocidad;`.
 3. Reemplazar toda referencia interna a `duracion` por `dur` — hoy hay una sola, la
    comparación dentro de `avanzar`.
-4. En `avanzar(dt)`, cambiar `t += dt` por `t += dt * vel`.
+4. Dentro de `avanzar(dt)`, y **después** del guard `if (estado !== 'reproduciendo') return;`
+   que queda tal cual está, cambiar `t = Math.min(t + dt, duracion)` por
+   `t = Math.min(t + dt * vel, dur)`.
 5. Agregar al objeto devuelto los getters y setters de `duracion` y `velocidad`, y el
    método `ir`.
+
+El guard de `avanzar` **no se toca**: que el reloj no se mueva mientras la escena no
+reproduce es comportamiento aprobado, lo fija la prueba `no avanza el tiempo mientras no
+se reproduce`, y los widgets se apoyan en él para quedarse quietos al cargar. `ir(t)` es
+la vía deliberada para mover el reloj sin reproducir, y por eso no pasa por `avanzar`.
 
 Así queda la parte que cambia, con lo que no cambia marcado como tal:
 
@@ -315,9 +338,9 @@ export function crearEscena({ dibujar, duracion, velocidad = 1, alCambiar }) {
       dibujar(t);
     },
     avanzar(dt) {
-      t += dt * vel;
+      if (estado !== 'reproduciendo') return;   // [SIN CAMBIOS] el guard se queda
+      t = Math.min(t + dt * vel, dur);
       if (t >= dur) {
-        t = dur;
         detenerLoop();
         pasarA('pausado');
       }
