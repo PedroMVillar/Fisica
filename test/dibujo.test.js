@@ -242,6 +242,20 @@ test('eje con marcasX:false omite los numeros del eje horizontal pero conserva l
     'los numeros del eje vertical tienen que seguir apareciendo');
 });
 
+test('eje con marcasY:false omite los numeros del eje vertical pero conserva los del horizontal', () => {
+  // Misma pareja de rangos y misma eleccion de marcas exclusivas que la prueba de
+  // marcasX:false, para que los dos bucles queden probados por separado y de forma
+  // simetrica.
+  const l = crearLienzo({ ancho: 300, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 5 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666', etiquetaX: 'x [m]', marcasY: false });
+  const textos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
+  assert.ok(!textos.includes('1') && !textos.includes('3') && !textos.includes('5'),
+    'no tendria que escribir ningun numero del eje vertical');
+  assert.ok(textos.includes('6') && textos.includes('8') && textos.includes('10'),
+    'los numeros del eje horizontal tienen que seguir apareciendo');
+});
+
 test('eje sin colorTexto no escribe nada, aunque pidan marcas y etiquetas', () => {
   const l = crearLienzo({ ancho: 300, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 5 });
   const c = ctxFalso();

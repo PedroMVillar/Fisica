@@ -154,6 +154,13 @@ function paso(rango) {
   return (n >= 5 ? 5 : n >= 2 ? 2 : 1) * p;
 }
 
+// Cuanto cuelga la etiqueta de un eje por encima del techo de su encuadre (el `- 15`
+// de mas abajo, `l.py(l.yMax) - COLGADO_ROTULO_EJE`). Exportada porque un widget que
+// apila varios paneles en un mismo canvas -- el de los tres paneles de
+// derivada-integral.html -- necesita el mismo numero para calcular cuanto aire dejar
+// entre paneles y que la etiqueta de uno no caiga adentro del panel de arriba.
+export const COLGADO_ROTULO_EJE = 15;
+
 // Las marcas y rótulos son el `axes()` del diseño
 // (docs/plataforma/diseno/Tiro parabolico.dc.html:376-401).
 //
@@ -223,7 +230,7 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX =
       { color: colorTexto, px: 10, alineacion: 'right' });
   }
   if (etiquetaY) {
-    texto(ctx, etiquetaY, l.px(0) - 34, l.py(l.yMax) - 15,
+    texto(ctx, etiquetaY, l.px(0) - 34, l.py(l.yMax) - COLGADO_ROTULO_EJE,
       { color: colorTexto, px: 10, alineacion: 'left' });
   }
 }
