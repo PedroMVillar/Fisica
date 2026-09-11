@@ -128,14 +128,23 @@ function widgetSecante(pagina) {
     // Los rotulos del triangulo se ocultan cuando el cateto no da para escribirlos.
     // Con Delta t chico los dos puntos colapsan y "Dt", "Dx" y "Q" se encinan; el
     // segmento sigue dibujado y el valor exacto vive en las lecturas de abajo.
-    const CATETO_MINIMO = 28;
+    //
+    // Los dos umbrales no preguntan lo mismo, y por eso no son el mismo numero: cada
+    // uno pregunta si el rotulo entra en su cateto Y ADEMAS queda libre de los rotulos
+    // vecinos. "Dx" va en el punto medio del cateto vertical y "Q" a 18 px debajo del
+    // punto, asi que los separa la mitad del cateto menos 18: para que no se toquen con
+    // glifos de 11 px hace falta un cateto de ~64 px. El horizontal no tiene vecino
+    // ("Dt" cuelga 15 px debajo del segmento, con el eje lejos), asi que le alcanza con
+    // que el texto entre.
+    const CATETO_T_MINIMO = 28;
+    const CATETO_X_MINIMO = 64;
     const catetoT = Math.abs(l.px(tQ) - l.px(T_P));
     const catetoX = Math.abs(l.py(x(tQ)) - l.py(x(T_P)));
-    if (catetoT >= CATETO_MINIMO) {
+    if (catetoT >= CATETO_T_MINIMO) {
       texto(ctx, 'Δt', (l.px(T_P) + l.px(tQ)) / 2, l.py(x(T_P)) + 15,
         { color: p.blue, alineacion: 'center' });
     }
-    if (catetoX >= CATETO_MINIMO) {
+    if (catetoX >= CATETO_X_MINIMO) {
       texto(ctx, 'Δx', l.px(tQ) + 8, (l.py(x(T_P)) + l.py(x(tQ))) / 2,
         { color: p.blue });
     }
@@ -145,7 +154,7 @@ function widgetSecante(pagina) {
     // P arriba y a la izquierda, Q abajo y a la derecha: Q *es* el cruce de la secante
     // con la curva, asi que cualquier desplazamiento hacia arriba lo deja debajo de una
     // de las dos lineas, y P arriba se despega de la fila de numeros del eje.
-    texto(ctx, 'P', l.px(T_P) - 16, l.py(x(T_P)) - 12, { color: p.ink });
+    texto(ctx, 'P', l.px(T_P) - 16, l.py(x(T_P)) - 20, { color: p.ink });
     texto(ctx, 'Q', l.px(tQ) + 12, l.py(x(tQ)) + 18, { color: p.blue });
 
     // Tres decimales en la pendiente y en la diferencia, no dos: con dos, en el mínimo
