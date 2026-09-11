@@ -37,11 +37,19 @@ export function crearWidget({ pagina, canvas, margen, encuadre, dibujar, dpr }) 
       // Una sola escala para los dos ejes, para no deformar el dibujo: se elige la
       // que entra, y el margen sobrante queda como aire.
       const sc = Math.min(anchoUtil / (xMax - xMin), (alto - margen.T - margen.B) / (yMax - yMin));
-      l = crearLienzo({
+      const lEstirado = crearLienzo({
         ancho, alto, margen,
         xMin, xMax: xMin + anchoUtil / sc,
         yMin, yMax: yMin + (alto - margen.T - margen.B) / sc,
       });
+      // NO SIMPLIFICAR: el lienzo se construye estirado a proposito, para que kx y ky
+      // salgan los dos exactamente `sc` y px/py queden uniformes -- son el X/Y del
+      // archivo de diseno. Pero los bordes que se REPORTAN son los pedidos: `eje` traza
+      // hasta ahi, como el axes() del diseno (Tiro parabolico.dc.html:383-384, que usa
+      // v.xmax, el tope pedido), y el sobrante del area util queda como aire en vez de
+      // estirar el eje. Reportar los estirados corre el eje que no manda hasta un pixel.
+      // El area util queda disponible en xMaxUtil/yMaxUtil para quien la necesite.
+      l = { ...lEstirado, xMax, yMax, xMaxUtil: lEstirado.xMax, yMaxUtil: lEstirado.yMax };
 
       dibujar(ctx, l, pagina);
     },

@@ -71,6 +71,28 @@ test('tocar avisa a los suscriptos una sola vez', () => {
   assert.equal(avisos, 1);
 });
 
+// El canvas se pinta pocas veces y nunca mas. Si las tipografias llegan despues del
+// unico pintado, los rotulos quedan en la fuente de respaldo para siempre: por eso
+// crearPagina repinta cuando resuelve `fonts.ready`.
+test('cuando terminan de cargar las fuentes se repinta todo', async () => {
+  const doc = documentoFalso();
+  doc.fonts = { ready: Promise.resolve() };
+  const p = crearPagina({ documento: doc });
+  let repintados = 0;
+  p.registrar({ repintar: () => repintados++ });
+  assert.equal(repintados, 0, 'no repinta antes de que resuelvan las fuentes');
+  await doc.fonts.ready;
+  await null;
+  assert.equal(repintados, 1);
+});
+
+test('un documento sin fonts (o sin fonts.ready) no rompe crearPagina', () => {
+  assert.doesNotThrow(() => crearPagina({ documento: documentoFalso() }));
+  const doc = documentoFalso();
+  doc.fonts = {};
+  assert.doesNotThrow(() => crearPagina({ documento: doc }));
+});
+
 test('el widget escala el canvas por devicePixelRatio y limpia antes de dibujar', () => {
   const p = crearPagina({ documento: documentoFalso() });
   const cv = canvasFalso(800, 400);
@@ -102,6 +124,38 @@ test('el lienzo del widget lleva el margen que se le dio', () => {
   assert.equal(w.lienzo().px(0), 60);
 });
 
+// Encuadre cuya relacion de aspecto NO coincide con la del canvas: el alto sale del
+// tope de 430 px, asi que la escala la fija y, y en x sobra area util. El lienzo tiene
+// que reportar el borde PEDIDO -- `eje` traza hasta ahi, como el axes() del archivo de
+// diseno -- y dejar el borde del area util en xMaxUtil. Si alguien vuelve a reportar el
+// estirado, el eje x se corre casi 9 unidades (en el ensayo de tiro eso era 1.05 px).
+test('el lienzo reporta el encuadre pedido, no el estirado al area util', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 },
+    encuadre: () => ({ xMax: 10, yMax: 10 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  const l = w.lienzo();
+
+  // alto = min(430, 800 * 10/10) = 430  ->  sc = min(800/10, 430/10) = 43
+  assert.equal(l.xMax, 10);
+  assert.equal(l.yMax, 10);
+  assert.ok(l.xMaxUtil > l.xMax, `xMaxUtil (${l.xMaxUtil}) tiene que pasar de xMax (${l.xMax})`);
+  assert.equal(l.xMaxUtil, 800 / 43);
+  assert.equal(l.yMaxUtil, 10);
+
+  // Y el mapeo no se movio: una sola escala para los dos ejes, la que entra.
+  assert.equal(l.escala.x, 43);
+  assert.equal(l.escala.y, 43);
+  assert.equal(l.px(10), 430);
+  assert.equal(l.py(10), 0);
+});
+
+// Este encuadre si coincide en aspecto, asi que no hay nada estirado: la prueba mira
+// que el encuadre se relea, no el recorte (eso lo fija la prueba de arriba).
 test('el encuadre se vuelve a consultar en cada repintado', () => {
   const p = crearPagina({ documento: documentoFalso() });
   const cv = canvasFalso(800, 400);

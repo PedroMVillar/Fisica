@@ -134,18 +134,9 @@ function widgetSombras(pagina) {
     // Quieto, el widget muestra el instante representativo; andando, el reloj de
     // la escena, que ya está en segundos físicos.
     const t = enReposo ? FRACCION_REPOSO * tiro.tVuelo : escena.t;
-    const { xMax: xTope, yMax: yTope } = encuadre();
     const k = l.escala.x * 0.42;
 
-    // `crearWidget` estira el lienzo hasta llenar el área útil: en el eje que no
-    // manda, l.xMax/l.yMax quedan un poco más allá del encuadre pedido (acá, con
-    // v₀ = 24 y α = 50°, 62.596 m contra 62.513 m: 1.05 px de más). El diseño
-    // traza los ejes hasta el encuadre (su `axes()` usa v.xmax/v.ymax), así que
-    // `eje` recibe el mismo lienzo recortado a esos topes: mismo px/py, sólo
-    // otro rango. El día que widget.js deje de estirar el encuadre, esta línea
-    // se borra y queda `eje(ctx, l, ...)`.
-    const lEje = { ...l, xMax: xTope, yMax: yTope };
-    eje(ctx, lEje, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', etiquetaY: 'y [m]' });
+    eje(ctx, l, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', etiquetaY: 'y [m]' });
     curva(ctx, l, tiro.pos, 0, tiro.tVuelo, { color: p.graph, grosor: 1.2, guiones: [3, 5] });
     curva(ctx, l, tiro.pos, 0, t, { color: p.graph, grosor: 1.8 });
 
@@ -182,10 +173,10 @@ function widgetSombras(pagina) {
     texto(ctx, 'g', X - 8, Y + 22, { color: p.red, alineacion: 'right' });
     punto(ctx, l, [cx, cy], 5.5, p.ink);
 
-    texto(ctx, 'paso constante', l.px(xTope * 0.5), l.py(0) + 31,
+    texto(ctx, 'paso constante', l.px(l.xMax * 0.5), l.py(0) + 31,
       { color: p.dim, px: 10, peso: 400, alineacion: 'center' });
     ctx.save();
-    ctx.translate(16, l.py(yTope * 0.5));
+    ctx.translate(16, l.py(l.yMax * 0.5));
     ctx.rotate(-Math.PI / 2);
     texto(ctx, 'frena y vuelve', 0, 0, { color: p.dim, px: 10, peso: 400, alineacion: 'center' });
     ctx.restore();
