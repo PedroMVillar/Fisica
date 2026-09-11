@@ -8,6 +8,15 @@
 // navegador, `reproducir()` lo llama solo mediante un loop de
 // requestAnimationFrame; en las pruebas (sin navegador) se llama a mano.
 
+// Tope del salto de un frame, en segundos, igual que el diseño
+// (`docs/plataforma/diseno/Tiro parabolico.dc.html`: `Math.min(0.05, ...)`).
+// Si la pestaña queda en segundo plano el navegador suspende el rAF, y sin tope
+// el primer frame de vuelta se comería de un saque todo el tiempo ausente: la
+// animación saltaría al final en vez de seguir donde estaba. El tope vive acá,
+// en el loop, que es quien mide tiempo real entre frames; `avanzar(dt)` es el
+// punto de entrada manual y respeta el dt que le pasan.
+const SALTO_MAXIMO = 0.05;
+
 export function crearEscena({ dibujar, duracion, alCambiar = () => {} }) {
   let t = 0;
   let estado = 'reposo';
@@ -35,7 +44,7 @@ export function crearEscena({ dibujar, duracion, alCambiar = () => {} }) {
       return;
     }
     if (tAnterior === null) tAnterior = ahora;
-    const dt = (ahora - tAnterior) / 1000;
+    const dt = Math.min(SALTO_MAXIMO, (ahora - tAnterior) / 1000);
     tAnterior = ahora;
     api.avanzar(dt);
     if (estado === 'reproduciendo') {

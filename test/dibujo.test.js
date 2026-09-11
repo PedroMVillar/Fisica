@@ -76,3 +76,14 @@ test('eje traza la horizontal en py(0) y la vertical en px(0), dentro de los lim
   assert.deepEqual(moves[1].slice(1), [0, 400]);
   assert.deepEqual(lines[1].slice(1), [0, 0]);
 });
+
+test('cuerpo deja el arco como trazado actual: no cierra ni reabre el path despues del fill', () => {
+  // El ensayo de tiro parabolico dibuja los puntos huecos rellenando con
+  // `cuerpo` y contorneando con un ctx.stroke() inmediato, que solo funciona si
+  // el arco sigue siendo el trazado actual. Esto fija ese contrato: si alguien
+  // agrega un closePath() o un beginPath() al final de `cuerpo`, los puntos
+  // huecos se volverian discos sin borde y esta prueba se cae.
+  const c = ctxFalso();
+  cuerpo(c, L, [50, 25], { radio: 4, color: '#f2f0ea' });
+  assert.deepEqual(c.ops.map(o => o[0]), ['beginPath', 'arc', 'fill']);
+});

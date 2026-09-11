@@ -156,3 +156,21 @@ test('reiniciar() cancela el frame agendado con su id exacto y un frame huerfano
     stub.restaurar();
   }
 });
+
+test('el loop topea el salto de un frame en 0.05 s (pestaña en segundo plano)', () => {
+  const stub = instalarStubRaf();
+  try {
+    const e = crearEscena({ dibujar() {}, duracion: 3 });
+    e.reproducir();
+    const [, paso] = [...stub.callbacksPorId.entries()][0];
+
+    paso(0);            // primer frame: fija el origen del reloj, dt = 0
+    assert.equal(e.t, 0);
+
+    paso(10_000);       // vuelta de un segundo plano de 10 s sin frames
+    assert.equal(e.t, 0.05);
+    assert.equal(e.estado, 'reproduciendo');
+  } finally {
+    stub.restaurar();
+  }
+});

@@ -187,15 +187,17 @@ function ejes(v, rotuloX, rotuloY) {
 
 // Flecha en píxeles: la punta del diseño es más chica que la de `vector`
 // (7 contra 9) y el asta se corta antes de la punta, así que se dibuja acá.
-function flecha(x1, y1, x2, y2, color, { grosor = 2, punta = 9 } = {}) {
+function flecha(x1, y1, x2, y2, color, { grosor = 2, punta = 9, guiones = [] } = {}) {
   const dx = x2 - x1, dy = y2 - y1, largo = Math.hypot(dx, dy);
   if (largo < 1) return;
   const hd = Math.min(punta, largo * 0.5), a = Math.atan2(dy, dx);
   ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = grosor;
+  ctx.setLineDash(guiones);
   ctx.beginPath();
   ctx.moveTo(x1, y1);
   ctx.lineTo(x2 - Math.cos(a) * hd * 0.85, y2 - Math.sin(a) * hd * 0.85);
   ctx.stroke();
+  ctx.setLineDash([]);
   ctx.beginPath();
   ctx.moveTo(x2, y2);
   ctx.lineTo(x2 - Math.cos(a - 0.42) * hd, y2 - Math.sin(a - 0.42) * hd);
