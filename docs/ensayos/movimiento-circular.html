@@ -107,7 +107,7 @@ try {
 </section>
 
 <div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La ventana de tiempo dura lo mismo que un período de la partícula azul, así que ella completa siempre exactamente una vuelta, sea cual sea su ω. La roja completa las que le tocan según la relación entre las dos velocidades angulares — con los valores por defecto, el doble: dos contra una, porque ω<sub>B</sub> = 2ω<sub>A</sub>. Movés cualquiera de los dos sliders y la proporción se actualiza sola; la azul nunca deja de cerrar su vuelta justo cuando termina la reproducción. Con ω = 2π rad/s, además, su período es exactamente 1 s y su frecuencia 1 Hz — el mismo valor que arroja el ejercicio 14. Ninguna de las dos lecturas depende de qué tan grande sea la circunferencia: <i>T</i> y <i>f</i> son propiedades de ω, no del radio.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La ventana de tiempo dura lo mismo que un período de la partícula más lenta —la que tenga menor velocidad angular, sea azul o roja— así que ésa completa siempre exactamente una vuelta, no importa cuánto muevas los sliders. La otra completa las que le tocan según la relación entre las dos velocidades. Con los valores por defecto la lenta es la azul: su ω vale 2π rad/s, así que su período es exactamente 1 s y su frecuencia 1 Hz —el mismo valor que arroja el ejercicio 14— y la roja, al doble de velocidad angular, da dos vueltas por cada una de la azul. Si invertís los sliders y la azul pasa a ser la rápida, los papeles se cambian solos: la ventana se acomoda a la roja, que vuelve a cerrar su única vuelta. Ninguna de las dos lecturas depende de qué tan grande sea la circunferencia: <i>T</i> y <i>f</i> son propiedades de ω, no del radio.</p>
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 2, pp. 25–47 · <a href="../../parcial-1/preparacion/resumen-movimiento-circular.pdf">hoja resumen</a> · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 11 a 14</a></p>
 </div>
@@ -237,6 +237,11 @@ function widgetPeriodo(pagina) {
   let omegaA = 2 * Math.PI, omegaB = 4 * Math.PI;   // 1 Hz y 2 Hz
   const movilA = () => crearCircular({ R, omega0: omegaA, centro: [-1.6, 0] });
   const movilB = () => crearCircular({ R, omega0: omegaB, centro: [1.6, 0] });
+  // La mas lenta de las dos -la de periodo mas largo- puede ser cualquiera de las dos:
+  // los sliders comparten el mismo rango, asi que el lector puede dejar a la roja mas
+  // lenta que la azul. La ventana tiene que seguir a quien sea lenta EN CADA MOMENTO,
+  // no a la azul en particular.
+  const periodoLento = () => Math.max(movilA().periodo, movilB().periodo);
 
   const canvas = el('w4-cv');
   const widget = crearWidget({
@@ -252,12 +257,12 @@ function widgetPeriodo(pagina) {
 
   const escena = crearEscena({
     dibujar: () => widget.repintar(),
-    // La ventana de tiempo es el periodo del movil lento (A): asi A da siempre
-    // EXACTAMENTE una vuelta, sea cual sea su velocidad angular, y B da las que le
-    // tocan segun la relacion entre las dos -dos, con los valores por defecto-. Fija
-    // en "2 s" esto se rompia apenas se movia un slider (la cuenta de vueltas dejaba
-    // de ser la que la prosa afirma, y con omega chica ni completaba una vuelta).
-    duracion: movilA().periodo,
+    // La ventana de tiempo es el periodo del movil MAS LENTO, sea cual sea -asi esa
+    // partida siempre da EXACTAMENTE una vuelta, y la otra da las que le tocan segun la
+    // relacion entre las dos-. Fija en "2 s" (o atada a una sola partida por nombre)
+    // esto se rompia apenas se movia un slider: con omega chica ni completaba una
+    // vuelta, y si esa partida pasaba a ser la rapida la ventana quedaba corta.
+    duracion: periodoLento(),
     velocidad: 0.5,
     alCambiar: rotular,
   });
@@ -308,7 +313,7 @@ function widgetPeriodo(pagina) {
     formato: v => v.toFixed(1) + ' rad/s',
     alCambiar: v => {
       omegaA = v;
-      escena.duracion = movilA().periodo;
+      escena.duracion = periodoLento();
       widget.repintar();
       rotular();
     },
@@ -318,7 +323,7 @@ function widgetPeriodo(pagina) {
     formato: v => v.toFixed(1) + ' rad/s',
     alCambiar: v => {
       omegaB = v;
-      escena.duracion = movilA().periodo;
+      escena.duracion = periodoLento();
       widget.repintar();
       rotular();
     },
