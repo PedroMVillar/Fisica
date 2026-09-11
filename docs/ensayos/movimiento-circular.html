@@ -107,7 +107,7 @@ try {
 </section>
 
 <div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con <i>ω</i> = 2π rad/s, la partícula azul completa una vuelta justo en <i>t</i> = 1 s: por eso su período es exactamente 1 s y su frecuencia, 1 Hz — el mismo valor que arroja el ejercicio 14 al aplicar esta fórmula. La roja gira al doble de velocidad angular, así que en esos mismos dos segundos completa el doble de vueltas: dos contra una. Ninguna de las dos lecturas depende de qué tan grande sea la circunferencia — <i>T</i> y <i>f</i> son propiedades de <i>ω</i>, no del radio.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La ventana de tiempo dura lo mismo que un período de la partícula azul, así que ella completa siempre exactamente una vuelta, sea cual sea su ω. La roja completa las que le tocan según la relación entre las dos velocidades angulares — con los valores por defecto, el doble: dos contra una, porque ω<sub>B</sub> = 2ω<sub>A</sub>. Movés cualquiera de los dos sliders y la proporción se actualiza sola; la azul nunca deja de cerrar su vuelta justo cuando termina la reproducción. Con ω = 2π rad/s, además, su período es exactamente 1 s y su frecuencia 1 Hz — el mismo valor que arroja el ejercicio 14. Ninguna de las dos lecturas depende de qué tan grande sea la circunferencia: <i>T</i> y <i>f</i> son propiedades de ω, no del radio.</p>
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 2, pp. 25–47 · <a href="../../parcial-1/preparacion/resumen-movimiento-circular.pdf">hoja resumen</a> · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 11 a 14</a></p>
 </div>
@@ -252,7 +252,12 @@ function widgetPeriodo(pagina) {
 
   const escena = crearEscena({
     dibujar: () => widget.repintar(),
-    duracion: 2,                 // dos segundos: una vuelta de A y dos de B
+    // La ventana de tiempo es el periodo del movil lento (A): asi A da siempre
+    // EXACTAMENTE una vuelta, sea cual sea su velocidad angular, y B da las que le
+    // tocan segun la relacion entre las dos -dos, con los valores por defecto-. Fija
+    // en "2 s" esto se rompia apenas se movia un slider (la cuenta de vueltas dejaba
+    // de ser la que la prosa afirma, y con omega chica ni completaba una vuelta).
+    duracion: movilA().periodo,
     velocidad: 0.5,
     alCambiar: rotular,
   });
@@ -301,12 +306,22 @@ function widgetPeriodo(pagina) {
   deslizador({
     entrada: el('w4-oa'), salida: el('w4-oa-out'), pagina,
     formato: v => v.toFixed(1) + ' rad/s',
-    alCambiar: v => { omegaA = v; widget.repintar(); rotular(); },
+    alCambiar: v => {
+      omegaA = v;
+      escena.duracion = movilA().periodo;
+      widget.repintar();
+      rotular();
+    },
   });
   deslizador({
     entrada: el('w4-ob'), salida: el('w4-ob-out'), pagina,
     formato: v => v.toFixed(1) + ' rad/s',
-    alCambiar: v => { omegaB = v; widget.repintar(); rotular(); },
+    alCambiar: v => {
+      omegaB = v;
+      escena.duracion = movilA().periodo;
+      widget.repintar();
+      rotular();
+    },
   });
   boton({
     elemento: el('w4-play'), pagina,
