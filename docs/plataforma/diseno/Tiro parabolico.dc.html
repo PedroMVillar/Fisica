@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbfaf7; --band:#f2f0ea; --ink:#16151a; --dim:#6a6760; --rule:#dcd8ce;
+  --blue:#1b4fd4; --blue-soft:#8aa3e6; --red:#c02a24; --graph:#8e8a80;
+}
+:root[data-theme="dark"]{
+  --paper:#131316; --band:#191a1e; --ink:#eceae4; --dim:#948f86; --rule:#2e2f35;
+  --blue:#7aa2ff; --blue-soft:#3f5694; --red:#ef5f52; --graph:#6f6c66;
+}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Source Serif 4",Charter,Georgia,serif;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none;border-bottom:1px solid var(--blue-soft)}
+a:hover{color:var(--red);border-bottom-color:var(--red)}
+input[type=range]{accent-color:var(--blue);background:transparent}
+button{font-family:"JetBrains Mono",ui-monospace,monospace}
+@keyframes tp-pulse{0%,100%{box-shadow:0 0 0 0 rgba(27,79,212,0)}50%{box-shadow:0 0 0 7px rgba(27,79,212,.16)}}
+</style>
+</helmet>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div style="max-width:680px;margin:0 auto;padding:56px 24px 0;display:flex;flex-direction:column;gap:0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ensayo 2 · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Tiro parabólico</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Son dos movimientos independientes que sólo comparten el reloj.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Ya leíste que el tiro parabólico «se descompone en <i>x</i> e <i>y</i>». La frase se puede repetir sin creerla: mientras uno la dice, sigue imaginando una piedra que traza una curva, una sola cosa moviéndose de un modo complicado. Y con esa imagen no hay ejercicio que salga, porque la curva no tiene ecuación fácil pero sus dos sombras sí.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Este ensayo tiene un solo objetivo: que dejes de ver una curva y empieces a ver dos movimientos que corren en paralelo, cada uno con su ecuación de siempre, atados únicamente por el hecho de que comparten la variable <i>t</i>.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · Dos movimientos, un reloj</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Mirá la simulación de abajo, pero no mires el proyectil: mirá las dos sombras que deja sobre los ejes. Poné a andar el tiro y fijate en las huellas que cada sombra va marcando, una cada dos décimas de segundo.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Las dos sombras</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— las huellas de abajo están siempre a la misma distancia; las de la izquierda, no.</span>
+    </div>
+    <canvas id="w1-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w1-play" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper);background:var(--blue);border:none;border-radius:2px;padding:9px 16px;cursor:pointer">Reproducir</button>
+        <button id="w1-reset" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Reiniciar</button>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">v₀ <output id="w1-v0-out" style="color:var(--ink);font-variant-numeric:tabular-nums">24.0 m/s</output></span>
+        <input id="w1-v0" type="range" min="8" max="40" step="0.5" value="24" style="width:100%">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">ángulo α <output id="w1-ang-out" style="color:var(--ink);font-variant-numeric:tabular-nums">50°</output></span>
+        <input id="w1-ang" type="range" min="5" max="85" step="1" value="50" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer;padding-bottom:4px">
+        <input id="w1-stamps" type="checkbox" checked style="accent-color:var(--blue);width:15px;height:15px">Huellas
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>t <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00 s</b></span>
+      <span>x <b id="w1-x" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.0 m</b></span>
+      <span>y <b id="w1-y" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.0 m</b></span>
+      <span>vₓ <b id="w1-vx" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">15.4 m/s</b></span>
+      <span><i>v</i><sub>y</sub> <b id="w1-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">18.4 m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La sombra de abajo se mueve como un auto en una ruta recta sin acelerador: pasos iguales en tiempos iguales. La sombra de la izquierda sube, va frenando, se detiene un instante en la altura máxima y vuelve acelerando. Son los dos movimientos que ya conocés del capítulo 1, uno al lado del otro, sin mezclarse.</p>
+  <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:26px 0 0">
+    <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0"><i>x</i>(<i>t</i>) = <i>v</i><sub>0</sub> cos α · <i>t</i><br><i>y</i>(<i>t</i>) = <i>v</i><sub>0</sub> sen α · <i>t</i> − ½ <i>g t</i><sup>2</sup></p>
+    <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:12px 0 0;color:var(--dim)"><i>v</i><sub><i>x</i></sub> = <i>v</i><sub>0</sub> cos α  (constante)   ·   <i>v</i><sub><i>y</i></sub> = <i>v</i><sub>0</sub> sen α − <i>g t</i></p>
+  </div>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:26px 0 0;text-wrap:pretty">No hay nada nuevo acá. La primera línea es un movimiento uniforme; la segunda, un uniformemente acelerado con <i>a</i> = −<i>g</i>. Lo único que las relaciona es la <i>t</i>, y esa <i>t</i> es la misma para las dos porque el proyectil es uno solo. De ahí sale casi toda la técnica del tema: <b style="font-weight:600">cuando un dato es de un eje y la pregunta es del otro, el puente siempre es el tiempo</b>.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · La caída no sabe del avance</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Antes de tocar nada, contestá para vos: si de la misma altura uno lanza una bala horizontalmente a 15 m/s y la otra simplemente se suelta, ¿cuál toca el piso primero? La respuesta correcta es la que casi nadie se cree hasta verla.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Galileo</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— subí la velocidad horizontal todo lo que quieras: las líneas punteadas siguen siendo horizontales.</span>
+    </div>
+    <canvas id="w2-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w2-play" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper);background:var(--blue);border:none;border-radius:2px;padding:9px 16px;cursor:pointer">Reproducir</button>
+        <button id="w2-reset" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Reiniciar</button>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 200px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">vₓ del lanzado <output id="w2-vx-out" style="color:var(--ink);font-variant-numeric:tabular-nums">15.0 m/s</output></span>
+        <input id="w2-vx" type="range" min="0" max="30" step="0.5" value="15" style="width:100%">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">altura <output id="w2-h-out" style="color:var(--ink);font-variant-numeric:tabular-nums">25 m</output></span>
+        <input id="w2-h" type="range" min="5" max="45" step="1" value="25" style="width:100%">
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>t <b id="w2-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00 s</b></span>
+      <span>altura de los dos <b id="w2-alt" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">25.0 m</b></span>
+      <span>diferencia de alturas <b id="w2-dif" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.00 m</b></span>
+      <span>t de caída <b id="w2-tf" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">2.26 s</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Tocan juntas, y no es un detalle curioso: es la independencia otra vez. La ecuación de <i>y</i> no contiene <i>v</i><sub><i>x</i></sub> en ninguna parte, así que el tiempo de caída no puede depender de él. Por eso en los ejercicios de tiro horizontal el tiempo se calcula siempre con la altura, nunca con la velocidad de lanzamiento, y recién después ese tiempo se usa para averiguar cuánto avanzó.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Guardá el orden, porque es el esqueleto de los ejercicios 9 y 10: <b style="font-weight:600">el eje <i>y</i> da el tiempo; el eje <i>x</i> cobra ese tiempo</b>.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · De dónde sale el seno</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">«¿Por qué <i>v</i><sub>0</sub> sen α va en <i>y</i>?» no es una pregunta de física sino de triángulo, y se contesta una sola vez. Arrastrá la punta del vector: lo que se mueve es la velocidad inicial completa, y las dos líneas punteadas son sus sombras, las mismas de la primera simulación pero en el instante cero.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 3</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El triángulo de v₀</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— arrastrá la punta de la flecha.</span>
+    </div>
+    <canvas id="w3-cv" style="width:100%;aspect-ratio:16/8;display:block;cursor:grab;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="w3-p45" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">45°</button>
+        <button id="w3-p30" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Ej. 9</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="w3-vert" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Medir α desde la vertical
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>v₀ <b id="w3-v0" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">25.0 m/s</b></span>
+      <span>α <b id="w3-ang" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">50°</b></span>
+      <span><span id="w3-lx">vₓ = v₀·cos α</span> <b id="w3-vx" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">16.1 m/s</b></span>
+      <span><span id="w3-ly">v_y = v₀·sen α</span> <b id="w3-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">19.2 m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Coseno y seno no están pegados a <i>x</i> y a <i>y</i>: están pegados al lado <b style="font-weight:600">adyacente</b> y al <b style="font-weight:600">opuesto</b> al ángulo. Si el enunciado mide el ángulo desde la vertical —y algunos lo hacen— tildá la casilla y mirá cómo se intercambian sin que el vector se mueva ni un milímetro. Es el error más fácil de cometer y el más fácil de evitar: antes de escribir cos, preguntate junto a cuál de los dos ejes está el ángulo dibujado.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Con las dos sombras del vector inicial ya tenés todo. Poniendo <i>y</i> = 0 sale el tiempo de vuelo, y con él el alcance:</p>
+  <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:24px 0 0">
+    <p style="font:400 18px/1.9 'Source Serif 4',Georgia,serif;margin:0"><i>t</i><sub>vuelo</sub> = 2 <i>v</i><sub>0</sub> sen α / <i>g</i><br><i>y</i><sub>máx</sub> = <i>v</i><sub>0</sub><sup>2</sup> sen<sup>2</sup>α / 2<i>g</i><br><i>x</i><sub>alcance</sub> = <i>v</i><sub>0</sub><sup>2</sup> sen 2α / <i>g</i></p>
+  </div>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:24px 0 0;text-wrap:pretty">No hace falta memorizarlas; sí conviene poder rearmarlas en treinta segundos. Y notá que el alcance máximo cae en α = 45° porque ahí sen 2α vale 1: el mejor tiro no es el más alto ni el más rápido en horizontal, es el que reparte.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">04 · Cuando el eje x deja de ser libre</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Hasta acá el eje horizontal no tenía aceleración. El ejercicio 15 le agrega una —un viento, un empuje— y conviene ver qué se rompe y qué no. Movés el slider y mirás sobre todo las dos lecturas de la derecha, que no se mueven.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 4</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Con viento</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— la curva gris es el tiro sin viento, para comparar.</span>
+    </div>
+    <canvas id="w4-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w4-play" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper);background:var(--blue);border:none;border-radius:2px;padding:9px 16px;cursor:pointer">Reproducir</button>
+        <button id="w4-reset" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Reiniciar</button>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 220px;min-width:160px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--red)">aₓ del viento <output id="w4-ax-out" style="font-variant-numeric:tabular-nums">0.0 m/s²</output></span>
+        <input id="w4-ax" type="range" min="-8" max="8" step="0.2" value="0" style="width:100%;accent-color:var(--red)">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">ángulo α <output id="w4-ang-out" style="color:var(--ink);font-variant-numeric:tabular-nums">55°</output></span>
+        <input id="w4-ang" type="range" min="15" max="80" step="1" value="55" style="width:100%">
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>alcance <b id="w4-alc" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">38.6 m</b></span>
+      <span>corrimiento <b id="w4-dif" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.0 m</b></span>
+      <span>t de vuelo <b id="w4-tf" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.34 s</b></span>
+      <span>altura máx <b id="w4-hmax" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">16.4 m</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La trayectoria se deforma, el vértice se corre, la simetría se pierde. Pero el tiempo de vuelo y la altura máxima no cambian ni un decimal, porque los decide sólo el eje <i>y</i> y al eje <i>y</i> no le pasó nada. La independencia, que en las tres primeras simulaciones era una afirmación, acá se vuelve una herramienta: te deja tocar un eje entero sabiendo exactamente qué resultados quedan intactos.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para resolver 9, 10 y 15</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>Elegí el origen y el sentido positivo, y anotalos. La mitad de los signos mal son de acá.</li>
+    <li>Descomponé <i>v</i><sub>0</sub> mirando desde qué eje se mide el ángulo.</li>
+    <li>Escribí las dos columnas, <i>x</i> e <i>y</i>, por separado. Nunca una ecuación que mezcle las dos.</li>
+    <li>Buscá cuál de las dos columnas te da el tiempo, y pasalo a la otra.</li>
+  </ol>
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 2, pp. 25–47 · <a href="#">hoja resumen</a> · <a href="#">práctico 1, ej. 9, 10 y 15</a> · g = 9.8 m/s²</p>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;huellas&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Widgets&quot;},&quot;velocidadReproduccion&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.75,&quot;min&quot;:0.25,&quot;max&quot;:1.5,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Widgets&quot;},&quot;temaInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;claro&quot;,&quot;oscuro&quot;],&quot;default&quot;:&quot;claro&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Página&quot;}}">
+const G = 9.8, RAD = Math.PI / 180;
+
+class Component extends DCLogic {
+  componentDidMount() {
+    const t = localStorage.getItem('tp-theme') || (this.props.temaInicial === 'oscuro' ? 'dark' : null);
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    this.syncThemeBtn();
+    if (!this.s) this.s = {
+      w1: { v0: 24, ang: 50, t: 0, playing: false, rest: true, stamps: this.props.huellas !== false },
+      w2: { vx: 15, h: 25, t: 0, playing: false, rest: true },
+      w3: { vx: 16.1, vy: 19.2, vert: false, drag: false },
+      w4: { ax: 0, ang: 55, t: 0, playing: false, rest: true }
+    };
+    ['w1', 'w2', 'w4'].forEach(k => { this.s[k].t = this.rest(k); this.label(k); });
+    this.bind();
+    this.observe();
+    this.drawAll();
+    window.onscroll = () => {
+      const el = document.getElementById('tp-prog');
+      if (!el) return;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      el.style.width = (max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0) + '%';
+    };
+    const pb = document.getElementById('w1-play');
+    if (pb && !this.touched) pb.style.animation = 'tp-pulse 2.4s ease-in-out infinite';
+  }
+  componentDidUpdate() { this._pal = null; this.drawAll(); }
+  componentWillUnmount() { if (this._ro) this._ro.disconnect(); if (this.raf) cancelAnimationFrame(this.raf); }
+
+  /* ---------- infra ---------- */
+  el(id) { return document.getElementById(id); }
+  set(id, v) { const e = this.el(id); if (e) e.textContent = v; }
+  pal() {
+    if (this._pal) return this._pal;
+    const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue('--' + n).trim();
+    return (this._pal = { paper: g('paper'), band: g('band'), ink: g('ink'), dim: g('dim'), rule: g('rule'), blue: g('blue'), blueSoft: g('blue-soft'), red: g('red'), graph: g('graph') });
+  }
+  syncThemeBtn() {
+    const b = this.el('tp-theme');
+    if (b) b.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
+  }
+  firstTouch() {
+    this.touched = true;
+    const pb = this.el('w1-play');
+    if (pb) pb.style.animation = '';
+  }
+  observe() {
+    if (this._ro) this._ro.disconnect();
+    this._ro = new ResizeObserver(() => this.drawAll());
+    ['w1-cv', 'w2-cv', 'w3-cv', 'w4-cv'].forEach(id => { const c = this.el(id); if (c && c.parentElement) this._ro.observe(c.parentElement); });
+  }
+  bind() {
+    const on = (id, ev, fn) => { const e = this.el(id); if (e) e[ev] = fn; };
+    on('tp-theme', 'onclick', () => {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (dark) document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('tp-theme', dark ? 'light' : 'dark');
+      this._pal = null; this.syncThemeBtn(); this.drawAll();
+    });
+    const slider = (id, key, k, fmt, out) => on(id, 'oninput', e => {
+      this.s[key][k] = parseFloat(e.target.value);
+      this.set(out, fmt(this.s[key][k]));
+      this.firstTouch();
+      if (this.s[key].rest) this.s[key].t = this.rest(key);
+      this['draw' + key.toUpperCase()]();
+    });
+    slider('w1-v0', 'w1', 'v0', v => v.toFixed(1) + ' m/s', 'w1-v0-out');
+    slider('w1-ang', 'w1', 'ang', v => Math.round(v) + '°', 'w1-ang-out');
+    slider('w2-vx', 'w2', 'vx', v => v.toFixed(1) + ' m/s', 'w2-vx-out');
+    slider('w2-h', 'w2', 'h', v => Math.round(v) + ' m', 'w2-h-out');
+    slider('w4-ax', 'w4', 'ax', v => v.toFixed(1) + ' m/s²', 'w4-ax-out');
+    slider('w4-ang', 'w4', 'ang', v => Math.round(v) + '°', 'w4-ang-out');
+    on('w1-stamps', 'onchange', e => { this.s.w1.stamps = e.target.checked; this.firstTouch(); this.drawW1(); });
+    on('w3-vert', 'onchange', e => { this.s.w3.vert = e.target.checked; this.firstTouch(); this.drawW3(); });
+    ['w1', 'w2', 'w4'].forEach(k => {
+      on(k + '-play', 'onclick', () => this.toggle(k));
+      on(k + '-reset', 'onclick', () => { const s = this.s[k]; s.playing = false; s.rest = true; s.t = this.rest(k); this.label(k); this['draw' + k.toUpperCase()](); });
+    });
+    on('w3-p45', 'onclick', () => this.setV3(25, 45));
+    on('w3-p30', 'onclick', () => this.setV3(20, 30));
+    const cv = this.el('w3-cv');
+    if (cv) {
+      const upd = e => {
+        const r = cv.getBoundingClientRect(), v = this._v3;
+        if (!v) return;
+        let x = (e.clientX - r.left - v.ox) / v.sc, y = (v.oy - (e.clientY - r.top)) / v.sc;
+        x = Math.max(0.5, x); y = Math.max(0.5, y);
+        const m = Math.hypot(x, y);
+        if (m > 40) { x *= 40 / m; y *= 40 / m; }
+        if (m < 6) { x *= 6 / m; y *= 6 / m; }
+        this.s.w3.vx = x; this.s.w3.vy = y; this.drawW3();
+      };
+      cv.onpointerdown = e => { this.s.w3.drag = true; cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; this.firstTouch(); upd(e); };
+      cv.onpointermove = e => { if (this.s.w3.drag) upd(e); };
+      cv.onpointerup = () => { this.s.w3.drag = false; cv.style.cursor = 'grab'; this.drawW3(); };
+    }
+  }
+  setV3(v0, ang) { this.s.w3.vx = v0 * Math.cos(ang * RAD); this.s.w3.vy = v0 * Math.sin(ang * RAD); this.firstTouch(); this.drawW3(); }
+  label(k) {
+    const b = this.el(k + '-play');
+    const s = this.s[k];
+    if (b) b.textContent = s.playing ? 'Pausar' : (!s.rest && s.t > 0 ? 'Seguir' : 'Reproducir');
+  }
+  toggle(k) {
+    const s = this.s[k];
+    this.firstTouch();
+    if (!s.playing && (s.rest || s.t >= this.tf(k) - 1e-6)) { s.t = 0; s.rest = false; }
+    s.playing = !s.playing;
+    this.label(k);
+    if (s.playing && !this.raf) { this.last = null; this.raf = requestAnimationFrame(this.tick); }
+    this['draw' + k.toUpperCase()]();
+  }
+  rest(k) { return 0.35 * this.tf(k); }
+  tf(k) {
+    const s = this.s[k];
+    if (k === 'w1') return 2 * s.v0 * Math.sin(s.ang * RAD) / G;
+    if (k === 'w2') return Math.sqrt(2 * s.h / G);
+    return 2 * 20 * Math.sin(s.ang * RAD) / G;
+  }
+  tick = ts => {
+    const dt = this.last ? Math.min(0.05, (ts - this.last) / 1000) : 0;
+    this.last = ts;
+    let any = false;
+    ['w1', 'w2', 'w4'].forEach(k => {
+      const s = this.s[k];
+      if (!s.playing) return;
+      s.t += dt * (this.props.velocidadReproduccion ?? 0.75);
+      if (s.t >= this.tf(k)) { s.t = this.tf(k); s.playing = false; this.label(k); }
+      else any = true;
+      this['draw' + k.toUpperCase()]();
+    });
+    this.raf = any ? requestAnimationFrame(this.tick) : null;
+  }
+  drawAll() { this.drawW1(); this.drawW2(); this.drawW3(); this.drawW4(); }
+
+  /* ---------- primitivas ---------- */
+  view(id, xmax, ymax, m) {
+    const cv = this.el(id);
+    if (!cv) return null;
+    const cw = cv.getBoundingClientRect().width || (cv.parentElement ? cv.parentElement.getBoundingClientRect().width : 0);
+    if (!cw) return null;
+    const availW = cw - m.L - m.R;
+    const h = Math.round(Math.max(215, Math.min(430, m.T + m.B + availW * (ymax / xmax))));
+    cv.style.aspectRatio = 'auto'; cv.style.height = h + 'px';
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(cw * dpr); cv.height = Math.round(h * dpr);
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cw, h);
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    const sc = Math.min(availW / xmax, (h - m.T - m.B) / ymax);
+    const ox = m.L, oy = h - m.B;
+    return { ctx, w: cw, h, sc, ox, oy, xmax, ymax, X: x => ox + x * sc, Y: y => oy - y * sc };
+  }
+  mono(ctx, px, weight) { ctx.font = (weight || 400) + ' ' + px + 'px "JetBrains Mono", ui-monospace, monospace'; }
+  step(range) {
+    const raw = range / 5, p = Math.pow(10, Math.floor(Math.log10(raw))), n = raw / p;
+    return (n >= 5 ? 5 : n >= 2 ? 2 : 1) * p;
+  }
+  axes(v, xLab, yLab, xmin) {
+    const { ctx } = v, p = this.pal(), x0 = xmin === undefined ? 0 : xmin;
+    ctx.strokeStyle = p.rule; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(v.X(x0), v.Y(0)); ctx.lineTo(v.X(v.xmax), v.Y(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(v.X(0), v.Y(0)); ctx.lineTo(v.X(0), v.Y(v.ymax)); ctx.stroke();
+    ctx.fillStyle = p.dim; this.mono(ctx, 10);
+    const sx = this.step(v.xmax - x0);
+    for (let x = Math.ceil(x0 / sx) * sx; x <= v.xmax + 1e-6; x += sx) {
+      ctx.strokeStyle = p.rule;
+      ctx.beginPath(); ctx.moveTo(v.X(x), v.Y(0)); ctx.lineTo(v.X(x), v.Y(0) + 4); ctx.stroke();
+      if (Math.abs(x) > 1e-9) { ctx.textAlign = 'center'; ctx.fillText(String(Math.round(x * 10) / 10), v.X(x), v.Y(0) + 16); }
+    }
+    const sy = this.step(v.ymax);
+    for (let y = sy; y <= v.ymax + 1e-6; y += sy) {
+      ctx.strokeStyle = p.rule;
+      ctx.beginPath(); ctx.moveTo(v.X(0), v.Y(y)); ctx.lineTo(v.X(0) - 4, v.Y(y)); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.fillText(String(Math.round(y * 10) / 10), v.X(0) - 8, v.Y(y) + 3.5);
+    }
+    ctx.textAlign = 'right'; this.mono(ctx, 10, 500);
+    ctx.fillText(xLab, v.X(v.xmax), v.Y(0) + 28);
+    ctx.textAlign = 'left'; ctx.fillText(yLab, v.X(0) - 34, v.Y(v.ymax) - 15);
+  }
+  arrow(ctx, x1, y1, x2, y2, color, opt) {
+    const o = opt || {}, dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy);
+    if (len < 1) return;
+    const hd = Math.min(o.head || 9, len * 0.5), a = Math.atan2(dy, dx);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = o.width || 2;
+    ctx.setLineDash(o.dash || []);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - Math.cos(a) * hd * 0.85, y2 - Math.sin(a) * hd * 0.85); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - Math.cos(a - 0.42) * hd, y2 - Math.sin(a - 0.42) * hd);
+    ctx.lineTo(x2 - Math.cos(a + 0.42) * hd, y2 - Math.sin(a + 0.42) * hd);
+    ctx.closePath(); ctx.fill();
+    if (o.label) {
+      this.mono(ctx, 11, 500); ctx.fillStyle = color;
+      ctx.textAlign = o.lAlign || 'left';
+      ctx.fillText(o.label, x2 + (o.ldx || 8), y2 + (o.ldy || -6));
+    }
+  }
+  path(v, f, t0, t1, color, opt) {
+    const o = opt || {}, ctx = v.ctx, n = 140;
+    ctx.strokeStyle = color; ctx.lineWidth = o.width || 1.6; ctx.setLineDash(o.dash || []);
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const t = t0 + (t1 - t0) * i / n, pt = f(t);
+      i ? ctx.lineTo(v.X(pt[0]), v.Y(pt[1])) : ctx.moveTo(v.X(pt[0]), v.Y(pt[1]));
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  ground(v, xmin) {
+    const { ctx } = v, p = this.pal(), y = v.Y(0), x0 = v.X(xmin === undefined ? 0 : xmin), x1 = v.X(v.xmax);
+    ctx.strokeStyle = p.graph; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+    ctx.globalAlpha = 0.5;
+    for (let x = x0; x < x1; x += 9) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 6, y + 6); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+  }
+  dot(ctx, x, y, r, color, hollow) {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832);
+    if (hollow) { ctx.fillStyle = this.pal().band; ctx.fill(); ctx.strokeStyle = color; ctx.lineWidth = 1.6; ctx.stroke(); }
+    else { ctx.fillStyle = color; ctx.fill(); }
+  }
+  dash(ctx, x1, y1, x2, y2, color) {
+    ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  /* ---------- widget 1 ---------- */
+  drawW1() {
+    const s = this.s.w1, p = this.pal();
+    const a = s.ang * RAD, vx = s.v0 * Math.cos(a), vy0 = s.v0 * Math.sin(a);
+    const tf = 2 * vy0 / G, R = vx * tf, H = vy0 * vy0 / (2 * G);
+    const v = this.view('w1-cv', Math.max(R, 2) * 1.08, Math.max(H, 1) * 1.28, { L: 62, R: 24, T: 38, B: 42 });
+    if (!v) return;
+    const { ctx } = v;
+    this.axes(v, 'x [m]', 'y [m]');
+    const f = t => [vx * t, vy0 * t - 0.5 * G * t * t];
+    this.path(v, f, 0, tf, p.graph, { dash: [3, 5], width: 1.2 });
+    this.path(v, f, 0, s.t, p.graph, { width: 1.8 });
+    if (s.stamps) {
+      const n = Math.max(1, Math.round(tf / 0.2));
+      for (let i = 0; i <= n; i++) {
+        const t = i * tf / n;
+        if (t > s.t + 1e-9) break;
+        const q = f(t);
+        ctx.strokeStyle = p.blue; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.75;
+        ctx.beginPath(); ctx.moveTo(v.X(q[0]), v.Y(0) - 4); ctx.lineTo(v.X(q[0]), v.Y(0) + 4); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(v.X(0) - 4, v.Y(q[1])); ctx.lineTo(v.X(0) + 4, v.Y(q[1])); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+    const c = f(s.t), px = v.X(c[0]), py = v.Y(c[1]);
+    this.dash(ctx, px, py, px, v.Y(0), p.blueSoft);
+    this.dash(ctx, px, py, v.X(0), py, p.blueSoft);
+    this.dot(ctx, px, v.Y(0), 4.5, p.blue, true);
+    this.dot(ctx, v.X(0), py, 4.5, p.blue, true);
+    const vyn = vy0 - G * s.t, k = v.sc * 0.42;
+    this.arrow(ctx, px, py, px + vx * k, py, p.blue, { width: 1.6, head: 7 });
+    this.arrow(ctx, px, py, px, py - vyn * k, p.blue, { width: 1.6, head: 7 });
+    this.arrow(ctx, px, py, px, py + 24, p.red, { width: 1.6, head: 7 });
+    this.mono(ctx, 11, 500); ctx.fillStyle = p.blue;
+    ctx.textAlign = 'center'; ctx.fillText('vₓ', px + vx * k / 2, py - 10);
+    ctx.textAlign = 'right'; ctx.fillText('v_y', px - 9, py - vyn * k / 2 + 4);
+    ctx.fillStyle = p.red; ctx.textAlign = 'right'; ctx.fillText('g', px - 8, py + 22);
+    this.dot(ctx, px, py, 5.5, p.ink);
+    ctx.fillStyle = p.dim; this.mono(ctx, 10);
+    ctx.textAlign = 'center'; ctx.fillText('paso constante', v.X(v.xmax * 0.5), v.Y(0) + 31);
+    ctx.save(); ctx.translate(16, v.Y(v.ymax * 0.5)); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center';
+    ctx.fillText('frena y vuelve', 0, 0); ctx.restore();
+    this.set('w1-t', s.t.toFixed(2) + ' s');
+    this.set('w1-x', c[0].toFixed(1) + ' m');
+    this.set('w1-y', Math.max(0, c[1]).toFixed(1) + ' m');
+    this.set('w1-vx', vx.toFixed(1) + ' m/s');
+    this.set('w1-vy', vyn.toFixed(1) + ' m/s');
+  }
+
+  /* ---------- widget 2 ---------- */
+  drawW2() {
+    const s = this.s.w2, p = this.pal();
+    const tf = Math.sqrt(2 * s.h / G), x0 = 3, xr = x0 + s.vx * tf;
+    const v = this.view('w2-cv', Math.max(xr * 1.1, 10), s.h * 1.12, { L: 58, R: 24, T: 38, B: 42 });
+    if (!v) return;
+    const { ctx } = v;
+    this.axes(v, 'x [m]', 'y [m]');
+    this.ground(v);
+    const yOf = t => s.h - 0.5 * G * t * t;
+    const A = t => [x0, yOf(t)], B = t => [x0 + s.vx * t, yOf(t)];
+    this.path(v, B, 0, tf, p.graph, { dash: [3, 5], width: 1.2 });
+    const n = Math.max(1, Math.round(tf / 0.3));
+    for (let i = 0; i <= n; i++) {
+      const t = i * tf / n;
+      if (t > s.t + 1e-9) break;
+      const ya = v.Y(yOf(t));
+      ctx.globalAlpha = 0.55;
+      this.dash(ctx, v.X(x0), ya, v.X(x0 + s.vx * t), ya, p.graph);
+      ctx.globalAlpha = 1;
+    }
+    const a = A(s.t), b = B(s.t);
+    this.dot(ctx, v.X(a[0]), v.Y(a[1]), 6.5, p.ink);
+    this.dot(ctx, v.X(b[0]), v.Y(b[1]), 6.5, p.blue);
+    ctx.fillStyle = p.dim; this.mono(ctx, 10); ctx.textAlign = 'right';
+    ctx.fillText('soltado', v.X(x0) - 11, v.Y(s.h) - 13);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = p.blue; ctx.fillText('lanzado', v.X(x0) + 11, v.Y(s.h) - 13);
+    this.set('w2-t', s.t.toFixed(2) + ' s');
+    this.set('w2-alt', Math.max(0, yOf(s.t)).toFixed(1) + ' m');
+    this.set('w2-dif', '0.00 m');
+    this.set('w2-tf', tf.toFixed(2) + ' s');
+  }
+
+  /* ---------- widget 3 ---------- */
+  drawW3() {
+    const s = this.s.w3, p = this.pal();
+    const v = this.view('w3-cv', 44, 44, { L: 62, R: 130, T: 38, B: 48 });
+    if (!v) return;
+    this._v3 = v;
+    const { ctx } = v;
+    this.axes(v, 'vₓ [m/s]', 'v_y [m/s]');
+    const tx = v.X(s.vx), ty = v.Y(s.vy), o = { x: v.X(0), y: v.Y(0) };
+    this.arrow(ctx, o.x, o.y, tx, o.y, p.blue, { width: 1.4, head: 7, dash: [4, 4] });
+    this.arrow(ctx, tx, o.y, tx, ty, p.blue, { width: 1.4, head: 7, dash: [4, 4] });
+    this.dash(ctx, o.x, ty, tx, ty, p.blueSoft);
+    this.mono(ctx, 11, 500); ctx.fillStyle = p.blue;
+    ctx.textAlign = 'center';
+    ctx.fillText((s.vert ? 'v₀ sen α' : 'v₀ cos α') + ' = ' + s.vx.toFixed(1), (o.x + tx) / 2, o.y + 33);
+    ctx.textAlign = 'left';
+    ctx.fillText((s.vert ? 'v₀ cos α' : 'v₀ sen α') + ' = ' + s.vy.toFixed(1), tx + 10, (o.y + ty) / 2 + 4);
+    const mag = Math.hypot(s.vx, s.vy), ang = Math.atan2(s.vy, s.vx);
+    ctx.strokeStyle = p.ink; ctx.lineWidth = 1.2;
+    const r = Math.min(46, v.sc * mag * 0.5);
+    ctx.beginPath();
+    if (s.vert) ctx.arc(o.x, o.y, r, -Math.PI / 2, -ang, false);
+    else ctx.arc(o.x, o.y, r, 0, -ang, true);
+    ctx.stroke();
+    ctx.fillStyle = p.ink; this.mono(ctx, 11, 500); ctx.textAlign = 'center';
+    const mid = s.vert ? -(Math.PI / 2 + ang) / 2 - Math.PI / 4 : -ang / 2;
+    ctx.fillText('α', o.x + Math.cos(mid) * (r + 13), o.y + Math.sin(mid) * (r + 13) + 4);
+    this.arrow(ctx, o.x, o.y, tx, ty, p.ink, { width: 2.6, head: 12 });
+    this.dot(ctx, tx, ty, 7, p.blue);
+    this.dot(ctx, tx, ty, 3, p.paper);
+    this.mono(ctx, 11, 500); ctx.fillStyle = p.ink; ctx.textAlign = 'left';
+    ctx.fillText('v₀ = ' + mag.toFixed(1) + ' m/s', tx + 14, ty - 8);
+    ctx.fillStyle = p.dim; this.mono(ctx, 10);
+    ctx.fillText('arrastrá →', tx + 14, ty + 8);
+    const deg = s.vert ? 90 - ang / RAD : ang / RAD;
+    this.set('w3-v0', mag.toFixed(1) + ' m/s');
+    this.set('w3-ang', Math.round(deg) + '°');
+    this.set('w3-vx', s.vx.toFixed(1) + ' m/s');
+    this.set('w3-vy', s.vy.toFixed(1) + ' m/s');
+    this.set('w3-lx', 'vₓ = v₀·' + (s.vert ? 'sen' : 'cos') + ' α');
+    this.set('w3-ly', 'v_y = v₀·' + (s.vert ? 'cos' : 'sen') + ' α');
+  }
+
+  /* ---------- widget 4 ---------- */
+  drawW4() {
+    const s = this.s.w4, p = this.pal(), v0 = 20;
+    const a = s.ang * RAD, vx = v0 * Math.cos(a), vy0 = v0 * Math.sin(a);
+    const tf = 2 * vy0 / G, H = vy0 * vy0 / (2 * G);
+    const yOf = t => vy0 * t - 0.5 * G * t * t;
+    const ref = t => [vx * t, yOf(t)], act = t => [vx * t + 0.5 * s.ax * t * t, yOf(t)];
+    const xr = ref(tf)[0], xa = act(tf)[0];
+    const xmax = Math.max(xr, xa, 5) * 1.08, xmin = Math.min(0, xa * 1.08);
+    const v = this.view('w4-cv', xmax - xmin, Math.max(H, 1) * 1.3, { L: 62, R: 24, T: 38, B: 42 });
+    if (!v) return;
+    const shift = -xmin;
+    const V = { ...v, X: x => v.X(x + shift) };
+    const { ctx } = v;
+    this.axes(V, 'x [m]', 'y [m]', xmin);
+    this.path(V, ref, 0, tf, p.graph, { dash: [3, 5], width: 1.2 });
+    this.path(V, act, 0, tf, p.blue, { width: 1.9 });
+    const cr = ref(tf / 2), ca = act(tf / 2);
+    this.dash(ctx, V.X(cr[0]), V.Y(cr[1]), V.X(ca[0]), V.Y(ca[1]), p.red);
+    this.dot(ctx, V.X(cr[0]), V.Y(cr[1]), 3.5, p.graph);
+    this.dot(ctx, V.X(ca[0]), V.Y(ca[1]), 3.5, p.blue);
+    ctx.strokeStyle = p.rule; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+    ctx.beginPath(); ctx.moveTo(V.X(xmin), V.Y(H)); ctx.lineTo(V.X(xmax - shift), V.Y(H)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = p.dim; this.mono(ctx, 10); ctx.textAlign = 'left';
+    ctx.fillText('altura máx — no cambia', V.X(xmin) + 6, V.Y(H) - 6);
+    const c = act(s.t), px = V.X(c[0]), py = V.Y(c[1]);
+    if (Math.abs(s.ax) > 0.05) this.arrow(ctx, px, py, px + Math.sign(s.ax) * (18 + Math.abs(s.ax) * 3.4), py, p.red, { width: 1.8, head: 8, label: 'aₓ', ldy: -8, lAlign: Math.sign(s.ax) > 0 ? 'left' : 'right', ldx: Math.sign(s.ax) > 0 ? 6 : -6 });
+    this.arrow(ctx, px, py, px, py + 26, p.red, { width: 1.6, head: 7 });
+    this.dot(ctx, px, py, 5.5, p.ink);
+    this.set('w4-alc', xa.toFixed(1) + ' m');
+    this.set('w4-dif', (xa - xr >= 0 ? '+' : '') + (xa - xr).toFixed(1) + ' m');
+    this.set('w4-tf', tf.toFixed(2) + ' s');
+    this.set('w4-hmax', H.toFixed(1) + ' m');
+  }
+
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
