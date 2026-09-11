@@ -96,7 +96,7 @@ try {
 
 <div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Donde <i>x</i> tiene su máximo —<i>t</i> = 1.7 s, <i>x</i> = 17.45 m— la velocidad vale cero, porque ahí la curva de posición está horizontal: no hay pendiente que leer. Arrastrá el cursor hasta esa cima y mirá el punto azul del panel del medio: cae justo sobre el cero.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">La aceleración, en cambio, no se entera de nada de eso: es constante y negativa, −10 m/s², en todo el recorrido. Se ve en que <i>v</i> es una recta que baja sin pausa y en que <i>x</i> es una parábola con la concavidad siempre hacia abajo. El ejercicio 4 cobra justo esta distinción: velocidad cero no es lo mismo que aceleración cero. En la cima del tiro, el móvil deja de subir un instante, pero nunca deja de frenar.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">La aceleración, en cambio, no se entera de nada de eso: es constante y negativa, −10 m/s², en todo el recorrido. Se ve en que <i>v</i> es una recta que baja sin pausa y en que <i>x</i> es una parábola con la concavidad siempre hacia abajo. El ejercicio 4 cobra justo esta distinción: velocidad cero no es lo mismo que aceleración cero. En la cima de la curva, el móvil deja de avanzar un instante, pero nunca deja de frenar.</p>
 
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 1, pp. 3–24 · <a href="../../parcial-1/practicos/practico_1_2026.pdf">práctico 1, ej. 1 a 8</a></p>
@@ -106,7 +106,7 @@ try {
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget } from '../motor/widget.js';
 import { crearLienzo } from '../motor/lienzo.js';
-import { eje, curva, cuerpo, punteado, texto } from '../motor/dibujo.js';
+import { eje, curva, cuerpo, punteado, texto, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
 import { deslizador, boton } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
 import { derivar } from '../fisica/calculo.js';
@@ -253,15 +253,21 @@ function widgetPaneles(pagina) {
   // casi enteros en el rotulo y la fila de numeros.
   //
   // HUECO_ROTULO es el aire que se deja entre paneles para que el rotulo del eje Y
-  // (que `eje()` cuelga 15 px por encima del techo de SU panel, dibujo.js) caiga en
-  // ese hueco y no adentro del panel de arriba -- la superposicion que reporto la
-  // ronda de revision 1. Se le suma al margen superior de cada sublienzo (no se toca
-  // el -15, que es del sistema de diseno) y, como ese margen sale del mismo
-  // presupuesto vertical que la curva, ALTO_PANEL_MINIMO le suma esos mismos 18 px al
-  // piso de 95 para que el area de curva no se achique: el piso de 95 px se fijo
-  // contando el espacio del rotulo, y ahora hay que contar tambien el hueco.
+  // caiga en ese hueco y no adentro del panel de arriba -- la superposicion que
+  // reporto la ronda de revision 1. No es un numero nuevo: se deriva de los dos que ya
+  // estan en el sistema. `eje()` cuelga la linea de base del rotulo
+  // COLGADO_ROTULO_EJE (15 px, dibujo.js) por encima del techo del panel, y un glifo
+  // de 10 px (el tamano de los rotulos de eje) sube unos 8 px por encima de su propia
+  // linea de base -- de ahi el "+ 8". Sumados, COLGADO_ROTULO_EJE + 8 es el hueco que
+  // deja el rotulo completamente libre del panel de arriba.
+  //
+  // Se le suma al margen superior de cada sublienzo (no se toca el COLGADO_ROTULO_EJE,
+  // que es del sistema de diseno) y, como ese margen sale del mismo presupuesto
+  // vertical que la curva, ALTO_PANEL_MINIMO le suma ese mismo hueco al piso de 95
+  // para que el area de curva no se achique: el piso de 95 px se fijo contando el
+  // espacio del rotulo, y ahora hay que contar tambien el hueco.
   const MARGEN = { L: 62, R: 24, T: 20, B: 34 };
-  const HUECO_ROTULO = 18;
+  const HUECO_ROTULO = COLGADO_ROTULO_EJE + 8;
   const ALTO_PANEL_MINIMO = 95 + HUECO_ROTULO;
   const widget = crearWidget({
     pagina, canvas,
