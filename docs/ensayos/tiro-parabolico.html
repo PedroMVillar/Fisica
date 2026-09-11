@@ -119,9 +119,47 @@ try {
   </div>
 </section>
 
-<div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
+<div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Tocan juntas, y no es un detalle curioso: es la independencia otra vez. La ecuación de <i>y</i> no contiene <i>v</i><sub><i>x</i></sub> en ninguna parte, así que el tiempo de caída no puede depender de él. Por eso en los ejercicios de tiro horizontal el tiempo se calcula siempre con la altura, nunca con la velocidad de lanzamiento, y recién después ese tiempo se usa para averiguar cuánto avanzó.</p>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Guardá el orden, porque es el esqueleto de los ejercicios 9 y 10: <b style="font-weight:600">el eje <i>y</i> da el tiempo; el eje <i>x</i> cobra ese tiempo</b>.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · De dónde sale el seno</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">«¿Por qué <i>v</i><sub>0</sub> sen α va en <i>y</i>?» no es una pregunta de física sino de triángulo, y se contesta una sola vez. Arrastrá la punta del vector: lo que se mueve es la velocidad inicial completa, y las dos líneas punteadas son sus sombras, las mismas de la primera simulación pero en el instante cero.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 3</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El triángulo de v₀</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— arrastrá la punta de la flecha.</span>
+    </div>
+    <canvas id="w3-cv" style="width:100%;aspect-ratio:16/8;display:block;cursor:grab;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="w3-p45" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">45°</button>
+        <button id="w3-p30" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Ej. 9</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="w3-vert" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Medir α desde la vertical
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>v₀ <b id="w3-v0" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">25.0 m/s</b></span>
+      <span>α <b id="w3-ang" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">50°</b></span>
+      <span><span id="w3-lx">vₓ = v₀·cos α</span> <b id="w3-vx" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">16.1 m/s</b></span>
+      <span><span id="w3-ly">v_y = v₀·sen α</span> <b id="w3-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">19.2 m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Coseno y seno no están pegados a <i>x</i> y a <i>y</i>: están pegados al lado <b style="font-weight:600">adyacente</b> y al <b style="font-weight:600">opuesto</b> al ángulo. Si el enunciado mide el ángulo desde la vertical —y algunos lo hacen— tildá la casilla y mirá cómo se intercambian sin que el vector se mueva ni un milímetro. Es el error más fácil de cometer y el más fácil de evitar: antes de escribir cos, preguntate junto a cuál de los dos ejes está el ángulo dibujado.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Con las dos sombras del vector inicial ya tenés todo. Poniendo <i>y</i> = 0 sale el tiempo de vuelo, y con él el alcance:</p>
+  <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:24px 0 0">
+    <p style="font:400 18px/1.9 'Source Serif 4',Georgia,serif;margin:0"><i>t</i><sub>vuelo</sub> = 2 <i>v</i><sub>0</sub> sen α / <i>g</i><br><i>y</i><sub>máx</sub> = <i>v</i><sub>0</sub><sup>2</sup> sen<sup>2</sup>α / 2<i>g</i><br><i>x</i><sub>alcance</sub> = <i>v</i><sub>0</sub><sup>2</sup> sen 2α / <i>g</i></p>
+  </div>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:24px 0 0;text-wrap:pretty">No hace falta memorizarlas; sí conviene poder rearmarlas en treinta segundos. Y notá que el alcance máximo cae en α = 45° porque ahí sen 2α vale 1: el mejor tiro no es el más alto ni el más rápido en horizontal, es el que reparte.</p>
 </div>
 
 <script type="module">
@@ -130,6 +168,7 @@ import { crearWidget } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
 import { eje, curva, cuerpo, vectorPx, punteado, texto } from '../motor/dibujo.js';
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
+import { arrastrable } from '../motor/arrastre.js';
 import { crearTiro } from '../fisica/tiro.js';
 
 const el = id => document.getElementById(id);
@@ -463,6 +502,92 @@ function widgetGalileo(pagina) {
   pulso();
 }
 
+/* ---------- widget 3: el triángulo de v₀ ---------- */
+
+// A diferencia de los widgets 1 y 2, este no anima: no tiene reloj ni `crearEscena`,
+// arranca quieto y sólo se redibuja cuando el lector arrastra la punta del vector o
+// toca un control. Transcripción de `drawW3` (Tiro parabolico.dc.html:533-573).
+function widgetTriangulo(pagina) {
+  const RAD = Math.PI / 180;
+  let vx = 16.1, vy = 19.2, desdeVertical = false;
+
+  const canvas = el('w3-cv');
+  const widget = crearWidget({
+    pagina, canvas,
+    margen: { L: 62, R: 130, T: 38, B: 48 },
+    encuadre: () => ({ xMax: 44, yMax: 44 }),
+    dibujar: pintar,
+  });
+
+  function pintar(ctx, l) {
+    const p = pagina.paleta();
+    const ox = l.px(0), oy = l.py(0), tx = l.px(vx), ty = l.py(vy);
+
+    eje(ctx, l, { color: p.rule, colorTexto: p.dim, etiquetaX: 'vₓ [m/s]', etiquetaY: 'v_y [m/s]' });
+
+    // Las dos sombras del vector, que son las mismas de la simulación 1 en t = 0.
+    vectorPx(ctx, ox, oy, tx, oy, { color: p.blue, grosor: 1.4, punta: 7, guiones: [4, 4] });
+    vectorPx(ctx, tx, oy, tx, ty, { color: p.blue, grosor: 1.4, punta: 7, guiones: [4, 4] });
+    punteado(ctx, ox, ty, tx, ty, { color: p.blueSoft });
+
+    texto(ctx, (desdeVertical ? 'v₀ sen α' : 'v₀ cos α') + ' = ' + vx.toFixed(1),
+      (ox + tx) / 2, oy + 33, { color: p.blue, alineacion: 'center' });
+    texto(ctx, (desdeVertical ? 'v₀ cos α' : 'v₀ sen α') + ' = ' + vy.toFixed(1),
+      tx + 10, (oy + ty) / 2 + 4, { color: p.blue });
+
+    const modulo = Math.hypot(vx, vy), ang = Math.atan2(vy, vx);
+    const r = Math.min(46, l.escala.x * modulo * 0.5);
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    if (desdeVertical) ctx.arc(ox, oy, r, -Math.PI / 2, -ang, false);
+    else ctx.arc(ox, oy, r, 0, -ang, true);
+    ctx.stroke();
+    const medio = desdeVertical ? -(Math.PI / 2 + ang) / 2 - Math.PI / 4 : -ang / 2;
+    texto(ctx, 'α', ox + Math.cos(medio) * (r + 13), oy + Math.sin(medio) * (r + 13) + 4,
+      { color: p.ink, alineacion: 'center' });
+
+    vectorPx(ctx, ox, oy, tx, ty, { color: p.ink, grosor: 2.6, punta: 12 });
+    cuerpo(ctx, l, [vx, vy], { radio: 7, color: p.blue });
+    cuerpo(ctx, l, [vx, vy], { radio: 3, color: p.paper });
+    texto(ctx, 'v₀ = ' + modulo.toFixed(1) + ' m/s', tx + 14, ty - 8, { color: p.ink });
+    texto(ctx, 'arrastrá →', tx + 14, ty + 8, { color: p.dim, px: 10, peso: 400 });
+
+    const grados = desdeVertical ? 90 - ang / RAD : ang / RAD;
+    leer('w3-v0', modulo.toFixed(1) + ' m/s');
+    leer('w3-ang', Math.round(grados) + '°');
+    leer('w3-vx', vx.toFixed(1) + ' m/s');
+    leer('w3-vy', vy.toFixed(1) + ' m/s');
+    leer('w3-lx', 'vₓ = v₀·' + (desdeVertical ? 'sen' : 'cos') + ' α');
+    leer('w3-ly', 'v_y = v₀·' + (desdeVertical ? 'cos' : 'sen') + ' α');
+  }
+
+  arrastrable({
+    canvas, pagina, lienzo: () => widget.lienzo(),
+    acotar: (x, y) => {
+      x = Math.max(0.5, x);
+      y = Math.max(0.5, y);
+      const m = Math.hypot(x, y);
+      if (m > 40) { x *= 40 / m; y *= 40 / m; }
+      if (m < 6) { x *= 6 / m; y *= 6 / m; }
+      return [x, y];
+    },
+    alArrastrar: (x, y) => { vx = x; vy = y; widget.repintar(); },
+  });
+
+  const preset = (v0, grados) => {
+    vx = v0 * Math.cos(grados * RAD);
+    vy = v0 * Math.sin(grados * RAD);
+    widget.repintar();
+  };
+  boton({ elemento: el('w3-p45'), pagina, alApretar: () => preset(25, 45) });
+  boton({ elemento: el('w3-p30'), pagina, alApretar: () => preset(20, 30) });
+  casilla({
+    entrada: el('w3-vert'), pagina,
+    alCambiar: v => { desdeVertical = v; widget.repintar(); },
+  });
+}
+
 /* ---------- tema ---------- */
 
 function tema(pagina) {
@@ -491,6 +616,7 @@ function tema(pagina) {
 const pagina = crearPagina({ documento: document });
 widgetSombras(pagina);
 widgetGalileo(pagina);
+widgetTriangulo(pagina);
 tema(pagina);
 pagina.observar();
 pagina.progreso(el('tp-prog'));
