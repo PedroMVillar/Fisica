@@ -1007,7 +1007,7 @@ widgets de este plan.
   - `deslizador({ entrada, salida, formato, alCambiar, pagina })` — conecta un `<input type="range">` a su `<output>` y a una función. Devuelve `{ valor() }`.
   - `casilla({ entrada, alCambiar, pagina })` — conecta un `<input type="checkbox">`. Devuelve `{ valor() }`.
   - `boton({ elemento, alApretar, pagina })` — conecta un `<button>`.
-  - `rotuloReproducir(elemento, escena)` — pone en el botón `Reproducir`, `Pausar` o `Seguir` según el estado y el reloj de la escena.
+  - `rotuloReproducir(elemento, escena, enReposo)` — pone en el botón `Reproducir`, `Pausar` o `Seguir`. Es la traducción literal del `label()` del diseño (`docs/plataforma/diseno/Tiro parabolico.dc.html:319-323`): `reproduciendo → 'Pausar'`, y si no, `'Seguir'` cuando **no** está en reposo y el reloj pasó de cero, `'Reproducir'` en cualquier otro caso. El tercer argumento hace falta porque `crearEscena` no distingue "en reposo mostrando un instante representativo" de "pausado a mitad de vuelo": las dos son `estado === 'pausado'` o `'reposo'` con `t > 0`. Esa distinción la lleva el ensayo, igual que el `s.rest` del diseño.
   - `arrastrable({ canvas, lienzo, alArrastrar, acotar, pagina })` — traduce los eventos de puntero a coordenadas físicas y llama a `alArrastrar(x, y)`. `acotar(x, y)` devuelve el par ya acotado.
 
 - [ ] **Paso 1: escribir las pruebas que fallan**
@@ -1061,27 +1061,37 @@ test('la casilla avisa booleanos', () => {
   assert.deepEqual(vistos, [false]);
 });
 
-test('el rotulo del boton dice Reproducir en reposo', () => {
+test('el rotulo del boton dice Reproducir en reposo, aunque el reloj no este en cero', () => {
+  // El estado de reposo de los widgets NO es t = 0: es un instante representativo
+  // del vuelo. Sin el tercer argumento esto diria "Seguir" al cargar la pagina.
   const b = { textContent: '' };
-  rotuloReproducir(b, { estado: 'reposo', t: 0, duracion: 10 });
+  rotuloReproducir(b, { estado: 'reposo', t: 1.3, duracion: 3.7 }, true);
   assert.equal(b.textContent, 'Reproducir');
 });
 
 test('el rotulo dice Pausar mientras reproduce', () => {
   const b = { textContent: '' };
-  rotuloReproducir(b, { estado: 'reproduciendo', t: 3, duracion: 10 });
+  rotuloReproducir(b, { estado: 'reproduciendo', t: 3, duracion: 10 }, false);
   assert.equal(b.textContent, 'Pausar');
 });
 
 test('el rotulo dice Seguir si esta pausado a mitad de camino', () => {
   const b = { textContent: '' };
-  rotuloReproducir(b, { estado: 'pausado', t: 3, duracion: 10 });
+  rotuloReproducir(b, { estado: 'pausado', t: 3, duracion: 10 }, false);
   assert.equal(b.textContent, 'Seguir');
 });
 
-test('el rotulo vuelve a Reproducir si esta pausado al final', () => {
+test('el rotulo dice Seguir tambien al final, como el diseno', () => {
+  // El diseno no distingue "pausado a mitad" de "terminado": las dos dicen Seguir,
+  // y apretar el boton reinicia desde cero. No se corrige, se copia.
   const b = { textContent: '' };
-  rotuloReproducir(b, { estado: 'pausado', t: 10, duracion: 10 });
+  rotuloReproducir(b, { estado: 'pausado', t: 10, duracion: 10 }, false);
+  assert.equal(b.textContent, 'Seguir');
+});
+
+test('el rotulo dice Reproducir si el reloj esta en cero y no se reprodujo nada', () => {
+  const b = { textContent: '' };
+  rotuloReproducir(b, { estado: 'reposo', t: 0, duracion: 10 }, false);
   assert.equal(b.textContent, 'Reproducir');
 });
 ```
@@ -1196,11 +1206,16 @@ export function boton({ elemento, alApretar, pagina }) {
   });
 }
 
-export function rotuloReproducir(elemento, escena) {
+// Traduccion literal del label() del diseno
+// (docs/plataforma/diseno/Tiro parabolico.dc.html:319-323):
+//   s.playing ? 'Pausar' : (!s.rest && s.t > 0 ? 'Seguir' : 'Reproducir')
+// `enReposo` es el `s.rest` del diseno. No sale de la escena porque crearEscena no
+// distingue "en reposo mostrando un instante representativo" de "pausado a mitad":
+// esa distincion la lleva el ensayo, que es quien decide cuando salir del reposo.
+export function rotuloReproducir(elemento, escena, enReposo) {
   if (!elemento) return;
   if (escena.estado === 'reproduciendo') { elemento.textContent = 'Pausar'; return; }
-  const aMitad = escena.t > 0 && escena.t < escena.duracion - 1e-6;
-  elemento.textContent = aMitad ? 'Seguir' : 'Reproducir';
+  elemento.textContent = !enReposo && escena.t > 0 ? 'Seguir' : 'Reproducir';
 }
 ```
 
@@ -1417,7 +1432,7 @@ function widgetGalileo(pagina) {
     dibujar: () => widget.repintar(),
     duracion: tf(),
     velocidad: 0.75,
-    alCambiar: () => rotuloReproducir(document.getElementById('w2-play'), escena),
+    alCambiar: () => rotuloReproducir(document.getElementById('w2-play'), escena, enReposo),
   });
 
   function pintar(ctx, l, t) {
@@ -1691,7 +1706,7 @@ function widgetViento(pagina) {
     dibujar: () => widget.repintar(),
     duracion: sinViento().tVuelo,
     velocidad: 0.75,
-    alCambiar: () => rotuloReproducir(document.getElementById('w4-play'), escena),
+    alCambiar: () => rotuloReproducir(document.getElementById('w4-play'), escena, enReposo),
   });
 
   function pintar(ctx, l, t) {
@@ -2839,7 +2854,7 @@ function widgetVersores(pagina) {
     dibujar: () => widget.repintar(),
     duracion: movil().periodo,
     velocidad: 0.75,
-    alCambiar: () => rotuloReproducir(document.getElementById('w1-play'), escena),
+    alCambiar: () => rotuloReproducir(document.getElementById('w1-play'), escena, enReposo),
   });
 
   function pintar(ctx, l, t) {
@@ -2915,7 +2930,7 @@ function widgetPeriodo(pagina) {
     dibujar: () => widget.repintar(),
     duracion: 2,                 // dos segundos: una vuelta de A y dos de B
     velocidad: 0.5,
-    alCambiar: () => rotuloReproducir(document.getElementById('w4-play'), escena),
+    alCambiar: () => rotuloReproducir(document.getElementById('w4-play'), escena, enReposo),
   });
 
   function pintar(ctx, l, t) {
@@ -3027,7 +3042,7 @@ function widgetAceleraciones(pagina) {
     dibujar: () => widget.repintar(),
     duracion: 3,
     velocidad: 0.6,
-    alCambiar: () => rotuloReproducir(document.getElementById('w2-play'), escena),
+    alCambiar: () => rotuloReproducir(document.getElementById('w2-play'), escena, enReposo),
   });
 
   function pintar(ctx, l, t) {
