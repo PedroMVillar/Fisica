@@ -161,6 +161,28 @@ test('el lienzo reporta el encuadre pedido, no el estirado al area util', () => 
   assert.equal(l.py(10), 0);
 });
 
+// centrar por defecto es false: mismo encuadre y mismo canvas que la prueba de arriba
+// ("el lienzo reporta el encuadre pedido..."), sin pasar `centrar`, tiene que dar el
+// mismo apoyo contra el margen izquierdo -px(xMin) cae justo en el margen L, todo el
+// sobrante (370 px) queda a la derecha, nada a la izquierda.
+test('centrar por defecto es false: el encuadre queda apoyado contra el margen izquierdo, como hoy', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const margen = { L: 0, R: 0, T: 0, B: 0 };
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen,
+    encuadre: () => ({ xMax: 10, yMax: 10 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  const l = w.lienzo();
+  // alto = 430, sc = 43 (igual que la prueba de arriba): el encuadre ocupa 430 de los
+  // 800 px de ancho util. Sin centrar, el px(xMin) pega contra el margen izquierdo (0)
+  // y los 370 px de sobrante quedan enteros del lado derecho.
+  assert.equal(l.px(l.xMin), 0, 'el borde izquierdo del encuadre pega contra el margen izquierdo');
+  assert.equal(l.px(l.xMax), 430, 'nada del sobrante (370 px) se reparte a la izquierda');
+});
+
 // Sin pasar la opcion, escalaUniforme tiene que seguir valiendo true: mismo encuadre
 // de la prueba de arriba (aspecto que NO coincide con el del canvas), misma escala
 // unica para los dos ejes.
@@ -175,6 +197,64 @@ test('escalaUniforme por defecto es true: el comportamiento de hoy no cambia', (
   w.repintar();
   const l = w.lienzo();
   assert.equal(l.escala.x, l.escala.y);
+});
+
+// centrar:true reparte el sobrante de la dimension que no manda en partes iguales
+// entre sus dos margenes: mismo encuadre y canvas que las dos pruebas de arriba
+// (alto tope 430, sc = 43, sobran 370 px de ancho util), pero ahora el sobrante se
+// reparte -185 px a cada lado- en vez de quedar todo a la derecha.
+test('centrar:true reparte el sobrante en partes iguales entre los dos margenes', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const margen = { L: 0, R: 0, T: 0, B: 0 };
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen, centrar: true,
+    encuadre: () => ({ xMax: 10, yMax: 10 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  const l = w.lienzo();
+
+  const aireIzquierda = l.px(l.xMin) - margen.L;
+  const aireDerecha = (cv.getBoundingClientRect().width - margen.R) - l.px(l.xMax);
+  assert.equal(aireIzquierda, 185, 'la mitad de los 370 px de sobrante queda a la izquierda');
+  assert.equal(aireDerecha, 185, 'la otra mitad queda a la derecha');
+  assert.equal(aireIzquierda, aireDerecha, 'el sobrante queda repartido en partes iguales');
+});
+
+// Con centrar:true las dos escalas siguen siendo la misma (lo que mantiene redondo a
+// un circulo): mismo caso que la prueba de arriba, sc = 43 para los dos ejes.
+test('centrar:true no rompe la escala uniforme: las dos escalas siguen siendo iguales', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 }, centrar: true,
+    encuadre: () => ({ xMax: 10, yMax: 10 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  const l = w.lienzo();
+  assert.equal(l.escala.x, l.escala.y);
+  assert.equal(l.escala.x, 43);
+});
+
+// Con centrar:true el lienzo sigue reportando los bordes PEDIDOS, exactos -no hay
+// estirado que corregir en este camino, asi que ni siquiera hace falta el rodeo de
+// "armar estirado y despues pisar xMax/yMax" que usa el camino sin centrar.
+test('centrar:true reporta los bordes pedidos, exactos', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 }, centrar: true,
+    encuadre: () => ({ xMin: 1, xMax: 11, yMin: 2, yMax: 12 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  const l = w.lienzo();
+  assert.equal(l.xMin, 1);
+  assert.equal(l.xMax, 11);
+  assert.equal(l.yMin, 2);
+  assert.equal(l.yMax, 12);
 });
 
 // Con escalaUniforme:false cada eje llena su propia dimension del area util: las dos

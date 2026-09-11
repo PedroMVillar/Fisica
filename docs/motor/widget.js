@@ -21,8 +21,15 @@ import { crearLienzo } from './lienzo.js';
 //   igualar entre segundos y metros. El alto sale de la proporcion 16:8 que el sistema
 //   de diseno fija para el canvas (brief.md 6.4, `aspect-ratio:16/8`), acotado igual
 //   que el camino uniforme.
+//
+// `centrar` (default false, solo tiene efecto con escalaUniforme:true) decide donde
+// cae el sobrante que deja la escala unica en la dimension que no manda: false apoya
+// el encuadre contra el margen izquierdo/superior (el comportamiento de siempre); true
+// reparte ese sobrante en partes iguales entre los dos margenes de cada dimension, asi
+// el encuadre queda centrado en el area util. Es lo que piden las circunferencias: un
+// circulo pegado a un margen con todo el aire del lado opuesto se ve roto.
 export function crearWidget({
-  pagina, canvas, margen, encuadre, dibujar, dpr, escalaUniforme = true,
+  pagina, canvas, margen, encuadre, dibujar, dpr, escalaUniforme = true, centrar = false,
   altoMin = 215, altoMax = 430,
 }) {
   let l = null;
@@ -56,27 +63,47 @@ export function crearWidget({
 
       if (escalaUniforme) {
         // Una sola escala para los dos ejes, para no deformar el dibujo: se elige la
-        // que entra, y el margen sobrante queda como aire.
-        const sc = Math.min(anchoUtil / (xMax - xMin), (alto - margen.T - margen.B) / (yMax - yMin));
-        const lEstirado = crearLienzo({
-          ancho, alto, margen,
-          xMin, xMax: xMin + anchoUtil / sc,
-          yMin, yMax: yMin + (alto - margen.T - margen.B) / sc,
-        });
-        // NO SIMPLIFICAR (solo aplica a este camino, el uniforme): el lienzo se
-        // construye estirado a proposito, para que kx y ky salgan los dos exactamente
-        // `sc` y px/py queden uniformes -- son el X/Y del archivo de diseno. Pero los
-        // bordes que se REPORTAN son los pedidos: `eje` traza hasta ahi, como el
-        // axes() del diseno (Tiro parabolico.dc.html:383-384, que usa v.xmax, el tope
-        // pedido), y el sobrante del area util queda como aire en vez de estirar el
-        // eje. Reportar los estirados corre el eje que no manda hasta un pixel.
-        //
-        // El precio, y es el correcto, pero conviene tenerlo escrito: aca `px` y `ux`
-        // dejan de cerrar en los bordes reportados. En el eje que no manda,
-        // `l.px(l.xMax)` cae ADENTRO del area util (no en `ancho - margen.R`) y
-        // `l.ux(ancho - margen.R)` da mas que `l.xMax`. Todo lienzo salido de
-        // `crearLienzo` cumple esa vuelta; este, a proposito, no.
-        l = { ...lEstirado, xMax, yMax };
+        // que entra, y el sobrante de la otra dimension queda como aire.
+        const altoUtil = alto - margen.T - margen.B;
+        const sc = Math.min(anchoUtil / (xMax - xMin), altoUtil / (yMax - yMin));
+        if (centrar) {
+          // Mismo `sc` que el camino de abajo (la escala no cambia), pero en vez de
+          // estirar el encuadre y despues acotar los bordes reportados, se deduce
+          // cuanto ocupa el encuadre en cada dimension (sc * rango) y el sobrante de
+          // cada una se reparte mitad y mitad entre sus dos margenes. El lienzo se
+          // arma directo con los bordes PEDIDOS -no hay estirado que corregir despues-
+          // y kx/ky salen `sc` los dos porque el margen efectivo absorbe exactamente
+          // el sobrante: (ancho - mL - mR) = anchoUtil - sobranteX = sc * (xMax-xMin).
+          const sobranteX = anchoUtil - sc * (xMax - xMin);
+          const sobranteY = altoUtil - sc * (yMax - yMin);
+          l = crearLienzo({
+            ancho, alto, xMin, xMax, yMin, yMax,
+            margen: {
+              L: margen.L + sobranteX / 2, R: margen.R + sobranteX / 2,
+              T: margen.T + sobranteY / 2, B: margen.B + sobranteY / 2,
+            },
+          });
+        } else {
+          const lEstirado = crearLienzo({
+            ancho, alto, margen,
+            xMin, xMax: xMin + anchoUtil / sc,
+            yMin, yMax: yMin + altoUtil / sc,
+          });
+          // NO SIMPLIFICAR (solo aplica a este camino, sin centrar): el lienzo se
+          // construye estirado a proposito, para que kx y ky salgan los dos exactamente
+          // `sc` y px/py queden uniformes -- son el X/Y del archivo de diseno. Pero los
+          // bordes que se REPORTAN son los pedidos: `eje` traza hasta ahi, como el
+          // axes() del diseno (Tiro parabolico.dc.html:383-384, que usa v.xmax, el tope
+          // pedido), y el sobrante del area util queda como aire en vez de estirar el
+          // eje. Reportar los estirados corre el eje que no manda hasta un pixel.
+          //
+          // El precio, y es el correcto, pero conviene tenerlo escrito: aca `px` y `ux`
+          // dejan de cerrar en los bordes reportados. En el eje que no manda,
+          // `l.px(l.xMax)` cae ADENTRO del area util (no en `ancho - margen.R`) y
+          // `l.ux(ancho - margen.R)` da mas que `l.xMax`. Todo lienzo salido de
+          // `crearLienzo` cumple esa vuelta; este, a proposito, no.
+          l = { ...lEstirado, xMax, yMax };
+        }
       } else {
         // Escalas independientes, cada una llenando su dimension del area util: xMax
         // cae exacto en el borde derecho del area util y yMax en el borde superior.
