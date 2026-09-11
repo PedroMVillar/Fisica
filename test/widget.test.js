@@ -223,24 +223,53 @@ test('centrar:true reparte el sobrante en partes iguales entre los dos margenes'
 });
 
 // Con centrar:true las dos escalas siguen siendo la misma (lo que mantiene redondo a
-// un circulo): mismo caso que la prueba de arriba, sc = 43 para los dos ejes.
-test('centrar:true no rompe la escala uniforme: las dos escalas siguen siendo iguales', () => {
+// un circulo) MIENTRAS el sobrante se reparte de verdad -- a diferencia de la prueba
+// de arriba (que usa el mismo encuadre que "reparte el sobrante..." y por eso, sola,
+// no aportaria nada nuevo), esta usa un canvas ANGOSTO donde el sobrante cae del lado
+// vertical (x manda, y sobra): canvas 200x* margen 0, encuadre xMax=10 yMax=2.
+// anchoUtil=200 -> sc=min(200/10, altoUtil/2). alto = acotarAlto(200*2/10) =
+// acotarAlto(40) = 215 (el piso), altoUtil=215 -> sc=min(20, 107.5)=20 (x manda).
+// sobranteY = 215 - 20*2 = 175, sobranteX = 0.
+//
+// Esto SI discrimina el camino viejo: sin centrar, py(yMin) pega contra el piso del
+// area util (alto - margen.B = 215) y py(yMax) queda mas arriba. Con centrar:true el
+// sobrante vertical se reparte mitad y mitad, asi que py(yMin) se despega del piso
+// tanto como py(yMax) se despega del techo -- y esa igualdad, junto con escala.x ==
+// escala.y, es lo que revierte si el reparto se rompe (por ejemplo si una
+// implementacion futura centrara estirando un solo eje en vez de correr el margen:
+// ahi las escalas dejarian de coincidir).
+test('centrar:true reparte el sobrante vertical sin romper la escala uniforme', () => {
   const p = crearPagina({ documento: documentoFalso() });
-  const cv = canvasFalso(800, 400);
+  const cv = canvasFalso(200, 100);
+  const margen = { L: 0, R: 0, T: 0, B: 0 };
   const w = crearWidget({
-    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 }, centrar: true,
-    encuadre: () => ({ xMax: 10, yMax: 10 }),
+    pagina: p, canvas: cv, dpr: 1, margen, centrar: true,
+    encuadre: () => ({ xMax: 10, yMax: 2 }),
     dibujar: () => {},
   });
   w.repintar();
   const l = w.lienzo();
-  assert.equal(l.escala.x, l.escala.y);
-  assert.equal(l.escala.x, 43);
+  const alto = parseFloat(cv.style.height);
+
+  assert.equal(l.escala.x, l.escala.y, 'la escala sigue siendo unica para los dos ejes');
+  assert.equal(l.escala.x, 20);
+
+  const aireAbajo = (alto - margen.B) - l.py(l.yMin);
+  const aireArriba = l.py(l.yMax) - margen.T;
+  assert.equal(aireAbajo, 87.5, 'la mitad de los 175 px de sobrante vertical queda abajo');
+  assert.equal(aireArriba, 87.5, 'la otra mitad queda arriba');
+  assert.equal(aireAbajo, aireArriba, 'el sobrante vertical tambien se reparte en partes iguales');
 });
 
-// Con centrar:true el lienzo sigue reportando los bordes PEDIDOS, exactos -no hay
-// estirado que corregir en este camino, asi que ni siquiera hace falta el rodeo de
-// "armar estirado y despues pisar xMax/yMax" que usa el camino sin centrar.
+// OJO: esta prueba, sola, no distingue centrar:true de centrar ausente -- el camino
+// SIN centrar ya reporta bordes pedidos exactos (es lo que prueba "el lienzo reporta
+// el encuadre pedido..." mas arriba: no hay estirado que corregir en ninguno de los
+// dos caminos, centrado o no, porque el mecanismo -absorber el sobrante en el margen-
+// nunca toca xMax/yMax). Un widget.js que ignorara `centrar` por completo la pasaria
+// igual. Queda como prueba de regresion (si algun dia este camino vuelve a estirar el
+// encuadre en vez de correr el margen, esto lo atrapa), no como evidencia de que
+// `centrar` este implementado -esa evidencia la dan las dos pruebas de arriba, que
+// verifican el reparto en sí.
 test('centrar:true reporta los bordes pedidos, exactos', () => {
   const p = crearPagina({ documento: documentoFalso() });
   const cv = canvasFalso(800, 400);
