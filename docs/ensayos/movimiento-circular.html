@@ -270,6 +270,50 @@ function widgetVersores(pagina) {
 
 /* ---------- widget 2: at y an ---------- */
 
+// Tope en pixeles del largo DIBUJADO de las tres flechas rojas. En el extremo del
+// ejercicio 13 (R=1.5, omega0=0, gamma=4, dejando correr la escena hasta t=5s -la
+// misma configuracion que cita el parrafo de cierre de la seccion) la normal ronda
+// 600 m/s^2, y con la escala fija `ka` de mas abajo eso son varios cientos de pixeles:
+// la flecha y su rotulo se van del canvas incluso en el ancho maximo del widget, y a
+// 390px (el minimo que pide la Tarea 17) mucho peor. La escala en si NO se toca -eso
+// aplanaria el crecimiento con omega^2 que es media ensenanza del widget-, asi que en
+// vez de reescalar se recorta el largo dibujado a este tope y se avisa con la marca de
+// `marcaDeTope` (dos trazos cruzados en la punta, la misma convencion que un eje
+// partido) para que quede claro que ahi no termina la magnitud real: el valor exacto
+// sigue en la lectura de abajo. 110px sale de medir, con la geometria de este widget
+// (margen, encuadre, y el rango completo de anchos de canvas de 280 a 880px que arma
+// `crearWidget`), el margen libre entre la punta de la flecha mas larga posible -mas
+// el espacio del rotulo- y el borde del canvas en esa configuracion: nunca baja de
+// ~14px, y a partir de 350px de ancho (390px de viewport) ya deja más de 35px libres.
+const TOPE_PX_ACELERACION = 110;
+
+// Devuelve [dx, dy, acotado] con (dx,dy) recortado a lo sumo a `tope` pixeles de largo,
+// conservando la direccion. `acotado` es true si hubo que recortar: lo usa quien llama
+// para decidir si dibuja la marca de tope.
+function acotarFlecha(dx, dy, tope) {
+  const largo = Math.hypot(dx, dy);
+  if (largo <= tope) return [dx, dy, false];
+  const f = tope / largo;
+  return [dx * f, dy * f, true];
+}
+
+// La marca de una flecha que llego a su tope: dos trazos cortos perpendiculares a la
+// punta, la misma convencion que el quiebre de un eje partido en un grafico. No es
+// sutil a proposito -- tiene que quedar claro que la magnitud real sigue creciendo
+// aunque el dibujo ya no.
+function marcaDeTope(ctx, x, y, dx, dy, color) {
+  const angulo = Math.atan2(dy, dx);
+  const nx = -Math.sin(angulo), ny = Math.cos(angulo);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  for (const d of [-3, 3]) {
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(angulo) * d - nx * 5, y + Math.sin(angulo) * d - ny * 5);
+    ctx.lineTo(x + Math.cos(angulo) * d + nx * 5, y + Math.sin(angulo) * d + ny * 5);
+    ctx.stroke();
+  }
+}
+
 function widgetAceleraciones(pagina) {
   const R = 1.5;
   let omega0 = 2, gamma = 0;
@@ -316,20 +360,29 @@ function widgetAceleraciones(pagina) {
       { color: p.blue, grosor: 2.2, punta: 10, rotulo: 'v' });
 
     // Las dos componentes primero, en tenue, y la total encima: asi se ve que la total
-    // es la suma de las dos y no una tercera flecha independiente.
+    // es la suma de las dos y no una tercera flecha independiente. Las tres se recortan
+    // a TOPE_PX_ACELERACION -ver el comentario de esa constante- sin tocar `ka`: lo que
+    // se acota es el largo DIBUJADO, nunca el valor, que sigue exacto en la lectura de
+    // abajo.
     const ka = 6;
     const [rx, ry] = c.versorR(t);
     const [tx, ty] = c.versorTheta(t);
     const aN = c.aN(t), aT = c.aT(t);
     ctx.globalAlpha = 0.45;
-    vectorPx(ctx, px, py, px - rx * aN * ka, py + ry * aN * ka,
+    const [dnx, dny, nAcotado] = acotarFlecha(-rx * aN * ka, ry * aN * ka, TOPE_PX_ACELERACION);
+    vectorPx(ctx, px, py, px + dnx, py + dny,
       { color: p.red, grosor: 1.4, punta: 7, rotulo: 'aₙ', rdy: 12 });
-    vectorPx(ctx, px, py, px + tx * aT * ka, py - ty * aT * ka,
+    if (nAcotado) marcaDeTope(ctx, px + dnx, py + dny, dnx, dny, p.red);
+    const [dtx, dty, tAcotado] = acotarFlecha(tx * aT * ka, -ty * aT * ka, TOPE_PX_ACELERACION);
+    vectorPx(ctx, px, py, px + dtx, py + dty,
       { color: p.red, grosor: 1.4, punta: 7, rotulo: 'aₜ', rdy: -12 });
+    if (tAcotado) marcaDeTope(ctx, px + dtx, py + dty, dtx, dty, p.red);
     ctx.globalAlpha = 1;
     const [ax, ay] = c.aTotalVector(t);
-    vectorPx(ctx, px, py, px + ax * ka, py - ay * ka,
+    const [dax, day, aAcotado] = acotarFlecha(ax * ka, -ay * ka, TOPE_PX_ACELERACION);
+    vectorPx(ctx, px, py, px + dax, py + day,
       { color: p.red, grosor: 2.4, punta: 11, rotulo: 'a' });
+    if (aAcotado) marcaDeTope(ctx, px + dax, py + day, dax, day, p.red);
 
     punteado(ctx, ox, oy, px, py, { color: p.rule });
     cuerpo(ctx, l, c.pos(t), { radio: 5.5, color: p.ink });
