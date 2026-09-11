@@ -2936,6 +2936,10 @@ function widgetVersores(pagina) {
   const widget = crearWidget({
     pagina, canvas,
     margen: { L: 40, R: 40, T: 30, B: 30 },
+    // Encuadre cuadrado en un canvas apaisado: la escala tiene que ser uniforme para
+    // que la circunferencia se vea redonda, y eso deja aire a los costados. `centrar`
+    // lo reparte en vez de apoyar el dibujo contra el margen izquierdo.
+    centrar: true,
     encuadre: () => ({ xMin: -2.2, xMax: 2.2, yMin: -2.2, yMax: 2.2 }),
     dibujar: (ctx, l) => pintar(ctx, l, escena.t),
   });
@@ -3012,6 +3016,7 @@ function widgetPeriodo(pagina) {
   const widget = crearWidget({
     pagina, canvas,
     margen: { L: 30, R: 30, T: 24, B: 64 },
+    centrar: true,   // dos circunferencias lado a lado: mismo motivo que el widget 1
     encuadre: () => ({ xMin: -3.2, xMax: 3.2, yMin: -1.6, yMax: 1.6 }),
     dibujar: (ctx, l) => pintar(ctx, l, escena.t),
   });
@@ -3124,6 +3129,7 @@ function widgetAceleraciones(pagina) {
   const widget = crearWidget({
     pagina, canvas,
     margen: { L: 40, R: 130, T: 30, B: 30 },
+    centrar: true,   // encuadre cuadrado, escala uniforme: mismo motivo que el widget 1
     encuadre: () => ({ xMin: -2.4, xMax: 2.4, yMin: -2.4, yMax: 2.4 }),
     dibujar: (ctx, l) => pintar(ctx, l, escena.t),
   });
