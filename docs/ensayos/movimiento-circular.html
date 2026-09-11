@@ -287,6 +287,28 @@ function widgetVersores(pagina) {
 // ~14px, y a partir de 350px de ancho (390px de viewport) ya deja más de 35px libres.
 const TOPE_PX_ACELERACION = 110;
 
+// Tope propio para `v`, NO el mismo numero que el de arriba. Las dos salen del mismo
+// punto (el cuerpo) pero en familias de direccion distintas, y eso cambia cuanto tope
+// aguanta cada una:
+// - `aN` y `a` son mayormente RADIALES (apuntan hacia/desde el centro). Una flecha
+//   radial capada a T pixeles termina, en el peor caso (T > R*escala), del OTRO lado
+//   del centro, a distancia |T - R*escala| del origen -- y esa distancia baja al subir
+//   R*escala, asi que un T generoso todavia deja margen.
+// - `v` (y `aT`, aunque `aT` nunca llega a acercarse a ningun tope bajo el rango de los
+//   sliders: su maximo es gamma*R = 4*1.5 = 6 m/s^2, unos 36px con `ka` -- muy por
+//   debajo de 110) son TANGENCIALES (perpendiculares al radio). Una flecha tangencial
+//   capada a T pixeles termina a distancia sqrt((R*escala)^2 + T^2) del origen: SIEMPRE
+//   mas lejos que una radial con el mismo T, porque ahi se suman en cuadratura en vez
+//   de restarse. El mismo tope de las rojas (110) medido para `v` (kv=22, contra ka=6
+//   de las rojas) da margenes negativos justo en los anchos de canvas mas angostos que
+//   pide la Tarea 17 (390px de viewport) -- se sale del canvas por el mismo motivo que
+//   corrigio la ronda anterior, pero en la familia tangencial. 70px es lo que devuelve
+//   margen positivo en todo el rango de anchos de canvas medido (280 a 880px, el mismo
+//   barrido que arriba, repetido con el rango completo de ambos sliders) Y deja el
+//   estado de apertura (ω=2, rapidez 3 m/s, 66px) sin capar: capar la apertura se veria
+//   como un widget que arranca roto.
+const TOPE_PX_VELOCIDAD = 70;
+
 // Devuelve [dx, dy, acotado] con (dx,dy) recortado a lo sumo a `tope` pixeles de largo,
 // conservando la direccion. `acotado` es true si hubo que recortar: lo usa quien llama
 // para decidir si dibuja la marca de tope.
@@ -356,8 +378,10 @@ function widgetAceleraciones(pagina) {
 
     const [vx, vy] = c.vel(t);
     const kv = 22;
-    vectorPx(ctx, px, py, px + vx * kv, py - vy * kv,
+    const [dvx, dvy, vAcotado] = acotarFlecha(vx * kv, -vy * kv, TOPE_PX_VELOCIDAD);
+    vectorPx(ctx, px, py, px + dvx, py + dvy,
       { color: p.blue, grosor: 2.2, punta: 10, rotulo: 'v' });
+    if (vAcotado) marcaDeTope(ctx, px + dvx, py + dvy, dvx, dvy, p.blue);
 
     // Las dos componentes primero, en tenue, y la total encima: asi se ve que la total
     // es la suma de las dos y no una tercera flecha independiente. Las tres se recortan
