@@ -129,7 +129,9 @@ function widgetSombras(pagina) {
     ctx.stroke();
   }
 
-  function pintar(ctx, l, pagina) {
+  // `crearWidget` pasa la página como tercer argumento; acá se omite y se usa la del
+  // cierre, que es el mismo objeto, para no sombrearla.
+  function pintar(ctx, l) {
     const p = pagina.paleta();
     // Quieto, el widget muestra el instante representativo; andando, el reloj de
     // la escena, que ya está en segundos físicos.
@@ -240,8 +242,11 @@ function widgetSombras(pagina) {
       rotular();
     },
   });
+  // Sin `pagina` a propósito: en el diseño, el handler de reset es el único que no
+  // llama a `firstTouch()` (Tiro parabolico.dc.html:297, contra los sliders en :286,
+  // la casilla en :293 y toggle() en :326). El pulso sobrevive a un Reiniciar.
   boton({
-    elemento: el('w1-reset'), pagina,
+    elemento: el('w1-reset'),
     alApretar: () => { enReposo = true; escena.reiniciar(); rotular(); },
   });
 
