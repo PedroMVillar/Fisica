@@ -64,3 +64,34 @@ test('el cursor cambia mientras se arrastra y vuelve al soltar', () => {
   cv.disparar('pointerup', 50, 50);
   assert.equal(cv.style.cursor, 'grab');
 });
+
+test('pointercancel corta el arrastre igual que pointerup', () => {
+  const cv = canvasFalso();
+  const vistos = [];
+  arrastrable({ canvas: cv, lienzo, alArrastrar: (x, y) => vistos.push([x, y]) });
+  cv.disparar('pointerdown', 100, 50);
+  cv.disparar('pointercancel', 100, 50);
+  cv.disparar('pointermove', 20, 20);
+  assert.equal(vistos.length, 1);
+});
+
+test('el lienzo se pide de nuevo en cada evento, no se cachea', () => {
+  // crearLienzo es pura: si arrastrable() la llamara una sola vez en el setup
+  // (en vez de por evento), las cinco pruebas de arriba pasarian igual, porque
+  // siempre reciben los mismos literales. Esta prueba usa un lienzo que cambia
+  // de mapeo entre eventos -como pasa cuando el widget se repinta a otro ancho-
+  // para que un arrastrable() que izara `lienzo()` una sola vez falle aca.
+  const cv = canvasFalso();
+  const vistos = [];
+  let angosto = false;
+  const lienzoCambiante = () => crearLienzo({
+    ancho: angosto ? 100 : 200, alto: 100, xMin: 0, xMax: 10, yMin: 0, yMax: 5,
+  });
+  arrastrable({ canvas: cv, lienzo: lienzoCambiante, alArrastrar: (x, y) => vistos.push([x, y]) });
+  cv.disparar('pointerdown', 100, 50);
+  // ancho 200: ux(100) = 100 / (200/10) = 5
+  angosto = true;
+  cv.disparar('pointermove', 100, 50);
+  // ancho 100: ux(100) = 100 / (100/10) = 10 -- distinto del mapeo viejo
+  assert.deepEqual(vistos, [[5, 2.5], [10, 2.5]]);
+});

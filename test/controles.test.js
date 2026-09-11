@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { deslizador, casilla, rotuloReproducir } from '../docs/motor/controles.js';
+import { deslizador, casilla, boton, rotuloReproducir } from '../docs/motor/controles.js';
 
 const entradaFalsa = (valor, tipo = 'range') => ({
   type: tipo, value: String(valor), checked: valor === true, _manejadores: {},
@@ -12,6 +12,11 @@ const entradaFalsa = (valor, tipo = 'range') => ({
 });
 const salidaFalsa = () => ({ textContent: '' });
 const paginaFalsa = () => { let n = 0; return { tocar: () => n++, toques: () => n }; };
+const botonFalso = () => ({
+  _manejadores: {},
+  addEventListener(ev, fn) { this._manejadores[ev] = fn; },
+  disparar(ev) { this._manejadores[ev](); },
+});
 
 test('el deslizador formatea su salida y avisa el valor numerico', () => {
   const e = entradaFalsa(24), s = salidaFalsa();
@@ -42,6 +47,23 @@ test('la casilla avisa booleanos', () => {
   casilla({ entrada: e, alCambiar: v => vistos.push(v) });
   e.disparar('change', false);
   assert.deepEqual(vistos, [false]);
+});
+
+test('el boton avisa al apretar y marca la pagina', () => {
+  const b = botonFalso(), p = paginaFalsa();
+  const vistos = [];
+  boton({ elemento: b, alApretar: () => vistos.push('apretado'), pagina: p });
+  b.disparar('click');
+  assert.deepEqual(vistos, ['apretado']);
+  assert.equal(p.toques(), 1);
+});
+
+test('el boton funciona sin pagina', () => {
+  const b = botonFalso();
+  const vistos = [];
+  boton({ elemento: b, alApretar: () => vistos.push('apretado') });
+  b.disparar('click');
+  assert.deepEqual(vistos, ['apretado']);
 });
 
 test('el rotulo del boton dice Reproducir en reposo, aunque el reloj no este en cero', () => {
