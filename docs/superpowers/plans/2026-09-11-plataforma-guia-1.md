@@ -2251,10 +2251,21 @@ function widgetPaneles(pagina) {
     { f: a, etiqueta: 'a [m/s²]', yMin: -19, yMax: 19, color: () => pagina.paleta().red },
   ];
 
+  // Tres paneles apilados dentro de un canvas. El encuadre de afuera mide tres
+  // unidades de alto, una por panel, y cada panel arma despues su propio lienzo con
+  // su rango real. `escalaUniforme: false` porque el eje horizontal es tiempo y el
+  // vertical metros: una sola escala para los dos no significaria nada y dejaria el
+  // grafico en la mitad del ancho. `altoMin` sube el piso del canvas para que cada
+  // panel tenga 95 px: con el piso generico de 215 quedarian 54, que se van casi
+  // enteros en el rotulo y la fila de numeros.
+  const MARGEN = { L: 62, R: 24, T: 20, B: 34 };
+  const ALTO_PANEL_MINIMO = 95;
   const widget = crearWidget({
     pagina, canvas,
-    margen: { L: 62, R: 24, T: 20, B: 34 },
-    encuadre: () => ({ xMin: T0, xMax: T1, yMax: 3 }),   // tres unidades de alto: un panel cada una
+    margen: MARGEN,
+    escalaUniforme: false,
+    altoMin: 3 * ALTO_PANEL_MINIMO + MARGEN.T + MARGEN.B,
+    encuadre: () => ({ xMin: T0, xMax: T1, yMin: 0, yMax: 3 }),
     dibujar: pintar,
   });
 
@@ -2273,7 +2284,7 @@ function widgetPaneles(pagina) {
         alturaPanel,
         lp: crearLienzo({
           ancho: l.ancho, alto: l.alto,
-          margen: { L: l.margen.L, R: l.margen.R, T: tope, B: l.alto - tope - alturaPanel + 10 },
+          margen: { L: MARGEN.L, R: MARGEN.R, T: tope, B: l.alto - tope - alturaPanel + 10 },
           xMin: T0, xMax: T1, yMin: panel.yMin, yMax: panel.yMax,
         }),
       };
@@ -2394,10 +2405,17 @@ function widgetDibujar(pagina) {
   const muestras = () => alturas.map((y, i) => [tDe(i), y]);
 
   const canvas = document.getElementById('w3-cv');
+  // Mismo esquema de tres paneles que el widget anterior, y por las mismas razones:
+  // escala independiente por eje porque el horizontal es tiempo, y piso de alto
+  // propio para que cada panel tenga 95 px en pantallas angostas.
+  const MARGEN = { L: 62, R: 24, T: 20, B: 34 };
+  const ALTO_PANEL_MINIMO = 95;
   const widget = crearWidget({
     pagina, canvas,
-    margen: { L: 62, R: 24, T: 20, B: 34 },
-    encuadre: () => ({ xMin: T0, xMax: T1, yMax: 3 }),
+    margen: MARGEN,
+    escalaUniforme: false,
+    altoMin: 3 * ALTO_PANEL_MINIMO + MARGEN.T + MARGEN.B,
+    encuadre: () => ({ xMin: T0, xMax: T1, yMin: 0, yMax: 3 }),
     dibujar: pintar,
   });
 
@@ -2421,7 +2439,7 @@ function widgetDibujar(pagina) {
         alturaPanel,
         lp: crearLienzo({
           ancho: l.ancho, alto: l.alto,
-          margen: { L: l.margen.L, R: l.margen.R, T: tope, B: l.alto - tope - alturaPanel + 10 },
+          margen: { L: MARGEN.L, R: MARGEN.R, T: tope, B: l.alto - tope - alturaPanel + 10 },
           xMin: T0, xMax: T1, yMin: r.yMin, yMax: r.yMax,
         }),
       };
@@ -2569,6 +2587,9 @@ function widgetArea(pagina) {
   const widget = crearWidget({
     pagina, canvas,
     margen: { L: 62, R: 24, T: 38, B: 42 },
+    // El eje horizontal es tiempo y el vertical velocidad: escala independiente por
+    // eje. Con una sola escala este grafico ocuparia el 4 % del ancho.
+    escalaUniforme: false,
     encuadre: () => ({ xMin: T0, xMax: T1, yMin: -19, yMax: 19 }),
     dibujar: pintar,
   });
