@@ -8,6 +8,19 @@ const FUNCIONES = {
 };
 const CONSTANTES = { pi: Math.PI, e: Math.E };
 
+// Tope a la cantidad de tokens de una expresion (hallazgo de revision de la Tarea 18).
+// `suma()`/`producto()` parsean una cadena larga de "+"/"*" con un bucle ITERATIVO, asi
+// que compilar() nunca desborda la pila por muchos operadores encadenados -pero cada
+// vuelta de ese bucle encierra el acumulado anterior en una clausura nueva
+// (`izq = t => a(t) + der(t)`), asi que evaluar f(t) al final SI recorre esa cadena de
+// clausuras de forma recursiva, una llamada por operador. Con una cadena de miles de
+// terminos ("1 + 1 + 1 + ... + 1"), compilar() devolvia `ok: true` sin problema y la
+// excepcion aparecia recien al llamar f(t), rompiendo el contrato de que f(t) siempre
+// da un numero. 2000 tokens es muy por encima de cualquier formula tipeable a mano (la
+// del ejercicio 14 tiene 9) y muy por debajo de la profundidad que hace saltar el limite
+// de pila de V8 (~10000-15000 niveles segun el motor).
+const LIMITE_TOKENS = 2000;
+
 function tokenizar(fuente) {
   const tokens = [];
   let i = 0;
@@ -40,6 +53,9 @@ export function compilar(fuente) {
   try {
     const tokens = tokenizar(fuente);
     if (!tokens.length) throw new Error('la expresión está vacía');
+    if (tokens.length > LIMITE_TOKENS) {
+      throw new Error(`la expresión es demasiado larga (más de ${LIMITE_TOKENS} símbolos)`);
+    }
     let k = 0;
     const mirar = () => tokens[k];
     const comer = tipo => {

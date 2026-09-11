@@ -130,12 +130,12 @@ try {
       <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
         <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">x(t)</span>
         <input id="w3-x" type="text" value="sen(2 * pi * t)" spellcheck="false" style="box-sizing:border-box;width:100%;font:400 13px/1.3 'JetBrains Mono',monospace;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:8px 10px">
-        <span id="w3-x-err" style="display:block;min-height:14px;font:400 11px/1.3 'JetBrains Mono',monospace;color:var(--red)"></span>
+        <span id="w3-x-err" style="display:block;min-height:14px;overflow-wrap:anywhere;font:400 11px/1.3 'JetBrains Mono',monospace;color:var(--red)"></span>
       </label>
       <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
         <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">y(t)</span>
         <input id="w3-y" type="text" value="cos(2 * pi * t) + 1" spellcheck="false" style="box-sizing:border-box;width:100%;font:400 13px/1.3 'JetBrains Mono',monospace;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:8px 10px">
-        <span id="w3-y-err" style="display:block;min-height:14px;font:400 11px/1.3 'JetBrains Mono',monospace;color:var(--red)"></span>
+        <span id="w3-y-err" style="display:block;min-height:14px;overflow-wrap:anywhere;font:400 11px/1.3 'JetBrains Mono',monospace;color:var(--red)"></span>
       </label>
       <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
         <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">t <output id="w3-t-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0.00</output></span>
@@ -210,6 +210,7 @@ import { crearWidget } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
 import { crearCircular } from '../fisica/circular.js';
 import { compilar } from '../fisica/expresion.js';
+import { ajustarCirculo } from '../fisica/ajuste.js';
 import { eje, curva, cuerpo, punteado, vectorPx } from '../motor/dibujo.js';
 import { deslizador, boton, rotuloReproducir } from '../motor/controles.js';
 
@@ -518,43 +519,18 @@ function widgetAceleraciones(pagina) {
 /* ---------- widget 3: de las ecuaciones al circulo ---------- */
 
 // Cuantos puntos se muestrean entre t=0 y t=1 para dibujar la curva y para ajustarle
-// un circulo. 61 alcanza de sobra para que la curva se vea lisa y el ajuste, que
-// promedia sobre todos los puntos, sea estable.
+// un circulo con `ajustarCirculo` (docs/fisica/ajuste.js). 61 alcanza de sobra para
+// que la curva se vea lisa y el ajuste, que promedia sobre todos los puntos, sea
+// estable.
 const N_MUESTRAS = 61;
 
-// Ajuste de circulo por minimos cuadrados (metodo algebraico de Kasa): busca el
-// centro (a, b) que minimiza la suma de (dist(punto, centro) - R)^2 para algun R, sin
-// fijar R de antemano. Se plantea como un sistema lineal en (a, b, c = R^2-a^2-b^2):
-// cada punto (x, y) aporta la ecuacion 2ax + 2by + c = x^2+y^2, y se resuelve el
-// sistema normal 3x3 por Cramer. Con puntos EXACTAMENTE colineales (la "Recta") la
-// matriz sale singular -dos filas iguales, porque x e y son la misma muestra- y no
-// hay ningun circulo finito que ajuste una linea recta: se devuelve null, y quien
-// llama lo interpreta como "esta trayectoria no tiene círculo que ajustarle", que es
-// la respuesta correcta, no un defecto del ajuste.
-function ajustarCirculo(fx, fy, n = N_MUESTRAS) {
-  let sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0, sxz = 0, syz = 0, sz = 0;
+function muestrear(fx, fy, n = N_MUESTRAS) {
+  const puntos = [];
   for (let i = 0; i < n; i++) {
     const t = i / (n - 1);
-    const x = fx(t), y = fy(t);
-    const z = x * x + y * y;
-    sx += x; sy += y; sxx += x * x; syy += y * y; sxy += x * y;
-    sxz += x * z; syz += y * z; sz += z;
+    puntos.push([fx(t), fy(t)]);
   }
-  const A = [
-    [4 * sxx, 4 * sxy, 2 * sx],
-    [4 * sxy, 4 * syy, 2 * sy],
-    [2 * sx, 2 * sy, n],
-  ];
-  const b = [2 * sxz, 2 * syz, sz];
-  const det = m => m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
-                  - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
-                  + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
-  const D = det(A);
-  if (!Number.isFinite(D) || Math.abs(D) < 1e-9) return null;
-  const conColumna = (m, col, v) => m.map((fila, i) => fila.map((x, j) => (j === col ? v[i] : x)));
-  const a = det(conColumna(A, 0, b)) / D;
-  const bb = det(conColumna(A, 1, b)) / D;
-  return [a, bb];
+  return puntos;
 }
 
 function widgetEcuaciones(pagina) {
@@ -595,8 +571,11 @@ function widgetEcuaciones(pagina) {
     // El centro candidato -el que mejor ajusta la curva muestreada- es la pieza que
     // delata la figura: la cuarta lectura de abajo (distancia al centro) se calcula
     // contra ESTE punto, nunca contra el origen, y por eso se queda fija solo cuando
-    // la trayectoria es de verdad una circunferencia.
-    const centro = ajustarCirculo(fx, fy);
+    // la trayectoria es de verdad una circunferencia. `ajustarCirculo` (docs/fisica/
+    // ajuste.js) normaliza antes de decidir si hay o no circulo: un umbral absoluto
+    // sobre datos sin normalizar le inventaba un circulo a una recta generica y
+    // confundia un circulo diminuto con degenerado (hallazgo de revision).
+    const centro = ajustarCirculo(muestrear(fx, fy));
     let distancia = null;
     if (centro) {
       const [cx, cy] = centro;
@@ -607,10 +586,14 @@ function widgetEcuaciones(pagina) {
     }
     cuerpo(ctx, l, [fx(t), fy(t)], { radio: 5.5, color: p.ink });
 
+    // Una expresion valida puede evaluar a un numero no finito en un punto puntual
+    // (NaN de raiz(0 - 1), Infinity de 1 / 0): las lecturas muestran un guion en vez
+    // de "NaN m" o "Infinity m", que no significan nada para el lector.
+    const num = (v, unidad) => (Number.isFinite(v) ? v.toFixed(2) + ' ' + unidad : '—');
     leer('w3-t-val', t.toFixed(2));
-    leer('w3-x-val', fx(t).toFixed(2) + ' m');
-    leer('w3-y-val', fy(t).toFixed(2) + ' m');
-    leer('w3-dist', distancia === null ? '— (sin círculo)' : distancia.toFixed(2) + ' m');
+    leer('w3-x-val', num(fx(t), 'm'));
+    leer('w3-y-val', num(fy(t), 'm'));
+    leer('w3-dist', distancia === null ? '— (sin círculo)' : num(distancia, 'm'));
   }
 
   function actualizar() {

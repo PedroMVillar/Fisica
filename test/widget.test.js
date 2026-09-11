@@ -62,6 +62,37 @@ test('repintarTodo repinta cada widget registrado, una vez cada uno', () => {
   assert.deepEqual(cuenta, { a: 1, b: 1 });
 });
 
+// Hallazgo de revision de la Tarea 18: repintarTodo() corre sin proteccion al cambiar
+// de tema, al redimensionar y al resolver `fonts.ready` -- una excepcion en el
+// `repintar` de un widget no puede abortar el repintado de los que vienen despues en
+// ninguno de esos tres casos.
+test('un widget que lanza al repintar no interrumpe a los que vienen despues', () => {
+  const doc = documentoFalso();
+  const p = crearPagina({ documento: doc });
+  const orden = [];
+  p.registrar({ repintar: () => orden.push('antes') });
+  p.registrar({ repintar: () => { throw new Error('widget roto'); } });
+  p.registrar({ repintar: () => orden.push('despues') });
+  assert.doesNotThrow(() => p.repintarTodo());
+  assert.deepEqual(orden, ['antes', 'despues']);
+});
+
+test('el error de un widget roto se deja visible en la consola, no se traga en silencio', () => {
+  const doc = documentoFalso();
+  const p = crearPagina({ documento: doc });
+  const error = new Error('widget roto');
+  p.registrar({ repintar: () => { throw error; } });
+  const original = console.error;
+  const capturados = [];
+  console.error = (...args) => capturados.push(args);
+  try {
+    p.repintarTodo();
+  } finally {
+    console.error = original;
+  }
+  assert.deepEqual(capturados, [[error]]);
+});
+
 test('tocar avisa a los suscriptos una sola vez', () => {
   const p = crearPagina({ documento: documentoFalso() });
   let avisos = 0;

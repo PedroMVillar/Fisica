@@ -94,3 +94,25 @@ test('no se puede colar codigo: nada de propiedades ni llamadas raras', () => {
 test('una division por cero da infinito, no una excepcion', () => {
   assert.equal(f('1 / 0')(0), Infinity);
 });
+
+// Hallazgo de revision de la Tarea 18: `suma()`/`producto()` parsean una cadena larga
+// de operadores con un bucle iterativo (no recursivo), asi que compilar() nunca
+// desbordaba la pila por muchos operadores encadenados. Pero evaluar f(t) SI recorre
+// esa cadena de forma recursiva (una clausura llama a la anterior), asi que antes de
+// esta prueba una cadena de miles de terminos compilaba ok:true y recien tiraba al
+// llamar f(t) -rompiendo el contrato de que f(t) siempre da un numero.
+test('una cadena de decenas de miles de operadores no compila: se rechaza antes de evaluar', () => {
+  // 50000 terminos: verificado a mano que, sin el tope, esto compila ok:true y
+  // recien lanza RangeError ("Maximum call stack size exceeded") al llamar f(0) --
+  // el umbral de este motor esta entre 10000 y 30000 terminos encadenados. Con el
+  // tope, se rechaza en compilar() mismo, mucho antes de intentar evaluar nada.
+  const cadena = Array(50000).fill('1').join(' + ');
+  const r = compilar(cadena);
+  assert.equal(r.ok, false);
+  assert.ok(typeof r.error === 'string' && r.error.length > 0);
+});
+
+test('una cadena larga pero razonable (100 terminos) sigue compilando y evaluando bien', () => {
+  const cadena = Array(100).fill('1').join(' + ');
+  cerca(f(cadena)(0), 100);
+});

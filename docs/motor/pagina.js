@@ -29,7 +29,22 @@ export function crearPagina({ documento = globalThis.document } = {}) {
     olvidarPaleta() { cache = null; },
     registrar(widget) { registrados.push(widget); },
     widgets() { return registrados.slice(); },
-    repintarTodo() { for (const w of registrados) w.repintar(); },
+    // Cada widget se repinta en su propio try/catch: sin esto, una excepcion en el
+    // `dibujar` de UN widget aborta el bucle entero y deja sin repintar a los que
+    // venian despues (hallazgo de revision de la Tarea 18) -- y este metodo corre al
+    // cambiar de tema, al redimensionar la ventana y al resolver `fonts.ready`, asi
+    // que un widget roto se llevaba puestos a los demas en los tres casos. El error
+    // se deja visible en la consola (no se traga en silencio): un widget que falla
+    // sigue siendo un bug a corregir, sólo que ya no bloquea a los otros tres.
+    repintarTodo() {
+      for (const w of registrados) {
+        try {
+          w.repintar();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    },
     observar() {
       if (typeof ResizeObserver !== 'function') return;
       if (observador) observador.disconnect();
