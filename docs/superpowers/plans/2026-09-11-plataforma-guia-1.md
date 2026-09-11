@@ -2405,11 +2405,13 @@ function widgetDibujar(pagina) {
   const muestras = () => alturas.map((y, i) => [tDe(i), y]);
 
   const canvas = document.getElementById('w3-cv');
-  // Mismo esquema de tres paneles que el widget anterior, y por las mismas razones:
-  // escala independiente por eje porque el horizontal es tiempo, y piso de alto
-  // propio para que cada panel tenga 95 px en pantallas angostas.
+  // Mismo esquema de tres paneles que el widget de la seccion 02, y por las mismas
+  // razones. Copiale las tres constantes tal como quedaron ahi, incluido el hueco
+  // derivado: el rotulo del eje vertical cuelga COLGADO_ROTULO_EJE por encima del
+  // techo de su panel, y un glifo de 10 px sube unos 8 px mas sobre su linea de base.
   const MARGEN = { L: 62, R: 24, T: 20, B: 34 };
-  const ALTO_PANEL_MINIMO = 95;
+  const HUECO_ROTULO = COLGADO_ROTULO_EJE + 8;
+  const ALTO_PANEL_MINIMO = 95 + HUECO_ROTULO;
   const widget = crearWidget({
     pagina, canvas,
     margen: MARGEN,
@@ -2439,7 +2441,10 @@ function widgetDibujar(pagina) {
         alturaPanel,
         lp: crearLienzo({
           ancho: l.ancho, alto: l.alto,
-          margen: { L: MARGEN.L, R: MARGEN.R, T: tope, B: l.alto - tope - alturaPanel + 10 },
+          margen: {
+            L: MARGEN.L, R: MARGEN.R,
+            T: tope + HUECO_ROTULO, B: l.alto - tope - alturaPanel + 10,
+          },
           xMin: T0, xMax: T1, yMin: r.yMin, yMax: r.yMax,
         }),
       };
@@ -2459,7 +2464,14 @@ function widgetDibujar(pagina) {
 
     const capas = lienzosPanel(l);
     capas.forEach(({ rango, lp }, i) => {
-      eje(ctx, lp, { color: p.rule, colorTexto: p.dim, etiquetaY: rango.etiqueta });
+      // El eje de tiempo se rotula una sola vez, en el panel de abajo: los tres lo
+      // comparten, y repetirlo tres veces lo deja flotando en mitad de los graficos.
+      const esElDeAbajo = i === capas.length - 1;
+      eje(ctx, lp, {
+        color: p.rule, colorTexto: p.dim, etiquetaY: rango.etiqueta,
+        marcasX: esElDeAbajo,
+        ...(esElDeAbajo ? { etiquetaX: 't [s]' } : {}),
+      });
       traza(ctx, lp, series[i].pts, { color: series[i].color, grosor: 1.8 });
     });
 
