@@ -249,10 +249,20 @@ function widgetPaneles(pagina) {
   // su rango real. `escalaUniforme: false` porque el eje horizontal es tiempo y el
   // vertical metros: una sola escala para los dos no significaria nada y dejaria el
   // grafico en la mitad del ancho. `altoMin` sube el piso del canvas para que cada
-  // panel tenga 95 px: con el piso generico de 215 quedarian 54, que se van casi
-  // enteros en el rotulo y la fila de numeros.
+  // panel tenga 95 px de curva: con el piso generico de 215 quedarian 54, que se van
+  // casi enteros en el rotulo y la fila de numeros.
+  //
+  // HUECO_ROTULO es el aire que se deja entre paneles para que el rotulo del eje Y
+  // (que `eje()` cuelga 15 px por encima del techo de SU panel, dibujo.js) caiga en
+  // ese hueco y no adentro del panel de arriba -- la superposicion que reporto la
+  // ronda de revision 1. Se le suma al margen superior de cada sublienzo (no se toca
+  // el -15, que es del sistema de diseno) y, como ese margen sale del mismo
+  // presupuesto vertical que la curva, ALTO_PANEL_MINIMO le suma esos mismos 18 px al
+  // piso de 95 para que el area de curva no se achique: el piso de 95 px se fijo
+  // contando el espacio del rotulo, y ahora hay que contar tambien el hueco.
   const MARGEN = { L: 62, R: 24, T: 20, B: 34 };
-  const ALTO_PANEL_MINIMO = 95;
+  const HUECO_ROTULO = 18;
+  const ALTO_PANEL_MINIMO = 95 + HUECO_ROTULO;
   const widget = crearWidget({
     pagina, canvas,
     margen: MARGEN,
@@ -277,7 +287,10 @@ function widgetPaneles(pagina) {
         alturaPanel,
         lp: crearLienzo({
           ancho: l.ancho, alto: l.alto,
-          margen: { L: MARGEN.L, R: MARGEN.R, T: tope, B: l.alto - tope - alturaPanel + 10 },
+          margen: {
+            L: MARGEN.L, R: MARGEN.R,
+            T: tope + HUECO_ROTULO, B: l.alto - tope - alturaPanel + 10,
+          },
           xMin: T0, xMax: T1, yMin: panel.yMin, yMax: panel.yMax,
         }),
       };
@@ -288,11 +301,22 @@ function widgetPaneles(pagina) {
     const p = pagina.paleta();
     const capas = lienzosPanel(l);
 
-    for (const { panel, lp } of capas) {
-      eje(ctx, lp, { color: p.rule, colorTexto: p.dim, etiquetaY: panel.etiqueta });
+    // El eje temporal se rotula una sola vez, al pie del panel de abajo (`a`): los
+    // tres paneles comparten el mismo mapeo horizontal, asi que repetir los numeros en
+    // los tres no agrega informacion y en los paneles con yMin negativo (v, a) esos
+    // numeros quedan flotando en la mitad del grafico, cruzados por la curva. Los
+    // paneles de arriba piden `marcasX: false` y dejan solo la linea del eje, que es
+    // la que ata visualmente a los tres.
+    capas.forEach(({ panel, lp }, i) => {
+      const esElDeAbajo = i === capas.length - 1;
+      eje(ctx, lp, {
+        color: p.rule, colorTexto: p.dim, etiquetaY: panel.etiqueta,
+        marcasX: esElDeAbajo,
+        etiquetaX: esElDeAbajo ? 't [s]' : undefined,
+      });
       curva(ctx, lp, t => [t, panel.f(t)], T0, T1, { color: panel.color(), grosor: 1.8 });
       cuerpo(ctx, lp, [cursor, panel.f(cursor)], { radio: 4.5, color: panel.color() });
-    }
+    });
 
     // El cursor compartido: una sola linea vertical que cruza los tres paneles. Es
     // literalmente el argumento del widget dibujado, y por eso su x sale del lienzo de
