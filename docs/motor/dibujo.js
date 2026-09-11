@@ -1,5 +1,10 @@
 const PUNTA = 9;
 
+// La firma real de las opciones es { color, grosor }. El rotulo todavia no
+// esta implementado: dibujar texto en canvas exige elegir tipografia, cuerpo
+// y desplazamiento, y eso se resuelve contra el archivo de diseno del widget
+// que lo necesita (el triangulo de v0, plan 2), no aca. Si se pasa `rotulo`
+// hoy, se acepta y se ignora sin romper nada; ver prueba en dibujo.test.js.
 export function vector(ctx, l, desde, hasta, { color, grosor = 2 } = {}) {
   const [x1, y1] = l.p(desde);
   const [x2, y2] = l.p(hasta);

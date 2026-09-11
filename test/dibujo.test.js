@@ -35,6 +35,14 @@ test('vector de largo nulo no dibuja nada', () => {
   assert.equal(c.ops.length, 0);
 });
 
+test('vector ignora rotulo sin cambiar lo que dibuja (rotulo aun no implementado)', () => {
+  const sinRotulo = ctxFalso();
+  vector(sinRotulo, L, [0, 0], [50, 0], { color: '#1b4fd4' });
+  const conRotulo = ctxFalso();
+  vector(conRotulo, L, [0, 0], [50, 0], { color: '#1b4fd4', rotulo: 'v' });
+  assert.deepEqual(conRotulo.ops, sinRotulo.ops);
+});
+
 test('cuerpo dibuja un arco cerrado en la posicion', () => {
   const c = ctxFalso();
   cuerpo(c, L, [50, 25], { radio: 4 });
