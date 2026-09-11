@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tiro parabólico · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div style="max-width:680px;margin:0 auto;padding:56px 24px 0;display:flex;flex-direction:column;gap:0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ensayo 2 · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Tiro parabólico</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Son dos movimientos independientes que sólo comparten el reloj.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Ya leíste que el tiro parabólico «se descompone en <i>x</i> e <i>y</i>». La frase se puede repetir sin creerla: mientras uno la dice, sigue imaginando una piedra que traza una curva, una sola cosa moviéndose de un modo complicado. Y con esa imagen no hay ejercicio que salga, porque la curva no tiene ecuación fácil pero sus dos sombras sí.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Este ensayo tiene un solo objetivo: que dejes de ver una curva y empieces a ver dos movimientos que corren en paralelo, cada uno con su ecuación de siempre, atados únicamente por el hecho de que comparten la variable <i>t</i>.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · Dos movimientos, un reloj</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Mirá la simulación de abajo, pero no mires el proyectil: mirá las dos sombras que deja sobre los ejes. Poné a andar el tiro y fijate en las huellas que cada sombra va marcando, una cada dos décimas de segundo.</p>
+</div>
+
+<section style="width:100%;background:var(--band);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 20px 28px;margin:30px 0 0;display:flex;justify-content:center">
+  <div style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Las dos sombras</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— las huellas de abajo están siempre a la misma distancia; las de la izquierda, no.</span>
+    </div>
+    <canvas id="w1-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w1-play" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper);background:var(--blue);border:none;border-radius:2px;padding:9px 16px;cursor:pointer">Reproducir</button>
+        <button id="w1-reset" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Reiniciar</button>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">v₀ <output id="w1-v0-out" style="color:var(--ink);font-variant-numeric:tabular-nums">24.0 m/s</output></span>
+        <input id="w1-v0" type="range" min="8" max="40" step="0.5" value="24" style="width:100%">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">ángulo α <output id="w1-ang-out" style="color:var(--ink);font-variant-numeric:tabular-nums">50°</output></span>
+        <input id="w1-ang" type="range" min="5" max="85" step="1" value="50" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer;padding-bottom:4px">
+        <input id="w1-stamps" type="checkbox" checked style="accent-color:var(--blue);width:15px;height:15px">Huellas
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
+      <span>t <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00 s</b></span>
+      <span>x <b id="w1-x" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.0 m</b></span>
+      <span>y <b id="w1-y" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.0 m</b></span>
+      <span>vₓ <b id="w1-vx" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">15.4 m/s</b></span>
+      <span><i>v</i><sub>y</sub> <b id="w1-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">18.4 m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:680px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La sombra de abajo se mueve como un auto en una ruta recta sin acelerador: pasos iguales en tiempos iguales. La sombra de la izquierda sube, va frenando, se detiene un instante en la altura máxima y vuelve acelerando. Son los dos movimientos que ya conocés del capítulo 1, uno al lado del otro, sin mezclarse.</p>
+  <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:26px 0 0">
+    <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0"><i>x</i>(<i>t</i>) = <i>v</i><sub>0</sub> cos α · <i>t</i><br><i>y</i>(<i>t</i>) = <i>v</i><sub>0</sub> sen α · <i>t</i> − ½ <i>g t</i><sup>2</sup></p>
+    <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:12px 0 0;color:var(--dim)"><i>v</i><sub><i>x</i></sub> = <i>v</i><sub>0</sub> cos α  (constante)   ·   <i>v</i><sub><i>y</i></sub> = <i>v</i><sub>0</sub> sen α − <i>g t</i></p>
+  </div>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:26px 0 0;text-wrap:pretty">No hay nada nuevo acá. La primera línea es un movimiento uniforme; la segunda, un uniformemente acelerado con <i>a</i> = −<i>g</i>. Lo único que las relaciona es la <i>t</i>, y esa <i>t</i> es la misma para las dos porque el proyectil es uno solo. De ahí sale casi toda la técnica del tema: <b style="font-weight:600">cuando un dato es de un eje y la pregunta es del otro, el puente siempre es el tiempo</b>.</p>
+</div>
+
+<script type="module">
+import { crearLienzo } from '../motor/lienzo.js';
+import { eje, traza, cuerpo } from '../motor/dibujo.js';
+import { crearTiro } from '../fisica/tiro.js';
+import { crearEscena } from '../motor/escena.js';
+
+// El diseño reproduce a 0.75 (su prop `velocidadReproduccion`). La escena no
+// tiene control de velocidad, así que su reloj cuenta segundos de pantalla y el
+// tiempo físico es 0.75 de ese reloj; por eso la duración es tVuelo / 0.75.
+const VELOCIDAD = 0.75;
+// Fracción del vuelo en la que el widget queda quieto al cargar (`rest()` del diseño).
+const FRACCION_REPOSO = 0.35;
+// Márgenes en píxeles del recuadro del widget 1 (`view(..., {L,R,T,B})` del diseño).
+const MARGEN = { L: 62, R: 24, T: 38, B: 42 };
+
+const cv = document.getElementById('w1-cv');
+const ctx = cv.getContext('2d');
+const el = id => document.getElementById(id);
+const set = (id, v) => { const e = el(id); if (e) e.textContent = v; };
+const leer = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+let paleta = null;
+const pal = () => paleta || (paleta = {
+  paper: leer('--paper'), band: leer('--band'), ink: leer('--ink'), dim: leer('--dim'),
+  rule: leer('--rule'), blue: leer('--blue'), blueSoft: leer('--blue-soft'),
+  red: leer('--red'), graph: leer('--graph'),
+});
+
+let tiro = crearTiro({ v0: 24, alfaGrados: 50 });
+let huellas = el('w1-stamps').checked;
+let enReposo = true;
+
+const tReposo = () => FRACCION_REPOSO * tiro.tVuelo;
+const duracionReloj = () => tiro.tVuelo / VELOCIDAD;
+
+/* ---------- primitivas que el diseño dibuja a mano ---------- */
+
+const mono = (px, peso) => {
+  ctx.font = (peso || 400) + ' ' + px + 'px "JetBrains Mono", ui-monospace, monospace';
+};
+
+// Paso de la grilla: 1, 2 o 5 por década, apuntando a unas cinco marcas.
+function pasoGrilla(rango) {
+  const crudo = rango / 5;
+  const p = Math.pow(10, Math.floor(Math.log10(crudo)));
+  const n = crudo / p;
+  return (n >= 5 ? 5 : n >= 2 ? 2 : 1) * p;
+}
+
+function medir(xTope, yTope) {
+  const ancho = cv.getBoundingClientRect().width ||
+    (cv.parentElement ? cv.parentElement.getBoundingClientRect().width : 0);
+  if (!ancho) return null;
+  const util = ancho - MARGEN.L - MARGEN.R;
+  const alto = Math.round(Math.max(215, Math.min(430, MARGEN.T + MARGEN.B + util * (yTope / xTope))));
+  cv.style.aspectRatio = 'auto';
+  cv.style.height = alto + 'px';
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = Math.round(ancho * dpr);
+  cv.height = Math.round(alto * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, ancho, alto);
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  const sc = Math.min(util / xTope, (alto - MARGEN.T - MARGEN.B) / yTope);
+  // Un solo lienzo cubre el canvas entero con escala uniforme (kx = ky = sc):
+  // los márgenes quedan fuera del primer cuadrante, así px(0) = L y py(0) = alto - B.
+  const l = crearLienzo({
+    ancho, alto,
+    xMin: -MARGEN.L / sc, xMax: (ancho - MARGEN.L) / sc,
+    yMin: -MARGEN.B / sc, yMax: (alto - MARGEN.B) / sc,
+  });
+  return { l, sc, xTope, yTope };
+}
+
+function ejes(v, rotuloX, rotuloY) {
+  const { l, sc, xTope, yTope } = v, p = pal();
+  // `eje` traza de (xMin,0) a (xMax,0) y de (0,yMin) a (0,yMax). Para obtener
+  // exactamente los dos segmentos del diseño —de 0 a xTope y de 0 a yTope— se le
+  // pasa un lienzo acotado a ese rectángulo y se lleva el contexto a su esquina.
+  const lEje = crearLienzo({
+    ancho: xTope * sc, alto: yTope * sc,
+    xMin: 0, xMax: xTope, yMin: 0, yMax: yTope,
+  });
+  ctx.save();
+  ctx.translate(l.px(0), l.py(yTope));
+  eje(ctx, lEje, { color: p.rule });
+  ctx.restore();
+  ctx.lineWidth = 1;
+
+  ctx.fillStyle = p.dim; mono(10);
+  const sx = pasoGrilla(xTope);
+  for (let x = 0; x <= xTope + 1e-6; x += sx) {
+    ctx.strokeStyle = p.rule;
+    ctx.beginPath(); ctx.moveTo(l.px(x), l.py(0)); ctx.lineTo(l.px(x), l.py(0) + 4); ctx.stroke();
+    if (Math.abs(x) > 1e-9) {
+      ctx.textAlign = 'center';
+      ctx.fillText(String(Math.round(x * 10) / 10), l.px(x), l.py(0) + 16);
+    }
+  }
+  const sy = pasoGrilla(yTope);
+  for (let y = sy; y <= yTope + 1e-6; y += sy) {
+    ctx.strokeStyle = p.rule;
+    ctx.beginPath(); ctx.moveTo(l.px(0), l.py(y)); ctx.lineTo(l.px(0) - 4, l.py(y)); ctx.stroke();
+    ctx.textAlign = 'right';
+    ctx.fillText(String(Math.round(y * 10) / 10), l.px(0) - 8, l.py(y) + 3.5);
+  }
+  ctx.textAlign = 'right'; mono(10, 500);
+  ctx.fillText(rotuloX, l.px(xTope), l.py(0) + 28);
+  ctx.textAlign = 'left';
+  ctx.fillText(rotuloY, l.px(0) - 34, l.py(yTope) - 15);
+}
+
+// Flecha en píxeles: la punta del diseño es más chica que la de `vector`
+// (7 contra 9) y el asta se corta antes de la punta, así que se dibuja acá.
+function flecha(x1, y1, x2, y2, color, { grosor = 2, punta = 9 } = {}) {
+  const dx = x2 - x1, dy = y2 - y1, largo = Math.hypot(dx, dy);
+  if (largo < 1) return;
+  const hd = Math.min(punta, largo * 0.5), a = Math.atan2(dy, dx);
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = grosor;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2 - Math.cos(a) * hd * 0.85, y2 - Math.sin(a) * hd * 0.85);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - Math.cos(a - 0.42) * hd, y2 - Math.sin(a - 0.42) * hd);
+  ctx.lineTo(x2 - Math.cos(a + 0.42) * hd, y2 - Math.sin(a + 0.42) * hd);
+  ctx.closePath(); ctx.fill();
+}
+
+function punteado(x1, y1, x2, y2, color) {
+  ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function punto(l, centro, radio, color, hueco) {
+  if (!hueco) return cuerpo(ctx, l, centro, { radio, color });
+  // `cuerpo` deja el arco como trazado actual: el stroke siguiente contornea ese
+  // mismo círculo, que es el punto hueco del diseño (relleno --band, borde de color).
+  cuerpo(ctx, l, centro, { radio, color: pal().band });
+  ctx.strokeStyle = color; ctx.lineWidth = 1.6; ctx.stroke();
+}
+
+function camino(l, f, t0, t1, color, { grosor = 1.6, guiones = [] } = {}) {
+  const n = 140, puntos = [];
+  for (let i = 0; i <= n; i++) puntos.push(f(t0 + ((t1 - t0) * i) / n));
+  ctx.setLineDash(guiones);
+  traza(ctx, l, puntos, { color, grosor });
+  ctx.setLineDash([]);
+}
+
+/* ---------- widget 1 ---------- */
+
+function pintar(t) {
+  const p = pal();
+  const v = medir(Math.max(tiro.alcance, 2) * 1.08, Math.max(tiro.yMax, 1) * 1.28);
+  if (!v) return;
+  const l = v.l;
+  ejes(v, 'x [m]', 'y [m]');
+  camino(l, tiro.pos, 0, tiro.tVuelo, p.graph, { grosor: 1.2, guiones: [3, 5] });
+  camino(l, tiro.pos, 0, t, p.graph, { grosor: 1.8 });
+
+  // Las huellas: una cada 0.2 s sobre cada eje. Las de abajo quedan equiespaciadas;
+  // las de la izquierda se juntan cerca del vértice. Eso es todo el widget.
+  if (huellas) {
+    const n = Math.max(1, Math.round(tiro.tVuelo / 0.2));
+    for (let i = 0; i <= n; i++) {
+      const s = (i * tiro.tVuelo) / n;
+      if (s > t + 1e-9) break;
+      const [qx, qy] = tiro.pos(s);
+      ctx.strokeStyle = p.blue; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.75;
+      ctx.beginPath();
+      ctx.moveTo(l.px(qx), l.py(0) - 4); ctx.lineTo(l.px(qx), l.py(0) + 4); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(l.px(0) - 4, l.py(qy)); ctx.lineTo(l.px(0) + 4, l.py(qy)); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  const [cx, cy] = tiro.pos(t);
+  const X = l.px(cx), Y = l.py(cy);
+  punteado(X, Y, X, l.py(0), p.blueSoft);
+  punteado(X, Y, l.px(0), Y, p.blueSoft);
+  punto(l, [cx, 0], 4.5, p.blue, true);
+  punto(l, [0, cy], 4.5, p.blue, true);
+
+  const vy = tiro.vel(t)[1], k = v.sc * 0.42;
+  flecha(X, Y, X + tiro.v0x * k, Y, p.blue, { grosor: 1.6, punta: 7 });
+  flecha(X, Y, X, Y - vy * k, p.blue, { grosor: 1.6, punta: 7 });
+  flecha(X, Y, X, Y + 24, p.red, { grosor: 1.6, punta: 7 });
+  mono(11, 500); ctx.fillStyle = p.blue;
+  ctx.textAlign = 'center'; ctx.fillText('vₓ', X + (tiro.v0x * k) / 2, Y - 10);
+  ctx.textAlign = 'right'; ctx.fillText('v_y', X - 9, Y - (vy * k) / 2 + 4);
+  ctx.fillStyle = p.red; ctx.textAlign = 'right'; ctx.fillText('g', X - 8, Y + 22);
+  punto(l, [cx, cy], 5.5, p.ink);
+
+  ctx.fillStyle = p.dim; mono(10);
+  ctx.textAlign = 'center';
+  ctx.fillText('paso constante', l.px(v.xTope * 0.5), l.py(0) + 31);
+  ctx.save();
+  ctx.translate(16, l.py(v.yTope * 0.5));
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('frena y vuelve', 0, 0);
+  ctx.restore();
+
+  set('w1-t', t.toFixed(2) + ' s');
+  set('w1-x', cx.toFixed(1) + ' m');
+  set('w1-y', Math.max(0, cy).toFixed(1) + ' m');
+  set('w1-vx', tiro.v0x.toFixed(1) + ' m/s');
+  set('w1-vy', vy.toFixed(1) + ' m/s');
+}
+
+/* ---------- escena y controles ---------- */
+
+// Quieto, el widget muestra el instante representativo; andando, el reloj de la
+// escena llevado a tiempo físico.
+const dibujar = tReloj => pintar(enReposo ? tReposo() : tReloj * VELOCIDAD);
+
+function rotularBoton() {
+  el('w1-play').textContent = escena.estado === 'reproduciendo'
+    ? 'Pausar'
+    : (!enReposo && escena.t > 0 ? 'Seguir' : 'Reproducir');
+}
+
+let escena = crearEscena({ dibujar, duracion: duracionReloj(), alCambiar: rotularBoton });
+
+const repintar = () => dibujar(escena.t);
+
+// La duración de la escena se fija al crearla, así que un cambio de v₀ o de α
+// obliga a rehacerla. Si venía andando o pausada, se la devuelve al mismo
+// instante para no perder el vuelo en curso, como hace el diseño.
+function rehacerEscena() {
+  const tReloj = escena.t;
+  const estadoPrevio = escena.estado;
+  if (estadoPrevio === 'reproduciendo') escena.pausar();
+  escena = crearEscena({ dibujar, duracion: duracionReloj(), alCambiar: rotularBoton });
+  if (estadoPrevio === 'reposo') {
+    escena.reiniciar();
+  } else {
+    escena.reproducir();
+    escena.avanzar(tReloj);
+    if (estadoPrevio === 'pausado') escena.pausar();
+  }
+  rotularBoton();
+}
+
+function primerContacto() {
+  el('w1-play').style.animation = '';
+}
+
+el('w1-play').onclick = () => {
+  primerContacto();
+  if (escena.estado === 'reproduciendo') {
+    escena.pausar();
+  } else {
+    if (enReposo || escena.t >= duracionReloj() - 1e-6) {
+      enReposo = false;
+      escena.reiniciar();
+    }
+    escena.reproducir();
+  }
+  rotularBoton();
+};
+
+el('w1-reset').onclick = () => {
+  enReposo = true;
+  escena.reiniciar();
+  rotularBoton();
+};
+
+for (const [id, salida, fmt] of [
+  ['w1-v0', 'w1-v0-out', v => v.toFixed(1) + ' m/s'],
+  ['w1-ang', 'w1-ang-out', v => Math.round(v) + '°'],
+]) {
+  el(id).oninput = () => {
+    set(salida, fmt(parseFloat(el(id).value)));
+    primerContacto();
+    tiro = crearTiro({
+      v0: parseFloat(el('w1-v0').value),
+      alfaGrados: parseFloat(el('w1-ang').value),
+    });
+    rehacerEscena();
+  };
+}
+
+el('w1-stamps').onchange = () => {
+  huellas = el('w1-stamps').checked;
+  primerContacto();
+  repintar();
+};
+
+/* ---------- tema y barra de progreso ---------- */
+
+function sincronizarTema() {
+  el('tp-theme').textContent =
+    document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
+}
+
+el('tp-theme').onclick = () => {
+  const oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (oscuro) document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', 'dark');
+  localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark');
+  paleta = null;
+  sincronizarTema();
+  repintar();
+};
+
+if (localStorage.getItem('tp-theme') === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+}
+sincronizarTema();
+
+window.onscroll = () => {
+  const barra = el('tp-prog');
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  barra.style.width = (max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0) + '%';
+};
+
+new ResizeObserver(() => repintar()).observe(cv.parentElement);
+
+// Arranca quieto, en un estado representativo, y el botón late hasta el primer toque.
+escena.reiniciar();
+rotularBoton();
+el('w1-play').style.animation = 'tp-pulse 2.4s ease-in-out infinite';
+</script>
+</body>
+</html>
