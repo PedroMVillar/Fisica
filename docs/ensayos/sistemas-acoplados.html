@@ -288,10 +288,11 @@ function pintar(ctx, l) {
   leer('w1-ta', num(tDesdeA, 2) + ' N');
   leer('w1-tb', num(tDesdeB, 2) + ' N');
   // El signo del cero: tDesdeA y tDesdeB son literalmente el mismo numero (misma
-  // cuerda), pero la resta de dos flotantes casi iguales puede dejar un -1e-13 que
-  // toFixed imprimiria como "-0.00". Mismo retoque que usan los otros ensayos.
-  const dif = num(tDesdeA - tDesdeB, 2);
-  leer('w1-dif', (dif === '-0.00' ? '0.00' : dif) + ' N');
+  // cuerda), pero la resta de dos flotantes casi iguales puede dejar un -1e-13.
+  // `num()` ya resuelve el signo, sin guarda local (mismo caso que los otros
+  // ensayos). Esta es justamente la lectura delatora: es la prueba de "cuerda sin
+  // masa" del parrafo de arriba, y tiene que dar cero en todo momento.
+  leer('w1-dif', num(tDesdeA - tDesdeB, 2) + ' N');
 }
 
 // La escena principal: los dos cuerpos parten del reposo en S0/YB0 y se mueven con

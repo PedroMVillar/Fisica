@@ -627,10 +627,13 @@ function widgetArea(pagina) {
       : integrar(v, T0, 1.7) - integrar(v, 1.7, hasta);
 
     // Al llegar a t = 3.4 el desplazamiento es matemáticamente 0, pero Simpson lo
-    // deja a un pelo de cero por el lado negativo (del orden de 1e-15) y
-    // toFixed(2) convierte ese resto en "-0.00", que contradice al párrafo de
-    // cierre. Por debajo de este umbral -muy por encima del ruido de Simpson y muy
-    // por debajo del decimal que se muestra- se redondea a 0 antes de formatear.
+    // deja a un pelo de cero por el lado negativo (del orden de 1e-15), que sin este
+    // acotado se vería como un cero con signo y contradiría al párrafo de cierre.
+    // Por debajo de este umbral -muy por encima del ruido de Simpson y muy por
+    // debajo del decimal que se muestra- se redondea a 0 antes de formatear: acota
+    // el valor numéricamente antes de pasarlo a `num()`, en vez de comparar el
+    // string ya formateado (como hacen otros ensayos) -- no depende de cuántos
+    // decimales ni de qué separador use el formato, así que se deja como está.
     const sinCeroNegativo = m => num(Math.abs(m) < 1e-6 ? 0 : m, 2);
 
     leer('w4-t', num(hasta, 2) + ' s');

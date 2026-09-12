@@ -290,11 +290,10 @@ function widgetVersores(pagina) {
     leer('w1-rap', num(c.rapidez(t), 2) + ' m/s');
     // r̂ · v calculado, no escrito a mano: ESTA lectura es la prueba que el parrafo de
     // abajo manda mirar ("la flecha azul nunca se apoya sobre la punteada gris"), asi
-    // que tiene que moverse si alguien rompiera el modelo. Da 0.00 siempre -ese es el
-    // punto del widget- pero porque sale de la cuenta. El unico retoque es el signo del
-    // cero: la cancelacion deja a veces un -1e-17 que toFixed imprimiria como "-0.00".
-    const prod = num(rx * vx + ry * vy, 2);
-    leer('w1-prod', prod === '-0.00' ? '0.00' : prod);
+    // que tiene que moverse si alguien rompiera el modelo. Da 0,00 siempre -ese es el
+    // punto del widget- pero porque sale de la cuenta. La cancelacion deja a veces un
+    // -1e-17 al que `num()` ya le saca el signo, sin guarda local.
+    leer('w1-prod', num(rx * vx + ry * vy, 2));
   }
 
   deslizador({

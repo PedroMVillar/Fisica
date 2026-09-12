@@ -479,12 +479,11 @@ function widgetGalileo(pagina) {
     leer('w2-alt', num(Math.max(0, yEn(t)), 1) + ' m');
     // La diferencia de alturas CALCULADA, no escrita a mano: es la lectura que el
     // parrafo manda mirar y la unica prueba numerica de que el movimiento horizontal no
-    // toca al vertical. Da 0.00 m siempre -ese es el punto del widget- pero restando de
+    // toca al vertical. Da 0,00 m siempre -ese es el punto del widget- pero restando de
     // verdad la altura de un cuerpo contra la del otro, asi que se moveria si alguien
-    // rompiera el modelo. El retoque del signo del cero es por si esa resta llegara a
-    // dar un cero negativo, que toFixed imprimiria como "-0.00".
-    const dif = num(a[1] - b[1], 2);
-    leer('w2-dif', (dif === '-0.00' ? '0.00' : dif) + ' m');
+    // rompiera el modelo. Si esa resta llegara a dar un cero negativo, `num()` ya le
+    // saca el signo -sin guarda local.
+    leer('w2-dif', num(a[1] - b[1], 2) + ' m');
     leer('w2-tf', num(tf(), 2) + ' s');
   }
 

@@ -312,10 +312,11 @@ function pintar(ctx, l) {
   leer('w1-alfa-val', num(alfa * 180 / Math.PI, 0) + '°');
   leer('w1-P', num(P, 1) + ' N');
   leer('w1-N', num(N, 1) + ' N');
-  // El signo del cero: la cancelacion deja a veces un -1e-13 que toFixed imprimiria
-  // como "-0.0". Mismo retoque que usa el widget 1 del ensayo de circular.
-  const res = num(modulo, 1);
-  leer('w1-res', (res === '-0.0' ? '0.0' : res) + ' N');
+  // El signo del cero: la cancelacion deja a veces un -1e-13 que redondeado a un
+  // decimal daria un cero negativo. `num()` ya lo resuelve (test/formato.test.js),
+  // asi que ninguna guarda local hace falta aca -- ver el mismo caso en el widget 1
+  // del ensayo de circular.
+  leer('w1-res', num(modulo, 1) + ' N');
 }
 
 const widget = crearWidget({
@@ -520,9 +521,9 @@ function pintar2(ctx, l) {
   leer('w2-theta-val', num(thetaGrados, 0) + '°');
   leer('w2-N', num(N, 1) + ' N');
   leer('w2-f', num(f, 1) + ' N');
-  // Mismo retoque del signo del cero que usa el widget 1.
-  const aTxt = num(a, 3);
-  leer('w2-a', (aTxt === '-0.000' ? '0.000' : aTxt) + ' m/s²');
+  // El signo del cero (mismo caso que el widget 1): `num()` ya lo resuelve, sin
+  // guarda local.
+  leer('w2-a', num(a, 3) + ' m/s²');
   leer('w2-opt', num(thetaOptGrados, 1) + '°');
 }
 
@@ -713,9 +714,9 @@ function pintar3(ctx, l, t) {
   leer('w3-T', num(T, 3) + ' N');
   // El signo del cero: cerca del tope del deslizador N puede quedar en un -0.0002 por el
   // redondeo del `max` del input a un decimal (59.8, apenas por encima del 59.793... que
-  // hace N=0 exacto). Mismo retoque de signo que usan los widgets 1 y 2.
-  const nTxt = num(N, 3);
-  leer('w3-N', (nTxt === '-0.000' ? '0.000' : nTxt) + ' N');
+  // hace N=0 exacto). `num()` ya lo resuelve, sin guarda local (mismo caso que los
+  // widgets 1 y 2).
+  leer('w3-N', num(N, 3) + ' N');
   leer('w3-res', num(modulo, 3) + ' N');
 }
 
