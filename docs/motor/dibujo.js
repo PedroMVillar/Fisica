@@ -337,13 +337,28 @@ export const COLGADO_ROTULO_EJE = 15;
 // saliendo despues de trazar nada mas que las dos lineas.
 export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX = true, marcasY = true } = {}) {
   exigirColor(color, 'eje');
+
+  // El eje vertical se ancla en x=0 y el horizontal en y=0 SOLO cuando 0 esta dentro
+  // del encuadre. Si no lo esta -el panel de la fuerza neta de fuerzas-de-posicion.html
+  // mide de s=0.10 a s=0.99, y 0 no es parte de ese rango- anclar en 0 de todos modos
+  // manda el eje, sus marcas Y SU ETIQUETA de palabra afuera del canvas, en silencio: a
+  // 1280px ese encuadre da l.px(0) = -27.2, y ahi se dibujaba un eje invisible con
+  // todas sus marcas y casi toda la etiqueta "F neta [mN]" fuera de los limites
+  // (hallazgo de revision de la Tarea 15, Ruling 20). El ancla pasa a ser el valor del
+  // encuadre MAS CERCANO a 0 dentro de el -que es 0 mismo siempre que el encuadre lo
+  // contenga, asi que para todo otro dominio del sitio (el unico que excluye el 0 es
+  // ese panel) esto es un no-op exacto: los tests de dibujo.test.js lo verifican en
+  // los dos sentidos.
+  const anclaX = Math.max(l.xMin, Math.min(l.xMax, 0));
+  const anclaY = Math.max(l.yMin, Math.min(l.yMax, 0));
+
   ctx.strokeStyle = color;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(l.px(l.xMin), l.py(0));
-  ctx.lineTo(l.px(l.xMax), l.py(0));
-  ctx.moveTo(l.px(0), l.py(l.yMin));
-  ctx.lineTo(l.px(0), l.py(l.yMax));
+  ctx.moveTo(l.px(l.xMin), l.py(anclaY));
+  ctx.lineTo(l.px(l.xMax), l.py(anclaY));
+  ctx.moveTo(l.px(anclaX), l.py(l.yMin));
+  ctx.lineTo(l.px(anclaX), l.py(l.yMax));
   ctx.stroke();
   if (!colorTexto) return;
 
@@ -352,12 +367,12 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX =
     for (let x = Math.ceil(l.xMin / sx) * sx; x <= l.xMax + 1e-6; x += sx) {
       ctx.strokeStyle = color;
       ctx.beginPath();
-      ctx.moveTo(l.px(x), l.py(0));
-      ctx.lineTo(l.px(x), l.py(0) + 4);
+      ctx.moveTo(l.px(x), l.py(anclaY));
+      ctx.lineTo(l.px(x), l.py(anclaY) + 4);
       ctx.stroke();
       // El cero no se rotula: se lee del cruce de los ejes y ahi choca con el de y.
       if (Math.abs(x) > 1e-9) {
-        texto(ctx, String(Math.round(x * 10) / 10), l.px(x), l.py(0) + 16,
+        texto(ctx, String(Math.round(x * 10) / 10), l.px(x), l.py(anclaY) + 16,
           { color: colorTexto, px: 10, peso: 400, alineacion: 'center' });
       }
     }
@@ -368,10 +383,10 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX =
       if (Math.abs(y) < 1e-9) continue;
       ctx.strokeStyle = color;
       ctx.beginPath();
-      ctx.moveTo(l.px(0), l.py(y));
-      ctx.lineTo(l.px(0) - 4, l.py(y));
+      ctx.moveTo(l.px(anclaX), l.py(y));
+      ctx.lineTo(l.px(anclaX) - 4, l.py(y));
       ctx.stroke();
-      texto(ctx, String(Math.round(y * 10) / 10), l.px(0) - 8, l.py(y) + 3.5,
+      texto(ctx, String(Math.round(y * 10) / 10), l.px(anclaX) - 8, l.py(y) + 3.5,
         { color: colorTexto, px: 10, peso: 400, alineacion: 'right' });
     }
   }
@@ -386,7 +401,7 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX =
       { color: colorTexto, px: 10, alineacion: 'right' });
   }
   if (etiquetaY) {
-    texto(ctx, etiquetaY, l.px(0) - 34, l.py(l.yMax) - COLGADO_ROTULO_EJE,
+    texto(ctx, etiquetaY, l.px(anclaX) - 34, l.py(l.yMax) - COLGADO_ROTULO_EJE,
       { color: colorTexto, px: 10, alineacion: 'left' });
   }
 }

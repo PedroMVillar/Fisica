@@ -52,6 +52,68 @@ test('eje traza la horizontal en py(0) y la vertical en px(0), dentro de los lim
   assert.deepEqual(lines[1].slice(1), [0, 0]);
 });
 
+// --- El ancla del eje: 0 si esta en el encuadre, el borde mas cercano si no ---------
+//
+// Ruling 20 (revision de la Tarea 15): `eje()` anclaba sus dos ejes en px(0)/py(0) sin
+// mirar si 0 caia dentro del encuadre. El panel de la fuerza neta de
+// fuerzas-de-posicion.html mide de s=0.10 a s=0.99 -0 no es parte de ese rango- y a
+// 1280px eso daba px(0) = -27.2: el eje, sus marcas y su etiqueta de palabra se
+// dibujaban fuera del canvas, en silencio. Estas dos pruebas fijan el arreglo en los
+// dos sentidos: que un encuadre que SI contiene el 0 no cambia (ancla = px(0)/py(0)
+// exactos, ningun otro dominio del sitio se ve afectado), y que uno que NO lo contiene
+// ancla en el borde mas cercano, dentro del area util.
+
+test('eje con 0 estrictamente adentro del encuadre: el ancla sigue siendo exactamente px(0)/py(0)', () => {
+  // xMin/yMin negativos y xMax/yMax positivos: 0 cae en el interior de los dos rangos,
+  // no en un borde -a diferencia de L (arriba), donde xMin=yMin=0 es un caso limite.
+  const l2 = crearLienzo({ ancho: 800, alto: 400, xMin: -50, xMax: 50, yMin: -20, yMax: 30 });
+  const c = ctxFalso();
+  eje(c, l2, { color: '#dcd8ce' });
+  const moves = c.ops.filter(o => o[0] === 'moveTo');
+  const lines = c.ops.filter(o => o[0] === 'lineTo');
+  // Horizontal en py(0), de px(xMin) a px(xMax).
+  assert.deepEqual(moves[0].slice(1), [l2.px(l2.xMin), l2.py(0)]);
+  assert.deepEqual(lines[0].slice(1), [l2.px(l2.xMax), l2.py(0)]);
+  // Vertical en px(0), de py(yMin) a py(yMax).
+  assert.deepEqual(moves[1].slice(1), [l2.px(0), l2.py(l2.yMin)]);
+  assert.deepEqual(lines[1].slice(1), [l2.px(0), l2.py(l2.yMax)]);
+});
+
+test('eje con un dominio horizontal que NO contiene el 0 (como [0.10, 0.99]): el eje y sus marcas caen dentro del area util', () => {
+  // Mismo xMin/xMax/margen que el panel 2 del widget 2 de fuerzas-de-posicion.html a
+  // 1280px de ancho fisico de canvas (880px), donde se midio el defecto.
+  const margen = { L: 62, R: 24, T: 20, B: 34 };
+  const l3 = crearLienzo({ ancho: 880, alto: 200, xMin: 0.10, xMax: 0.99, yMin: -12, yMax: 12, margen });
+  const c = ctxFalso();
+  eje(c, l3, { color: '#dcd8ce', colorTexto: '#6a6760', etiquetaY: 'F neta [mN]' });
+
+  // "Dentro del area util" quiere decir dentro del CANVAS VISIBLE (0..ancho): la
+  // etiqueta y los numeros de marca cuelgan a proposito del margen izquierdo -esa es
+  // justamente su funcion, en todo widget del sitio que tiene xMin=0- asi que caer
+  // ANTES de margen.L (en el hueco reservado para ellos) es correcto; caer en x<0 es
+  // el defecto (queda recortado por el borde del canvas, invisible).
+  const moves = c.ops.filter(o => o[0] === 'moveTo');
+  // moves[1] es el arranque de la vertical (el eje "y"), en x = ancla, y = py(yMin).
+  const xEje = moves[1][1];
+  assert.ok(xEje >= 0 && xEje <= l3.ancho,
+    `el eje vertical cae en x=${xEje}, fuera del canvas [0, ${l3.ancho}]`);
+
+  const textos = c.ops.filter(o => o[0] === 'fillText');
+  const rotuloY = textos.find(o => o[1] === 'F neta [mN]');
+  assert.ok(rotuloY, 'la etiqueta "F neta [mN]" no se dibujo');
+  assert.ok(rotuloY[2] >= 0 && rotuloY[2] <= l3.ancho,
+    `la etiqueta "F neta [mN]" arranca en x=${rotuloY[2]}, fuera del canvas [0, ${l3.ancho}]`);
+
+  // Los numeros de las marcas Y (que cuelgan del mismo ancla) tambien tienen que caer
+  // dentro del canvas visible.
+  const numerosY = textos.filter(o => /^-?\d+$/.test(o[1]) && o[1] !== '');
+  assert.ok(numerosY.length > 0, 'no se dibujo ningun numero de marca');
+  for (const n of numerosY) {
+    assert.ok(n[2] >= 0 && n[2] <= l3.ancho,
+      `la marca "${n[1]}" cae en x=${n[2]}, fuera del canvas [0, ${l3.ancho}]`);
+  }
+});
+
 // --- El color es obligatorio y no tiene valor por defecto ---------------
 //
 // Un default seria una copia mas de la paleta, escondida en un modulo que no
