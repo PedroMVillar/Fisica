@@ -624,7 +624,8 @@ git add docs/motor/dibujo.js test/dibujo.test.js
 git commit -m "feat(motor): presupuestoPx, la barra apilada contra un total declarado"
 ```
 
-Esperado: **246 pruebas, 0 fallas** (240 de base + 6).
+Esperado: **246 pruebas, 0 fallas** (240 de base + 6). Con la séptima prueba que sumó la
+ronda de arreglo — la del orden del borde — son **247**.
 
 ---
 
@@ -858,9 +859,15 @@ vectorPx(ctx, bx - dxPx, by - dyPx, bx, by,
 ```
 
 Comprobación de que gira de verdad, medida a 880 px: a θ = 0 las componentes son
-(94, 0) px; a θ = 30°, (82, 47); a θ = 60°, (47, 82). A 350 px: (51, 0), (44, 25),
-(26, 44). Si al mover el deslizador la flecha no se inclina, mirá esas seis cifras antes
-que cualquier otra cosa.
+(70,6; 0) px; a θ = 30°, (61,2; 35,3); a θ = 60°, (35,3; 61,2). A 350 px: (38,3; 0),
+(33,1; 19,1), (19,1; 33,1). Si al mover el deslizador la flecha no se inclina, mirá esas
+seis cifras antes que cualquier otra cosa.
+
+**Corregido durante la ejecución, midiendo:** este plan traía (94, 0) / (82, 47) /
+(47, 82), calculadas con la fuerza en el extremo del tramo, F(20) = 120 N. Pero el bloque
+se dibuja en el **medio** del tramo, x = 15, donde F(15) = 90 N — lo dice el párrafo de
+acá abajo—, así que la flecha real mide 0,75 de aquello. Las cifras de arriba son las
+medidas instrumentando el canvas, no las calculadas a mano.
 
 `x` es la posición del bloque dentro del tramo. Sin animación: el bloque se dibuja en el
 medio del tramo (x = 15) y ahí se queda. Este widget no tiene reproducción — lo que se
@@ -927,8 +934,9 @@ Con θ = 30° y la casilla marcada, las cinco lecturas tienen que dar `779,4 J`,
 2. Sin rozamiento a θ = 30°: `K final` tiene que dar `779,4 J` y `v final`, `8,83 m/s`.
 3. θ = 0 y θ = 60, los dos extremos: el chequeo sigue en `0,00 J` y la curva no se sale
    del panel por arriba ni cruza el cero por abajo.
-4. **Medí la flecha**, no la mires: a 880 px tiene que dar 94 px a θ = 0 y sus componentes
-   (47, 82) a θ = 60°.
+4. **Medí la flecha**, no la mires: a 880 px tiene que dar **70,6 px** a θ = 0 y sus
+   componentes **(35,3; 61,2)** a θ = 60°, con el bloque en x = 15 (F = 90 N). El módulo
+   no cambia con θ: sólo se reparte entre las componentes.
 5. 1280 y 390 px, los dos temas, consola limpia, ningún widget animándose solo al cargar.
 6. Rompé el modelo a propósito una vez: cambiá `normal` por `() => M * G` y confirmá que
    el chequeo salta a `22,50 J` a θ = 30°. Volvé atrás. Si no saltó, el chequeo no está
@@ -2617,8 +2625,15 @@ la fila es falsa.
    Los dos archivos nuevos tienen que dar **9** cada uno —los mismos nueve del esqueleto,
    ni uno más—. Si dan más, hay un `style` inventado y hay que cambiarlo por una clase de
    `base.css`. Si dan menos, se perdió algo del esqueleto al copiarlo.
-7. `node --test "test/**/*.test.js"`: **246 pruebas, 0 fallas** (240 de base + 6 de
-   `presupuestoPx`).
+
+   **Ojo con cuándo se mide.** Los nueve son los de la página **terminada**. Dos de ellos
+   viven en el `<ol>` de `Para tener a mano`, que no lo escribe la tarea que crea la página
+   sino la que la cierra: `energia.html` da **7** desde la Tarea 3 hasta la 6, y recién
+   llega a 9 cuando la Tarea 6 agrega ese cierre. Medido durante la ejecución. Un 7 en ese
+   momento no es un `style` perdido.
+7. `node --test "test/**/*.test.js"`: **247 pruebas, 0 fallas** (240 de base + 7 de
+   `presupuestoPx`: las seis que este plan dictaba más la del orden del borde, que sumó la
+   revisión de la Tarea 2 al encontrar un mutante que sobrevivía a las seis).
 
 - [ ] **Paso 6: commit**
 
