@@ -68,10 +68,54 @@ try {
   </div>
 </section>
 
-<div class="columna columna-final">
+<div class="columna">
   <p class="parrafo-suelto">Los números a 30°: la fuerza hace 779,4 J, pero al bloque le quedan 658,9 J, porque el rozamiento se llevó 120,5 J. Y esos 120,5 J no salen de μ·<i>mg</i>·<i>d</i>: la normal no es <i>mg</i>. Empieza en 226 N y termina en 256 N, justamente porque <i>F</i> aprieta cada vez más fuerte —crece con <i>x</i>— y el bloque se apoya cada vez con más ganas contra el piso.</p>
   <p class="parrafo">Movés θ y mirá el área. A 0° la fuerza empuja de lleno hacia adelante y el trabajo es máximo (900 J). A 60° el área es la mitad. Lo que se pierde no es «fuerza»: la fuerza vale exactamente lo mismo, 120 N al final del tramo en los dos casos. Lo que se pierde es <b class="negrita">dirección</b>.</p>
   <p class="parrafo">Que la lectura de abajo esté clavada en 0,00 J no es una comprobación de que la cuenta esté bien: es la definición de trabajo puesta a prueba. Una de las dos cuentas integra la curva que ves dibujada; la otra es la fórmula cerrada del papel. Si fueran dos cosas distintas, el trabajo no sería el área.</p>
+
+  <h2 class="titulo-seccion">02 · El mismo presupuesto, dos depósitos</h2>
+  <p class="parrafo">La contabilidad es siempre la misma. Hay un total, que se fija al principio; hay casilleros por los que esa energía se reparte —cinética, potencial gravitatoria, potencial elástica—; y hay un sumidero, el rozamiento, que saca del total y no devuelve. Mientras nada salga por el sumidero, la suma de los casilleros no cambia aunque cada uno suba y baje. La barra de arriba del widget es literalmente esa cuenta.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación 2</span>
+      <span class="titulo-fila">El mismo presupuesto, dos depósitos</span>
+      <span class="nota-fila">— la barra nunca cambia de largo; lo único que cambia es de quién es cada pedazo.</span>
+    </div>
+    <canvas id="w2-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="w2-play" class="boton-primario">Reproducir</button>
+        <button id="w2-reset" class="boton">Reiniciar</button>
+      </div>
+      <label class="rotulo-campo" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <input id="w2-modo" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Resorte en vez de plano
+      </label>
+      <label class="control" style="flex:1 1 150px;min-width:130px">
+        <span class="rotulo-campo">μ <output id="w2-mu-out" class="valor-control">0,30</output></span>
+        <input id="w2-mu" type="range" min="0" max="0.5" step="0.01" value="0.3" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>cinética <b id="w2-k" class="lectura-valor azul">0,000 J</b></span>
+      <span>potencial <b id="w2-u" class="lectura-valor" style="color:var(--graph)">9,800 J</b></span>
+      <span>disipado <b id="w2-q" class="lectura-valor roja">0,000 J</b></span>
+      <span>v <b id="w2-v" class="lectura-valor">0,0000 m/s</b></span>
+      <span>suma − total <b id="w2-chequeo" class="lectura-valor tenue">0,000 J</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna columna-final">
+  <p class="parrafo-suelto">Los números del plano con μ = 0,3: llega abajo a 3,0685 m/s en vez de 4,4272, y la diferencia no es «un poco menos»: de los 9,80 J que había arriba, el rozamiento se comió 5,0922 J — <b class="negrita">más de la mitad</b>. Y esa cuenta no depende de cuánto tarde ni de qué forma tenga el plano: es la fuerza de rozamiento por la distancia recorrida, nada más.</p>
+  <p class="parrafo">Poné μ en cero y mirá la lectura de velocidad: 4,4272 m/s. Es exactamente lo mismo que si el bloque se hubiera dejado caer derecho desde 1 m —el inciso (c) del ejercicio 3—. El peso es conservativo: le importa de dónde a dónde, no por dónde. Lo que <b class="negrita">sí</b> cambia es el tiempo, la dirección de llegada y la distancia recorrida.</p>
+  <p class="parrafo">Pasá al modo resorte: cambia el depósito y no cambia nada más. La barra hace lo mismo, el chequeo sigue en cero, y la única diferencia es que arriba dice «elástica» en vez de «gravitatoria». Es el mismo ejercicio, escrito dos veces en el práctico.</p>
+  <p class="parrafo">Y el detalle del inciso (d) del ejercicio 4, que vale por sí solo: cuando el cuerpo llega a <b class="negrita">la mitad</b> de su velocidad, no perdió la mitad de su energía, perdió <b class="negrita">tres cuartos</b> — de 0,09 J le quedan 0,0225 J, así que el rozamiento le sacó 0,0675 J. La energía cinética va con <i>v</i>², no con <i>v</i>. Frenar un auto de 100 a 50 cuesta tres veces más energía que frenarlo de 50 a 0.</p>
+
+  <h3 class="titulo-seccion">Apoyar no es soltar</h3>
+  <p class="parrafo">Se apoya <b class="negrita">suavemente</b> una masa de 5 kg sobre un resorte vertical de <i>k</i> = 2 N/m. El equilibrio está en <i>x</i><sub>eq</sub> = 24,5 m. Bajando hasta ahí el peso entrega <i>mg</i>·<i>x</i><sub>eq</sub> = 1200,5 J, pero en el resorte quedan guardados sólo <i>kx</i>²/2 = 600,25 J: <b class="negrita">la mitad exacta</b>. ¿Dónde está la otra mitad? En la mano, que frenó el descenso y por lo tanto hizo un trabajo de −600,25 J. Y el inciso (c) es la confirmación: si en vez de apoyarla se la <b class="negrita">suelta</b> desde 1 m de altura, la mano no está para frenar nada, toda la energía entra al balance, y el resorte se comprime hasta 49,9804 m desde su longitud natural — 25,4804 m más allá del equilibrio. «Comprimirse hasta el equilibrio y quedarse ahí» no es lo que pasa en general: es lo que pasa cuando alguien te está frenando.</p>
 
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
@@ -84,8 +128,9 @@ try {
 <script type="module">
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget, panelesApilados } from '../motor/widget.js';
-import { eje, bloque, suelo, curva, punteado, vectorPx, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
-import { deslizador, casilla } from '../motor/controles.js';
+import { eje, bloque, suelo, curva, punteado, vectorPx, traza, presupuestoPx, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
+import { crearEscena } from '../motor/escena.js';
 import { conectarTema } from '../motor/tema.js';
 import { num } from '../motor/formato.js';
 
@@ -248,6 +293,243 @@ casilla({
   entrada: el('w1-roce'), pagina,
   alCambiar: v => { conRoceW1 = v; widgetW1.repintar(); },
 });
+
+/* ---------- widget 2: el mismo presupuesto, dos depositos ---------- */
+
+// Practico 3, ej. 3 y 4. Verificado en los bloques "Ej 3" y "Ej 4":
+//   plano:   1 kg, 30 grados, h = 1 m (s = 2 m sobre el plano)
+//            mu = 0   -> v = 4.4272 m/s
+//            mu = 0.3 -> v = 3.0685 m/s, W_roce = -5.0922 J de los 9.80 J iniciales
+//   resorte: 1 kg, k = 2 N/m, comprimido 0.3 m -> W = 0.09 J, v = 0.424264 m/s,
+//            y con mu = 0.2 se detiene a 0.045918 m (4.59 cm)
+const M_W2 = 1, ALFA_W2 = 30 * Math.PI / 180, H_W2 = 1, S_PLANO_W2 = H_W2 / Math.sin(ALFA_W2);  // 2 m
+const K_RES_W2 = 2, X_COMP_W2 = 0.3;
+
+// --- modo plano: aceleracion constante, y la cinetica sale de la VELOCIDAD (no de
+// "total - potencial - disipado": si se calculara asi, la resta de mas abajo daria cero
+// por construccion y no probaria nada -- ver el comentario junto al chequeo).
+function planoW2(t, mu) {
+  const a = G * (Math.sin(ALFA_W2) - mu * Math.cos(ALFA_W2));
+  const s = Math.min(0.5 * a * t * t, S_PLANO_W2);
+  const v = Math.sqrt(2 * a * s);                         // no a*t: asi vale tambien en el tope
+  return {
+    s, v,
+    total: M_W2 * G * H_W2,
+    K: 0.5 * M_W2 * v * v,                                // de la velocidad
+    U: M_W2 * G * (H_W2 - s * Math.sin(ALFA_W2)),         // de la altura
+    Q: mu * M_W2 * G * Math.cos(ALFA_W2) * s,             // de la fuerza por la distancia
+  };
+}
+
+// --- modo resorte: dos tramos. Empuje del resorte (un cuarto de periodo de un armonico,
+// sin friccion) y despues frenado uniforme en la zona rugosa. `s` hace doble turno como
+// coordenada de pantalla: negativa (de -0.3 a 0) durante el empuje, positiva (de 0 a lo
+// que tarde en frenar) durante el frenado -- por eso el dibujo puede usarla tal cual.
+function resorteW2(t, mu) {
+  const w = Math.sqrt(K_RES_W2 / M_W2);                   // 1.4142 rad/s
+  const tEmpuje = (Math.PI / 2) / w;                      // 1.1107 s
+  const vSalida = X_COMP_W2 * w;                          // 0.424264 m/s
+  const aFreno = mu * G;
+  const total = 0.5 * K_RES_W2 * X_COMP_W2 * X_COMP_W2;   // 0.09 J
+  if (t <= tEmpuje) {
+    const x = -X_COMP_W2 * Math.cos(w * t);               // de -0.3 a 0
+    const v = X_COMP_W2 * w * Math.sin(w * t);
+    return { s: x, v, total, K: 0.5 * M_W2 * v * v, U: 0.5 * K_RES_W2 * x * x, Q: 0 };
+  }
+  const td = Math.min(t - tEmpuje, vSalida / aFreno);
+  const d = vSalida * td - 0.5 * aFreno * td * td;
+  const v = vSalida - aFreno * td;
+  return { s: d, v, total, K: 0.5 * M_W2 * v * v, U: 0, Q: mu * M_W2 * G * d };
+}
+
+// Duraciones. Integradas: plano 1,3036 s con mu = 0,3 (0,9035 s con mu = 0 y 2,4684 s
+// con mu = 0,5); resorte 1,3272 s con mu = 0,2 (1,1107 s de empuje + 0,2165 s de frenado).
+//
+// Con mu = 0 en modo resorte `aFreno` da 0 y esta division da Infinity: el bloque no
+// frena nunca, cosa correcta (sin friccion no hay por que frenar), y `escenaW2.duracion`
+// en Infinity no rompe nada -- `crearEscena` solo lo usa en comparaciones (`t >= dur`,
+// que nunca se cumple) y el bloque sencillamente sale del cuadro. No hace falta un caso
+// especial: es la fisica real del caso limite.
+function duracionPlanoW2(mu) {
+  const a = G * (Math.sin(ALFA_W2) - mu * Math.cos(ALFA_W2));
+  return Math.sqrt(2 * S_PLANO_W2 / a);
+}
+function duracionResorteW2(mu) {
+  const w = Math.sqrt(K_RES_W2 / M_W2);
+  const tEmpuje = (Math.PI / 2) / w;
+  const vSalida = X_COMP_W2 * w;
+  return tEmpuje + vSalida / (mu * G);
+}
+
+let modoResorteW2 = false;
+let muW2 = 0.3;
+const estadoW2 = (t, mu) => modoResorteW2 ? resorteW2(t, mu) : planoW2(t, mu);
+const duracionW2 = mu => modoResorteW2 ? duracionResorteW2(mu) : duracionPlanoW2(mu);
+
+const MARGEN_W2 = { L: 28, R: 24, T: 54, B: 26 };          // T de 54: el aire de la barra
+
+function encuadreW2() {
+  return modoResorteW2
+    ? { xMin: -0.40, xMax: 0.15, yMin: -0.06, yMax: 0.18 }
+    : { xMin: -0.35, xMax: 2.05, yMin: -0.35, yMax: 1.35 };
+}
+
+const ANCHO_BLOQUE_W2 = 0.15, ALTO_BLOQUE_W2 = 0.1;
+const ANCHO_BLOQUE_RES_W2 = 0.03, ALTO_BLOQUE_RES_W2 = 0.03;
+const PARED_X_W2 = -0.37;
+
+function pintarEscenaPlanoW2(ctx, l, e, p) {
+  const baseX = S_PLANO_W2 * Math.cos(ALFA_W2);            // 1,732 m
+  suelo(ctx, l, { color: p.rule, desde: baseX, hasta: l.xMax - 0.05, y: 0 });
+  // El plano en si es una recta -- dos puntos alcanzan -- del vertice de arriba al pie.
+  traza(ctx, l, [[0, H_W2], [baseX, 0]], { color: p.ink, grosor: 1.5 });
+
+  // El bloque va apoyado SOBRE la superficie del plano, no centrado en la linea: se
+  // corre medio alto en la direccion perpendicular al plano (sen ALFA, cos ALFA).
+  const sx = e.s * Math.cos(ALFA_W2), sy = H_W2 - e.s * Math.sin(ALFA_W2);
+  const nx = Math.sin(ALFA_W2), ny = Math.cos(ALFA_W2);
+  const centro = [sx + nx * ALTO_BLOQUE_W2 / 2, sy + ny * ALTO_BLOQUE_W2 / 2];
+  bloque(ctx, l, centro, { ancho: ANCHO_BLOQUE_W2, alto: ALTO_BLOQUE_W2, color: p.band, borde: p.ink, angulo: -ALFA_W2 });
+}
+
+function pintarEscenaResorteW2(ctx, l, e, p) {
+  // La zona rugosa se dibuja desde x = 0 (donde el resorte llega a su longitud natural
+  // y el bloque se separa) hasta el borde: es lo que distingue a simple vista la zona
+  // sin friccion (sin rayado) de la zona con friccion (con rayado).
+  suelo(ctx, l, { color: p.rule, desde: 0, hasta: l.xMax - 0.01, y: 0 });
+
+  // El resorte en zigzag entre la pared fija y su extremo libre. Ese extremo sigue al
+  // bloque MIENTRAS lo empuja (e.s <= 0) y se queda en su longitud natural (x = 0) una
+  // vez que el bloque se separo y entro en la zona rugosa (e.s > 0): de ahi el min.
+  const finResorte = Math.min(e.s, 0);
+  const puntos = [[PARED_X_W2, 0]];
+  const n = 10;
+  for (let i = 1; i < n; i++) {
+    const x = PARED_X_W2 + (finResorte - PARED_X_W2) * i / n;
+    puntos.push([x, (i % 2 === 0 ? 1 : -1) * 0.02]);
+  }
+  puntos.push([finResorte, 0]);
+  traza(ctx, l, puntos, { color: p.ink, grosor: 1.5 });
+  traza(ctx, l, [[PARED_X_W2, -0.02], [PARED_X_W2, 0.05]], { color: p.ink, grosor: 2.5 });
+
+  bloque(ctx, l, [e.s, ALTO_BLOQUE_RES_W2 / 2],
+    { ancho: ANCHO_BLOQUE_RES_W2, alto: ALTO_BLOQUE_RES_W2, color: p.band, borde: p.ink });
+}
+
+function pintarW2(ctx, l) {
+  const p = pagina.paleta();
+  const e = estadoW2(escenaW2.t, muW2);
+
+  // La barra en PIXELES DE CANVAS, no del encuadre: de 28 px del borde izquierdo a 24
+  // del derecho, en cualquier viewport y en los dos modos -- asi no cambia de largo al
+  // cambiar de modo, que es exactamente lo que la barra promete.
+  const X_BARRA = 28, ALTO_BARRA = 22, Y_BARRA = 16;
+  presupuestoPx(ctx, X_BARRA, Y_BARRA, l.ancho - X_BARRA - 24, ALTO_BARRA, [
+    { valor: e.K, color: p.blue, etiqueta: 'cinética' },
+    { valor: e.U, color: p.graph, etiqueta: 'potencial' },
+    { valor: e.Q, color: p.red, etiqueta: 'disipado' },
+  ], { total: e.total, colorBorde: p.rule, colorTexto: p.paper });
+
+  if (modoResorteW2) pintarEscenaResorteW2(ctx, l, e, p);
+  else pintarEscenaPlanoW2(ctx, l, e, p);
+
+  // --- las lecturas y el chequeo ---
+  // K sale de la velocidad, U de la posicion y Q de la fuerza de rozamiento por la
+  // distancia: tres caminos que no comparten una linea de codigo entre si, y la suma
+  // tiene que dar el total declarado en la barra de arriba.
+  //
+  // Zona ciega, analoga a la del widget 1 pero mas amplia: en t = 0 (en CUALQUIER modo
+  // y con CUALQUIER mu) s vale 0 (o, en modo resorte, la velocidad vale 0 y la posicion
+  // vale exactamente -X_COMP_W2), asi que K y Q colapsan al mismo valor este bien o mal
+  // calculada `a` (o `w`) -- recien se despliegan con t > 0. Y con mu = 0 -en cualquier
+  // instante y en cualquier modo- Q da cero SIN IMPORTAR si `s` (o `d`) esta bien
+  // calculada, porque mu multiplica a todo el termino: un error ahi (como el que rompe
+  // el Paso 7 de la tarea, sacar el cos(ALFA_W2) de Q) es invisible con el deslizador en
+  // 0. Medido con esa rotura: el chequeo se mueve a 0,788 J al pie del plano con mu =
+  // 0,3, pero a mu = 0 sigue en cero pase lo que pase con la formula de Q.
+  const chequeo = (e.K + e.U + e.Q) - e.total;
+  leer('w2-k', num(e.K, 3) + ' J');
+  leer('w2-u', num(e.U, 3) + ' J');
+  leer('w2-q', num(e.Q, 3) + ' J');
+  leer('w2-v', num(e.v, 4) + ' m/s');
+  leer('w2-chequeo', num(chequeo, 3) + ' J');
+}
+
+const widgetW2 = crearWidget({
+  pagina, canvas: el('w2-cv'),
+  margen: MARGEN_W2,
+  escalaUniforme: true,
+  centrar: true,
+  encuadre: encuadreW2,
+  dibujar: pintarW2,
+});
+
+let enReposoW2 = true;
+const rotularW2 = () => rotuloReproducir(el('w2-play'), escenaW2, enReposoW2);
+
+const escenaW2 = crearEscena({
+  dibujar: () => widgetW2.repintar(),
+  duracion: duracionW2(muW2),
+  alCambiar: rotularW2,
+});
+
+deslizador({
+  entrada: el('w2-mu'), salida: el('w2-mu-out'), pagina,
+  formato: v => num(v, 2),
+  alCambiar: v => {
+    muW2 = v;
+    escenaW2.duracion = duracionW2(muW2);
+    widgetW2.repintar();
+  },
+});
+
+// Mover el deslizador desde codigo es asignar Y despachar: asi es `deslizador` quien
+// repinta su <output> y avisa a la pagina, y no queda una segunda copia del cableado
+// que se pueda desincronizar del control visible (docs/ensayos/movimiento-circular.html:513).
+const fijarDeslizadorW2 = (entrada, valor) => {
+  entrada.value = String(valor);
+  entrada.dispatchEvent(new Event('input'));
+};
+
+casilla({
+  entrada: el('w2-modo'), pagina,
+  alCambiar: v => {
+    modoResorteW2 = v;
+    // El valor por defecto de mu lo fija el modo: 0,30 en plano (Ej 3), 0,20 en resorte
+    // (Ej 4). Sin esto el <output> del deslizador quedaria mostrando el numero viejo.
+    fijarDeslizadorW2(el('w2-mu'), v ? 0.20 : 0.30);
+    enReposoW2 = true;
+    escenaW2.duracion = duracionW2(muW2);
+    escenaW2.reiniciar();
+    rotularW2();
+  },
+});
+boton({
+  elemento: el('w2-play'), pagina,
+  alApretar: () => {
+    if (escenaW2.estado === 'reproduciendo') {
+      escenaW2.pausar();
+    } else {
+      if (enReposoW2 || escenaW2.t >= escenaW2.duracion - 1e-6) {
+        enReposoW2 = false;
+        escenaW2.reiniciar();
+      }
+      escenaW2.reproducir();
+    }
+    rotularW2();
+  },
+});
+boton({
+  elemento: el('w2-reset'),
+  alApretar: () => { enReposoW2 = true; escenaW2.reiniciar(); rotularW2(); },
+});
+
+rotularW2();
+const pulsoW2 = () => {
+  el('w2-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
+};
+pagina.alTocar(pulsoW2);
+pulsoW2();
 
 /* ---------- arranque ---------- */
 
