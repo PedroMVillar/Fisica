@@ -65,6 +65,16 @@ export function crearWidget({
       ctx.clearRect(0, 0, ancho, alto);
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
+      // Estado que los ensayos cambian y reponen a mano al dibujar (`globalAlpha` en
+      // cinco lugares de los ensayos, `setLineDash` dentro de `curva` y `punteado`).
+      // El contexto de un canvas sobrevive entre repintados y `repintarTodo` se traga
+      // la excepcion de un widget: si algo lanza ENTRE el set y el reset, ese contexto
+      // queda con alpha < 1 o con guiones puestos PARA SIEMPRE, y el widget se dibuja
+      // translucido o punteado en cada repintado posterior, sin error visible.
+      // Reponerlos aca, al lado de lineJoin/lineCap, hace que todo repintado arranque
+      // del mismo estado, haya lanzado o no el anterior.
+      ctx.globalAlpha = 1;
+      ctx.setLineDash([]);
 
       if (escalaUniforme) {
         // Una sola escala para los dos ejes, para no deformar el dibujo: se elige la

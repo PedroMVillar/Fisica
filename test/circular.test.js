@@ -88,10 +88,44 @@ test('inciso (d) del ejercicio 11: la posicion y la velocidad son siempre perpen
 test('inciso (e) del ejercicio 11: velocidad y aceleracion son perpendiculares solo en el uniforme', () => {
   const uniforme = ej14();
   const [vx, vy] = uniforme.vel(0.3);
-  const [ax, ay] = uniforme.aTotalVector ? uniforme.aTotalVector(0.3) : [0, 0];
+  const [ax, ay] = uniforme.aTotalVector(0.3);   // sin fallback: si el metodo no esta, esto rompe
   cerca(vx * ax + vy * ay, 0, 1e-6);
-  // Con gamma distinto de cero deja de valer: hay componente a lo largo de v.
-  assert.ok(Math.abs(ej13().aT(2)) > 1e-9);
+  // Con gamma distinto de cero deja de valer: hay componente a lo largo de v, y el
+  // producto escalar NO da cero. Sin esta mitad, la prueba pasaba con cualquier signo
+  // de la componente normal.
+  const acelerado = ej13();
+  const [wx, wy] = acelerado.vel(2);
+  const [bx, by] = acelerado.aTotalVector(2);
+  assert.ok(Math.abs(wx * bx + wy * by) > 1e-6,
+    `con gamma != 0 la velocidad y la aceleracion no pueden ser perpendiculares (dio ${wx * bx + wy * by})`);
+  // Y esa componente a lo largo de v es exactamente la tangencial, no otra cosa.
+  cerca((wx * bx + wy * by) / Math.hypot(wx, wy), acelerado.aT(2), 1e-9);
+});
+
+// La direccion de `aTotalVector` es todo el argumento del widget de aceleraciones: la
+// flecha roja apunta HACIA EL CENTRO, no hacia afuera. Pedir solo que a . v sea cero en
+// el uniforme no lo comprueba -- eso se cumple con la componente normal en cualquiera
+// de los dos sentidos. Aca se fija el signo: la proyeccion sobre r̂ tiene que ser -aN.
+test('la componente radial de la aceleracion es -aN: la flecha apunta al centro', () => {
+  for (const c of [ej13(), ej14()]) {
+    for (const t of [0, 0.3, 1, 2.5]) {
+      const [rx, ry] = c.versorR(t);
+      const [ax, ay] = c.aTotalVector(t);
+      cerca(ax * rx + ay * ry, -c.aN(t), 1e-9);
+    }
+  }
+});
+
+test('la aceleracion total se reconstruye como -aN r̂ + aT θ̂, y su modulo es aTotal', () => {
+  const c = ej13();
+  for (const t of [0.4, 3]) {
+    const [rx, ry] = c.versorR(t);
+    const [tx, ty] = c.versorTheta(t);
+    const [ax, ay] = c.aTotalVector(t);
+    cerca(ax, -c.aN(t) * rx + c.aT(t) * tx, 1e-9);
+    cerca(ay, -c.aN(t) * ry + c.aT(t) * ty, 1e-9);
+    cerca(Math.hypot(ax, ay), c.aTotal(t), 1e-9);
+  }
 });
 
 test('los dos versores son unitarios y perpendiculares entre si', () => {

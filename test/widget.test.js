@@ -149,6 +149,42 @@ test('el widget escala el canvas por devicePixelRatio y limpia antes de dibujar'
   assert.ok(nombres.indexOf('clearRect') < nombres.length);
 });
 
+// `repintar` repone el estado del contexto que los ensayos cambian a mano. `dibujar`
+// puede lanzar a mitad de camino -- y `repintarTodo` se traga esa excepcion -- asi que
+// el reset que el ensayo hace despues de bajar el alpha o poner guiones puede no
+// llegar a correr nunca. Sin este reposicion, el canvas quedaria translucido (o
+// punteado) en todos los repintados siguientes, sin ningun error visible.
+test('cada repintado arranca con globalAlpha en 1 y sin guiones, aunque el anterior haya lanzado', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const ultimoGuion = () => cv.ops.filter(o => o[0] === 'setLineDash').at(-1)?.[1];
+  const alEmpezarADibujar = [];
+  let lanzar = true;
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1,
+    margen: { L: 0, R: 0, T: 0, B: 0 },
+    encuadre: () => ({ xMax: 10, yMax: 5 }),
+    dibujar: ctx => {
+      alEmpezarADibujar.push({ alpha: ctx.globalAlpha, guiones: ultimoGuion() });
+      // Lo que hace un ensayo de verdad: baja el alpha y pone guiones...
+      ctx.globalAlpha = 0.45;
+      ctx.setLineDash([3, 5]);
+      // ...y revienta antes de llegar a reponerlos.
+      if (lanzar) throw new Error('un widget que revienta a mitad de dibujo');
+    },
+  });
+
+  assert.throws(() => w.repintar(), /revienta/);
+  lanzar = false;
+  w.repintar();
+
+  assert.equal(alEmpezarADibujar.length, 2);
+  for (const [i, estado] of alEmpezarADibujar.entries()) {
+    assert.equal(estado.alpha, 1, `el repintado ${i} no arranco opaco`);
+    assert.deepEqual(estado.guiones, [], `el repintado ${i} arranco con guiones puestos`);
+  }
+});
+
 test('el lienzo del widget lleva el margen que se le dio', () => {
   const p = crearPagina({ documento: documentoFalso() });
   const cv = canvasFalso(800, 400);

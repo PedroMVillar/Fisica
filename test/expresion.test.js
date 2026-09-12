@@ -85,8 +85,19 @@ test('sobra basura al final: tambien es error', () => {
   assert.equal(compilar('2 3').ok, false);
 });
 
+// Los cuatro primeros casos mueren antes de llegar a la rama de LLAMADA A FUNCION: el
+// tokenizador rechaza el punto y el corchete, y `constructor` suelto cae en la rama de
+// variable. La guarda que importa -el `hasOwnProperty` con que se busca el nombre en
+// FUNCIONES- solo se ejecuta cuando detras del nombre viene un '(' , asi que los tres
+// ultimos casos son los unicos que la ejercitan: sin ella, `FUNCIONES[nombre]` resuelve
+// contra Object.prototype, `fn` sale truthy, compilar() devuelve ok:true y recien
+// explota (o devuelve cualquier cosa) al evaluar f(t).
 test('no se puede colar codigo: nada de propiedades ni llamadas raras', () => {
-  for (const fuente of ['constructor', 't.constructor', 'globalThis', '[].map']) {
+  const fuentes = [
+    'constructor', 't.constructor', 'globalThis', '[].map',
+    'constructor(t)', 'valueOf(t)', 'hasOwnProperty(t)',
+  ];
+  for (const fuente of fuentes) {
     assert.equal(compilar(fuente).ok, false, `${fuente} no deberia compilar`);
   }
 });
