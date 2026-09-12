@@ -1931,7 +1931,7 @@ La franja:
   `— dos franjas del mismo ancho valen lo mismo, esté el cuerpo lento o rápido.`
 - `<canvas id="m1-cv">`
 - controles: deslizador `m1-t1` (`min="0" max="3.5" step="0.05" value="0"`, s), deslizador
-  `m1-dt` (`min="0.1" max="1.5" step="0.05" value="1"`, s), y dos botones,
+  `m1-dt` (`min="0.1" max="4.55" step="0.05" value="1"`, s), y dos botones,
   `Primer segundo` (`m1-b1`) y `Segundo segundo` (`m1-b2`), que ponen los deslizadores en
   (0; 1) y (1; 1).
 
@@ -2068,6 +2068,16 @@ intervalo.
    `Segundo segundo`: `19,6`, `19,6`, `0,0`, `9,80`, `19,60`. Contra el bloque `Ej 9`.
 2. `t1 = 0`, `Δt` al máximo: el intervalo se recorta en `t_cl = 4,5175 s` y `J` da
    `88,5 N·s`. `v al terminar` da `44,27 m/s`.
+
+   **Corregido durante la ejecución.** Este plan daba `max="1.5"` para `m1-dt`, y con ese
+   tope el máximo alcanzable desde `t1 = 0` es `mg·1,5 = 29,4 N·s`: los `88,5` de este paso
+   eran **inalcanzables**. Y no era sólo un paso de verificación mal escrito: el párrafo de
+   cierre del Paso 5 le dice al lector «estirá Δt hasta el final» y le promete los
+   `88,544 N·s`, que es el número donde se juntan los dos caminos —`mg·t_cl` y `m√(2gh)`— y
+   por lo tanto la idea entera de la sección. La página le pedía al lector algo que el
+   control no podía hacer. El tope pasa a `4.55`, que desde `t1 = 0` alcanza el recorte en
+   `t_cl` con un paso de sobra; el valor por defecto sigue en `1`, así que la comparación
+   primer segundo / segundo segundo no cambia.
 3. La esquina del rango: `t1 = 3,5` y `Δt = 1,5` — la suma da 5,0, hay que ver el recorte
    actuando y `J` dando `mg·(4,5175 − 3,5) = 19,94 N·s`, no `29,4`.
 4. **Medí las dos franjas**: 173,9 px a 880 px las dos.
