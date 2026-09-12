@@ -34,6 +34,11 @@
 //      `globalAlpha` para las rayitas (a 0.5) y lo repone a 1 antes de salir:
 //      a diferencia de las tres propiedades de arriba, `globalAlpha` sale
 //      siempre en el mismo estado en el que entró.
+//    - `componentes` también limpia `setLineDash` a `[]` al final, igual que
+//      `punteado`/`curva`; no toca `font`/`textAlign`.
+//    - `arco` sin `rotulo` no toca ninguno de los tres. Con `rotulo`, delega en
+//      `texto` para escribirlo y queda en el estado que `texto` deja: `font`
+//      en JetBrains Mono al tamaño por defecto y `textAlign` en `'center'`.
 //
 // De las tres reglas, la 2 está fijada por prueba en test/dibujo.test.js, que
 // afirma que `cuerpo` emite exactamente ['beginPath', 'arc', 'fill'] — o sea
@@ -231,6 +236,55 @@ export function suelo(ctx, l, { color, desde, hasta, y = 0 } = {}) {
     ctx.stroke();
   }
   ctx.globalAlpha = 1;
+}
+
+// El arquito que marca un angulo, con su letra en la bisectriz. El radio va en pixeles
+// y no en unidades fisicas a proposito: un angulo no tiene tamaño fisico, y si el radio
+// se escalara con el encuadre el arco cambiaria de tamaño al mover un slider. Grosor del
+// trazo (1.2) y desplazamiento del rotulo (radio + 13, y + 4 de linea de base) son los
+// mismos numeros con que el ensayo de tiro parabolico dibuja a mano el angulo de v0
+// (docs/ensayos/tiro-parabolico.html:579-585).
+export function arco(ctx, l, centro, { radio, desde, hasta, color, rotulo, colorTexto } = {}) {
+  exigirColor(color, 'arco');
+  const [ox, oy] = l.p(centro);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  // En pantalla la y crece hacia abajo, asi que un angulo que en la fisica va en
+  // sentido antihorario se dibuja con los signos cambiados: el angulo de canvas es
+  // el opuesto del angulo fisico. El ultimo argumento no puede quedar fijo en `true`:
+  // eso barre siempre en sentido de angulo de canvas decreciente, que es el camino
+  // directo de `desde` a `hasta` solo cuando `desde < hasta`. Cuando el llamador pide
+  // el arco al reves -- como el angulo medido desde la vertical en el ensayo de tiro
+  // parabolico, que dibuja `ctx.arc(ox, oy, r, -Math.PI / 2, -ang, false)` -- barrer
+  // siempre en el mismo sentido da la vuelta larga en vez del arco chico entre las dos
+  // semirrectas. `ccw = desde < hasta` barre siempre directo, sin dar la vuelta.
+  ctx.arc(ox, oy, radio, -desde, -hasta, desde < hasta);
+  ctx.stroke();
+  if (!rotulo) return;
+  exigirColor(colorTexto, 'arco (colorTexto)');
+  const medio = (desde + hasta) / 2;
+  texto(ctx, rotulo, ox + Math.cos(medio) * (radio + 13), oy - Math.sin(medio) * (radio + 13) + 4,
+    { color: colorTexto, alineacion: 'center' });
+}
+
+// Las dos punteadas que cierran el rectangulo entre el origen de un vector y su punta,
+// en los ejes del marco. Es lo que hace ver que una fuerza oblicua no es una cosa nueva:
+// son dos fuerzas, una por eje. Sobre un lienzo inclinado los ejes son los del plano,
+// que es exactamente como se resuelve un plano inclinado.
+export function componentes(ctx, l, desde, hasta, { color, guiones = [3, 4] } = {}) {
+  exigirColor(color, 'componentes');
+  const [x0, y0] = desde, [x1, y1] = hasta;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.setLineDash(guiones);
+  for (const [a, b] of [[[x1, y0], [x1, y1]], [[x0, y1], [x1, y1]]]) {
+    ctx.beginPath();
+    ctx.moveTo(...l.p(a));
+    ctx.lineTo(...l.p(b));
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
 }
 
 export function traza(ctx, l, puntos, { color, grosor = 2 } = {}) {

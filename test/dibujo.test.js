@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { crearLienzo } from '../docs/motor/lienzo.js';
-import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva, acotarFlecha, marcaDeTope, bloque, suelo } from '../docs/motor/dibujo.js';
+import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva, acotarFlecha, marcaDeTope, bloque, suelo, arco, componentes } from '../docs/motor/dibujo.js';
 
 function ctxFalso() {
   const ops = [];
@@ -405,4 +405,81 @@ test('el rayado de suelo cae del lado del terreno con escala anisotropa y lienzo
 
   const dot = rayitaX * nx + rayitaY * ny;
   assert.ok(dot > 0, `el rayado quedo del lado del aire, no del terreno (producto punto ${dot})`);
+});
+
+test('arco traza un arco y escribe su rotulo', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: -5, xMax: 5, yMin: -5, yMax: 5 });
+  const c = ctxFalso();
+  arco(c, l, [0, 0], { radio: 30, desde: 0, hasta: Math.PI / 3,
+    color: '#000', rotulo: 'α', colorTexto: '#666' });
+  assert.equal(c.ops.filter(o => o[0] === 'arc').length, 1);
+  const t = c.ops.find(o => o[0] === 'fillText');
+  assert.equal(t[1], 'α');
+});
+
+test('el rotulo del arco cae en la bisectriz, del lado de afuera', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: -5, xMax: 5, yMin: -5, yMax: 5 });
+  const c = ctxFalso();
+  arco(c, l, [0, 0], { radio: 30, desde: 0, hasta: Math.PI / 2,
+    color: '#000', rotulo: 'α', colorTexto: '#666' });
+  const [ox, oy] = l.p([0, 0]);
+  const t = c.ops.find(o => o[0] === 'fillText');
+  // Bisectriz de 0 a 90 grados: 45. En pantalla la y crece hacia abajo, asi que el
+  // rotulo queda a la derecha y arriba del centro.
+  assert.ok(t[2] > ox, 'a la derecha');
+  assert.ok(t[3] < oy, 'arriba');
+  assert.ok(Math.hypot(t[2] - ox, t[3] - oy) > 30, 'afuera del arco');
+});
+
+test('arco sin rotulo no escribe nada', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: -5, xMax: 5, yMin: -5, yMax: 5 });
+  const c = ctxFalso();
+  arco(c, l, [0, 0], { radio: 30, desde: 0, hasta: 1, color: '#000' });
+  assert.equal(c.ops.filter(o => o[0] === 'fillText').length, 0);
+});
+
+test('componentes cierra el rectangulo con dos punteadas', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  componentes(c, l, [2, 2], [6, 5], { color: '#000' });
+  // Dos segmentos: cada uno es un moveTo y un lineTo.
+  assert.equal(c.ops.filter(o => o[0] === 'moveTo').length, 2);
+  assert.equal(c.ops.filter(o => o[0] === 'lineTo').length, 2);
+  const dashes = c.ops.filter(o => o[0] === 'setLineDash').map(o => o[1]);
+  assert.deepEqual(dashes.at(-1), [], 'limpia los guiones al salir');
+});
+
+test('las dos punteadas pasan por las esquinas del rectangulo', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  componentes(c, l, [2, 2], [6, 5], { color: '#000' });
+  const puntos = c.ops.filter(o => o[0] === 'moveTo' || o[0] === 'lineTo')
+    .map(o => [o[1], o[2]]);
+  const esquinaA = l.p([6, 2]), esquinaB = l.p([2, 5]);
+  const cerca = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-9;
+  assert.ok(puntos.some(q => cerca(q, esquinaA)), 'la esquina de abajo');
+  assert.ok(puntos.some(q => cerca(q, esquinaB)), 'la esquina del costado');
+});
+
+// --- El sentido del barrido (agregada mas alla de las cinco del brief) --------
+//
+// La convencion de canvas mide angulo creciente en sentido horario en pantalla (la y
+// crece hacia abajo), asi que un angulo fisico (antihorario, creciente hacia +y) se
+// dibuja con los signos cambiados: `ctx.arc(ox, oy, radio, -desde, -hasta, ccw)`. El
+// bug tipico es fijar `ccw` en `true` siempre: eso funciona mientras `desde < hasta`
+// (los cinco casos de arriba), pero cuando el llamador pide el arco al reves --
+// `desde` mayor que `hasta`, como el angulo medido desde la vertical del ensayo de
+// tiro parabolico, que dibuja `ctx.arc(ox, oy, r, -Math.PI/2, -ang, false)` -- un
+// `ccw` fijo en `true` barre la vuelta larga (la de afuera del angulo) en vez del
+// arco chico entre las dos semirrectas. La regla correcta es `ccw = desde < hasta`:
+// con `desde` mayor, hay que barrer en sentido de angulo de canvas creciente
+// (`ccw: false`) para ir directo de una semirrecta a la otra sin dar la vuelta.
+test('arco con hasta menor que desde barre directo entre los dos angulos, no la vuelta larga', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: -5, xMax: 5, yMin: -5, yMax: 5 });
+  const c = ctxFalso();
+  arco(c, l, [0, 0], { radio: 30, desde: Math.PI / 2, hasta: Math.PI / 3, color: '#000' });
+  const a = c.ops.find(o => o[0] === 'arc');
+  assert.equal(a[4], -Math.PI / 2, 'angulo inicial en pixeles');
+  assert.equal(a[5], -Math.PI / 3, 'angulo final en pixeles');
+  assert.equal(a[6], false, 'con desde > hasta hay que barrer sin dar la vuelta larga');
 });
