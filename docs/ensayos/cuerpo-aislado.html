@@ -67,9 +67,46 @@ try {
   </div>
 </section>
 
-<div class="columna columna-final">
+<div class="columna">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Que la resultante dé cero arriba no es un resultado que salga del dibujo: es el <i>dato</i> del problema —el bloque está en equilibrio— y de ahí salen las dos incógnitas, <i>T</i><sub>AB</sub> y <i>N</i>. Con α = 30° eso da <i>T</i><sub>AB</sub> = 574,9 N y <i>N</i> = 799,7 N, los dos números del ejercicio 1. La cuenta no cambia de naturaleza cuando cambian los datos: son siempre las mismas dos ecuaciones, una por eje, resueltas para las dos fuerzas que no se conocen.</p>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Movés el ángulo y mirá qué le pasa a <i>N</i>. No vale <i>mg</i>, y no sólo porque el plano esté inclinado: la cuerda horizontal también le saca carga, tirando del bloque hacia afuera del plano. La normal es lo que el plano tiene que hacer para que el bloque no se hunda en él, ni un newton más ni uno menos, y eso depende de todo lo demás que actúa sobre el cuerpo — es el error más caro de este tema, y el que este widget está pensado para que no se cometa nunca más.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · La normal no es el peso</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Casi todo el mundo escribe <i>N</i> = <i>mg</i> sin pensarlo, y casi siempre está mal. Acá se ve por qué de la peor manera posible para esa costumbre: se arrastra una caja tirando de una cuerda que forma un ángulo con el piso, la normal cambia mientras se tira, el rozamiento cambia con ella —porque depende de la normal—, y el resultado tiene un máximo que no está donde la intuición lo pone.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El ángulo óptimo</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— tirar derecho no es lo mejor, y el mejor ángulo no depende de cuánto tires.</span>
+    </div>
+    <canvas id="w2-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">ángulo θ <output id="w2-theta-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0°</output></span>
+        <input id="w2-theta" type="range" min="0" max="60" step="1" value="0" style="width:100%">
+      </label>
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">fuerza F <output id="w2-F-out" style="color:var(--ink);font-variant-numeric:tabular-nums">40 N</output></span>
+        <input id="w2-F" type="range" min="20" max="60" step="1" value="40" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>θ <b id="w2-theta-val" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0°</b></span>
+      <span>N <b id="w2-N" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">98.0 N</b></span>
+      <span>rozamiento <b id="w2-f" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">39.2 N</b></span>
+      <span>a <b id="w2-a" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.080 m/s²</b></span>
+      <span>mejor θ <b id="w2-opt" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">21.8°</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna columna-final">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Por qué hay un máximo: subir la cuerda cambia dos cosas a la vez, y en sentidos contrarios. Se pierde <i>F</i>(1 − cos θ) de tirón horizontal —la cuerda deja de empujar de lleno hacia adelante—, pero se gana μ<i>F</i> sen θ de rozamiento ahorrado —la cuerda alivia el piso, y el piso empuja de vuelta con menos fuerza—. Al principio, con θ chico, el ahorro de rozamiento gana; pasado cierto punto, la pérdida de tirón horizontal gana. En el medio hay un ángulo donde ninguno de los dos gana: el máximo.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Que ese ángulo óptimo cumpla tan θ = μ —y no dependa ni de la masa ni de la fuerza con que se tira— es el resultado del ejercicio 9, y es más fuerte de lo que parece: <b style="font-weight:600">el mejor ángulo es una propiedad del par de superficies</b>, no de cuánto empujes. Movés <i>F</i> de 20 a 60 N y «mejor θ» no se mueve, porque no depende de <i>F</i>.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Con μ = 0,4 sale 21,8°, y la diferencia contra tirar derecho es grande: con <i>F</i> = 40 N, la aceleración pasa de <i>a</i>(0°) = 0,080 m/s² a <i>a</i>(21,8°) = 0,388 m/s². Casi cinco veces, por levantar la cuerda veintipico de grados.</p>
 
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
@@ -81,8 +118,8 @@ try {
 
 <script type="module">
 import { crearPagina } from '../motor/pagina.js';
-import { crearWidget } from '../motor/widget.js';
-import { eje, bloque, suelo, arco, componentes, vectorPx } from '../motor/dibujo.js';
+import { crearWidget, panelesApilados } from '../motor/widget.js';
+import { eje, bloque, suelo, arco, componentes, vectorPx, curva, cuerpo, punteado, texto, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
 import { deslizador, casilla } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
 
@@ -245,6 +282,173 @@ deslizador({
 casilla({
   entrada: el('w1-ejes'), pagina,
   alCambiar: v => { verEjes = v; widget.repintar(); },
+});
+
+/* ---------- widget 2: el angulo optimo ---------- */
+
+// Guia 2, ej. 9, con los valores concretos del bloque "Ej 9" de
+// verificacion-practico-2.py: m = 10 kg, F = 40 N, mu = 0.4.
+//   theta* = 21.8 grados,  a(theta*) = 0.388 m/s^2,  a(0) = 0.080,  a(45) = 0.040,
+//   N(theta*) = 83.14 N
+const M2 = 10, MU = 0.4;
+const THETA_OPT = Math.atan(MU);      // no se escribe 21.8: se calcula
+
+function estado2(theta, F) {
+  const N = M2 * G - F * Math.sin(theta);
+  const f = MU * N;                       // la caja ya se mueve: rozamiento dinamico
+  const a = (F * Math.cos(theta) - f) / M2;
+  return { N, f, a };
+}
+
+// La caja y el piso, en metros -- misma silueta 2:1 que el bloque del widget 1
+// (ANCHO_CAJA:ALTO_CAJA = 2:1, se lee como un cajon incluso en el canvas mas chico).
+// El piso va de FLOOR_DESDE a FLOOR_HASTA, tocando los dos bordes del panel de arriba
+// -- igual que el plano del widget 1 llega a los bordes de su encuadre -- con espacio
+// a la derecha de la caja para que la cuerda y las cuatro flechas entren sin
+// recortarse con F = 60 N y theta = 60 grados (confirmado por captura,
+// t10-1280-claro-F60.png / t10-390-oscuro-F60.png).
+const ANCHO_CAJA = 2, ALTO_CAJA = 1;
+const FLOOR_DESDE = -2.5, FLOOR_HASTA = 6;
+// El rango vertical del panel de arriba es simetrico (yMin = -yMax) a proposito: asi
+// el origen de la caja cae exactamente en el medio del panel, y el mismo truco del
+// widget 1 -semialto = mitad del alto util del panel- sirve sin cambios para escalar
+// las flechas.
+const Y0_ESCENA = 2;
+// Largo fijo, en metros, de la cuerda dibujada -- no cambia con F ni con theta. A
+// F = 60 N (la tension mas larga posible) la flecha de tension mide bastante menos que
+// esto en pixeles (ver K_FUERZA mas abajo), asi que la cuerda se ve seguir mas alla de
+// donde termina la flecha, hacia donde tira la mano.
+const CUERDA_LARGO = 3;
+
+// Rango del eje horizontal del panel de abajo, en grados: 0 a 60, el recorrido
+// completo del deslizador de theta. Es independiente del rango del panel de arriba
+// (metros) -- el uso real de panelesApilados que agrego la Tarea 3.
+const GRAFICO_THETA_MAX = 60;
+// El rango vertical se deriva evaluando el modelo (estado2, arriba) en los extremos
+// del dominio de los dos deslizadores -- theta en [0,60], F en [20,60]: el minimo cae
+// en F=20, theta=60 (a = -2.23 m/s^2) y el maximo en F=60, theta=theta* (a = 2.54
+// m/s^2). Con un margen chico para que la curva no toque el borde del panel.
+const GRAFICO_A_MIN = -2.5, GRAFICO_A_MAX = 3;
+
+let theta = 0 * Math.PI / 180;
+let F = 40;
+
+// Mismo esquema de paneles apilados que auto-y-camion.html (la nota que agrego la
+// Tarea 3 como primer uso de rango-por-panel): MARGEN y HUECO_ROTULO son los mismos
+// numeros, derivados igual (ver el comentario de HUECO_ROTULO en derivada-integral.html).
+const MARGEN2 = { L: 62, R: 24, T: 20, B: 34 };
+const HUECO_ROTULO2 = COLGADO_ROTULO_EJE + 8;
+const ALTO_PANEL_MINIMO2 = 95 + HUECO_ROTULO2;
+
+const widget2 = crearWidget({
+  pagina, canvas: el('w2-cv'),
+  margen: MARGEN2,
+  escalaUniforme: false,
+  altoMin: 2 * ALTO_PANEL_MINIMO2 + MARGEN2.T + MARGEN2.B,
+  encuadre: () => ({ xMin: FLOOR_DESDE, xMax: FLOOR_HASTA, yMin: 0, yMax: 2 }),
+  dibujar: pintar2,
+});
+
+// Los dos paneles, cada uno con su propio rango horizontal: arriba metros (la escena),
+// abajo grados (el grafico). Si el de abajo heredara el rango del de arriba (omitiendo
+// xMin/xMax) los dos leerian "metros" y el grafico de a-contra-theta no tendria sentido.
+const capas2 = l => panelesApilados({
+  lienzo: l, margen: { L: MARGEN2.L, R: MARGEN2.R }, hueco: HUECO_ROTULO2,
+  paneles: [
+    { xMin: FLOOR_DESDE, xMax: FLOOR_HASTA, yMin: -Y0_ESCENA, yMax: Y0_ESCENA },
+    { xMin: 0, xMax: GRAFICO_THETA_MAX, yMin: GRAFICO_A_MIN, yMax: GRAFICO_A_MAX },
+  ],
+});
+
+function pintar2(ctx, l) {
+  const p = pagina.paleta();
+  const [escena, grafico] = capas2(l);
+  const lpE = escena.lp, lpG = grafico.lp;
+  const { N, f, a } = estado2(theta, F);
+
+  // --- la escena ---
+  suelo(ctx, lpE, { color: p.rule, desde: FLOOR_DESDE, hasta: FLOOR_HASTA, y: -ALTO_CAJA / 2 });
+  bloque(ctx, lpE, [0, 0], { ancho: ANCHO_CAJA, alto: ALTO_CAJA, color: p.band, borde: p.ink });
+
+  const [ox, oy] = lpE.p([0, 0]);
+  // La flecha mas larga posible es el peso, M2*G = 98 N (N nunca lo supera: en todo el
+  // rango de los dos deslizadores F*sen(theta) <= 60*sen(60°) = 52 N < 98 N, la caja
+  // nunca se levanta). Se le da el 80% del semialto util del panel, y de ahi sale
+  // cuantos pixeles vale un newton -- mismo criterio que el widget 1.
+  const semialto = (lpE.alto - lpE.margen.T - lpE.margen.B) / 2;
+  const K_FUERZA = (0.8 * semialto) / (M2 * G);
+
+  // La cuerda: una linea de largo fijo en la direccion de theta, del color del piso
+  // porque es otro elemento de la escena, no una fuerza. Este panel no gira (angulo=0
+  // siempre, a diferencia del widget 1), asi que (cos theta, sen theta) ya esta en la
+  // orientacion de pantalla y no hace falta pasar por `l.aMundo`.
+  const [cx, cy] = lpE.p([CUERDA_LARGO * Math.cos(theta), CUERDA_LARGO * Math.sin(theta)]);
+  ctx.strokeStyle = p.rule;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(ox, oy);
+  ctx.lineTo(cx, cy);
+  ctx.stroke();
+
+  // Las cuatro fuerzas, en rojo, con largo en pixeles -- ya en la orientacion de
+  // pantalla, por lo mismo de arriba.
+  const lista = [
+    ['peso', [0, -M2 * G], 'P'],
+    ['normal', [0, N], 'N'],
+    ['tensión', [F * Math.cos(theta), F * Math.sin(theta)], 'T'],
+    ['rozamiento', [-f, 0], 'f'],
+  ];
+  for (const [, [fx, fy], rotulo] of lista) {
+    vectorPx(ctx, ox, oy, ox + fx * K_FUERZA, oy - fy * K_FUERZA,
+      { color: p.red, grosor: 2, punta: 9, rotulo });
+  }
+
+  // La resultante, en azul, sumada en el codigo como en el widget 1: por construccion
+  // (N despeja el equilibrio vertical) la componente vertical da siempre ~0 y la
+  // flecha queda horizontal -- es la lectura que hay que mirar para saber que el
+  // modelo sigue bien.
+  const rx = lista.reduce((s, ff) => s + ff[1][0], 0);
+  const ry = lista.reduce((s, ff) => s + ff[1][1], 0);
+  if (Math.hypot(rx, ry) * K_FUERZA > 1) {
+    vectorPx(ctx, ox, oy, ox + rx * K_FUERZA, oy - ry * K_FUERZA,
+      { color: p.blue, grosor: 2.6, punta: 11, rotulo: 'R' });
+  }
+
+  // --- el grafico ---
+  eje(ctx, lpG, { color: p.rule, colorTexto: p.dim, etiquetaX: 'θ [°]', etiquetaY: 'a [m/s²]' });
+  curva(ctx, lpG, gr => [gr, estado2(gr * Math.PI / 180, F).a], 0, GRAFICO_THETA_MAX,
+    { color: p.red, grosor: 1.8 });
+
+  const thetaGrados = theta * 180 / Math.PI;
+  punteado(ctx, lpG.px(thetaGrados), lpG.py(GRAFICO_A_MIN), lpG.px(thetaGrados), lpG.py(GRAFICO_A_MAX),
+    { color: p.dim });
+  cuerpo(ctx, lpG, [thetaGrados, a], { radio: 4.5, color: p.red });
+
+  // El maximo, marcado siempre en el mismo lugar (theta_opt no depende de F): es el
+  // punto entero del widget, y por eso se dibuja con un color distinto del de la curva.
+  const thetaOptGrados = THETA_OPT * 180 / Math.PI;
+  const aOpt = estado2(THETA_OPT, F).a;
+  cuerpo(ctx, lpG, [thetaOptGrados, aOpt], { radio: 4, color: p.ink });
+  texto(ctx, 'óptimo', lpG.px(thetaOptGrados) + 8, lpG.py(aOpt) - 10, { color: p.ink });
+
+  leer('w2-theta-val', thetaGrados.toFixed(0) + '°');
+  leer('w2-N', N.toFixed(1) + ' N');
+  leer('w2-f', f.toFixed(1) + ' N');
+  // Mismo retoque del signo del cero que usa el widget 1.
+  const aTxt = a.toFixed(3);
+  leer('w2-a', (aTxt === '-0.000' ? '0.000' : aTxt) + ' m/s²');
+  leer('w2-opt', thetaOptGrados.toFixed(1) + '°');
+}
+
+deslizador({
+  entrada: el('w2-theta'), salida: el('w2-theta-out'), pagina,
+  formato: v => v.toFixed(0) + '°',
+  alCambiar: v => { theta = v * Math.PI / 180; widget2.repintar(); },
+});
+deslizador({
+  entrada: el('w2-F'), salida: el('w2-F-out'), pagina,
+  formato: v => v.toFixed(0) + ' N',
+  alCambiar: v => { F = v; widget2.repintar(); },
 });
 
 /* ---------- arranque ---------- */
