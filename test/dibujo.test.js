@@ -1,7 +1,17 @@
-import { test } from 'node:test';
+import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { crearLienzo } from '../docs/motor/lienzo.js';
 import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva, acotarFlecha, marcaDeTope, bloque, suelo, arco, componentes } from '../docs/motor/dibujo.js';
+import { reiniciarEtiquetas } from '../docs/motor/etiqueta.js';
+
+// `vectorPx`/`arco` rotulan a traves de `colocarEtiqueta`, que lleva memoria entre
+// llamadas (el registro de rotulos ya colocados). En la pagina real esa memoria se
+// vacia una vez por repintado (`crearWidget` llama `reiniciarEtiquetas`); aca, sin ese
+// vaciado, dos pruebas que rotulan cerca del mismo punto con el mismo texto -como las
+// dos de "arco" que dibujan 'α' casi en el mismo lugar- se verian una a la otra y la
+// segunda esquivaria a la primera, rompiendo una asercion que no tiene nada que ver con
+// el esquive. Cada prueba arranca sola, como arranca cada repintado.
+beforeEach(() => reiniciarEtiquetas());
 
 function ctxFalso() {
   const ops = [];
@@ -9,6 +19,11 @@ function ctxFalso() {
   for (const m of ['beginPath','moveTo','lineTo','stroke','fill','arc','closePath','save','restore','translate','rotate','setLineDash','fillText']) {
     c[m] = (...a) => ops.push([m, ...a]);
   }
+  // `vectorPx`/`arco` rotulan a traves de `colocarEtiqueta` (motor/etiqueta.js), que
+  // necesita `measureText` para decidir donde entra un rotulo. No hace falta una
+  // metrica real aca -ninguna prueba de este archivo ejercita el recorte de borde ni
+  // el esquive de colisiones, solo que el rotulo se escriba- alcanza con que exista.
+  c.measureText = (cadena) => ({ width: cadena.length * 7 });
   return c;
 }
 

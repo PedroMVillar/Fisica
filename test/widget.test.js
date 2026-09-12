@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { crearPagina } from '../docs/motor/pagina.js';
 import { crearWidget, panelesApilados } from '../docs/motor/widget.js';
 import { crearLienzo } from '../docs/motor/lienzo.js';
+import { colocarEtiqueta } from '../docs/motor/etiqueta.js';
 
 // Documento falso: lo mínimo que pagina.js y widget.js le piden al DOM.
 function documentoFalso({ tokens = {} } = {}) {
@@ -16,7 +17,11 @@ function documentoFalso({ tokens = {} } = {}) {
 
 function canvasFalso(ancho = 800, alto = 400) {
   const ops = [];
-  const ctx = new Proxy({ ops }, {
+  // `measureText` no puede quedar en el catch-all de mas abajo (que registra la
+  // llamada pero devuelve `undefined`): `colocarEtiqueta` (motor/etiqueta.js), a la
+  // que `vectorPx`/`arco` delegan sus rotulos, hace `.width` sobre lo que devuelve.
+  const medirTexto = cadena => ({ width: cadena.length * 7 });
+  const ctx = new Proxy({ ops, measureText: medirTexto }, {
     get: (o, k) => k in o ? o[k] : (...a) => ops.push([k, ...a]),
     set: (o, k, v) => { o[k] = v; return true; },
   });
@@ -534,6 +539,39 @@ test('un canvas sin ancho no rompe: el widget no dibuja', () => {
   });
   w.repintar();
   assert.equal(dibujos, 0);
+});
+
+// Tarea 5: `colocarEtiqueta` (motor/etiqueta.js) lleva memoria entre llamadas -el
+// registro de rotulos ya colocados en el cuadro- para que el quinto rotulo esquive a
+// los otros cuatro. Esa memoria tiene que vaciarse en CADA repintado: si no se vaciara,
+// el segundo cuadro heredaria los rotulos del primero y el esquive se degradaria con
+// el tiempo -algo que una prueba de un solo cuadro no puede ver. Esta dibuja, en dos
+// repintados seguidos, el mismo patron de cinco rotulos naciendo del mismo punto (el
+// peor caso real, los widgets de fuerzas de cuerpo-aislado.html) y verifica que el
+// SEGUNDO cuadro cae exactamente en las mismas posiciones que el primero -algo que solo
+// pasa si `crearWidget` vacio el registro antes de dibujar el segundo cuadro; si no lo
+// vaciara, el segundo cuadro heredaria los cinco rectangulos del primero y ninguno de
+// los cinco rotulos nuevos podria caer donde cayo la vez pasada.
+test('crearWidget vacia el registro de rotulos en cada repintado', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const cuadros = [];
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 },
+    encuadre: () => ({ xMax: 10, yMax: 5 }),
+    dibujar: ctx => {
+      const antes = ctx.ops.length;
+      for (const s of ['P', 'N', 'T', 'Q', 'R']) {
+        colocarEtiqueta(ctx, s, 200, 100, { dx: 8, dy: -6, color: '#000' });
+      }
+      cuadros.push(ctx.ops.slice(antes).filter(o => o[0] === 'fillText').map(o => [o[2], o[3]]));
+    },
+  });
+  w.repintar();
+  w.repintar();
+  assert.equal(cuadros.length, 2);
+  assert.deepEqual(cuadros[1], cuadros[0],
+    'el segundo repintado no repite las posiciones del primero: el registro no se vacio');
 });
 
 test('crear un widget lo registra en la pagina', () => {

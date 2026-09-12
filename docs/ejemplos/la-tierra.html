@@ -93,6 +93,7 @@ try {
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget } from '../motor/widget.js';
 import { eje, curva, cuerpo, punteado, texto, vectorPx } from '../motor/dibujo.js';
+import { colocarEtiqueta } from '../motor/etiqueta.js';
 import { deslizador, boton } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
 import { num } from '../motor/formato.js';
@@ -190,8 +191,10 @@ function widgetLaTierra(pagina) {
 
     // El camino sin gravedad: la tangente, punteada.
     punteado(ctx, ...l.p([R, 0]), ...l.p(recto(t)), { color: p.rule, guiones: [4, 5] });
-    texto(ctx, 'sin gravedad', ...desplazar(l.p(recto(t)), 8, -6),
-      { color: p.dim, px: 10, peso: 400 });
+    {
+      const [rx, ry] = l.p(recto(t));
+      colocarEtiqueta(ctx, 'sin gravedad', rx, ry, { dx: 8, dy: -6, color: p.dim, px: 10, peso: 400 });
+    }
 
     // El camino real: el arco de la orbita.
     curva(ctx, l, real, 0, t, { color: p.graph, grosor: 1.9 });

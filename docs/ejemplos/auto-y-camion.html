@@ -96,16 +96,14 @@ try {
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget, panelesApilados } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
-import { eje, curva, cuerpo, punteado, texto, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { eje, curva, cuerpo, punteado, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { colocarEtiqueta } from '../motor/etiqueta.js';
 import { deslizador, boton, rotuloReproducir } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
 import { num } from '../motor/formato.js';
 
 const el = id => document.getElementById(id);
 const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
-
-// [x+dx, y+dy]: para no repetir la aritmetica de desplazar un rotulo en cada llamada.
-const desplazar = ([x, y], dx, dy) => [x + dx, y + dy];
 
 /* ---------- el widget ---------- */
 
@@ -178,10 +176,12 @@ function widgetAutoYCamion(pagina) {
     eje(ctx, ruta.lp, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', marcasY: false });
     cuerpo(ctx, ruta.lp, [xAuto(t), 0.35], { radio: 7, color: p.blue });
     cuerpo(ctx, ruta.lp, [xCamion(t), 0.35], { radio: 9, color: p.red });
-    texto(ctx, 'auto', ...desplazar(ruta.lp.p([xAuto(t), 0.35]), 0, -16),
-      { color: p.blue, alineacion: 'center' });
-    texto(ctx, 'camión', ...desplazar(ruta.lp.p([xCamion(t), 0.35]), 0, -18),
-      { color: p.red, alineacion: 'center' });
+    {
+      const [ax, ay] = ruta.lp.p([xAuto(t), 0.35]);
+      colocarEtiqueta(ctx, 'auto', ax, ay, { dx: 0, dy: -16, color: p.blue, alineacion: 'center' });
+      const [cx, cy] = ruta.lp.p([xCamion(t), 0.35]);
+      colocarEtiqueta(ctx, 'camión', cx, cy, { dx: 0, dy: -18, color: p.red, alineacion: 'center' });
+    }
 
     // La distancia entre los dos, dibujada como el segmento que se achica. Es la
     // lectura que el parrafo pide mirar.
@@ -202,8 +202,10 @@ function widgetAutoYCamion(pagina) {
     punteado(ctx, ...grafico.lp.p([tEnc, 0]), ...grafico.lp.p([tEnc, xAuto(tEnc)]),
       { color: p.rule });
     cuerpo(ctx, grafico.lp, [tEnc, xAuto(tEnc)], { radio: 5, color: p.ink });
-    texto(ctx, 'se alcanzan', ...desplazar(grafico.lp.p([tEnc, xAuto(tEnc)]), 10, -8),
-      { color: p.ink });
+    {
+      const [ex, ey] = grafico.lp.p([tEnc, xAuto(tEnc)]);
+      colocarEtiqueta(ctx, 'se alcanzan', ex, ey, { dx: 10, dy: -8, color: p.ink });
+    }
 
     cuerpo(ctx, grafico.lp, [t, xAuto(t)], { radio: 4, color: p.blue });
     cuerpo(ctx, grafico.lp, [t, xCamion(t)], { radio: 4, color: p.red });

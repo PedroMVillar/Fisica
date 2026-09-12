@@ -219,6 +219,7 @@ import { crearPagina } from '../motor/pagina.js';
 import { crearWidget } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
 import { eje, curva, cuerpo, vectorPx, punteado, texto, suelo } from '../motor/dibujo.js';
+import { colocarEtiqueta } from '../motor/etiqueta.js';
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
 import { crearTiro } from '../fisica/tiro.js';
@@ -307,9 +308,9 @@ function widgetSombras(pagina) {
     vectorPx(ctx, X, Y, X + tiro.v0x * k, Y, { color: p.blue, grosor: 1.6, punta: 7 });
     vectorPx(ctx, X, Y, X, Y - vy * k, { color: p.blue, grosor: 1.6, punta: 7 });
     vectorPx(ctx, X, Y, X, Y + 24, { color: p.red, grosor: 1.6, punta: 7 });
-    texto(ctx, 'vₓ', X + (tiro.v0x * k) / 2, Y - 10, { color: p.blue, alineacion: 'center' });
-    texto(ctx, 'v_y', X - 9, Y - (vy * k) / 2 + 4, { color: p.blue, alineacion: 'right' });
-    texto(ctx, 'g', X - 8, Y + 22, { color: p.red, alineacion: 'right' });
+    colocarEtiqueta(ctx, 'vₓ', X + (tiro.v0x * k) / 2, Y, { dx: 0, dy: -10, color: p.blue, alineacion: 'center' });
+    colocarEtiqueta(ctx, 'v_y', X, Y - (vy * k) / 2, { dx: -9, dy: 4, color: p.blue, alineacion: 'right' });
+    colocarEtiqueta(ctx, 'g', X, Y, { dx: -8, dy: 22, color: p.red, alineacion: 'right' });
     punto(ctx, l, [cx, cy], 5.5, p.ink);
 
     texto(ctx, 'paso constante', l.px(l.xMax * 0.5), l.py(0) + 31,

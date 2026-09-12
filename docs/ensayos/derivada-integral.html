@@ -173,6 +173,7 @@ try {
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget, panelesApilados } from '../motor/widget.js';
 import { eje, curva, cuerpo, punteado, texto, traza, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { colocarEtiqueta } from '../motor/etiqueta.js';
 import { deslizador, boton } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
 import { derivar, derivarMuestras, suavizar, integrar } from '../fisica/calculo.js';
@@ -249,12 +250,12 @@ function widgetSecante(pagina) {
     const catetoT = Math.abs(l.px(tQ) - l.px(T_P));
     const catetoX = Math.abs(l.py(x(tQ)) - l.py(x(T_P)));
     if (catetoT >= CATETO_T_MINIMO) {
-      texto(ctx, 'Δt', (l.px(T_P) + l.px(tQ)) / 2, l.py(x(T_P)) + 15,
-        { color: p.blue, alineacion: 'center' });
+      colocarEtiqueta(ctx, 'Δt', (l.px(T_P) + l.px(tQ)) / 2, l.py(x(T_P)),
+        { dx: 0, dy: 15, color: p.blue, alineacion: 'center' });
     }
     if (catetoX >= CATETO_X_MINIMO) {
-      texto(ctx, 'Δx', l.px(tQ) + 8, (l.py(x(T_P)) + l.py(x(tQ))) / 2,
-        { color: p.blue });
+      colocarEtiqueta(ctx, 'Δx', l.px(tQ), (l.py(x(T_P)) + l.py(x(tQ))) / 2,
+        { dx: 8, dy: 0, color: p.blue });
     }
 
     cuerpo(ctx, l, [T_P, x(T_P)], { radio: 5.5, color: p.ink });
@@ -263,7 +264,11 @@ function widgetSecante(pagina) {
     // con la curva, asi que cualquier desplazamiento hacia arriba lo deja debajo de una
     // de las dos lineas, y P arriba se despega de la fila de numeros del eje.
     texto(ctx, 'P', l.px(T_P) - 16, l.py(x(T_P)) - 20, { color: p.ink });
-    texto(ctx, 'Q', l.px(tQ) + 12, l.py(x(tQ)) + Q_ABAJO, { color: p.blue });
+    // `evitar: false`: a proposito. El ejercicio ES arrastrar Q hasta que se superponga
+    // a P -asi la secante se vuelve tangente-, asi que Q no puede esquivar a P cuando
+    // se acercan. P queda con `texto()` de siempre (nunca se mueve, T_P es constante:
+    // no hay nada que esquivar del otro lado).
+    colocarEtiqueta(ctx, 'Q', l.px(tQ), l.py(x(tQ)), { dx: 12, dy: Q_ABAJO, color: p.blue, evitar: false });
 
     // Tres decimales en la pendiente y en la diferencia, no dos: con dos, en el mínimo
     // del slider la diferencia se muestra 0.00 y la página afirma justo lo contrario

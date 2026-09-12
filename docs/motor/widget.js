@@ -1,4 +1,5 @@
 import { crearLienzo } from './lienzo.js';
+import { reiniciarEtiquetas } from './etiqueta.js';
 
 // Fabrica un widget: mide su canvas, arma el lienzo y delega el dibujo. La medicion
 // replica al literal el `view()` del archivo de diseno (docs/plataforma/diseno/Tiro
@@ -117,6 +118,16 @@ export function crearWidget({
         l = crearLienzo({ ancho, alto, margen, xMin, xMax, yMin, yMax, angulo });
       }
 
+      // Vacia el registro de rotulos ya colocados antes del `dibujar` de ESTE widget:
+      // cada canvas repinta su propio cuadro, y un rotulo del repintado anterior (o de
+      // otro widget de la misma pagina, que comparte el registro porque es un modulo
+      // con un solo estado) no tiene que poder empujar a uno de este. `crearWidget` es
+      // el lugar natural porque ya envuelve el `dibujar` de cada widget y ya conoce el
+      // tamaño del canvas (`ancho`/`alto`, en pixeles CSS -el mismo sistema de
+      // coordenadas en el que dibuja `ctx`, ver el `setTransform` de arriba): asi
+      // ninguna pagina tiene que acordarse de llamarlo, y el arreglo no se pudre con
+      // el tiempo.
+      reiniciarEtiquetas({ ancho, alto });
       dibujar(ctx, l, pagina);
     },
   };

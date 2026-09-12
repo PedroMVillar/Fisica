@@ -18,8 +18,10 @@
 //    contexto vuelve como estaba:
 //    - `vectorPx`/`vector` dejan `setLineDash([])` puesto (limpian los
 //      guiones del asta después de trazarla) pero no tocan `font`/`textAlign`
-//      salvo que `rotulo` esté presente, en cuyo caso `texto` los deja como
-//      se describe abajo.
+//      salvo que `rotulo` esté presente, en cuyo caso `colocarEtiqueta`
+//      (motor/etiqueta.js) los deja como se describe abajo -- `textAlign`
+//      siempre en `'left'`, sea cual sea la `rAlineacion` pedida (ver el
+//      comentario de `colocarEtiqueta`).
 //    - `punteado` también limpia `setLineDash` a `[]` al final.
 //    - `curva` también limpia `setLineDash` a `[]` al final.
 //    - `texto` deja `font` en la tipografía JetBrains Mono con el `px`/`peso`
@@ -37,8 +39,10 @@
 //    - `componentes` también limpia `setLineDash` a `[]` al final, igual que
 //      `punteado`/`curva`; no toca `font`/`textAlign`.
 //    - `arco` sin `rotulo` no toca ninguno de los tres. Con `rotulo`, delega en
-//      `texto` para escribirlo y queda en el estado que `texto` deja: `font`
-//      en JetBrains Mono al tamaño por defecto y `textAlign` en `'center'`.
+//      `colocarEtiqueta` para escribirlo y queda en el estado que esa deja: `font`
+//      en JetBrains Mono al tamaño por defecto y `textAlign` en `'left'` (el
+//      `'center'` que pedía el arco se resuelve adentro, corriendo el
+//      desplazamiento -- ver `colocarEtiqueta`).
 //
 // De las tres reglas, la 2 está fijada por prueba en test/dibujo.test.js, que
 // afirma que `cuerpo` emite exactamente ['beginPath', 'arc', 'fill'] — o sea
@@ -55,6 +59,7 @@
 // tokens CSS leídos por el widget.
 
 import { marca } from './formato.js';
+import { colocarEtiqueta } from './etiqueta.js';
 
 function exigirColor(color, primitiva) {
   if (typeof color !== 'string' || color === '') {
@@ -89,7 +94,7 @@ export function vectorPx(ctx, x1, y1, x2, y2, opciones = {}) {
   ctx.lineTo(x2 - Math.cos(a + 0.42) * hd, y2 - Math.sin(a + 0.42) * hd);
   ctx.closePath();
   ctx.fill();
-  if (rotulo) texto(ctx, rotulo, x2 + rdx, y2 + rdy, { color, alineacion: rAlineacion });
+  if (rotulo) colocarEtiqueta(ctx, rotulo, x2, y2, { dx: rdx, dy: rdy, color, alineacion: rAlineacion });
 }
 
 export function vector(ctx, l, desde, hasta, opciones = {}) {
@@ -266,8 +271,10 @@ export function arco(ctx, l, centro, { radio, desde, hasta, color, rotulo, color
   if (!rotulo) return;
   exigirColor(colorTexto, 'arco (colorTexto)');
   const medio = (desde + hasta) / 2;
-  texto(ctx, rotulo, ox + Math.cos(medio) * (radio + 13), oy - Math.sin(medio) * (radio + 13) + 4,
-    { color: colorTexto, alineacion: 'center' });
+  colocarEtiqueta(ctx, rotulo, ox, oy, {
+    dx: Math.cos(medio) * (radio + 13), dy: -Math.sin(medio) * (radio + 13) + 4,
+    color: colorTexto, alineacion: 'center',
+  });
 }
 
 // Las dos punteadas que cierran el rectangulo entre el origen de un vector y su punta,
