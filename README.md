@@ -89,8 +89,8 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 | Tiro parabólico | Las dos componentes del movimiento por separado —caída libre en *y*, velocidad constante en *x*— sobre la misma trayectoria, con el reloj como único vínculo entre ambas | Práctico 1, ej. 9, 10 y 15 |
 | Movimiento circular | Las dos aceleraciones del movimiento circular —tangencial y centrípeta— y cómo el período y la frecuencia se leen del mismo giro | Práctico 1, ej. 11 a 14 |
 | Diagrama de cuerpo aislado | El diagrama de un solo cuerpo con sus fuerzas de contacto y la resultante, variando plano, ángulo y rozamiento | Práctico 2, ej. 1, 6, 8, 9, 10, 13, 18 y 19 |
-| Sistemas acoplados | Dos cuerpos atados por una cuerda, cada uno con su propio diagrama, y la tensión que sale de resolverlos como un sistema | Práctico 2, ej. 2 a 7 |
-| Fuerzas que dependen de la posición | La fuerza elástica y la gravitatoria como funciones de la posición, no como números fijos, y el punto de equilibrio de cada una | Práctico 2, ej. 11 a 18 |
+| Sistemas acoplados | Dos cuerpos atados por una cuerda, cada uno con su propio diagrama, y la tensión que sale de resolverlos como un sistema | Práctico 2, ej. 3, 4, 5 y 7 |
+| Fuerzas que dependen de la posición | La fuerza elástica y la gravitatoria como funciones de la posición, no como números fijos, y el punto de equilibrio de cada una | Práctico 2, ej. 11, 12, 14, 15, 16 y 17 |
 
 | Ejemplo resuelto | Construye | Cubre |
 |---|---|---|

@@ -197,7 +197,9 @@ const M_Q = 10;       // kg, el cuerpo que cuelga de la cuerda horizontal
 const T_C = M_Q * G;  // 98.0 N
 
 // Las cuatro fuerzas, en el marco del plano: x a lo largo hacia arriba, y perpendicular
-// saliente. El peso vale (0, -M_A*G) en el mundo, y `l.aMarco` lo trae a este marco --
+// saliente. El peso vale (0, -M_A*G) en el mundo; sen/cos lo proyectan a mano sobre
+// esos dos ejes (lo mismo que a la tension de AC, que tambien llega horizontal desde
+// el mundo), y P y N salen de plantear el equilibrio a lo largo de cada eje del plano --
 // esa es exactamente la descomposicion que la casilla hace visible.
 function fuerzas(alfa) {
   const sen = Math.sin(alfa), cos = Math.cos(alfa);
