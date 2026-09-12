@@ -150,7 +150,8 @@ export function crearWidget({
 // - `techo`: el borde superior de esa franja, en píxeles de canvas.
 // - `alturaPanel`: el alto en píxeles de cada franja (igual para las N).
 // - `lp`: el lienzo de esa franja, ya armado con `crearLienzo`, con el rango
-//   vertical propio del panel y el rango horizontal compartido del lienzo exterior.
+//   vertical propio del panel y el rango horizontal compartido del lienzo exterior
+//   -salvo que el panel pida el suyo, ver `xMin`/`xMax` mas abajo.
 export function panelesApilados({ lienzo, margen, hueco, paneles }) {
   const n = paneles.length;
   const alturaPanel = (lienzo.py(0) - lienzo.py(n)) / n;
@@ -165,7 +166,14 @@ export function panelesApilados({ lienzo, margen, hueco, paneles }) {
           L: margen.L, R: margen.R,
           T: techo + hueco, B: lienzo.alto - techo - alturaPanel + 10,
         },
-        xMin: lienzo.xMin, xMax: lienzo.xMax, yMin: panel.yMin, yMax: panel.yMax,
+        // Cada panel hereda el rango horizontal del lienzo de afuera, que es lo que
+        // hace que una columna vertical signifique lo mismo en todos. Un panel puede
+        // pedir el suyo cuando de verdad mide otra cosa: en la nota del auto y el
+        // camion, la franja de arriba es la ruta en metros y la de abajo el grafico
+        // de posicion contra tiempo en segundos.
+        xMin: panel.xMin ?? lienzo.xMin,
+        xMax: panel.xMax ?? lienzo.xMax,
+        yMin: panel.yMin, yMax: panel.yMax,
       }),
     };
   });

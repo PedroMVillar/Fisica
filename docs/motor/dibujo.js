@@ -29,7 +29,7 @@
 //      alguna etiqueta, dibuja marcas y rótulos con `texto` y queda en el
 //      estado que haya dejado la última llamada (rótulo de y si hay
 //      `etiquetaY`, si no el de x).
-//    - `cuerpo` y `traza` no tocan ninguno de los tres.
+//    - `cuerpo`, `traza` y `marcaDeTope` no tocan ninguno de los tres.
 //
 // De las tres reglas, la 2 está fijada por prueba en test/dibujo.test.js, que
 // afirma que `cuerpo` emite exactamente ['beginPath', 'arc', 'fill'] — o sea
@@ -129,6 +129,36 @@ export function cuerpo(ctx, l, punto, { radio = 4, color } = {}) {
   ctx.beginPath();
   ctx.arc(x, y, radio, 0, Math.PI * 2);
   ctx.fill();
+}
+
+// Acota el largo dibujado de una flecha sin tocar su direccion, y avisa si la acoto.
+// Hace falta cuando dos magnitudes del mismo dibujo tienen escalas muy distintas: en
+// el widget de aceleraciones la normal llega a 600 mientras la tangencial vale 6, y
+// sin acotar la flecha larga se va del canvas. La escala se deja fija a proposito --
+// normalizar al valor del momento borraria que la magnitud crece.
+export function acotarFlecha(dx, dy, tope) {
+  const largo = Math.hypot(dx, dy);
+  if (largo <= tope) return [dx, dy, false];
+  const f = tope / largo;
+  return [dx * f, dy * f, true];
+}
+
+// La marca de una flecha que llego a su tope: dos trazos cortos perpendiculares a la
+// punta, la misma convencion que el quiebre de un eje partido. No es sutil a
+// proposito -- tiene que quedar claro que la magnitud real sigue creciendo aunque el
+// dibujo ya no.
+export function marcaDeTope(ctx, x, y, dx, dy, { color } = {}) {
+  exigirColor(color, 'marcaDeTope');
+  const angulo = Math.atan2(dy, dx);
+  const nx = -Math.sin(angulo), ny = Math.cos(angulo);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  for (const d of [-3, 3]) {
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(angulo) * d - nx * 5, y + Math.sin(angulo) * d - ny * 5);
+    ctx.lineTo(x + Math.cos(angulo) * d + nx * 5, y + Math.sin(angulo) * d + ny * 5);
+    ctx.stroke();
+  }
 }
 
 export function traza(ctx, l, puntos, { color, grosor = 2 } = {}) {

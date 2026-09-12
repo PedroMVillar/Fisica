@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { crearLienzo } from '../docs/motor/lienzo.js';
-import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva } from '../docs/motor/dibujo.js';
+import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva, acotarFlecha, marcaDeTope } from '../docs/motor/dibujo.js';
 
 function ctxFalso() {
   const ops = [];
@@ -274,4 +274,33 @@ test('eje con yMin = 0 deja la etiqueta del eje x donde estaba', () => {
   eje(c, l, { color: '#000', colorTexto: '#666', etiquetaX: 'x [m]' });
   const rotulo = c.ops.find(o => o[0] === 'fillText' && o[1] === 'x [m]');
   assert.equal(rotulo[3], l.py(0) + 28);
+});
+
+test('acotarFlecha deja pasar una flecha mas corta que el tope', () => {
+  const [dx, dy, acotada] = acotarFlecha(30, 40, 100);
+  assert.equal(dx, 30);
+  assert.equal(dy, 40);
+  assert.equal(acotada, false);
+});
+
+test('acotarFlecha recorta al tope y avisa, conservando la direccion', () => {
+  const [dx, dy, acotada] = acotarFlecha(300, 400, 100);   // largo 500
+  assert.ok(Math.abs(Math.hypot(dx, dy) - 100) < 1e-9);
+  assert.ok(Math.abs(dx / dy - 300 / 400) < 1e-12, 'la direccion no cambia');
+  assert.equal(acotada, true);
+});
+
+test('marcaDeTope dibuja dos trazos perpendiculares a la flecha', () => {
+  const c = ctxFalso();
+  marcaDeTope(c, 100, 100, 50, 0, { color: '#000' });
+  // Dos trazos: dos moveTo y dos lineTo, y los dos verticales porque la flecha es
+  // horizontal -- misma x en cada par, distinta y.
+  const moves = c.ops.filter(o => o[0] === 'moveTo');
+  const lines = c.ops.filter(o => o[0] === 'lineTo');
+  assert.equal(moves.length, 2);
+  assert.equal(lines.length, 2);
+  for (let i = 0; i < 2; i++) {
+    assert.ok(Math.abs(moves[i][1] - lines[i][1]) < 1e-9, 'trazo vertical');
+    assert.ok(Math.abs(moves[i][2] - lines[i][2]) > 1, 'con largo');
+  }
 });

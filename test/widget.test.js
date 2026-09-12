@@ -722,3 +722,32 @@ test('panelesApilados: el margen horizontal de cada franja es el que se le paso'
     assert.equal(lp.margen.R, 24);
   });
 });
+
+test('panelesApilados hereda el rango horizontal del lienzo de afuera', () => {
+  const l = crearLienzo({ ancho: 800, alto: 400, xMin: 0, xMax: 10, yMin: 0, yMax: 2,
+    margen: { L: 0, R: 0, T: 0, B: 0 } });
+  const capas = panelesApilados({
+    lienzo: l, margen: { L: 0, R: 0, T: 0, B: 0 }, hueco: 0,
+    paneles: [{ yMin: 0, yMax: 1 }, { yMin: -5, yMax: 5 }],
+  });
+  for (const { lp } of capas) {
+    assert.equal(lp.xMin, 0);
+    assert.equal(lp.xMax, 10);
+  }
+});
+
+test('un panel puede pedir su propio rango horizontal', () => {
+  const l = crearLienzo({ ancho: 800, alto: 400, xMin: 0, xMax: 10, yMin: 0, yMax: 2,
+    margen: { L: 0, R: 0, T: 0, B: 0 } });
+  const capas = panelesApilados({
+    lienzo: l, margen: { L: 0, R: 0, T: 0, B: 0 }, hueco: 0,
+    paneles: [
+      { yMin: 0, yMax: 1, xMin: -40, xMax: 60 },   // la ruta, en metros
+      { yMin: 0, yMax: 50 },                        // el grafico, en segundos
+    ],
+  });
+  assert.equal(capas[0].lp.xMin, -40);
+  assert.equal(capas[0].lp.xMax, 60);
+  assert.equal(capas[1].lp.xMin, 0);
+  assert.equal(capas[1].lp.xMax, 10);
+});

@@ -216,7 +216,7 @@ import { crearEscena } from '../motor/escena.js';
 import { crearCircular } from '../fisica/circular.js';
 import { compilar } from '../fisica/expresion.js';
 import { ajustarCirculo } from '../fisica/ajuste.js';
-import { eje, curva, cuerpo, punteado, vectorPx } from '../motor/dibujo.js';
+import { eje, curva, cuerpo, punteado, vectorPx, acotarFlecha, marcaDeTope } from '../motor/dibujo.js';
 import { deslizador, boton, rotuloReproducir } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
 
@@ -377,33 +377,6 @@ const TOPE_PX_ACELERACION = 110;
 //   como un widget que arranca roto.
 const TOPE_PX_VELOCIDAD = 70;
 
-// Devuelve [dx, dy, acotado] con (dx,dy) recortado a lo sumo a `tope` pixeles de largo,
-// conservando la direccion. `acotado` es true si hubo que recortar: lo usa quien llama
-// para decidir si dibuja la marca de tope.
-function acotarFlecha(dx, dy, tope) {
-  const largo = Math.hypot(dx, dy);
-  if (largo <= tope) return [dx, dy, false];
-  const f = tope / largo;
-  return [dx * f, dy * f, true];
-}
-
-// La marca de una flecha que llego a su tope: dos trazos cortos perpendiculares a la
-// punta, la misma convencion que el quiebre de un eje partido en un grafico. No es
-// sutil a proposito -- tiene que quedar claro que la magnitud real sigue creciendo
-// aunque el dibujo ya no.
-function marcaDeTope(ctx, x, y, dx, dy, color) {
-  const angulo = Math.atan2(dy, dx);
-  const nx = -Math.sin(angulo), ny = Math.cos(angulo);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.4;
-  for (const d of [-3, 3]) {
-    ctx.beginPath();
-    ctx.moveTo(x + Math.cos(angulo) * d - nx * 5, y + Math.sin(angulo) * d - ny * 5);
-    ctx.lineTo(x + Math.cos(angulo) * d + nx * 5, y + Math.sin(angulo) * d + ny * 5);
-    ctx.stroke();
-  }
-}
-
 function widgetAceleraciones(pagina) {
   const R = 1.5;
   let omega0 = 2, gamma = 0;
@@ -449,7 +422,7 @@ function widgetAceleraciones(pagina) {
     const [dvx, dvy, vAcotado] = acotarFlecha(vx * kv, -vy * kv, TOPE_PX_VELOCIDAD);
     vectorPx(ctx, px, py, px + dvx, py + dvy,
       { color: p.blue, grosor: 2.2, punta: 10, rotulo: 'v' });
-    if (vAcotado) marcaDeTope(ctx, px + dvx, py + dvy, dvx, dvy, p.blue);
+    if (vAcotado) marcaDeTope(ctx, px + dvx, py + dvy, dvx, dvy, { color: p.blue });
 
     // Las dos componentes primero, en tenue, y la total encima: asi se ve que la total
     // es la suma de las dos y no una tercera flecha independiente. Las tres se recortan
@@ -464,17 +437,17 @@ function widgetAceleraciones(pagina) {
     const [dnx, dny, nAcotado] = acotarFlecha(-rx * aN * ka, ry * aN * ka, TOPE_PX_ACELERACION);
     vectorPx(ctx, px, py, px + dnx, py + dny,
       { color: p.red, grosor: 1.4, punta: 7, rotulo: 'aₙ', rdy: 12 });
-    if (nAcotado) marcaDeTope(ctx, px + dnx, py + dny, dnx, dny, p.red);
+    if (nAcotado) marcaDeTope(ctx, px + dnx, py + dny, dnx, dny, { color: p.red });
     const [dtx, dty, tAcotado] = acotarFlecha(tx * aT * ka, -ty * aT * ka, TOPE_PX_ACELERACION);
     vectorPx(ctx, px, py, px + dtx, py + dty,
       { color: p.red, grosor: 1.4, punta: 7, rotulo: 'aₜ', rdy: -12 });
-    if (tAcotado) marcaDeTope(ctx, px + dtx, py + dty, dtx, dty, p.red);
+    if (tAcotado) marcaDeTope(ctx, px + dtx, py + dty, dtx, dty, { color: p.red });
     ctx.globalAlpha = 1;
     const [ax, ay] = c.aTotalVector(t);
     const [dax, day, aAcotado] = acotarFlecha(ax * ka, -ay * ka, TOPE_PX_ACELERACION);
     vectorPx(ctx, px, py, px + dax, py + day,
       { color: p.red, grosor: 2.4, punta: 11, rotulo: 'a' });
-    if (aAcotado) marcaDeTope(ctx, px + dax, py + day, dax, day, p.red);
+    if (aAcotado) marcaDeTope(ctx, px + dax, py + day, dax, day, { color: p.red });
 
     punteado(ctx, ox, oy, px, py, { color: p.rule });
     cuerpo(ctx, l, c.pos(t), { radio: 5.5, color: p.ink });
