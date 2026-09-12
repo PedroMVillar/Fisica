@@ -100,7 +100,7 @@ try {
     </div>
     <div class="lecturas">
       <span>cinética <b id="w2-k" class="lectura-valor azul">0,000 J</b></span>
-      <span>potencial <b id="w2-u" class="lectura-valor" style="color:var(--graph)">9,800 J</b></span>
+      <span>potencial <b id="w2-u" class="lectura-valor grafico">9,800 J</b></span>
       <span>disipado <b id="w2-q" class="lectura-valor roja">0,000 J</b></span>
       <span>v <b id="w2-v" class="lectura-valor">0,0000 m/s</b></span>
       <span>suma − total <b id="w2-chequeo" class="lectura-valor tenue">0,000 J</b></span>
@@ -108,7 +108,7 @@ try {
   </div>
 </section>
 
-<div class="columna columna-final">
+<div class="columna">
   <p class="parrafo-suelto">Los números del plano con μ = 0,3: llega abajo a 3,0685 m/s en vez de 4,4272, y la diferencia no es «un poco menos»: de los 9,80 J que había arriba, el rozamiento se comió 5,0922 J — <b class="negrita">más de la mitad</b>. Y esa cuenta no depende de cuánto tarde ni de qué forma tenga el plano: es la fuerza de rozamiento por la distancia recorrida, nada más.</p>
   <p class="parrafo">Poné μ en cero y mirá la lectura de velocidad: 4,4272 m/s. Es exactamente lo mismo que si el bloque se hubiera dejado caer derecho desde 1 m —el inciso (c) del ejercicio 3—. El peso es conservativo: le importa de dónde a dónde, no por dónde. Lo que <b class="negrita">sí</b> cambia es el tiempo, la dirección de llegada y la distancia recorrida.</p>
   <p class="parrafo">Pasá al modo resorte: cambia el depósito y no cambia nada más. La barra hace lo mismo, el chequeo sigue en cero, y la única diferencia es que arriba dice «elástica» en vez de «gravitatoria». Es el mismo ejercicio, escrito dos veces en el práctico.</p>
@@ -116,6 +116,46 @@ try {
 
   <h3 class="titulo-seccion">Apoyar no es soltar</h3>
   <p class="parrafo">Se apoya <b class="negrita">suavemente</b> una masa de 5 kg sobre un resorte vertical de <i>k</i> = 2 N/m. El equilibrio está en <i>x</i><sub>eq</sub> = 24,5 m. Bajando hasta ahí el peso entrega <i>mg</i>·<i>x</i><sub>eq</sub> = 1200,5 J, pero en el resorte quedan guardados sólo <i>kx</i>²/2 = 600,25 J: <b class="negrita">la mitad exacta</b>. ¿Dónde está la otra mitad? En la mano, que frenó el descenso y por lo tanto hizo un trabajo de −600,25 J. Y el inciso (c) es la confirmación: si en vez de apoyarla se la <b class="negrita">suelta</b> desde 1 m de altura, la mano no está para frenar nada, toda la energía entra al balance, y el resorte se comprime hasta 49,9804 m desde su longitud natural — 25,4804 m más allá del equilibrio. «Comprimirse hasta el equilibrio y quedarse ahí» no es lo que pasa en general: es lo que pasa cuando alguien te está frenando.</p>
+
+  <h2 class="titulo-seccion">03 · La energía es continua; la tensión, no</h2>
+  <p class="parrafo">Hay dos preguntas que parecen la misma y no lo son. «¿Cuánta energía tiene?» es una pregunta sobre el <b class="negrita">estado</b>: depende de dónde está y a qué velocidad va, y nada más. «¿Cuánto tira la cuerda?» es una pregunta sobre el <b class="negrita">instante</b>: depende además de qué curva está describiendo justo ahí. Este ejercicio las separa de la manera más limpia posible, porque la trayectoria cambia de radio de golpe y la velocidad ni se entera.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación 3</span>
+      <span class="titulo-fila">El péndulo y el clavo</span>
+      <span class="nota-fila">— la velocidad no se entera de nada; la tensión salta en el mismo instante.</span>
+    </div>
+    <canvas id="w3-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="w3-play" class="boton-primario">Reproducir</button>
+        <button id="w3-reset" class="boton">Reiniciar</button>
+      </div>
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span class="rotulo-campo">θ<sub>A</sub> <output id="w3-theta-out" class="valor-control">5°</output></span>
+        <input id="w3-theta" type="range" min="5" max="50" step="1" value="5" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>v en B <b id="w3-v" class="lectura-valor azul">0,3138 m/s</b></span>
+      <span>θ<sub>C</sub> <b id="w3-thc" class="lectura-valor">7,07°</b></span>
+      <span>T/m antes <b id="w3-ta" class="lectura-valor roja">9,875 N/kg</b></span>
+      <span>T/m después <b id="w3-td" class="lectura-valor roja">9,949 N/kg</b></span>
+      <span>v antes − v después <b id="w3-chequeo" class="lectura-valor tenue">0,0000 m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna columna-final">
+  <p class="parrafo-suelto">Los números a 5°: v<sub>B</sub> = 0,3138 m/s, θ<sub>C</sub> = 7,07°. Sube <b class="negrita">más abierto</b> de lo que bajó, y no porque haya ganado nada: llega a la misma altura que tenía al empezar —eso es lo que dice la conservación— pero como ahora gira con la mitad del radio, la misma altura pide más ángulo. La energía fija la altura; la geometría decide el ángulo.</p>
+  <p class="parrafo">Y en el mismo instante, sin que nadie toque nada, la cuerda pasa de tirar 9,875 a 9,949 N/kg. La velocidad no cambió ni un milímetro por segundo. Lo único que cambió es el radio, y el radio entra en la tensión (T/m = g cos θ + v²/r) y <b class="negrita">no</b> entra en la energía. Llevá el deslizador a 50°: ahí el salto es de 16,801 a 23,803 N/kg —un 42 %— y las dos flechas se separan a la vista.</p>
+  <p class="parrafo">Por qué la energía no se entera: la tensión de la cuerda <b class="negrita">no hace trabajo, nunca</b>, porque es perpendicular a la velocidad en todo instante. El clavo cambia hacia dónde apunta esa tensión, no cuánta energía hay. Si alguna vez un problema parece pedir «la energía que aportó la cuerda», la respuesta es cero y la pregunta estaba mal.</p>
+
+  <h3 class="titulo-seccion">Lo mismo, sin nada que gire</h3>
+  <p class="parrafo">Un embalaje de 250 kg cuelga de un cable de 10 m y se lo aparta 1 m de la vertical (θ = 5,74°). Cuatro preguntas y cuatro respuestas que este ensayo ya tiene todas: (a) sostenerlo ahí pide <i>F</i> = <i>mg</i> tan θ = <b class="negrita">246,23 N</b>; (b) sostenerlo <b class="negrita">no hace trabajo</b>: el desplazamiento es cero, y no importa cuánto te canses; (c) moverlo de lado <b class="negrita">sí</b> hizo trabajo, porque al apartarse el embalaje <b class="negrita">subió</b> d<i>h</i> = <i>L</i> − √(<i>L</i>² − <i>l</i>²) = 0,050126 m, así que <i>W</i> = <i>mg</i>·d<i>h</i> = <b class="negrita">122,81 J</b> — y ojo con la trampa: <i>F</i>·<i>l</i> = 246,2 J <b class="negrita">no</b> es la respuesta, porque <i>F</i> no vale 246,23 N durante el traslado, vale eso sólo al final (arranca en cero); (d) la tensión del cable <b class="negrita">no trabaja en ningún instante</b>, por lo mismo que en el péndulo de arriba.</p>
 
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
@@ -128,7 +168,7 @@ try {
 <script type="module">
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget, panelesApilados } from '../motor/widget.js';
-import { eje, bloque, suelo, curva, punteado, vectorPx, traza, presupuestoPx, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { eje, bloque, suelo, curva, punteado, vectorPx, traza, presupuestoPx, COLGADO_ROTULO_EJE, arco, cuerpo } from '../motor/dibujo.js';
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { crearEscena } from '../motor/escena.js';
 import { conectarTema } from '../motor/tema.js';
@@ -447,6 +487,23 @@ function pintarW2(ctx, l) {
   // el Paso 7 de la tarea, sacar el cos(ALFA_W2) de Q) es invisible con el deslizador en
   // 0. Medido con esa rotura: el chequeo se mueve a 0,788 J al pie del plano con mu =
   // 0,3, pero a mu = 0 sigue en cero pase lo que pase con la formula de Q.
+  //
+  // Un tercer punto ciego, mas ancho que los dos de arriba: un M_W2 equivocado es
+  // invisible a este chequeo en TODO instante y con CUALQUIER mu en modo plano, y en
+  // toda la fase de empuje del modo resorte. Medido cambiando M_W2 de 1 a 5 kg: en el
+  // plano, a mu = 0,3 y t = 0,3 s, K pasa de 0,249 a 1,247 J (exactamente 5 veces mas)
+  // y el chequeo se queda en 0,000000 J en los dos casos, en cualquier t que se
+  // pruebe; en el resorte, en plena fase de empuje (antes de tocar la zona rugosa),
+  // K y U dejan de coincidir entre las dos masas -no son ni siquiera un multiplo entre
+  // si, salen distintos porque cambia la frecuencia angular- y el chequeo sigue dando
+  // 0,000000 J con las dos. La razon: en el plano la aceleracion no depende de la
+  // masa, asi que `s` y `v` tampoco, y M_W2 multiplica POR IGUAL al total, a la
+  // cinetica, a la potencial y a la disipada -se cancela entero en la resta-. En el
+  // empuje del resorte pasa algo mas fuerte todavia: K + U = 0.5*k*X² es una identidad
+  // de seno-mas-coseno-al-cuadrado que vale para CUALQUIER masa (la masa solo decide
+  // la frecuencia angular w = raiz(k/M), no el reparto entre K y U en cada instante).
+  // Este chequeo verifica que el BALANCE cierre, no que la ESCALA sea la correcta: una
+  // masa mal tipeada no es del tipo de error que esta resta puede atrapar.
   const chequeo = (e.K + e.U + e.Q) - e.total;
   leer('w2-k', num(e.K, 3) + ' J');
   leer('w2-u', num(e.U, 3) + ' J');
@@ -530,6 +587,242 @@ const pulsoW2 = () => {
 };
 pagina.alTocar(pulsoW2);
 pulsoW2();
+
+/* ---------- widget 3: el pendulo y el clavo ---------- */
+
+// Practico 3, ej. 1. Cuerda de L = 1.32 m, clavo a d = 0.66 m del pivote (la mitad
+// justa), asi que el radio de giro pasa de L a L - d. Verificado en el bloque "Ej 1":
+//   th_A = 5  -> v_B = 0.3138  th_C = 7.07   T/m: 9.875  -> 9.949
+//   th_A = 45 -> v_B = 2.7528  th_C = 65.53  T/m: 15.541 -> 21.281
+//   th_A = 50 -> v_B = 3.0400  th_C = 73.41  T/m: 16.801 -> 23.803
+// Sufijo `_W3`: son constantes fisicas propias de este widget (masa implicita en las
+// formulas por unidad de masa, y la longitud de la cuerda), y el modulo es UNO solo.
+const L_W3 = 1.32, D_W3 = 0.66, R_W3 = L_W3 - D_W3;
+
+// La velocidad en el punto mas bajo, por conservacion: NO depende del radio, porque el
+// radio no aparece en el balance de energia. Este es el numero que no se entera del
+// clavo, y la razon esta en esta linea: la tension es siempre perpendicular a la
+// velocidad (no hace trabajo) y la altura de caida es la misma con cualquier radio.
+const vB_W3 = thA => Math.sqrt(2 * G * L_W3 * (1 - Math.cos(thA)));
+
+// El angulo maximo del otro lado, con el radio NUEVO. A partir de th_A = 60 grados
+// (cos th_A = 0.5) esto daria th_C = 90 grados exactos y de ahi para arriba la masa
+// pasaria la horizontal con el hilo tenso -que un hilo no puede hacer-: por eso el
+// deslizador no pasa de 50.
+const thC_W3 = thA => Math.acos(1 - (L_W3 / R_W3) * (1 - Math.cos(thA)));
+
+// La tension por unidad de masa, en cualquier punto de cualquiera de los dos arcos. El
+// radio entra ACA y solo aca: T/m = g cos(angulo) + v^2/radio. Es la unica diferencia
+// entre "antes" y "despues", y es toda la diferencia.
+//
+// Comprobacion cerrada de escritorio (no hay lectura en pantalla para esto):
+// tension_W3(0, vB_W3(thA), L_W3) tiene que dar G*(3 - 2*cos(thA)) y
+// tension_W3(0, vB_W3(thA), R_W3) tiene que dar G*(5 - 4*cos(thA)) -las dos
+// expresiones cerradas del papel- para cualquier th_A. Verificado aparte para 5, 45 y
+// 50 grados: coinciden a 1e-9.
+const tension_W3 = (angulo, v, radio) => G * Math.cos(angulo) + v * v / radio;
+
+const MARGEN_W3 = { L: 30, R: 30, T: 26, B: 26 };
+
+// El encuadre es mas ancho que el recorrido real a proposito -medido barriendo los dos
+// arcos a th_A = 50 (el caso mas ancho), x cae en [-1.011, 0.633] e y en
+// [-1.320, -0.848]-: con ese aire de sobra la escala uniforme llega a 227.50 px/m a
+// 880 px de ancho (416 px de alto) y a 80.56 px/m a 350 (215 px de alto), medido con
+// el `crearWidget` real. Con un encuadre ajustado al recorrido la escala apenas sube y
+// el canvas se clava en el tope de 430 px: no vale la pena.
+function encuadreW3() {
+  return { xMin: -1.8, xMax: 1.8, yMin: -1.45, yMax: 0.15 };
+}
+
+// La tension mas grande que este widget puede mostrar es T/m = 23.803 N/kg (th_A =
+// 50). Se le dan 0.55 m del marco, y de ahi salen los metros por N/kg: medido, 5.26 px
+// por N/kg a 880 y 1.86 px a 350.
+//
+// A th_A = 5 grados -el valor del enunciado- las dos tensiones difieren en apenas
+// 0.074 N/kg, o sea 0.39 px a 880 y 0.14 px a 350: las dos flechas se ven exactamente
+// iguales, y no hay escala que arregle eso sin volver ridicula la del resto de la
+// franja. Por eso el deslizador arranca en 5 grados (el caso del enunciado, que es el
+// que reproducen las lecturas) y el salto se lee en los NUMEROS, no en el dibujo; a
+// th_A = 50 la diferencia es de 36.80 px a 880 y 13.03 px a 350 -perfectamente
+// visible-, y el parrafo de cierre manda explicitamente llevar el deslizador ahi.
+const K_T_W3 = 0.55 / 23.803;
+
+// El "tiempo" de esta animacion es de dibujo, no fisico. En vez de integrar la
+// ecuacion del pendulo -que iria mas rapido cerca de B-, el parametro que avanza
+// LINEALMENTE es el angulo, tramo por tramo, y la duracion de cada tramo es
+// proporcional a su longitud de arco (L*th_A y (L-d)*th_C): por eso alcanza con una
+// sola "velocidad" ficticia de recorrido para que el reparto salga proporcional solo.
+// Lo que el widget MIDE (v y T, en las lecturas de abajo) son los valores reales en
+// cada posicion; el RITMO con que la escena los recorre es puro dibujo. Si el dueño
+// quiere el ritmo real, es integrar dth/dt = v(th)/radio, y es un cambio acotado a
+// `posicionW3`.
+const VELOCIDAD_ANIM_W3 = 1.4;
+
+function tramosW3(thA) {
+  const c = thC_W3(thA);
+  return { c, dur1: (L_W3 * thA) / VELOCIDAD_ANIM_W3, dur2: (R_W3 * c) / VELOCIDAD_ANIM_W3 };
+}
+
+// La posicion de la masa en el marco. Tramo 1 (alrededor del pivote): el angulo baja
+// linealmente de th_A a 0. Tramo 2 (alrededor del clavo): el angulo sube linealmente
+// de 0 a th_C. Los dos tramos empiezan/terminan en el mismo punto (0, -L_W3) -no hay
+// salto en el DIBUJO, aunque la tension si salte ahi mismo, en el mismo instante-.
+function posicionW3(t, thA, tramos) {
+  if (t <= tramos.dur1) {
+    const angulo = thA * (1 - t / tramos.dur1);
+    return [-L_W3 * Math.sin(angulo), -L_W3 * Math.cos(angulo)];
+  }
+  const angulo = tramos.c * (t - tramos.dur1) / tramos.dur2;
+  return [R_W3 * Math.sin(angulo), -D_W3 - R_W3 * Math.cos(angulo)];
+}
+
+let thA_W3 = 5 * Math.PI / 180;
+let tramosW3Actuales = tramosW3(thA_W3);
+
+function pintarW3(ctx, l) {
+  const p = pagina.paleta();
+  const thA = thA_W3;
+  const anguloC = thC_W3(thA);
+
+  // Los dos arcos completos de la trayectoria, en --graph: el de radio L_W3 alrededor
+  // del pivote y el de radio R_W3 alrededor del clavo. Se ve de un vistazo que el
+  // radio se achico a la mitad y que del otro lado sube MAS ABIERTO de lo que bajo.
+  curva(ctx, l, ang => [-L_W3 * Math.sin(ang), -L_W3 * Math.cos(ang)], 0, thA, { color: p.graph, grosor: 1.4 });
+  curva(ctx, l, ang => [R_W3 * Math.sin(ang), -D_W3 - R_W3 * Math.cos(ang)], 0, anguloC, { color: p.graph, grosor: 1.4 });
+
+  // La cuerda, con `traza`: una polilinea de DOS puntos en el primer tramo y de TRES
+  // en el segundo (pivote -> clavo -> masa). Ese quiebre es el momento del ejercicio.
+  const punto = posicionW3(escenaW3.t, thA, tramosW3Actuales);
+  const puntos = escenaW3.t <= tramosW3Actuales.dur1
+    ? [[0, 0], punto]
+    : [[0, 0], [0, -D_W3], punto];
+  traza(ctx, l, puntos, { color: p.ink, grosor: 1.5 });
+
+  cuerpo(ctx, l, [0, 0], { radio: 4, color: p.ink });
+  cuerpo(ctx, l, [0, -D_W3], { radio: 4, color: p.dim });
+  cuerpo(ctx, l, punto, { radio: 6, color: p.ink });
+
+  // Los arquitos de th_A y th_C. El angulo que toma `arco` es el angulo MATEMATICO
+  // (x a la derecha, y hacia arriba): la vertical hacia abajo cae en -pi/2, asi que
+  // el punto A (a th_A de la vertical, hacia la izquierda) cae en -pi/2 - th_A, y el
+  // punto C (a th_C de la vertical del clavo, hacia la derecha) cae en th_C - pi/2.
+  arco(ctx, l, [0, 0], { radio: 30, desde: -Math.PI / 2 - thA, hasta: -Math.PI / 2, color: p.rule, rotulo: 'θA', colorTexto: p.dim });
+  arco(ctx, l, [0, -D_W3], { radio: 30, desde: -Math.PI / 2, hasta: anguloC - Math.PI / 2, color: p.rule, rotulo: 'θC', colorTexto: p.dim });
+
+  // --- las dos flechas de tension en B, siempre visibles ---
+  // Ancladas en el punto mas bajo de la cuerda (0, -L_W3), donde las dos son
+  // verticales -son colineales, apuntan las dos hacia arriba- y por eso se dibujan
+  // separadas 10 px a cada lado del eje en vez de una encima de la otra. `rdx` de
+  // signo opuesto en cada rotulo (por la opcion `rotulo:` de `vectorPx`, nunca
+  // `texto()`) para que `colocarEtiqueta` las separe hacia afuera.
+  const [bx, by] = l.p([0, -L_W3]);
+  const vAntes = vB_W3(thA);
+  const ta = tension_W3(0, vAntes, L_W3);
+  const td = tension_W3(0, vAntes, R_W3);
+  const largoTaPx = ta * K_T_W3 * l.escala.y;
+  const largoTdPx = td * K_T_W3 * l.escala.y;
+  vectorPx(ctx, bx - 10, by, bx - 10, by - largoTaPx,
+    { color: p.red, grosor: 2, rotulo: 'T antes', rdx: -6, rAlineacion: 'right' });
+  vectorPx(ctx, bx + 10, by, bx + 10, by - largoTdPx,
+    { color: p.red, grosor: 2, rotulo: 'T después', rdx: 6 });
+
+  // --- las lecturas ---
+  // El chequeo compara dos caminos que no comparten una linea de codigo: la velocidad
+  // "antes" sale de conservar energia desde A con el radio VIEJO (L_W3); la
+  // "despues" sale de conservar energia HACIA ATRAS desde C con el radio NUEVO
+  // (R_W3). Si alguien mete el radio nuevo en el balance de ida -el error clasico de
+  // este ejercicio- la resta deja de dar cero.
+  //
+  // Zona ciega, medida y no razonada -pero de otra forma que en los widgets 1 y 2,
+  // que colapsaban en un punto DENTRO del rango del deslizador-. Rompiendo `vB_W3`
+  // por `thA => Math.sqrt(2 * G * R_W3 * (1 - Math.cos(thA)))` (el radio nuevo en la
+  // ida), el chequeo se mueve en TODO el rango del deslizador: de 0.0919 m/s a
+  // th_A = 5 grados (el extremo mas chico de toda la curva) hasta 0.8904 m/s a
+  // th_A = 50. No hay ningun th_A entre 5 y 50 donde vuelva a dar cero -solo colapsa
+  // en th_A = 0 EXACTO, fuera del rango del deslizador (que arranca en 5), porque ahi
+  // cos(0) = 1 y las dos formulas dan 0 sin importar el radio: la misma coincidencia
+  // de seno/coseno de angulo nulo que ya aparecio en los widgets 1 y 2, pero esta vez
+  // sin pisar el rango real que el deslizador puede alcanzar.
+  //
+  // Lo que este chequeo NO vigila, para NINGUN th_A: el salto de la TENSION.
+  // `vAntes`/`vDespues` no llaman a `tension_W3` en absoluto, asi que una rotura ahi
+  // (cambiar `v*v/radio` por `v/radio`, por ejemplo, o usar siempre `L_W3` en vez de
+  // alternar con `R_W3`) deja esta lectura clavada en 0,0000 m/s pase lo que pase con
+  // las flechas y con w3-ta/w3-td. No es una coincidencia algebraica en un th_A
+  // puntual: es que este chequeo mide la CONTINUIDAD de v, y la tension es
+  // precisamente la parte discontinua del ejercicio -la pregunta sobre el instante,
+  // no sobre el estado-. Lo unico que vigila la tension son los numeros de w3-ta y
+  // w3-td contra el bloque "Ej 1" (a mano, Paso 6) y las dos flechas dibujadas: no
+  // hay una resta automatica que lo haga.
+  //
+  // La masa, a diferencia del widget 2, ni siquiera aparece como parametro: `vB_W3`,
+  // `thC_W3` y `tension_W3` son las formulas de v y T POR UNIDAD DE MASA que trae el
+  // enunciado, asi que la masa ya se cancelo antes de escribir la primera linea de
+  // este widget -no hay ningun `M_W3` que una masa mal tipeada pudiera pisar-. No es
+  // que el chequeo sea ciego a un error de masa: es que en este widget esa categoria
+  // de error no existe.
+  const vDespues = Math.sqrt(2 * G * R_W3 * (1 - Math.cos(anguloC)));
+  leer('w3-v', num(vAntes, 4) + ' m/s');
+  leer('w3-thc', num(anguloC * 180 / Math.PI, 2) + '°');
+  leer('w3-ta', num(ta, 3) + ' N/kg');
+  leer('w3-td', num(td, 3) + ' N/kg');
+  leer('w3-chequeo', num(vAntes - vDespues, 4) + ' m/s');
+}
+
+const widgetW3 = crearWidget({
+  pagina, canvas: el('w3-cv'),
+  margen: MARGEN_W3,
+  escalaUniforme: true,
+  centrar: true,
+  encuadre: encuadreW3,
+  dibujar: pintarW3,
+});
+
+let enReposoW3 = true;
+const rotularW3 = () => rotuloReproducir(el('w3-play'), escenaW3, enReposoW3);
+
+const escenaW3 = crearEscena({
+  dibujar: () => widgetW3.repintar(),
+  duracion: tramosW3Actuales.dur1 + tramosW3Actuales.dur2,
+  alCambiar: rotularW3,
+});
+
+deslizador({
+  entrada: el('w3-theta'), salida: el('w3-theta-out'), pagina,
+  formato: v => num(v, 0) + '°',
+  alCambiar: v => {
+    thA_W3 = v * Math.PI / 180;
+    tramosW3Actuales = tramosW3(thA_W3);
+    escenaW3.duracion = tramosW3Actuales.dur1 + tramosW3Actuales.dur2;
+    widgetW3.repintar();
+  },
+});
+boton({
+  elemento: el('w3-play'), pagina,
+  alApretar: () => {
+    if (escenaW3.estado === 'reproduciendo') {
+      escenaW3.pausar();
+    } else {
+      if (enReposoW3 || escenaW3.t >= escenaW3.duracion - 1e-6) {
+        enReposoW3 = false;
+        escenaW3.reiniciar();
+      }
+      escenaW3.reproducir();
+    }
+    rotularW3();
+  },
+});
+boton({
+  elemento: el('w3-reset'),
+  alApretar: () => { enReposoW3 = true; escenaW3.reiniciar(); rotularW3(); },
+});
+
+rotularW3();
+const pulsoW3 = () => {
+  el('w3-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
+};
+pagina.alTocar(pulsoW3);
+pulsoW3();
 
 /* ---------- arranque ---------- */
 

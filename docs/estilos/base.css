@@ -52,6 +52,7 @@ canvas { width: 100%; aspect-ratio: 16/8; display: block; touch-action: none; }
 .lectura-valor.roja { color: var(--red); }
 .lectura-valor.azul { color: var(--blue); }
 .lectura-valor.tenue { color: var(--dim); }
+.lectura-valor.grafico { color: var(--graph); }
 
 /* Hermana de .lectura-valor y NO un modificador suyo: el eco en vivo del valor de un
    slider vive en un <output> y va sin negrita; el resultado final vive en un <b> y va
