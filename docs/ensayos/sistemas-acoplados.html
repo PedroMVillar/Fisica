@@ -75,9 +75,53 @@ try {
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con B de 4 kg, <i>a</i> = 0,665 m/s² y <i>T</i> = 41,86 N. Comparala con el peso de B, que vale 39,20 N: la cuerda tira <b style="font-weight:600">más</b> de lo que B pesa, y tiene que ser así —B no está colgado quieto, está subiendo cada vez más rápido. Una cuerda que sólo sostiene tira igual al peso; una que además acelera hacia arriba tiene que tirar de más, porque esa diferencia es justamente lo que le da la aceleración.</p>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Subí el deslizador de B: en algún punto el sistema se frena y después se da vuelta. El punto de equilibrio está en <i>m</i><sub>B</sub> = <i>m</i><sub>A</sub> sen α ≈ 4,8 kg, y no es casualidad que justo ahí la aceleración cambie de signo —es la misma comparación de fuerzas del principio de esta sección, sólo que ahora escrita como ecuación en vez de como intuición.</p>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Que las dos tensiones den lo mismo no es una comprobación de que la cuenta esté bien hecha: es lo que <i>significa</i> «cuerda sin masa». Si la cuerda pesara, las dos puntas tirarían distinto, y esa diferencia sería exactamente la que acelera a la cuerda misma —que es el ejercicio 3, donde <i>F</i><sub>BC</sub>/<i>F</i> = <i>M</i>/(<i>M</i> + <i>m</i>).</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · Cada cuerda lleva lo que tiene adelante</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Una cuerda intermedia no «reparte» la fuerza aplicada entre los cuerpos que sostiene. Tiene un trabajo concreto y acotado —acelerar todo lo que cuelga de ella hacia adelante— y su tensión es exactamente esa masa acumulada por la aceleración del conjunto, ni más ni menos. De ahí sale el resultado que sorprende la primera vez: la cuerda de más atrás, la que menos carga tiene por delante, es la que soporta <b style="font-weight:600">menos</b> tensión —al revés de la intuición de que «la del medio hace de todo un poco».</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Tres bloques y dos cuerdas</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— cambiá a vertical: la aceleración se da vuelta y las tensiones no se mueven.</span>
+    </div>
+    <canvas id="w2-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">fuerza F <output id="w2-F-out" style="color:var(--ink);font-variant-numeric:tabular-nums">60 N</output></span>
+        <input id="w2-F" type="range" min="0" max="900" step="10" value="60" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="w2-vertical" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Tirar hacia arriba
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>a <b id="w2-a" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.857 m/s²</b></span>
+      <span>T<sub>1</sub> <b id="w2-t1" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">17.14 N</b></span>
+      <span>T<sub>2</sub> <b id="w2-t2" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">34.29 N</b></span>
+      <span>T<sub>3</sub> <b id="w2-t3" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">60.00 N</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con <i>F</i> = 60 N la escalera de tensiones es 17,14 / 34,29 / 60 N: cada escalón es la masa acumulada hasta ahí —20, 40 y 70 kg— por la misma aceleración, 0,857 m/s². La cuerda de más atrás, la que sólo tiene que arrastrar los 20 kg del bloque que le sigue, es la que menos tensión soporta; la última —que ya es la fuerza aplicada entera— es la que más.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Pasá el widget a vertical. La aceleración se da vuelta —60 N no alcanzan para sostener los 686 N que pesan los tres bloques juntos, y el conjunto baja con <i>a</i> = −8,94 m/s²— pero las dos tensiones no se mueven de 17,14 y 34,29 N. La cuenta lo explica: en vertical cada tensión vale la masa acumulada por (<i>a</i> + <i>g</i>), y <i>a</i> + <i>g</i> da exactamente lo mismo que valía <i>a</i> sola en horizontal, porque <i>a</i> = <i>F</i>/<i>M</i> − <i>g</i>. La gravedad entra dos veces en la cuenta —restando en la aceleración, sumando en cada tensión— y las dos entradas se cancelan.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Y la generalización, que es lo que hay que llevarse: <b style="font-weight:600">la tensión de una cuerda no depende de qué hay detrás de ella</b>. Ni de la masa de atrás, ni de si hay gravedad de por medio. Es exactamente lo que hace falta para acelerar lo que tiene adelante, y nada más. En el ejercicio 5, dos bloques de 2 y 1 kg en contacto con 3 N empujando dan <i>a</i> = 1 m/s², y la fuerza de contacto entre ellos vale 1 N si empujás al de 2 kg y 2 N si empujás al de 1 kg: la misma idea que este widget, con «adelante» cambiado de lado.</p>
 </div>
 
 <div class="columna columna-final">
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para tener a mano</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>Un sistema acoplado se resuelve con un diagrama <b style="font-weight:600">por cuerpo</b>, no con uno del conjunto. El del conjunto sirve sólo para la aceleración.</li>
+    <li>La cuerda ideal aporta dos cosas distintas: inextensible da un vínculo entre aceleraciones; sin masa da una tensión igual en los dos extremos.</li>
+    <li>Elegí un sentido positivo <i>antes</i> de escribir nada, y respetalo en los dos cuerpos. Si la aceleración sale negativa, el sistema va para el otro lado y la cuenta ya lo dijo.</li>
+    <li>La tensión de una cuerda es la masa de lo que tiene adelante por la aceleración —más el peso de eso, si la cosa va en vertical.</li>
+    <li>La polea ideal sólo cambia la dirección de la cuerda. No cambia el módulo de la tensión.</li>
+  </ol>
+
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
     <a href="cuerpo-aislado.html">Ensayo 4 · Diagrama de cuerpo aislado</a>
@@ -421,6 +465,279 @@ const pulso = () => {
 };
 pagina.alTocar(pulso);
 pulso();
+
+/* ---------- widget 2: tres bloques y dos cuerdas ---------- */
+
+// Guia 2, ej. 7. Tres bloques de 20, 20 y 30 kg en fila, unidos por dos cuerdas, con 60 N
+// tirando del de adelante. Verificado en el bloque "Ej 7":
+//   horizontal: a = 0.857 m/s^2, T1 = 17.14 N, T2 = 34.29 N
+//   vertical:   a = -8.943 m/s^2, T1 = 17.14 N, T2 = 34.29 N   <- las mismas tensiones
+const MASAS = [20, 20, 30];                       // del de adelante hacia atras
+const M_TOTAL = MASAS.reduce((s, m) => s + m, 0); // 70 kg
+
+// Una sola cuenta para los dos casos. En vertical la gravedad entra restando en la
+// aceleracion Y sumando en cada tension, y las dos entradas se cancelan exactamente:
+// por eso las tensiones no se mueven. El codigo no lo asume -- lo calcula, y el widget
+// deja verlo. (Llamada `estadoTren`, no `estado2`: ese nombre ya lo usa cuerpo-aislado.html
+// para otro widget, y reusarlo entre dos archivos que se leen uno al lado del otro es una
+// trampa innecesaria.)
+function estadoTren(F, vertical) {
+  const a = vertical ? (F - M_TOTAL * G) / M_TOTAL : F / M_TOTAL;
+  const acumulada = [];
+  let suma = 0;
+  for (const m of MASAS) { suma += m; acumulada.push(suma); }
+  // T_i acelera todo lo que tiene ADELANTE (incluido su propio bloque siguiente): en
+  // vertical, ademas, tiene que sostener ese mismo peso.
+  const tension = i => acumulada[i] * (vertical ? a + G : a);
+  return { a, T: [tension(0), tension(1), tension(2)] };
+}
+
+// --- geometria de las dos disposiciones ---
+//
+// Dos escenas distintas de los mismos tres bloques (Paso 3 de la tarea): en horizontal,
+// una fila con la cuerda aplicada saliendo a la derecha; en vertical, una columna
+// colgando con la cuerda aplicada saliendo hacia arriba. Comparten las mismas
+// proporciones (ANCHO_BLOQUE/ALTO_BLOQUE/GAP) para que se lean como la misma escena
+// rotada, pero son dos funciones de dibujo separadas -- el lienzo NO gira (`angulo`)
+// entre las dos, porque el peso de cada bloque tiene que seguir apuntando hacia abajo de
+// la PANTALLA en el modo vertical, no hacia el -y de un marco girado.
+// ANCHO_BLOQUE/ALTO_BLOQUE ya estan declaradas mas arriba, para el widget 1 (misma
+// silueta 2:1 que cuerpo-aislado.html) -- este widget dibuja bloques de la misma
+// proporcion, asi que reusa esas dos constantes en vez de redeclararlas.
+const GAP = 2.2; // separacion entre bordes de bloques vecinos: ahi conviven DOS flechas
+  // de T1 o T2 que crecen una hacia la otra (Paso 3, "hacia afuera" de cada bloque), asi
+  // que el hueco tiene que bancarse el DOBLE del largo de una sola. Con FRACCION_T2 (ver
+  // mas abajo) el peor caso es T2 en el tope del deslizador en la disposicion vertical
+  // -la mas comprimida de las dos, por apilar 3 bloques en vez de ponerlos en fila-: ver
+  // el informe de esta tarea (t13-*.json) para el largo medido contra este hueco a 1280
+  // y 390 px.
+const EXT = 1.6; // el tramo de la tercera cuerda (la aplicada): mas corto que GAP porque
+  // T3 usa su propia escala LOCAL (`kAplicada`, mas abajo), atada al largo de ESTE tramo
+  // en la disposicion que este dibujando -- no comparte la escala de T1/T2 y por eso no
+  // necesita el mismo margen que GAP.
+const PASO_H = ANCHO_BLOQUE + GAP; // distancia centro a centro en horizontal: ahi los
+  // bloques miden ANCHO_BLOQUE en la direccion en que estan en fila.
+const PASO_V = ALTO_BLOQUE + GAP; // misma idea en vertical, con ALTO_BLOQUE en vez de
+  // ANCHO_BLOQUE: ahi los bloques miden ALTO_BLOQUE en la direccion en que estan
+  // apilados. Con PASO_H el hueco real (PASO_H - ALTO_BLOQUE) hubiera quedado mas grande
+  // que GAP sin que ningun numero lo dijera.
+const CX = [-PASO_H, 0, PASO_H]; // centros x de los 3 bloques en horizontal: MASAS[0] (el
+  // que menos tension carga, Paso 4) a la izquierda, MASAS[2] (pegado a la cuerda
+  // aplicada) a la derecha.
+const CY = [-PASO_V, 0, PASO_V]; // centros y de los 3 bloques en vertical, mismo GAP que
+  // en horizontal: MASAS[0] abajo, MASAS[2] arriba, pegado a la cuerda que ahora tira
+  // hacia arriba.
+
+const PAD = 0.6; // aire extra en cada borde del encuadre: el rotulo de una flecha cuelga
+  // 8/-6 px de la punta (dibujo.js, vectorPx) y sin este margen quedaria pegado al marco
+  // del widget.
+const Y_RES = ALTO_BLOQUE / 2 + 0.5; // altura (unidades) a la que se dibuja la flecha
+  // azul de la resultante en horizontal, por encima del lomo de los bloques.
+const X_RES = ANCHO_BLOQUE / 2 + 0.5; // misma idea que Y_RES, al costado de la columna
+  // en vertical.
+
+// Los dos encuadres, fijos (no dependen de F ni de ninguna escala de fuerza): xMin/xMax/
+// yMin/yMax salen todos de la geometria de arriba, nunca de un numero suelto.
+const ENCUADRE_H = {
+  xMin: CX[0] - ANCHO_BLOQUE / 2 - PAD,
+  xMax: CX[2] + ANCHO_BLOQUE / 2 + EXT + PAD,
+  yMin: -ALTO_BLOQUE / 2 - PAD,
+  yMax: Y_RES + PAD,
+};
+const ENCUADRE_V = {
+  xMin: -ANCHO_BLOQUE / 2 - PAD,
+  xMax: X_RES + PAD,
+  yMin: CY[0] - ALTO_BLOQUE / 2 - PAD,
+  yMax: CY[2] + ALTO_BLOQUE / 2 + EXT + PAD,
+};
+
+// --- escalas de fuerza ---
+//
+// El Paso 5 de esta tarea solo exige una cosa de pixeles: que T1 y T2 midan lo MISMO en
+// horizontal y en vertical (item 3). T3, los tres pesos y la resultante no tienen esa
+// obligacion -- cada uno usa su propia escala, elegida para que entre comodo en el lugar
+// donde se dibuja, y ninguno tiene que competir por el presupuesto de pixeles de T1/T2.
+const F_TOPE = 900; // = max del deslizador w2-F
+
+// T1 y T2 comparten una escala atada a `l.ancho`, no al encuadre: es la unica forma de
+// garantizar la igualdad del Paso 5, porque `l.ancho` es el ancho del canvas en pixeles
+// CSS, fijado por el contenedor -- no cambia al tildar la casilla -- mientras que el
+// encuadre (y por lo tanto `l.alto`/semialto) SI cambia entre ENCUADRE_H y ENCUADRE_V.
+// T2_TOPE es el mayor valor que T1 o T2 alcanzan en todo el rango del deslizador: T2 =
+// acumulada[1]*a = (MASAS[0]+MASAS[1]) * F_TOPE/M_TOTAL en el tope, y T1 = acumulada[0]*a
+// nunca lo supera (acumulada es creciente). Con FRACCION_T2 = 0.035, T2 en su propio tope
+// ocupa el 3,5% del ancho del canvas -- confirmado en el informe de esta tarea que eso
+// deja un margen de casi 20 px contra GAP en la disposicion vertical (la mas comprimida
+// de las dos) incluso con las dos flechas de T2 al tope del deslizador a la vez, a 1280
+// y 390 px.
+const T2_TOPE = (MASAS[0] + MASAS[1]) * F_TOPE / M_TOTAL; // 514.29 N
+const FRACCION_T2 = 0.035;
+function kTension(l) { return (FRACCION_T2 * l.ancho) / T2_TOPE; }
+
+// T3: escala LOCAL, atada al tramo EXT de la disposicion que se este dibujando (`l.escala.x`
+// vale lo mismo que `l.escala.y` porque el widget usa escalaUniforme). Ocupa a lo sumo el
+// 85% de ese tramo, en las dos disposiciones, sin importar cuanto mida EXT en pixeles.
+function kAplicada(l) { return (0.85 * EXT * l.escala.x) / F_TOPE; }
+
+// Los pesos: escala LOCAL tambien, atada al medio-alto de un bloque -- se dibujan desde
+// el CENTRO de cada bloque hacia abajo, y el 70% de ALTO_BLOQUE/2 los deja salir del
+// bloque (son una fuerza, tienen que verse) sin invadir el hueco de al lado. PESO_TOPE es
+// el peso del bloque mas pesado, 30 kg.
+const PESO_TOPE = Math.max(...MASAS) * G; // 294 N
+function kPeso(l) { return (0.7 * (ALTO_BLOQUE / 2) * l.escala.x) / PESO_TOPE; }
+
+// La resultante: escala LOCAL, atada al aire que separa el lomo de los bloques (Y_RES o
+// X_RES) del borde del encuadre (PAD) -- el mismo PAD que ya reserva Y_RES/X_RES para
+// esto. Su maximo modulo es 900 N en horizontal (== F_TOPE) y 686 N en vertical (el peso
+// total, cuando F = 0); los dos caben en el 80% de PAD.
+function kResultante(l) { return (0.8 * PAD * l.escala.x) / F_TOPE; }
+
+// Una flecha de fuerza en pixeles: `origenPx` es el punto de partida (ya mapeado con
+// `l.p`), `dirPx` es un vector unitario EN PIXELES (no en unidades del marco -- por eso
+// no hace falta `l.aMundo`: [1,0] es siempre "hacia la derecha de la pantalla" y [0,-1]
+// siempre "hacia arriba de la pantalla", sea cual sea el modo).
+function flechaFuerza(ctx, origenPx, dirPx, magnitudN, K, color, rotulo) {
+  const largoPx = magnitudN * K;
+  vectorPx(ctx, origenPx[0], origenPx[1],
+    origenPx[0] + dirPx[0] * largoPx, origenPx[1] + dirPx[1] * largoPx,
+    { color, grosor: 2, punta: 9, rotulo });
+}
+
+// La resultante, azul, "sobre el conjunto": si `R` da negativa se dibuja al reves de
+// `ejePositivo` -- es justamente la afirmacion del encabezado, "la aceleracion se da
+// vuelta", y este widget la deja ver en vez de asumirla.
+function pintarResultante(ctx, l, p, origenUnidad, ejePositivo, R) {
+  const signo = R < 0 ? -1 : 1;
+  const [ox, oy] = l.p(origenUnidad);
+  flechaFuerza(ctx, [ox, oy], [ejePositivo[0] * signo, ejePositivo[1] * signo],
+    Math.abs(R), kResultante(l), p.blue, 'R');
+}
+
+function pintarHorizontal(ctx, l, p, a, T) {
+  const K = kTension(l), K3 = kAplicada(l);
+  const bordeDer = i => CX[i] + ANCHO_BLOQUE / 2;
+  const bordeIzq = i => CX[i] - ANCHO_BLOQUE / 2;
+
+  suelo(ctx, l, { color: p.rule, desde: ENCUADRE_H.xMin + 0.3, hasta: ENCUADRE_H.xMax - 0.3, y: -ALTO_BLOQUE / 2 });
+
+  // Las tres cuerdas, como segmentos: dos internas entre bloques, y la aplicada
+  // saliendo hacia la derecha del ultimo bloque.
+  ctx.strokeStyle = p.rule;
+  ctx.lineWidth = 1.4;
+  for (let i = 0; i < 2; i++) {
+    const [x0, y0] = l.p([bordeDer(i), 0]), [x1, y1] = l.p([bordeIzq(i + 1), 0]);
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+  }
+  {
+    const [x0, y0] = l.p([bordeDer(2), 0]), [x1, y1] = l.p([bordeDer(2) + EXT, 0]);
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+  }
+
+  for (const cx of CX) {
+    bloque(ctx, l, [cx, 0], { ancho: ANCHO_BLOQUE, alto: ALTO_BLOQUE, color: p.band, borde: p.ink });
+  }
+
+  // Las tensiones, rojas, "hacia afuera" de cada bloque: la cuerda i tira del bloque i
+  // hacia adelante (afuera de SU borde derecho) y del bloque i+1 hacia atras (afuera de
+  // SU borde izquierdo) -- en sentidos opuestos, con el mismo largo, porque es la misma
+  // cuerda. La tercera (aplicada) solo toca al bloque 2, hacia afuera de su borde
+  // derecho. Se rotula una sola vez por cuerda (el lado "hacia adelante") para no
+  // duplicar el texto sobre un hueco angosto.
+  for (let i = 0; i < 2; i++) {
+    const [ox, oy] = l.p([bordeDer(i), 0]);
+    flechaFuerza(ctx, [ox, oy], [1, 0], T[i], K, p.red, 'T' + (i + 1));
+    const [ox2, oy2] = l.p([bordeIzq(i + 1), 0]);
+    flechaFuerza(ctx, [ox2, oy2], [-1, 0], T[i], K, p.red, null);
+  }
+  {
+    const [ox, oy] = l.p([bordeDer(2), 0]);
+    flechaFuerza(ctx, [ox, oy], [1, 0], T[2], K3, p.red, 'T3');
+  }
+
+  pintarResultante(ctx, l, p, [0, Y_RES], [1, 0], M_TOTAL * a);
+}
+
+function pintarVertical(ctx, l, p, a, T) {
+  const K = kTension(l), K3 = kAplicada(l), KP = kPeso(l);
+  const bordeArriba = i => CY[i] + ALTO_BLOQUE / 2;
+  const bordeAbajo = i => CY[i] - ALTO_BLOQUE / 2;
+
+  // Las tres cuerdas: dos internas y la aplicada saliendo hacia arriba del bloque de
+  // arriba. Sin suelo -- estan colgando, no apoyados (Paso 3).
+  ctx.strokeStyle = p.rule;
+  ctx.lineWidth = 1.4;
+  for (let i = 0; i < 2; i++) {
+    const [x0, y0] = l.p([0, bordeArriba(i)]), [x1, y1] = l.p([0, bordeAbajo(i + 1)]);
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+  }
+  {
+    const [x0, y0] = l.p([0, bordeArriba(2)]), [x1, y1] = l.p([0, bordeArriba(2) + EXT]);
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+  }
+
+  for (const cy of CY) {
+    bloque(ctx, l, [0, cy], { ancho: ANCHO_BLOQUE, alto: ALTO_BLOQUE, color: p.band, borde: p.ink });
+  }
+
+  // Los pesos, rojos, hacia abajo desde el centro de cada bloque: la fuerza nueva que
+  // aparece solo en este modo (Paso 3).
+  MASAS.forEach((m, i) => {
+    const [ox, oy] = l.p([0, CY[i]]);
+    flechaFuerza(ctx, [ox, oy], [0, 1], m * G, KP, p.red, 'P');
+  });
+
+  // Las tensiones: mismo esquema que en horizontal, rotado -- la cuerda i tira del
+  // bloque i hacia adelante (afuera de su borde de ARRIBA) y del bloque i+1 hacia atras
+  // (afuera de su borde de ABAJO).
+  for (let i = 0; i < 2; i++) {
+    const [ox, oy] = l.p([0, bordeArriba(i)]);
+    flechaFuerza(ctx, [ox, oy], [0, -1], T[i], K, p.red, 'T' + (i + 1));
+    const [ox2, oy2] = l.p([0, bordeAbajo(i + 1)]);
+    flechaFuerza(ctx, [ox2, oy2], [0, 1], T[i], K, p.red, null);
+  }
+  {
+    const [ox, oy] = l.p([0, bordeArriba(2)]);
+    flechaFuerza(ctx, [ox, oy], [0, -1], T[2], K3, p.red, 'T3');
+  }
+
+  pintarResultante(ctx, l, p, [X_RES, 0], [0, -1], M_TOTAL * a);
+}
+
+let vertical = false;
+
+function leerF() { return parseFloat(el('w2-F').value); }
+
+const widget2 = crearWidget({
+  pagina, canvas: el('w2-cv'),
+  margen: { L: 40, R: 40, T: 26, B: 26 },
+  centrar: true,
+  encuadre: () => vertical ? ENCUADRE_V : ENCUADRE_H,
+  dibujar: pintar2,
+});
+
+function pintar2(ctx, l) {
+  const p = pagina.paleta();
+  const F = leerF();
+  const { a, T } = estadoTren(F, vertical);
+
+  if (vertical) pintarVertical(ctx, l, p, a, T);
+  else pintarHorizontal(ctx, l, p, a, T);
+
+  leer('w2-a', a.toFixed(3) + ' m/s²');
+  leer('w2-t1', T[0].toFixed(2) + ' N');
+  leer('w2-t2', T[1].toFixed(2) + ' N');
+  leer('w2-t3', T[2].toFixed(2) + ' N');
+}
+
+deslizador({
+  entrada: el('w2-F'), salida: el('w2-F-out'), pagina,
+  formato: v => v.toFixed(0) + ' N',
+  alCambiar: () => widget2.repintar(),
+});
+casilla({
+  entrada: el('w2-vertical'), pagina,
+  alCambiar: v => { vertical = v; widget2.repintar(); },
+});
 
 /* ---------- arranque ---------- */
 
