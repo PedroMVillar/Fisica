@@ -523,6 +523,30 @@ test('las dos punteadas pasan por las esquinas del rectangulo', () => {
   assert.ok(puntos.some(q => cerca(q, esquinaB)), 'la esquina del costado');
 });
 
+// Agregada mas alla de las cinco del brief: las cinco de arriba usan angulo = 0, donde
+// el marco y la pantalla coinciden y una implementacion que trabajara en pixeles de
+// pantalla en vez de en el marco pasaria igual. Sobre un lienzo inclinado las dos
+// punteadas tienen que caer en las esquinas del marco GIRADO -a lo largo de la
+// pendiente y de su normal-, no en un rectangulo alineado con la pantalla.
+test('sobre un lienzo con angulo, las punteadas van a las esquinas del marco (no de la pantalla)', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10, angulo: Math.PI / 5 });
+  const c = ctxFalso();
+  componentes(c, l, [2, 2], [6, 5], { color: '#000' });
+  const puntos = c.ops.filter(o => o[0] === 'moveTo' || o[0] === 'lineTo')
+    .map(o => [o[1], o[2]]);
+  // Las esquinas del rectangulo, en el marco (no en pantalla): [6, 2] y [2, 5]. `l.p`
+  // ya hace la rotacion, asi que este calculo es independiente del que hace `componentes`.
+  const esquinaA = l.p([6, 2]), esquinaB = l.p([2, 5]);
+  const cerca = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-9;
+  assert.ok(puntos.some(q => cerca(q, esquinaA)), 'la esquina de abajo, girada con el marco');
+  assert.ok(puntos.some(q => cerca(q, esquinaB)), 'la esquina del costado, girada con el marco');
+  // Con angulo != 0 esas esquinas ya no caen donde caerian sobre una pantalla sin girar
+  // (mismo calculo con angulo 0): si el test pasara igual con esta linea, no estaria
+  // ejercitando la rotacion.
+  const sinGirar = crearLienzo({ ancho: 200, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  assert.ok(!cerca(esquinaA, sinGirar.p([6, 2])), 'el angulo tiene que mover la esquina');
+});
+
 // --- El sentido del barrido (agregada mas alla de las cinco del brief) --------
 //
 // La convencion de canvas mide angulo creciente en sentido horario en pantalla (la y
