@@ -9,8 +9,10 @@ export function arrastrable({ canvas, lienzo, alArrastrar, acotar, pagina }) {
     const r = canvas.getBoundingClientRect();
     const l = lienzo();
     if (!l) return null;
-    let x = l.ux(evento.clientX - r.left);
-    let y = l.uy(evento.clientY - r.top);
+    const px = evento.clientX - r.left;
+    const py = evento.clientY - r.top;
+    let x = l.ux(px, py);
+    let y = l.uy(py, px);
     if (acotar) [x, y] = acotar(x, y);
     return [x, y];
   };

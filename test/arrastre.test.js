@@ -95,3 +95,18 @@ test('el lienzo se pide de nuevo en cada evento, no se cachea', () => {
   // ancho 100: ux(100) = 100 / (100/10) = 10 -- distinto del mapeo viejo
   assert.deepEqual(vistos, [[5, 2.5], [10, 2.5]]);
 });
+
+test('con un lienzo inclinado, el punto que llega al callback es el del marco', () => {
+  const alfa = Math.PI / 6;
+  const l = crearLienzo({
+    ancho: 400, alto: 400, xMin: -10, xMax: 10, yMin: -10, yMax: 10, angulo: alfa,
+  });
+  const esperado = [6, 2];
+  const [vx, vy] = l.p(esperado);
+  let visto = null;
+  const cv = canvasFalso();
+  arrastrable({ canvas: cv, lienzo: () => l, alArrastrar: (x, y) => { visto = [x, y]; } });
+  cv.disparar('pointerdown', vx, vy);
+  assert.ok(Math.abs(visto[0] - esperado[0]) < 1e-6, 'x en el marco');
+  assert.ok(Math.abs(visto[1] - esperado[1]) < 1e-6, 'y en el marco');
+});
