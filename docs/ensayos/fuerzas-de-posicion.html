@@ -81,7 +81,54 @@ try {
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Y los otros tres ejercicios de resortes de la guía, cada uno en una frase. El dinamómetro del ejercicio 11, donde <i>k</i> = 2 N / 0,117 m = 17,09 N/m y 0,4 N estiran 2,34 cm. Los dos resortes en paralelo del ejercicio 12, que suman sus constantes —50 + 100 = 150 N/m— y con 0,5 m de estiramiento dan 75 N contra un peso de 24,5 N, o sea 20,20 m/s² hacia arriba. Y el ejercicio 14, que es el más lindo de los tres porque junta este ensayo con el 4: un resorte de 400 N/m y largo natural 0,5 m hace girar una masa de 2 kg, y es <b style="font-weight:600">el resorte</b> el que provee la fuerza centrípeta. Con radio 1 m la velocidad es 10,00 m/s; al doble de velocidad el resorte se estira hasta 1,686 m, porque al alejarse necesita más fuerza y estirándose la consigue.</p>
 </div>
 
+<div class="columna">
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · El punto donde nadie tira</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">La gravedad no se apaga con la distancia: se diluye. Nunca llega a cero —por lejos que estén dos cuerpos, cada uno sigue tirando del otro, aunque sea poquísimo— pero cae con el cuadrado de la distancia, y entre dos cuerpos eso alcanza para que exista un punto donde las dos atracciones se cancelan exactamente. No es «donde no hay gravedad»: es donde hay <b style="font-weight:600">dos</b>, tirando cada una para su lado, y se anulan. Son dos cosas completamente distintas, y vale la pena decirlo así.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Entre la Tierra y la Luna</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— el punto de empate está al 90 % del camino, no a la mitad; las flechas no están a escala de newtons: leé los números.</span>
+    </div>
+    <canvas id="w2-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <label class="control" style="flex:2 1 220px;min-width:200px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">posición s <output id="w2-s-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0.500 d</output></span>
+        <input id="w2-s" type="range" min="0.10" max="0.99" step="0.001" value="0.500" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="w2-log" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Escala logarítmica
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>F Tierra <b id="w2-ft" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">1.0808e-2 N</b></span>
+      <span>F Luna <b id="w2-fl" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">1.3307e-4 N</b></span>
+      <span>neta <b id="w2-fn" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">-1.0675e-2 N</b></span>
+      <span>punto de empate <b id="w2-eq" style="color:var(--dim);font-weight:500;font-variant-numeric:tabular-nums">0.900 d</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">El empate está en <i>r</i>/<i>d</i> = 1/(1 + √(<i>M</i><sub>L</sub>/<i>M</i><sub>T</sub>)). Con la Tierra unas 81 veces más masiva que la Luna, esa raíz vale cerca de 1/9, y el cociente completo da 0,900: el punto queda al 90 % del camino, mucho más cerca de la Luna que de la Tierra. Que la respuesta dependa de la <b style="font-weight:600">raíz</b> del cociente de masas, y no del cociente mismo, es lo que la hace menos extrema de lo que uno esperaría —81 veces más masa no manda el punto a menos del 2 % del camino, lo manda apenas al 90 %—. (Los tamaños de la Tierra y la Luna en el dibujo son decorativos, no están a escala: a la escala real de <i>d</i> = 3,84×10⁸ m los dos cuerpos serían puntos invisibles.)</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Que la fuerza neta sea cero justo ahí no significa que ahí no pase nada. Una masa soltada exactamente en ese punto se queda, pero es un equilibrio <b style="font-weight:600">inestable</b>: un milímetro para cualquier lado y la cancelación se rompe, empujándola siempre para afuera, nunca de vuelta. El gráfico de abajo lo muestra: la curva cruza el cero con pendiente —no se aplana ahí— y a los dos lados del cruce el signo de la neta apunta siempre hacia afuera del punto de empate.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">El ejercicio 16 es la misma idea con tres cuerpos en vez de dos: tres masas iguales en los vértices de un triángulo equilátero de lado <i>L</i> sienten, cada una, una fuerza de las otras dos que suma √3 <i>Gm</i>²/<i>L</i>² apuntando al baricentro. Y en el baricentro mismo el campo es cero por simetría —las tres masas están tirando, pero para direcciones que se cancelan entre sí—: otra vez, cero <b style="font-weight:600">no</b> es ausencia de gravedad, es el resultado de que haya varias tirando a la vez.</p>
+</div>
+
 <div class="columna columna-final">
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para tener a mano</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>Si la fuerza depende de la posición, la aceleración no es un número: las fórmulas de aceleración constante no sirven, hay que ir a la ecuación de movimiento o a un caso ya resuelto.</li>
+    <li>Ley de Hooke: <i>F</i> = −<i>k</i>(<i>x</i> − <i>x</i><sub>0</sub>), y el signo menos es todo: es lo que produce la oscilación, y no una fuga.</li>
+    <li>En un MAS, ω = √(<i>k</i>/<i>m</i>), y el período no depende de la amplitud. Soltarlo de más lejos lo hace ir más rápido, no tardar más.</li>
+    <li>Resortes en paralelo suman sus constantes; en serie, suman las inversas.</li>
+    <li>Gravitación: <i>F</i> = <i>Gm</i><sub>1</sub><i>m</i><sub>2</sub>/<i>r</i>², siempre atractiva, con <i>r</i> la distancia entre los centros.</li>
+    <li>Entre dos cuerpos hay un punto de fuerza neta nula, a <i>d</i>/(1 + √(<i>m</i><sub>2</sub>/<i>m</i><sub>1</sub>)) del más masivo. Es un equilibrio inestable.</li>
+  </ol>
+
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
     <a href="sistemas-acoplados.html">Ensayo 5 · Sistemas acoplados</a>
@@ -95,7 +142,7 @@ import { crearPagina } from '../motor/pagina.js';
 import { crearWidget, panelesApilados } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
 import { eje, curva, cuerpo, punteado, texto, bloque, vectorPx, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
-import { deslizador, boton, rotuloReproducir } from '../motor/controles.js';
+import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
 
 const el = id => document.getElementById(id);
@@ -393,6 +440,255 @@ boton({
 boton({
   elemento: el('w1-reset'),
   alApretar: () => { enReposo = true; escena.reiniciar(); rotular(); },
+});
+
+/* ---------- widget 2: entre la Tierra y la Luna ---------- */
+
+// Guia 2, ej. 15. Verificado en el bloque "Ej 15" de verificacion-practico-2.py:
+//   r = d/(1 + sqrt(M_L/M_T)) = 3.456e8 m = 0.900 d
+const GRAV = 6.674e-11;
+const M_TIERRA = 5.97e24, M_LUNA = 7.35e22, D_TL = 3.84e8;
+const S_EQUILIBRIO = 1 / (1 + Math.sqrt(M_LUNA / M_TIERRA));   // en fracciones de d
+
+// Fuerzas sobre una masa de prueba de 1 kg, a una fraccion `s` del camino desde la
+// Tierra. Positiva = hacia la Luna.
+function campo(s) {
+  const rT = s * D_TL, rL = (1 - s) * D_TL;
+  const fT = GRAV * M_TIERRA / (rT * rT);      // tira hacia la Tierra
+  const fL = GRAV * M_LUNA / (rL * rL);        // tira hacia la Luna
+  return { fT, fL, neta: fL - fT };
+}
+
+// Extremos del deslizador w2-s (min/max del <input>, mas abajo). fT es decreciente en s
+// y fL creciente en s, asi que los cuatro modulos en estos dos extremos -fT(S_MIN),
+// fL(S_MIN), fT(S_MAX), fL(S_MAX)- acotan el rango ENTERO de modulos que aparece en
+// todo el recorrido del deslizador, sin hacer falta barrer mas puntos. Medido con node:
+//   campo(0.10) = {fT: 2.7021e-1 N, fL: 4.1070e-5 N}
+//   campo(0.99) = {fT: 2.7569e-3 N, fL: 3.3267e-1 N}
+// minimo global 4.107e-5 N (fL en 0.10), maximo global 3.327e-1 N (fL en 0.99).
+const S_MIN = 0.10, S_MAX = 0.99;
+const _extremosW2 = [campo(S_MIN).fT, campo(S_MIN).fL, campo(S_MAX).fT, campo(S_MAX).fL];
+const LOG_MIN_W2 = Math.log10(Math.min(..._extremosW2));
+const LOG_MAX_W2 = Math.log10(Math.max(..._extremosW2)); // LOG_MAX-LOG_MIN = 3.91 decadas
+
+// El problema de escala (Paso 3 del brief): entre s=0.10 y s=0.99 los modulos cambian
+// casi cuatro ordenes de magnitud, y una flecha proporcional al newton se sale del
+// canvas en un extremo y desaparece en el otro. Dos escalas -anunciadas en el
+// encabezado de arriba-, y ninguna de las dos inventa un numero: las lecturas en
+// newtons de mas abajo son siempre las de verdad.
+//
+// - proporcional (casilla sin marcar): largoT/largoL = fT/(fT+fL), fL/(fT+fL) -las dos
+//   siempre suman 1-, asi que las dos flechas juntas miden siempre
+//   LARGO_TOTAL_PROP_PX. Lo que se lee es la PROPORCION entre las dos, que es
+//   justamente lo que decide donde esta el empate: en s=S_EQUILIBRIO las dos miden lo
+//   mismo (Paso 6.2).
+// - logaritmica (casilla marcada): largo proporcional a log10(f), normalizado entre
+//   LOG_MIN_W2 y LOG_MAX_W2. Ahi se ve la caida 1/r^2 pero se pierde la comparacion
+//   directa entre las dos (Paso 3 del brief).
+const LARGO_TOTAL_PROP_PX = 70; // "ideal" cuando sobra lugar (ver el recorte de abajo)
+const LARGO_MAX_LOG_PX = 60;    // un poco menos que el total proporcional, mismo orden
+const LARGO_MIN_LOG_PX = 3;     // piso para que el extremo mas chico no desaparezca del
+                                 // todo (vectorPx no dibuja flechas de menos de 1px)
+
+// Cuanto puede medir una flecha sin salirse del panel: la distancia en PIXELES REALES
+// desde el origen (la masa de prueba en s) hasta el borde de ese lado del panel, con un
+// 10% de aire para que la punta no quede pegada al borde. Se recalcula en cada
+// repintado con la escala de ESE lienzo (`lp.escala.x`), asi que es automaticamente
+// seguro a cualquier ancho de viewport. Medido antes de este recorte: con un largo FIJO
+// de 80px, a 390px de ancho y s=0.99 la flecha de la Luna se salia del canvas por 37px
+// (el origen quedaba a 307.5px del borde derecho del canvas de 350px de ancho fisico,
+// t15-390-claro-extremo-099.png). Con el recorte, esa misma flecha mide como mucho lo
+// que entra.
+const AIRE_FLECHA = 0.90;
+function roomIzquierda(lp, s) { return (s - XMIN_P1) * lp.escala.x * AIRE_FLECHA; }
+function roomDerecha(lp, s) { return (XMAX_P1 - s) * lp.escala.x * AIRE_FLECHA; }
+
+function largosFlechas(fT, fL, log, roomIzq, roomDer) {
+  let lt, ll;
+  if (log) {
+    const norm = f => LARGO_MIN_LOG_PX + (LARGO_MAX_LOG_PX - LARGO_MIN_LOG_PX) *
+      (Math.log10(f) - LOG_MIN_W2) / (LOG_MAX_W2 - LOG_MIN_W2);
+    lt = norm(fT); ll = norm(fL);
+  } else {
+    const suma = fT + fL;
+    lt = LARGO_TOTAL_PROP_PX * fT / suma; ll = LARGO_TOTAL_PROP_PX * fL / suma;
+  }
+  // El recorte solo actua cerca de los extremos del deslizador -donde la flecha
+  // dominante es grande y el lugar de ese lado es chico-; en el resto del recorrido
+  // roomIzq/roomDer sobran y `Math.min` no cambia nada.
+  return { lt: Math.min(lt, roomIzq), ll: Math.min(ll, roomDer) };
+}
+
+// La flecha azul de la neta: en el modo proporcional, |lt-ll| es EXACTAMENTE
+// |fL-fT|/(fT+fL) * LARGO_TOTAL_PROP_PX -la fraccion neta de verdad-, asi que la
+// flecha azul es geometricamente lo que sobra de restar las dos rojas colineales. En
+// modo logaritmico los logaritmos no se restan como las fuerzas, asi que el mismo
+// |lt-ll| es solo una continuacion visual -no una tercera escala inventada-, y ahi la
+// lectura numerica de "neta" es la que manda.
+function largoNeta(lt, ll) { return Math.abs(lt - ll); }
+
+// --- geometria del panel 1 (la recta Tierra-Luna) ---
+//
+// La Tierra en s=0, la Luna en s=1: el eje horizontal de este panel son fracciones de
+// d, igual que el del panel 2. El rango se extiende un poco mas alla de 0 y 1 para que
+// los dos cuerpos -decorativos, ver mas abajo- no queden pegados al borde del canvas.
+const PAD_P1 = 0.07; // fraccion de d de aire a cada lado
+const XMIN_P1 = -PAD_P1, XMAX_P1 = 1 + PAD_P1;
+
+// Alto del panel: puramente de dibujo (no hay una magnitud fisica en el eje vertical),
+// con mas aire arriba de la recta que abajo para la fila de la flecha azul (Paso 4:
+// "las dos flechas rojas... y la azul de la neta"), y aire abajo para los rotulos
+// "Tierra"/"Luna" bajo cada cuerpo.
+const YMIN_P1 = -0.20, YMAX_P1 = 0.55;
+
+// Los radios de la Tierra y la Luna son DECORATIVOS, no a escala del sistema (que mide
+// fracciones de d = 3.84e8 m: dibujar los cuerpos a esa escala real los reduciria a
+// menos de un pixel). Se les dio la proporcion real entre radios (R_Luna/R_Tierra =
+// 1737/6371 = 0.273) para que al menos esa relacion sea honesta -aclarado en el
+// parrafo de cierre de la seccion, no inventado en silencio.
+const RADIO_TIERRA_PX = 15;
+const RADIO_LUNA_PX = Math.round(RADIO_TIERRA_PX * 1737 / 6371); // 4 px
+const RADIO_PRUEBA_PX = 3.5;
+
+function pintarPanel1(ctx, lp, p, s, log) {
+  const { fT, fL, neta } = campo(s);
+  const { lt, ll } = largosFlechas(fT, fL, log, roomIzquierda(lp, s), roomDerecha(lp, s));
+  const ln = largoNeta(lt, ll);
+
+  // La recta Tierra-Luna.
+  const [xTPx, yLineaPx] = lp.p([0, 0]);
+  const [xLPx] = lp.p([1, 0]);
+  ctx.strokeStyle = p.rule;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(xTPx, yLineaPx);
+  ctx.lineTo(xLPx, yLineaPx);
+  ctx.stroke();
+
+  // La marca de S_EQUILIBRIO: punteada vertical de punta a punta del panel.
+  const [xEqPx, yTopPx] = lp.p([S_EQUILIBRIO, YMAX_P1]);
+  const [, yBotPx] = lp.p([S_EQUILIBRIO, YMIN_P1]);
+  punteado(ctx, xEqPx, yTopPx, xEqPx, yBotPx, { color: p.rule });
+
+  // La Tierra y la Luna, decorativas (ver constantes de arriba).
+  cuerpo(ctx, lp, [0, 0], { radio: RADIO_TIERRA_PX, color: p.ink });
+  cuerpo(ctx, lp, [1, 0], { radio: RADIO_LUNA_PX, color: p.ink });
+  texto(ctx, 'Tierra', xTPx, yLineaPx + RADIO_TIERRA_PX + 14, { color: p.dim, alineacion: 'center' });
+  texto(ctx, 'Luna', xLPx, yLineaPx + RADIO_TIERRA_PX + 14, { color: p.dim, alineacion: 'center' });
+
+  // La masa de prueba, en s.
+  const [xSPx, ySPx] = lp.p([s, 0]);
+  cuerpo(ctx, lp, [s, 0], { radio: RADIO_PRUEBA_PX, color: p.ink });
+
+  // Las dos flechas rojas, colineales y en sentidos opuestos: la que tira hacia la
+  // Tierra (hacia -x) y la que tira hacia la Luna (hacia +x). `vectorPx` toma pixeles
+  // de pantalla y no pasa por `lp.p`: por eso el origen ya viene convertido y el largo
+  // se suma en pixeles crudos.
+  vectorPx(ctx, xSPx, ySPx, xSPx - lt, ySPx, { color: p.red, grosor: 2, punta: 7 });
+  vectorPx(ctx, xSPx, ySPx, xSPx + ll, ySPx, { color: p.red, grosor: 2, punta: 7 });
+
+  // La flecha azul de la neta, en una fila aparte arriba para no superponerse con las
+  // rojas: apunta hacia donde gana la atraccion mas fuerte (positivo = hacia la Luna,
+  // igual convencion que `campo()`). El rotulo se cuelga del lado de ADENTRO de la
+  // punta (hacia el origen), no siempre a la derecha: cerca de s=0.99 la flecha apunta
+  // hacia la Luna, pegada al borde derecho del panel, y un rotulo colgando encima
+  // (rdx>0 por defecto) se salia del canvas (medido en
+  // t15-1280-claro-extremo-099.png antes de este cambio).
+  const filaNeta = ySPx - 22;
+  const signo = neta >= 0 ? 1 : -1;
+  vectorPx(ctx, xSPx, filaNeta, xSPx + signo * ln, filaNeta, {
+    color: p.blue, grosor: 2, punta: 7, rotulo: 'neta',
+    rdx: signo > 0 ? -8 : 8, rAlineacion: signo > 0 ? 'right' : 'left',
+  });
+}
+
+// --- panel 2: la fuerza neta contra la posicion ---
+//
+// Rango horizontal: el MISMO recorrido del deslizador, S_MIN a S_MAX -no 0 a 1, porque
+// en los bordes verdaderos (s=0 o s=1) el cuerpo de prueba estaria adentro de la
+// Tierra o de la Luna y la fuerza tiende a infinito.
+//
+// Recorte del eje vertical (Paso 4: "elegi el recorte mirando los valores que imprime
+// el script"). Las cuatro filas que agrega el Paso 1 al bloque "Ej 15" dan:
+//   s=0.5000 d:  neta = -1.0675e-2 N        (|neta| = 1.0675e-2 N, la mayor de las 4)
+//   s=0.9000 d:  neta = +9.2198e-6 N
+//   s=0.9001 d:  neta = -5.2042e-18 N       (practicamente cero: es S_EQUILIBRIO)
+//   s=0.9500 d:  neta = +1.0313e-2 N
+// (signo invertido contra el script: alla es F_T-F_L, aca fL-fT). El mayor de los
+// cuatro modulos es 1.0675e-2 N; el recorte se fija en +-12 mN -cerca de un 12% de margen sobre
+// ese maximo-, en MILINEWTONS y no en newtons porque `eje()` (motor/dibujo.js)
+// redondea los rotulos a UN solo decimal: en newtons (0.0107) todas las marcas
+// redondearian a "0.0". Con este recorte la curva real -que en los extremos del
+// deslizador llega a -2.7017e-1 y +3.2991e-1 N, ver t15-extremos-deslizador.txt- se
+// dibuja RECORTADA cerca de s=0.10 y s=0.99: se pega contra el techo o el piso del
+// panel en vez de seguir creciendo, que es exactamente "se dispara" del Paso 4.
+const NETA_LIM_MN = 12; // mN, ver derivacion arriba
+function netaMN(s) { return campo(s).neta * 1000; }
+function recortarNeta(v) { return Math.max(-NETA_LIM_MN, Math.min(NETA_LIM_MN, v)); }
+
+const MARGEN2 = { L: 62, R: 24, T: 20, B: 34 };
+const HUECO_ROTULO2 = COLGADO_ROTULO_EJE + 8;
+const ALTO_PANEL_MINIMO2 = 95 + HUECO_ROTULO2;
+
+function leerS() { return parseFloat(el('w2-s').value); }
+
+const widget2 = crearWidget({
+  pagina, canvas: el('w2-cv'),
+  margen: MARGEN2,
+  escalaUniforme: false,
+  altoMin: 2 * ALTO_PANEL_MINIMO2 + MARGEN2.T + MARGEN2.B,
+  encuadre: () => ({ xMin: S_MIN, xMax: S_MAX, yMin: 0, yMax: 2 }),
+  dibujar: pintar2,
+});
+
+// Los dos paneles, cada uno con su propio rango horizontal (Paso 4: "panelesApilados
+// con dos paneles, con rango horizontal propio cada uno").
+const capas2 = l => panelesApilados({
+  lienzo: l, margen: { L: MARGEN2.L, R: MARGEN2.R }, hueco: HUECO_ROTULO2,
+  paneles: [
+    { xMin: XMIN_P1, xMax: XMAX_P1, yMin: YMIN_P1, yMax: YMAX_P1 },
+    { xMin: S_MIN, xMax: S_MAX, yMin: -NETA_LIM_MN, yMax: NETA_LIM_MN, etiqueta: 'F neta [mN]' },
+  ],
+});
+
+function pintar2(ctx, l) {
+  const p = pagina.paleta();
+  const s = leerS();
+  const log = casillaLog.valor();
+  const { fT, fL, neta } = campo(s);
+  const [panel1, panel2] = capas2(l);
+
+  pintarPanel1(ctx, panel1.lp, p, s, log);
+
+  eje(ctx, panel2.lp, {
+    color: p.rule, colorTexto: p.dim,
+    etiquetaY: panel2.panel.etiqueta, etiquetaX: 'posición s [d]',
+  });
+  curva(ctx, panel2.lp, ss => [ss, recortarNeta(netaMN(ss))], S_MIN, S_MAX,
+    { color: p.blue, grosor: 1.8 });
+  // El cruce por cero: fijo en S_EQUILIBRIO, no depende del deslizador.
+  cuerpo(ctx, panel2.lp, [S_EQUILIBRIO, 0], { radio: 4, color: p.blue });
+  // El cursor de la posicion actual, solo en este panel (el panel 1 ya muestra el
+  // instante con la masa de prueba misma, igual que la escena del widget 1).
+  punteado(ctx, panel2.lp.px(s), panel2.techo, panel2.lp.px(s), panel2.techo + panel2.alturaPanel,
+    { color: p.blueSoft, guiones: [3, 4] });
+
+  leer('w2-ft', fT.toExponential(4) + ' N');
+  leer('w2-fl', fL.toExponential(4) + ' N');
+  leer('w2-fn', (neta >= 0 ? '+' : '') + neta.toExponential(4) + ' N');
+  // Calculada con la formula (Paso 2 del brief: "tiene que... moverse si alguien
+  // cambiara una masa"), no escrita a mano.
+  leer('w2-eq', S_EQUILIBRIO.toFixed(3) + ' d');
+}
+
+deslizador({
+  entrada: el('w2-s'), salida: el('w2-s-out'), pagina,
+  formato: v => v.toFixed(3) + ' d',
+  alCambiar: () => widget2.repintar(),
+});
+const casillaLog = casilla({
+  entrada: el('w2-log'), pagina,
+  alCambiar: () => widget2.repintar(),
 });
 
 /* ---------- arranque ---------- */
