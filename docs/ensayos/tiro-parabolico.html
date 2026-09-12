@@ -67,11 +67,11 @@ try {
       </label>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
-      <span>t <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00 s</b></span>
-      <span>x <b id="w1-x" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.0 m</b></span>
-      <span>y <b id="w1-y" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.0 m</b></span>
+      <span>t <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.31 s</b></span>
+      <span>x <b id="w1-x" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">20.3 m</b></span>
+      <span>y <b id="w1-y" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">15.7 m</b></span>
       <span>vₓ <b id="w1-vx" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">15.4 m/s</b></span>
-      <span><i>v</i><sub>y</sub> <b id="w1-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">18.4 m/s</b></span>
+      <span><i>v</i><sub>y</sub> <b id="w1-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">5.5 m/s</b></span>
     </div>
   </div>
 </section>
@@ -111,8 +111,8 @@ try {
       </label>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
-      <span>t <b id="w2-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00 s</b></span>
-      <span>altura de los dos <b id="w2-alt" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">25.0 m</b></span>
+      <span>t <b id="w2-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.79 s</b></span>
+      <span>altura de los dos <b id="w2-alt" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">21.9 m</b></span>
       <span>diferencia de alturas <b id="w2-dif" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.00 m</b></span>
       <span>t de caída <b id="w2-tf" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">2.26 s</b></span>
     </div>
@@ -145,7 +145,7 @@ try {
       </label>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
-      <span>v₀ <b id="w3-v0" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">25.0 m/s</b></span>
+      <span>v₀ <b id="w3-v0" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">25.1 m/s</b></span>
       <span>α <b id="w3-ang" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">50°</b></span>
       <span><span id="w3-lx">vₓ = v₀·cos α</span> <b id="w3-vx" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">16.1 m/s</b></span>
       <span><span id="w3-ly">v_y = v₀·sen α</span> <b id="w3-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">19.2 m/s</b></span>
@@ -188,10 +188,10 @@ try {
       </label>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:0 26px;border-top:1px solid var(--rule);padding-top:12px;font:400 12px/1.5 'JetBrains Mono',monospace;color:var(--dim)">
-      <span>alcance <b id="w4-alc" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">38.6 m</b></span>
-      <span>corrimiento <b id="w4-dif" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.0 m</b></span>
+      <span>alcance <b id="w4-alc" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">38.4 m</b></span>
+      <span>corrimiento <b id="w4-dif" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">+0.0 m</b></span>
       <span>t de vuelo <b id="w4-tf" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.34 s</b></span>
-      <span>altura máx <b id="w4-hmax" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">16.4 m</b></span>
+      <span>altura máx <b id="w4-hmax" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">13.7 m</b></span>
     </div>
   </div>
 </section>
@@ -500,7 +500,14 @@ function widgetGalileo(pagina) {
 
     leer('w2-t', t.toFixed(2) + ' s');
     leer('w2-alt', Math.max(0, yEn(t)).toFixed(1) + ' m');
-    leer('w2-dif', '0.00 m');
+    // La diferencia de alturas CALCULADA, no escrita a mano: es la lectura que el
+    // parrafo manda mirar y la unica prueba numerica de que el movimiento horizontal no
+    // toca al vertical. Da 0.00 m siempre -ese es el punto del widget- pero restando de
+    // verdad la altura de un cuerpo contra la del otro, asi que se moveria si alguien
+    // rompiera el modelo. El retoque del signo del cero es por si esa resta llegara a
+    // dar un cero negativo, que toFixed imprimiria como "-0.00".
+    const dif = (a[1] - b[1]).toFixed(2);
+    leer('w2-dif', (dif === '-0.00' ? '0.00' : dif) + ' m');
     leer('w2-tf', tf().toFixed(2) + ' s');
   }
 

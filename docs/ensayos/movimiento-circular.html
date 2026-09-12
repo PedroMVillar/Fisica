@@ -84,9 +84,10 @@ try {
     </div>
     <canvas id="w2-cv" style="width:100%;aspect-ratio:16/8;display:block;touch-action:none"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button id="w2-play" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper);background:var(--blue);border:none;border-radius:2px;padding:9px 16px;cursor:pointer">Reproducir</button>
         <button id="w2-reset" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Reiniciar</button>
+        <button id="w2-ej13" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:9px 13px;cursor:pointer">Ej. 13</button>
       </div>
       <label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:150px">
         <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">velocidad angular ω <output id="w2-omega-out" style="color:var(--ink);font-variant-numeric:tabular-nums">2.0 rad/s</output></span>
@@ -107,7 +108,7 @@ try {
 </section>
 
 <div style="max-width:680px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:0">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con <i>γ</i> = 0 el ángulo entre <i>v</i> y <i>a</i> marca 90° exactos en todo el recorrido, y la rapidez que leés arriba no se mueve un milímetro: es el movimiento circular uniforme, y es la única situación donde velocidad y aceleración son perpendiculares. Subí <i>γ</i> a 4 sobre este mismo radio de 1.5 m y la tangencial queda fija en 6 m/s² —no depende de <i>ω</i>, sólo de <i>γ</i> y de <i>R</i>— mientras la normal crece con el cuadrado de la velocidad angular: en <i>t</i> = 5 s ya vale 600 m/s² contra esos mismos 6, así que la aceleración total es prácticamente toda normal, 600.03 m/s², y la flecha roja apunta casi exacto al centro. Que la normal domine no quiere decir que la tangencial haya desaparecido: quiere decir que la rapidez cambia despacio comparada con lo rápido que cambia la dirección.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con <i>γ</i> = 0 el ángulo entre <i>v</i> y <i>a</i> marca 90° exactos en todo el recorrido, y la rapidez que leés arriba no se mueve un milímetro: es el movimiento circular uniforme, y es la única situación donde velocidad y aceleración son perpendiculares. Apretá <code>Ej. 13</code> —deja <i>ω</i> en 0 y <i>γ</i> en 4 sobre este mismo radio de 1.5 m, que es el ejercicio 13 tal cual— y dale a <code>Reproducir</code> hasta el final de la ventana. Arranca quieto, así que en <i>t</i> = 0 no hay velocidad y el ángulo no existe: la lectura muestra un guion, no 90°. La tangencial queda fija en 6 m/s² —no depende de <i>ω</i>, sólo de <i>γ</i> y de <i>R</i>— mientras la normal crece con el cuadrado de la velocidad angular: en <i>t</i> = 5 s ya vale 600 m/s² contra esos mismos 6, así que la aceleración total es prácticamente toda normal, 600.03 m/s², y la flecha roja apunta casi exacto al centro. Que la normal domine no quiere decir que la tangencial haya desaparecido: quiere decir que la rapidez cambia despacio comparada con lo rápido que cambia la dirección.</p>
 
   <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · De las ecuaciones al círculo</h2>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Un movimiento circular no siempre viene anunciado. A veces llega como dos ecuaciones sueltas, una para <i>x</i>(<i>t</i>) y otra para <i>y</i>(<i>t</i>), sin ningún <i>R</i> ni ningún <i>ω</i> a la vista, y hay que reconocer la circunferencia escondida ahí adentro. Es exactamente lo que pide el ejercicio 14: <i>x</i>(<i>t</i>) = sen(<i>ωt</i>), <i>y</i>(<i>t</i>) = cos(<i>ωt</i>) + 1, con <i>ω</i> = 2π rad/s. Escribí las dos expresiones en los campos de abajo —ya están cargadas con ese par— y mirá qué trayectoria dibujan.</p>
@@ -286,7 +287,13 @@ function widgetVersores(pagina) {
     leer('w1-t', t.toFixed(2) + ' s');
     leer('w1-ang', ((c.theta(t) * 180 / Math.PI) % 360).toFixed(0) + '°');
     leer('w1-rap', c.rapidez(t).toFixed(2) + ' m/s');
-    leer('w1-prod', '0.00');        // r̂ · v, que es cero siempre: es el punto del widget
+    // r̂ · v calculado, no escrito a mano: ESTA lectura es la prueba que el parrafo de
+    // abajo manda mirar ("la flecha azul nunca se apoya sobre la punteada gris"), asi
+    // que tiene que moverse si alguien rompiera el modelo. Da 0.00 siempre -ese es el
+    // punto del widget- pero porque sale de la cuenta. El unico retoque es el signo del
+    // cero: la cancelacion deja a veces un -1e-17 que toFixed imprimiria como "-0.00".
+    const prod = (rx * vx + ry * vy).toFixed(2);
+    leer('w1-prod', prod === '-0.00' ? '0.00' : prod);
   }
 
   deslizador({
@@ -473,14 +480,21 @@ function widgetAceleraciones(pagina) {
     cuerpo(ctx, l, c.pos(t), { radio: 5.5, color: p.ink });
 
     // El angulo entre v y a: 90 grados exactos mientras gamma sea cero, y es la
-    // lectura que contesta el inciso (e) del ejercicio 11.
-    const cosAng = (vx * ax + vy * ay) / (Math.hypot(vx, vy) * Math.hypot(ax, ay) || 1);
-    const grados = Math.acos(Math.min(1, Math.max(-1, cosAng))) * 180 / Math.PI;
+    // lectura que contesta el inciso (e) del ejercicio 11. Si uno de los dos vectores
+    // es nulo el angulo NO existe, y se muestra un guion: pasa justo con el preset del
+    // ejercicio 13 (omega = 0, gamma = 4) en t = 0, donde la velocidad es cero. Antes,
+    // el `|| 1` tapaba el denominador nulo y la lectura decia "90.0°" -contradiciendo
+    // al parrafo, que afirma que los 90° son exclusivos del movimiento uniforme.
+    const modV = Math.hypot(vx, vy), modA = Math.hypot(ax, ay);
+    const cosAng = modV > 0 && modA > 0 ? (vx * ax + vy * ay) / (modV * modA) : null;
+    const grados = cosAng === null
+      ? null
+      : Math.acos(Math.min(1, Math.max(-1, cosAng))) * 180 / Math.PI;
 
     leer('w2-rap', c.rapidez(t).toFixed(2) + ' m/s');
     leer('w2-at', aT.toFixed(2) + ' m/s²');
     leer('w2-an', aN.toFixed(2) + ' m/s²');
-    leer('w2-ang', grados.toFixed(1) + '°');
+    leer('w2-ang', grados === null ? '—' : grados.toFixed(1) + '°');
   }
 
   deslizador({
@@ -511,6 +525,32 @@ function widgetAceleraciones(pagina) {
   boton({
     elemento: el('w2-reset'),
     alApretar: () => { enReposo = true; escena.reiniciar(); rotular(); },
+  });
+
+  // Preset del ejercicio 13 (omega0 = 0, gamma = 4, sobre este mismo R = 1.5): es la
+  // configuracion que cita el parrafo de cierre de la seccion, y el widget arranca en
+  // omega = 2, asi que sin este boton el lector que seguia el texto al pie de la letra
+  // leia 726 m/s^2 en t = 5 s y no los 600 prometidos. Mismo mecanismo que los presets
+  // del ensayo 2 y del widget 3 de este mismo ensayo.
+  //
+  // Los sliders se mueven despachando su evento 'input' en vez de tocar `omega0` y
+  // `gamma` a mano: asi es `deslizador` quien repinta su <output> y avisa, y no queda
+  // una segunda copia del cableado que se pueda desincronizar del control visible.
+  const fijarDeslizador = (entrada, valor) => {
+    entrada.value = String(valor);
+    entrada.dispatchEvent(new Event('input'));
+  };
+  boton({
+    elemento: el('w2-ej13'), pagina,
+    alApretar: () => {
+      fijarDeslizador(el('w2-omega'), 0);
+      fijarDeslizador(el('w2-gamma'), 4);
+      // Vuelta al arranque: el numero del parrafo es el de t = 5 s, el final de la
+      // ventana, asi que el preset deja la escena lista para reproducirla entera.
+      enReposo = true;
+      escena.reiniciar();
+      rotular();
+    },
   });
 
   rotular();
