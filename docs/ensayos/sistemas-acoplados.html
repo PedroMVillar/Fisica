@@ -134,7 +134,7 @@ try {
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
-import { bloque, suelo, vectorPx, cuerpo } from '../motor/dibujo.js';
+import { bloque, suelo, vectorPx, cuerpo, acotarFlecha, marcaDeTope } from '../motor/dibujo.js';
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
 
@@ -504,13 +504,17 @@ function estadoTren(F, vertical) {
 // ANCHO_BLOQUE/ALTO_BLOQUE ya estan declaradas mas arriba, para el widget 1 (misma
 // silueta 2:1 que cuerpo-aislado.html) -- este widget dibuja bloques de la misma
 // proporcion, asi que reusa esas dos constantes en vez de redeclararlas.
-const GAP = 2.2; // separacion entre bordes de bloques vecinos: ahi conviven DOS flechas
-  // de T1 o T2 que crecen una hacia la otra (Paso 3, "hacia afuera" de cada bloque), asi
-  // que el hueco tiene que bancarse el DOBLE del largo de una sola. Con FRACCION_T2 (ver
-  // mas abajo) el peor caso es T2 en el tope del deslizador en la disposicion vertical
-  // -la mas comprimida de las dos, por apilar 3 bloques en vez de ponerlos en fila-: ver
-  // el informe de esta tarea (t13-*.json) para el largo medido contra este hueco a 1280
-  // y 390 px.
+const GAP = 8; // separacion entre bordes de bloques vecinos: ahi conviven DOS flechas de
+  // T1 o T2 que crecen una hacia la otra (Paso 3, "hacia afuera" de cada bloque), asi que
+  // el hueco tiene que bancarse el DOBLE del largo de una sola -acotada a
+  // TOPE_PX_TENSION, ver mas abajo. El peor caso NO es la disposicion vertical (que por
+  // apilar 3 bloques en vez de ponerlos en fila uno pensaria mas comprimida): es la
+  // horizontal a 390px de viewport, donde el ancho de todo el tren (3 bloques + 2 GAP +
+  // EXT) supera el ancho util del canvas y `sc` queda atado al ancho, no al alto -- un
+  // hueco mas chico ahi que en cualquier otra combinacion de disposicion/ancho medida
+  // (confirmado barriendo las 4: horizontal/vertical x 880/350px de canvas). Con GAP = 8
+  // ese peor caso mide ~87 px (informe de la Tarea 13, fix del Ruling 18), contra
+  // 2*TOPE_PX_TENSION = 70 px: deja margen.
 const EXT = 1.6; // el tramo de la tercera cuerda (la aplicada): mas corto que GAP porque
   // T3 usa su propia escala LOCAL (`kAplicada`, mas abajo), atada al largo de ESTE tramo
   // en la disposicion que este dibujando -- no comparte la escala de T1/T2 y por eso no
@@ -557,22 +561,47 @@ const ENCUADRE_V = {
 // horizontal y en vertical (item 3). T3, los tres pesos y la resultante no tienen esa
 // obligacion -- cada uno usa su propia escala, elegida para que entre comodo en el lugar
 // donde se dibuja, y ninguno tiene que competir por el presupuesto de pixeles de T1/T2.
-const F_TOPE = 900; // = max del deslizador w2-F
+const F_TOPE = 900; // = max del deslizador w2-F (T3, los pesos y la resultante escalan
+  // contra este numero: ver kAplicada/kPeso/kResultante mas abajo)
 
-// T1 y T2 comparten una escala atada a `l.ancho`, no al encuadre: es la unica forma de
+// RULING 18 -- correccion sobre el primer intento de esta tarea. Anclar la escala de
+// T1/T2 al TOPE del deslizador (900 N) los deja invisibles en el caso del ejercicio
+// (F = 60 N, la posicion por defecto): medido, T2 daba 2,1 px en escritorio y 0,8 px
+// en telefono -menos de un pixel-, y la "escalera" 17,14/34,29/60 que esta seccion
+// existe para mostrar no se veia en su propio caso canonico. El deslizador llega a
+// 900 N (quince veces el caso del ejercicio) para poder explorar, pero la escala tiene
+// que servirle al caso, no al extremo.
+//
+// La correccion: anclar la escala a F_EJERCICIO (el valor con el que arranca el
+// deslizador, `w2-F value="60"`) y RECORTAR el largo dibujado con `acotarFlecha` cuando
+// F crece -exactamente la convencion de `TOPE_PX_ACELERACION` en el widget de
+// aceleraciones de movimiento-circular.html, con su misma `marcaDeTope` cuando corta.
+// El valor en newtons de la lectura no se toca: sigue exacto en todo el rango.
+//
+// T1 y T2 comparten esta escala atada a `l.ancho`, no al encuadre: es la unica forma de
 // garantizar la igualdad del Paso 5, porque `l.ancho` es el ancho del canvas en pixeles
 // CSS, fijado por el contenedor -- no cambia al tildar la casilla -- mientras que el
 // encuadre (y por lo tanto `l.alto`/semialto) SI cambia entre ENCUADRE_H y ENCUADRE_V.
-// T2_TOPE es el mayor valor que T1 o T2 alcanzan en todo el rango del deslizador: T2 =
-// acumulada[1]*a = (MASAS[0]+MASAS[1]) * F_TOPE/M_TOTAL en el tope, y T1 = acumulada[0]*a
-// nunca lo supera (acumulada es creciente). Con FRACCION_T2 = 0.035, T2 en su propio tope
-// ocupa el 3,5% del ancho del canvas -- confirmado en el informe de esta tarea que eso
-// deja un margen de casi 20 px contra GAP en la disposicion vertical (la mas comprimida
-// de las dos) incluso con las dos flechas de T2 al tope del deslizador a la vez, a 1280
-// y 390 px.
-const T2_TOPE = (MASAS[0] + MASAS[1]) * F_TOPE / M_TOTAL; // 514.29 N
-const FRACCION_T2 = 0.035;
-function kTension(l) { return (FRACCION_T2 * l.ancho) / T2_TOPE; }
+const F_EJERCICIO = 60; // = value inicial de w2-F: el caso del ejercicio 7
+const T2_ANCLA = (MASAS[0] + MASAS[1]) * F_EJERCICIO / M_TOTAL; // 34.29 N: T2 en F = 60.
+  // T1 vale siempre la mitad de T2 (acumulada[0]/acumulada[1] = 20/40 = 1/2, para
+  // cualquier F o modo), asi que anclar contra T2 alcanza para los dos.
+const FRACCION_T2 = 0.028; // T2 en F = 60 ocupa el 2,8% del ancho del canvas -- elegido
+  // para que quepa SIN recortar, con margen, contra TOPE_PX_TENSION (mas abajo): con este
+  // numero T2(60) mide ~25 px en escritorio (880px de ancho) y ~10 px en telefono
+  // (350px), y T1(60) la mitad -visible y distinguible de T2 en los dos anchos. Ver el
+  // informe de la Tarea 13 (fix del Ruling 18) para la medicion.
+function kTension(l) { return (FRACCION_T2 * l.ancho) / T2_ANCLA; }
+
+// El tope en pixeles del largo DIBUJADO de T1 y T2 (nunca del valor: la lectura en
+// newtons sigue exacta). Sin este tope, a F = 900 T2 mediria 15,4x lo que mide en F = 60
+// -mas de lo que cabe en cualquier disposicion/ancho- y las dos flechas de una misma
+// cuerda, que crecen una hacia la otra en el mismo hueco (Paso 3), se fusionarian
+// visualmente mucho antes de llegar ahi. 35 px es el mayor tope que deja margen contra
+// el peor caso (ver el comentario de GAP: horizontal a 390px, ~87 px de hueco) con GAP =
+// 8: dos flechas de 35 px dejan unos 17 px libres de por medio ahi, y bastante mas en
+// las otras tres combinaciones de disposicion/ancho.
+const TOPE_PX_TENSION = 35;
 
 // T3: escala LOCAL, atada al tramo EXT de la disposicion que se este dibujando (`l.escala.x`
 // vale lo mismo que `l.escala.y` porque el widget usa escalaUniforme). Ocupa a lo sumo el
@@ -601,6 +630,18 @@ function flechaFuerza(ctx, origenPx, dirPx, magnitudN, K, color, rotulo) {
   vectorPx(ctx, origenPx[0], origenPx[1],
     origenPx[0] + dirPx[0] * largoPx, origenPx[1] + dirPx[1] * largoPx,
     { color, grosor: 2, punta: 9, rotulo });
+}
+
+// T1 y T2, con el recorte del Ruling 18: mismo patron que `movimiento-circular.html`
+// (`acotarFlecha` + `marcaDeTope`). `acotarFlecha` preserva la direccion y solo achica
+// el modulo dibujado si hace falta; la marca de tope avisa que el valor real (en la
+// lectura numerica) sigue creciendo aunque el dibujo ya no.
+function flechaTension(ctx, origenPx, dirPx, magnitudN, K, color, rotulo) {
+  const [dx, dy, acotado] = acotarFlecha(
+    dirPx[0] * magnitudN * K, dirPx[1] * magnitudN * K, TOPE_PX_TENSION);
+  vectorPx(ctx, origenPx[0], origenPx[1], origenPx[0] + dx, origenPx[1] + dy,
+    { color, grosor: 2, punta: 9, rotulo });
+  if (acotado) marcaDeTope(ctx, origenPx[0] + dx, origenPx[1] + dy, dx, dy, { color });
 }
 
 // La resultante, azul, "sobre el conjunto": si `R` da negativa se dibuja al reves de
@@ -645,9 +686,9 @@ function pintarHorizontal(ctx, l, p, a, T) {
   // duplicar el texto sobre un hueco angosto.
   for (let i = 0; i < 2; i++) {
     const [ox, oy] = l.p([bordeDer(i), 0]);
-    flechaFuerza(ctx, [ox, oy], [1, 0], T[i], K, p.red, 'T' + (i + 1));
+    flechaTension(ctx, [ox, oy], [1, 0], T[i], K, p.red, 'T' + (i + 1));
     const [ox2, oy2] = l.p([bordeIzq(i + 1), 0]);
-    flechaFuerza(ctx, [ox2, oy2], [-1, 0], T[i], K, p.red, null);
+    flechaTension(ctx, [ox2, oy2], [-1, 0], T[i], K, p.red, null);
   }
   {
     const [ox, oy] = l.p([bordeDer(2), 0]);
@@ -691,9 +732,9 @@ function pintarVertical(ctx, l, p, a, T) {
   // (afuera de su borde de ABAJO).
   for (let i = 0; i < 2; i++) {
     const [ox, oy] = l.p([0, bordeArriba(i)]);
-    flechaFuerza(ctx, [ox, oy], [0, -1], T[i], K, p.red, 'T' + (i + 1));
+    flechaTension(ctx, [ox, oy], [0, -1], T[i], K, p.red, 'T' + (i + 1));
     const [ox2, oy2] = l.p([0, bordeAbajo(i + 1)]);
-    flechaFuerza(ctx, [ox2, oy2], [0, 1], T[i], K, p.red, null);
+    flechaTension(ctx, [ox2, oy2], [0, 1], T[i], K, p.red, null);
   }
   {
     const [ox, oy] = l.p([0, bordeArriba(2)]);
