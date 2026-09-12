@@ -106,7 +106,7 @@ try {
 <div class="columna columna-final">
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Por qué hay un máximo: subir la cuerda cambia dos cosas a la vez, y en sentidos contrarios. Se pierde <i>F</i>(1 − cos θ) de tirón horizontal —la cuerda deja de empujar de lleno hacia adelante—, pero se gana μ<i>F</i> sen θ de rozamiento ahorrado —la cuerda alivia el piso, y el piso empuja de vuelta con menos fuerza—. Al principio, con θ chico, el ahorro de rozamiento gana; pasado cierto punto, la pérdida de tirón horizontal gana. En el medio hay un ángulo donde ninguno de los dos gana: el máximo.</p>
   <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Que ese ángulo óptimo cumpla tan θ = μ —y no dependa ni de la masa ni de la fuerza con que se tira— es el resultado del ejercicio 9, y es más fuerte de lo que parece: <b style="font-weight:600">el mejor ángulo es una propiedad del par de superficies</b>, no de cuánto empujes. Movés <i>F</i> de 20 a 60 N y «mejor θ» no se mueve, porque no depende de <i>F</i>.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Con μ = 0,4 sale 21,8°, y la diferencia contra tirar derecho es grande: con <i>F</i> = 40 N, la aceleración pasa de <i>a</i>(0°) = 0,080 m/s² a <i>a</i>(21,8°) = 0,388 m/s². Casi cinco veces, por levantar la cuerda veintipico de grados.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Con μ = 0,4 sale 21,8°, y la diferencia contra tirar derecho es grande: con <i>F</i> = 40 N, la aceleración pasa de <i>a</i>(0°) = 0,080 m/s² a <i>a</i>(21,8°) = 0,388 m/s². Casi cinco veces, por levantar la cuerda veintipico de grados. Y por debajo de <i>F</i> = 36,40 N, ni el mejor ángulo alcanza: el rozamiento estático se lleva todo el tirón horizontal, la caja no se mueve a ningún θ, y el gráfico se queda plano en cero —el mismo rozamiento que «vale lo que haga falta» y no una fórmula fija.</p>
 
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
@@ -289,14 +289,30 @@ casilla({
 // Guia 2, ej. 9, con los valores concretos del bloque "Ej 9" de
 // verificacion-practico-2.py: m = 10 kg, F = 40 N, mu = 0.4.
 //   theta* = 21.8 grados,  a(theta*) = 0.388 m/s^2,  a(0) = 0.080,  a(45) = 0.040,
-//   N(theta*) = 83.14 N
+//   N(theta*) = 83.14 N,  F_umbral = 36.40 N
 const M2 = 10, MU = 0.4;
 const THETA_OPT = Math.atan(MU);      // no se escribe 21.8: se calcula
+// Por debajo de F_umbral, ni siquiera al mejor angulo alcanza el tiron horizontal para
+// vencer el rozamiento estatico -- ver el bloque "Ej 9" del script (Ruling 17 de la
+// revision de esta tarea): F_umbral = mu*m*g/sqrt(1+mu^2).
+const F_UMBRAL = MU * M2 * G / Math.sqrt(1 + MU * MU);
 
+// El rozamiento no es una formula fija (mu*N) sin condicion: eso es solo lo que vale
+// UNA VEZ que la caja ya se mueve. Con un solo mu para el caso estatico y el dinamico
+// (la simplificacion estandar, sin inventar una constante nueva), el rozamiento
+// disponible antes de moverse es el mismo tope mu*N, pero mientras el tiron horizontal
+// no lo supere la caja no se mueve: el rozamiento estatico vale lo que hace falta para
+// frenarlo del todo -ni un newton mas, exactamente el mismo principio que hace que la
+// normal no sea mg-, y la aceleracion es cero, no negativa. Solo cuando el tiron supera
+// ese tope la caja arranca y el rozamiento pasa a valer mu*N con la aceleracion neta de
+// siempre.
 function estado2(theta, F) {
   const N = M2 * G - F * Math.sin(theta);
-  const f = MU * N;                       // la caja ya se mueve: rozamiento dinamico
-  const a = (F * Math.cos(theta) - f) / M2;
+  const horizontal = F * Math.cos(theta);
+  const fDisponible = MU * N;
+  if (horizontal <= fDisponible) return { N, f: horizontal, a: 0 };
+  const f = fDisponible;                  // la caja ya se mueve: rozamiento dinamico
+  const a = (horizontal - f) / M2;
   return { N, f, a };
 }
 
@@ -325,10 +341,13 @@ const CUERDA_LARGO = 3;
 // (metros) -- el uso real de panelesApilados que agrego la Tarea 3.
 const GRAFICO_THETA_MAX = 60;
 // El rango vertical se deriva evaluando el modelo (estado2, arriba) en los extremos
-// del dominio de los dos deslizadores -- theta en [0,60], F en [20,60]: el minimo cae
-// en F=20, theta=60 (a = -2.23 m/s^2) y el maximo en F=60, theta=theta* (a = 2.54
-// m/s^2). Con un margen chico para que la curva no toque el borde del panel.
-const GRAFICO_A_MIN = -2.5, GRAFICO_A_MAX = 3;
+// del dominio de los dos deslizadores -- theta en [0,60], F en [20,60]. Con el
+// rozamiento estatico (Ruling 17) `a` nunca es negativa: el minimo es 0 (la caja no se
+// mueve, F < F_umbral = 36.4 N en buena parte del rango del deslizador de F) y el
+// maximo cae en F=60, theta=theta* (a = 2.54 m/s^2). GRAFICO_A_MIN queda un poco por
+// debajo de 0 -no en 0 justo- para que el tramo en cero se vea como una linea aparte
+// del borde del panel, no pegada a el.
+const GRAFICO_A_MIN = -0.5, GRAFICO_A_MAX = 3;
 
 let theta = 0 * Math.PI / 180;
 let F = 40;
@@ -426,10 +445,16 @@ function pintar2(ctx, l) {
 
   // El maximo, marcado siempre en el mismo lugar (theta_opt no depende de F): es el
   // punto entero del widget, y por eso se dibuja con un color distinto del de la curva.
+  // Pero solo si F supera F_UMBRAL: por debajo, la caja no se mueve a NINGUN angulo
+  // (a = 0 en todo el rango, Ruling 17) y no hay ningun optimo que marcar -- marcar un
+  // punto ahi seria rotular "óptimo" lo que en realidad es "la manera menos mala de no
+  // moverse", que es exactamente el error que esta seccion quiere evitar.
   const thetaOptGrados = THETA_OPT * 180 / Math.PI;
   const aOpt = estado2(THETA_OPT, F).a;
-  cuerpo(ctx, lpG, [thetaOptGrados, aOpt], { radio: 4, color: p.ink });
-  texto(ctx, 'óptimo', lpG.px(thetaOptGrados) + 8, lpG.py(aOpt) - 10, { color: p.ink });
+  if (aOpt > 0) {
+    cuerpo(ctx, lpG, [thetaOptGrados, aOpt], { radio: 4, color: p.ink });
+    texto(ctx, 'óptimo', lpG.px(thetaOptGrados) + 8, lpG.py(aOpt) - 10, { color: p.ink });
+  }
 
   leer('w2-theta-val', thetaGrados.toFixed(0) + '°');
   leer('w2-N', N.toFixed(1) + ' N');
