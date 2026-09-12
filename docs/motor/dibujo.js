@@ -43,6 +43,12 @@
 //      en JetBrains Mono al tamaño por defecto y `textAlign` en `'left'` (el
 //      `'center'` que pedía el arco se resuelve adentro, corriendo el
 //      desplazamiento -- ver `colocarEtiqueta`).
+//    - `presupuestoPx` deja escritos `fillStyle`, `strokeStyle` y `lineWidth`; no
+//      toca `setLineDash` ni `globalAlpha`. Toca `font`/`textAlign` SÓLO si algún
+//      segmento llegó a rotularse -queda lo que deje `texto`: JetBrains Mono a
+//      10px y `textAlign` en `'center'`-. Con todos los segmentos más angostos
+//      que `minEtiquetaPx` no los toca: el estado en que sale depende de los
+//      datos que se le pasaron, no sólo de las opciones.
 //
 // De las tres reglas, la 2 está fijada por prueba en test/dibujo.test.js, que
 // afirma que `cuerpo` emite exactamente ['beginPath', 'arc', 'fill'] — o sea
@@ -411,5 +417,60 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX =
   if (etiquetaY) {
     texto(ctx, etiquetaY, l.px(anclaX) - 34, l.py(l.yMax) - COLGADO_ROTULO_EJE,
       { color: colorTexto, px: 10, alineacion: 'left' });
+  }
+}
+
+// Una barra apilada en pixeles: `segmentos` es una lista de {valor, color, etiqueta},
+// todos en las mismas unidades que `total`. El ancho de cada uno es proporcional a su
+// valor sobre `total` -- NO sobre la suma de los segmentos, y eso es a proposito.
+//
+// `total` se pide explicito, igual que `color` en las demas primitivas, porque la
+// distancia entre "lo que suman los segmentos" y "el total declarado" ES la lectura que
+// esta barra existe para mostrar. Una barra normalizada a si misma siempre se ve llena,
+// y una barra que siempre se ve llena no delata nada: ni el calor que todavia no se
+// disipo (suma < total: queda un tramo sin pintar) ni una energia contada dos veces
+// (suma > total: la barra se desborda y lleva `marcaDeTope`). Clipear en silencio
+// esconderia justo el error que hay que mostrar.
+//
+// El calculo del chequeo -- `total - suma`, o la diferencia entre dos energias que
+// deberian coincidir -- lo hace el widget, no la primitiva: aca solo se dibuja lo que se
+// pasa, igual que `vectorPx` no suma las fuerzas.
+export function presupuestoPx(ctx, x, y, ancho, alto, segmentos,
+  { total, colorBorde, colorTexto, minEtiquetaPx = 24 } = {}) {
+  exigirColor(colorBorde, 'presupuestoPx (colorBorde)');
+  for (const s of segmentos) {
+    exigirColor(s.color, 'presupuestoPx (segmento)');
+    // Un presupuesto de energia no tiene segmentos negativos: si hace falta mostrar el
+    // trabajo negativo de un agente externo (la mano del ej. 5), son DOS barras --
+    // "entra" y "sale" -- no un segmento al reves dentro de la misma.
+    if (!(s.valor >= 0)) {
+      throw new TypeError(
+        `presupuestoPx: el segmento "${s.etiqueta ?? ''}" vale ${s.valor}. Un presupuesto no admite valores negativos ni NaN: partilo en dos barras.`);
+    }
+  }
+  // Sin total no hay escala que definir; dividir por cero daria NaN en cada ancho.
+  if (!(total > 0)) return;
+  const k = ancho / total;
+  let cursor = x;
+  for (const s of segmentos) {
+    const w = s.valor * k;
+    ctx.fillStyle = s.color;
+    ctx.fillRect(cursor, y, w, alto);
+    // Mismo criterio que `eje` al no rotular el cero: un rotulo que no entra se
+    // superpone con el vecino y se lee peor que no estar.
+    if (s.etiqueta && w >= minEtiquetaPx) {
+      exigirColor(colorTexto, 'presupuestoPx (colorTexto)');
+      texto(ctx, s.etiqueta, cursor + w / 2, y + alto / 2 + 4,
+        { color: colorTexto, px: 10, alineacion: 'center' });
+    }
+    cursor += w;
+  }
+  ctx.strokeStyle = colorBorde;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x, y, ancho, alto);
+  // El medio pixel de tolerancia es contra el ruido de punto flotante cuando la suma da
+  // exactamente el total, que es el caso normal en los widgets de energia.
+  if (cursor > x + ancho + 0.5) {
+    marcaDeTope(ctx, cursor, y + alto / 2, 1, 0, { color: colorBorde });
   }
 }

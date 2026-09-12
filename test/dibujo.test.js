@@ -1,7 +1,7 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { crearLienzo } from '../docs/motor/lienzo.js';
-import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva, acotarFlecha, marcaDeTope, bloque, suelo, arco, componentes } from '../docs/motor/dibujo.js';
+import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva, acotarFlecha, marcaDeTope, bloque, suelo, arco, componentes, presupuestoPx } from '../docs/motor/dibujo.js';
 import { reiniciarEtiquetas } from '../docs/motor/etiqueta.js';
 
 // `vectorPx`/`arco` rotulan a traves de `colocarEtiqueta`, que lleva memoria entre
@@ -16,7 +16,7 @@ beforeEach(() => reiniciarEtiquetas());
 function ctxFalso() {
   const ops = [];
   const c = { ops, strokeStyle: '', fillStyle: '', lineWidth: 0, font: '', textAlign: '' };
-  for (const m of ['beginPath','moveTo','lineTo','stroke','fill','arc','closePath','save','restore','translate','rotate','setLineDash','fillText']) {
+  for (const m of ['beginPath','moveTo','lineTo','stroke','fill','fillRect','strokeRect','arc','closePath','save','restore','translate','rotate','setLineDash','fillText']) {
     c[m] = (...a) => ops.push([m, ...a]);
   }
   // `vectorPx`/`arco` rotulan a traves de `colocarEtiqueta` (motor/etiqueta.js), que
@@ -616,4 +616,63 @@ test('arco con hasta menor que desde barre directo entre los dos angulos, no la 
   assert.equal(a[4], -Math.PI / 2, 'angulo inicial en pixeles');
   assert.equal(a[5], -Math.PI / 3, 'angulo final en pixeles');
   assert.equal(a[6], false, 'con desde > hasta hay que barrer sin dar la vuelta larga');
+});
+
+// --- presupuestoPx: la barra apilada contra un total declarado -----------------
+
+test('presupuestoPx: el ancho de cada segmento sale del total declarado, no de la suma de los segmentos', () => {
+  const c = ctxFalso();
+  presupuestoPx(c, 100, 10, 200, 20,
+    [{ valor: 20, color: '#1b4fd4' }, { valor: 30, color: '#c02a24' }],
+    { total: 100, colorBorde: '#dcd8ce' });
+  const rects = c.ops.filter(o => o[0] === 'fillRect');
+  assert.equal(rects.length, 2);
+  // 20/100*200 = 40. Si se normalizara por la suma (50) darian 80 y 120.
+  assert.equal(rects[0][3], 40);
+  assert.equal(rects[1][3], 60);
+  assert.equal(rects[1][1], 140, 'el segundo arranca donde termina el primero');
+});
+
+test('presupuestoPx: lo que falta para llegar al total queda sin pintar', () => {
+  const c = ctxFalso();
+  presupuestoPx(c, 0, 0, 200, 20, [{ valor: 50, color: '#1b4fd4' }],
+    { total: 100, colorBorde: '#dcd8ce' });
+  const r = c.ops.filter(o => o[0] === 'fillRect');
+  assert.equal(r.length, 1);
+  assert.equal(r[0][3], 100, 'el segmento NO se estira para llenar la barra');
+  const borde = c.ops.find(o => o[0] === 'strokeRect');
+  assert.deepEqual(borde.slice(1), [0, 0, 200, 20]);
+});
+
+test('presupuestoPx: un segmento negativo tira TypeError', () => {
+  const c = ctxFalso();
+  assert.throws(() => presupuestoPx(c, 0, 0, 200, 20,
+    [{ valor: -1, color: '#1b4fd4' }], { total: 10, colorBorde: '#dcd8ce' }), TypeError);
+});
+
+test('presupuestoPx: total cero no dibuja nada', () => {
+  const c = ctxFalso();
+  presupuestoPx(c, 0, 0, 200, 20, [{ valor: 0, color: '#1b4fd4' }],
+    { total: 0, colorBorde: '#dcd8ce' });
+  assert.equal(c.ops.length, 0);
+});
+
+test('presupuestoPx: si los segmentos suman mas que el total, la barra se desborda y lleva marca de tope', () => {
+  const c = ctxFalso();
+  presupuestoPx(c, 0, 0, 200, 20, [{ valor: 150, color: '#1b4fd4' }],
+    { total: 100, colorBorde: '#dcd8ce' });
+  assert.equal(c.ops.find(o => o[0] === 'fillRect')[3], 300, 'no se clipea en silencio');
+  const xs = c.ops.filter(o => o[0] === 'moveTo' || o[0] === 'lineTo').map(o => o[1]);
+  assert.ok(xs.length > 0, 'dibuja la marca de tope');
+  assert.ok(Math.max(...xs) > 200, 'la marca cae fuera del ancho pedido');
+});
+
+test('presupuestoPx: un segmento mas angosto que minEtiquetaPx no lleva rotulo', () => {
+  const c = ctxFalso();
+  presupuestoPx(c, 0, 0, 200, 20,
+    [{ valor: 95, color: '#1b4fd4', etiqueta: 'cinetica' },
+     { valor: 5, color: '#c02a24', etiqueta: 'calor' }],
+    { total: 100, colorBorde: '#dcd8ce', colorTexto: '#8e8a80', minEtiquetaPx: 24 });
+  const rotulos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
+  assert.deepEqual(rotulos, ['cinetica'], '5/100*200 = 10 px, menos que 24');
 });
