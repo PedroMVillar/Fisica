@@ -18,6 +18,17 @@
 
 **Clases tipográficas en vez de atributos `style`.** El mismo plan de deuda suma **diez clases tipográficas** a `docs/estilos/base.css`, encima de las nueve que ya existen (`.columna`, `.columna-final`, `.banda`, `.marco-widget`, `.encabezado-widget`, `.boton`, `.boton-primario`, `.control`, `.lecturas`). Son `.lectura-valor` (con sus modificadores `.roja`, `.azul` y `.tenue`), `.valor-control`, `.parrafo`, `.parrafo-suelto`, `.titulo-seccion`, `.rotulo-mono`, `.rotulo-campo`, `.titulo-fila`, `.nota-fila` y `.negrita` — leídas de `base.css` al corregir este plan, no adivinadas. **El implementador las vuelve a leer del archivo** y no inventa ninguna.
 
+**Una clase más, agregada durante la ejecución: `.lectura-valor.grafico`.** `.lectura-valor`
+traía modificadores `.roja`, `.azul` y `.tenue`, y **ninguno para `--graph`** — que es
+justo el color de la energía potencial en la extensión semántica que aprobó el dueño. La
+Tarea 4 resolvió esa lectura con un `style="color:var(--graph)"` inline, y la revisión
+señaló, con razón, que deja el tercer color de una misma fila de lecturas fuera del patrón
+que los otros dos sí usan. El precedente que se había invocado —el `style="color:var(--dim)"`
+de `index.html`— no aplicaba: ése es sobre `.titulo-fila`, una clase que no tiene
+modificadores de color. Como `--graph` vuelve a aparecer en las Tareas 7, 8 y 9 con el
+mismo significado, la clase se agrega una vez y se usa en todas. **Las lecturas en `--graph`
+de las tareas siguientes usan `.lectura-valor grafico`, no un `style` inline.**
+
 **Lo que esas diez clases NO cubren, y cómo se resuelve la contradicción.** Medido: `base.css` **no tiene clase** para el `<h1>`, el kicker, la bajada, la `<ol>` de cierre, el pie ni la línea de fuentes. Y el esqueleto de `cuerpo-aislado.html` —que las Tareas 3 y 7 mandan copiar— lleva **28 atributos `style`**, nueve de ellos tipográficos, que son justamente los de esos elementos. Una regla que dijera «ningún `style` tipográfico nuevo en la página» contradiría, en la misma página, la orden de copiar el esqueleto. La regla real, entonces, es:
 
 > **Los `style` tipográficos que se copian del esqueleto se conservan idénticos; ninguno nuevo se inventa.**
