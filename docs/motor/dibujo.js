@@ -131,10 +131,13 @@ export function cuerpo(ctx, l, punto, { radio = 4, color } = {}) {
   ctx.fill();
 }
 
-// Acota el largo dibujado de una flecha sin tocar su direccion, y avisa si la acoto.
-// Hace falta cuando dos magnitudes del mismo dibujo tienen escalas muy distintas: en
-// el widget de aceleraciones la normal llega a 600 mientras la tangencial vale 6, y
-// sin acotar la flecha larga se va del canvas. La escala se deja fija a proposito --
+// Devuelve [dx, dy, acotado] con (dx, dy) recortado a lo sumo a `tope` pixeles de largo,
+// conservando la direccion. `acotado` es true si hubo que recortar, y lo usa quien llama
+// para decidir si dibuja la marca de tope.
+//
+// Hace falta cuando dos magnitudes del mismo dibujo tienen escalas muy distintas: en el
+// widget de aceleraciones la normal llega a 600 mientras la tangencial vale 6, y sin
+// acotar la flecha larga se va del canvas. La escala se deja fija a proposito --
 // normalizar al valor del momento borraria que la magnitud crece.
 export function acotarFlecha(dx, dy, tope) {
   const largo = Math.hypot(dx, dy);
@@ -144,9 +147,9 @@ export function acotarFlecha(dx, dy, tope) {
 }
 
 // La marca de una flecha que llego a su tope: dos trazos cortos perpendiculares a la
-// punta, la misma convencion que el quiebre de un eje partido. No es sutil a
-// proposito -- tiene que quedar claro que la magnitud real sigue creciendo aunque el
-// dibujo ya no.
+// punta, la misma convencion que el quiebre de un eje partido en un grafico. No es
+// sutil a proposito -- tiene que quedar claro que la magnitud real sigue creciendo
+// aunque el dibujo ya no.
 export function marcaDeTope(ctx, x, y, dx, dy, { color } = {}) {
   exigirColor(color, 'marcaDeTope');
   const angulo = Math.atan2(dy, dx);
