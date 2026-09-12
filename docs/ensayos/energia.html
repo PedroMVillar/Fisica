@@ -105,15 +105,15 @@ const pagina = crearPagina({ documento: document });
 // a x = 20 m. Verificado en el bloque "Ej 2 (numerico)" con th = 30 grados:
 //   W_F = 779.4229 J   N(10) = 226.00 N   N(20) = 256.00 N   W_roce = -120.5000 J
 //   K_f(mu=0) = 779.4229 J   K_f(mu=0.05) = 658.9229 J   v_f = 8.8285 y 8.1174 m/s
-const M = 20, X0 = 10, X1 = 20, MU = 0.05;
+const M_W1 = 20, X0_W1 = 10, X1_W1 = 20, MU_W1 = 0.05;
 
-const F = x => 6 * x;                                       // N
+const F_W1 = x => 6 * x;                                     // N
 // F aprieta contra el piso: la normal NO vale mg y crece con x.
-const normal = (x, th) => M * G + F(x) * Math.sin(th);
-const tangencial = (x, th, mu) => F(x) * Math.cos(th) - mu * normal(x, th);
+const normal_W1 = (x, th) => M_W1 * G + F_W1(x) * Math.sin(th);
+const tangencial_W1 = (x, th, mu) => F_W1(x) * Math.cos(th) - mu * normal_W1(x, th);
 
 // Camino A -- la formula cerrada, la que se saca en el papel integrando a mano.
-const cerrada = (th, mu) => mu > 0
+const cerrada_W1 = (th, mu) => mu > 0
   ? 900 * Math.cos(th) - 45 * Math.sin(th) - 98
   : 900 * Math.cos(th);
 
@@ -126,7 +126,7 @@ const cerrada = (th, mu) => mu > 0
 // cuadratura es EXACTA (la diferencia medida entre los dos caminos, con el modelo bien,
 // es del orden de 1e-13 J en todo el rango del deslizador): lo que la lectura compara
 // son las dos EXPRESIONES, no la precision del metodo.
-function area(f, a, b, n = 400) {
+function area_W1(f, a, b, n = 400) {
   const h = (b - a) / n;
   let s = 0;
   for (let i = 0; i < n; i++) s += (f(a + i * h) + f(a + (i + 1) * h)) / 2 * h;
@@ -143,7 +143,7 @@ const ALTO_PANEL_MINIMO_W1 = 95 + HUECO_ROTULO_W1;
 // reproducción -- lo que se manipula es theta, no el tiempo.
 const X_BLOQUE_W1 = 15;
 
-let theta = 30 * Math.PI / 180;
+let theta_W1 = 30 * Math.PI / 180;
 let conRoceW1 = true;
 
 // Los dos paneles, con su propio rango vertical cada uno -- el uso de panelesApilados
@@ -160,8 +160,8 @@ const capasW1 = l => panelesApilados({
 function pintarW1(ctx, l) {
   const p = pagina.paleta();
   const [{ lp: esc }, { lp: gr }] = capasW1(l);
-  const th = theta;
-  const mu = conRoceW1 ? MU : 0;
+  const th = theta_W1;
+  const mu = conRoceW1 ? MU_W1 : 0;
 
   // --- la escena ---
   // El panel de arriba es anisotropo (escala x != escala y), asi que un cajon pedido
@@ -180,8 +180,8 @@ function pintarW1(ctx, l) {
   const [bx, by] = esc.p([X_BLOQUE_W1, altoU / 2]);
   // Componentes EN PIXELES: en pantalla la y crece hacia abajo y la fuerza baja, asi
   // que su componente vertical SUMA a `by`.
-  const dxPx = K_PX * F(X_BLOQUE_W1) * Math.cos(th);
-  const dyPx = K_PX * F(X_BLOQUE_W1) * Math.sin(th);
+  const dxPx = K_PX * F_W1(X_BLOQUE_W1) * Math.cos(th);
+  const dyPx = K_PX * F_W1(X_BLOQUE_W1) * Math.sin(th);
   // El rotulo va por `rotulo:` (que llama a `colocarEtiqueta` por dentro), nunca un
   // `texto()` a mano al lado de la punta. `rdx`/`rdy` lo corren hacia la cola para que
   // no se meta en el panel de abajo.
@@ -192,23 +192,37 @@ function pintarW1(ctx, l) {
   // El area se raya, no se rellena: no hay primitiva de relleno en el motor. Sin la
   // casilla la curva es F(x)*cos(th) (tangencial con mu=0); con la casilla, la fuerza
   // tangencial neta -- es la misma funcion con otro mu, no se escriben dos.
-  for (let xp = gr.px(X0); xp <= gr.px(X1) + 0.01; xp += 6) {
+  for (let xp = gr.px(X0_W1); xp <= gr.px(X1_W1) + 0.01; xp += 6) {
     const xu = gr.ux(xp);
-    punteado(ctx, xp, gr.py(0), xp, gr.py(tangencial(xu, th, mu)),
+    punteado(ctx, xp, gr.py(0), xp, gr.py(tangencial_W1(xu, th, mu)),
       { color: p.blueSoft, guiones: [2, 3] });
   }
-  curva(ctx, gr, xg => [xg, tangencial(xg, th, mu)], X0, X1, { color: p.red, grosor: 1.8 });
+  curva(ctx, gr, xg => [xg, tangencial_W1(xg, th, mu)], X0_W1, X1_W1, { color: p.red, grosor: 1.8 });
   eje(ctx, gr, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', etiquetaY: 'F∥ [N]' });
 
   // --- las lecturas ---
   // El chequeo compara dos caminos que no comparten una linea de codigo: el area bajo
   // la MISMA curva que se dibujo arriba (por trapecios) contra la formula cerrada del
   // papel. Sin guarda de "-0,00": `num()` ya normaliza el cero negativo.
-  const chequeo = area(u => tangencial(u, th, mu), X0, X1) - cerrada(th, mu);
+  //
+  // Zona ciega, medida y no razonada: a th = 0 este chequeo NO vigila `normal_W1()`, y
+  // tampoco lo vigila con la casilla de rozamiento destildada (mu = 0) para ningun th.
+  // No es que el canario falle -- es que ahi el modelo roto y el correcto dan el MISMO
+  // numero. A th = 0, F llega horizontal: no tiene componente vertical, asi que el
+  // termino F_W1(x)*sin(th) de `normal_W1` se anula solo -- coincidencia algebraica de
+  // sen(0) = 0, no un defecto de la cuenta. Y el termino que multiplica a `normal_W1`
+  // dentro de `tangencial_W1` va con mu: con la casilla destildada (mu = 0) se anula
+  // igual, sea cual sea th. En los dos casos "normal_W1 mal calculada" y "normal_W1
+  // bien calculada" quedan indistinguibles para este chequeo.
+  // Por eso, para probar el canario rompiendo `normal_W1` (por ejemplo, cambiandola por
+  // `() => M_W1 * G`), hay que hacerlo con la casilla de rozamiento MARCADA y th != 0:
+  // medido, el chequeo salta a 22,50 J a th = 30 grados y a 38,97 J a th = 60 grados: a
+  // th = 0 no salta a nada.
+  const chequeo = area_W1(u => tangencial_W1(u, th, mu), X0_W1, X1_W1) - cerrada_W1(th, mu);
   leer('w1-w', num(900 * Math.cos(th), 1) + ' J');
-  leer('w1-n', num(normal(X0, th), 0) + ' → ' + num(normal(X1, th), 0) + ' N');
-  leer('w1-k', num(cerrada(th, mu), 1) + ' J');
-  leer('w1-v', num(Math.sqrt(2 * cerrada(th, mu) / M), 2) + ' m/s');
+  leer('w1-n', num(normal_W1(X0_W1, th), 0) + ' → ' + num(normal_W1(X1_W1, th), 0) + ' N');
+  leer('w1-k', num(cerrada_W1(th, mu), 1) + ' J');
+  leer('w1-v', num(Math.sqrt(2 * cerrada_W1(th, mu) / M_W1), 2) + ' m/s');
   leer('w1-chequeo', num(chequeo, 2) + ' J');
 }
 
@@ -228,7 +242,7 @@ const widgetW1 = crearWidget({
 deslizador({
   entrada: el('w1-theta'), salida: el('w1-theta-out'), pagina,
   formato: v => num(v, 0) + '°',
-  alCambiar: v => { theta = v * Math.PI / 180; widgetW1.repintar(); },
+  alCambiar: v => { theta_W1 = v * Math.PI / 180; widgetW1.repintar(); },
 });
 casilla({
   entrada: el('w1-roce'), pagina,
