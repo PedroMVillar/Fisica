@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script del ensayo es `type="module"` y se difiere hasta después del
+// parseo, así que aplicar el tema desde ahí regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahí la excepción abortaría el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>Trabajo y energía · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div class="columna" style="padding-top:56px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ensayo 7 · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Trabajo y energía</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Cuánto se mueve la energía de un casillero a otro, y quién la mueve.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p class="parrafo-suelto">La palabra «trabajo» no significa esfuerzo. Significa una cosa muy precisa: cuánta energía le entra o le sale a un cuerpo por culpa de una fuerza, y esa cuenta sólo mira la componente de la fuerza <i>en la dirección en que el cuerpo se movió</i>. Una fuerza perpendicular al movimiento vale lo que valga y no transfiere nada.</p>
+  <p class="parrafo" style="margin-top:22px">¿Por qué conviene pensarlo así? Con fuerzas hay que resolver el movimiento instante por instante; con energía se comparan dos estados y el camino del medio no importa —mientras todas las fuerzas que actuaron sean conservativas—. Ese «mientras» es el tema de las cuatro secciones que siguen.</p>
+
+  <h2 class="titulo-seccion">01 · El trabajo es un área</h2>
+  <p class="parrafo">Casi todo el mundo aprende «trabajo = fuerza por distancia», y eso vale sólo si la fuerza es constante y paralela al desplazamiento. Acá no pasa ninguna de las dos: <i>F</i> crece con <i>x</i> (de 60 N a 120 N) y llega inclinada. Lo que hay que sumar es <i>F</i>·cos θ a lo largo del camino, pedacito por pedacito — o sea, el <b class="negrita">área</b> bajo la curva de la componente útil. Y hay una segunda trampa: como <i>F</i> llega desde arriba, aprieta al bloque contra el piso, así que <i>N</i> no vale <i>mg</i>, crece con <i>x</i>, y el rozamiento crece con ella.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación 1</span>
+      <span class="titulo-fila">El trabajo es un área</span>
+      <span class="nota-fila">— el número de la fórmula y el área sombreada tienen que dar lo mismo, θ por θ.</span>
+    </div>
+    <canvas id="w1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span class="rotulo-campo">ángulo θ <output id="w1-theta-out" class="valor-control">30°</output></span>
+        <input id="w1-theta" type="range" min="0" max="60" step="1" value="30" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="w1-roce" type="checkbox" checked style="accent-color:var(--blue);width:15px;height:15px">Hay rozamiento (μ = 0,05)
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>W de F <b id="w1-w" class="lectura-valor">779,4 J</b></span>
+      <span>N(10) → N(20) <b id="w1-n" class="lectura-valor roja">226 → 256 N</b></span>
+      <span>K final <b id="w1-k" class="lectura-valor azul">658,9 J</b></span>
+      <span>v final <b id="w1-v" class="lectura-valor azul">8,12 m/s</b></span>
+      <span>área − fórmula <b id="w1-chequeo" class="lectura-valor tenue">0,00 J</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna columna-final">
+  <p class="parrafo-suelto">Los números a 30°: la fuerza hace 779,4 J, pero al bloque le quedan 658,9 J, porque el rozamiento se llevó 120,5 J. Y esos 120,5 J no salen de μ·<i>mg</i>·<i>d</i>: la normal no es <i>mg</i>. Empieza en 226 N y termina en 256 N, justamente porque <i>F</i> aprieta cada vez más fuerte —crece con <i>x</i>— y el bloque se apoya cada vez con más ganas contra el piso.</p>
+  <p class="parrafo">Movés θ y mirá el área. A 0° la fuerza empuja de lleno hacia adelante y el trabajo es máximo (900 J). A 60° el área es la mitad. Lo que se pierde no es «fuerza»: la fuerza vale exactamente lo mismo, 120 N al final del tramo en los dos casos. Lo que se pierde es <b class="negrita">dirección</b>.</p>
+  <p class="parrafo">Que la lectura de abajo esté clavada en 0,00 J no es una comprobación de que la cuenta esté bien: es la definición de trabajo puesta a prueba. Una de las dos cuentas integra la curva que ves dibujada; la otra es la fórmula cerrada del papel. Si fueran dos cosas distintas, el trabajo no sería el área.</p>
+
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="fuerzas-de-posicion.html">Ensayo 6 · Fuerzas que dependen de la posición</a>
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0"><a href="../recursos/practico_3_2026.pdf">práctico 3, ej. 1 a 8</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget, panelesApilados } from '../motor/widget.js';
+import { eje, bloque, suelo, curva, punteado, vectorPx, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { deslizador, casilla } from '../motor/controles.js';
+import { conectarTema } from '../motor/tema.js';
+import { num } from '../motor/formato.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+// `G` es de la PAGINA, no de este widget: va arriba de todo, fuera del bloque del
+// widget 1, porque los widgets 2, 3 y 4 la usan y el modulo es uno solo.
+const G = 9.8;
+
+const pagina = crearPagina({ documento: document });
+
+/* ---------- widget 1: el trabajo es un area ---------- */
+
+// Practico 3, ej. 2. Bloque de 20 kg empujado sobre un piso horizontal por una fuerza
+// F(x) = 6x N que llega DESDE ARRIBA formando un angulo th con la horizontal, de x = 10
+// a x = 20 m. Verificado en el bloque "Ej 2 (numerico)" con th = 30 grados:
+//   W_F = 779.4229 J   N(10) = 226.00 N   N(20) = 256.00 N   W_roce = -120.5000 J
+//   K_f(mu=0) = 779.4229 J   K_f(mu=0.05) = 658.9229 J   v_f = 8.8285 y 8.1174 m/s
+const M = 20, X0 = 10, X1 = 20, MU = 0.05;
+
+const F = x => 6 * x;                                       // N
+// F aprieta contra el piso: la normal NO vale mg y crece con x.
+const normal = (x, th) => M * G + F(x) * Math.sin(th);
+const tangencial = (x, th, mu) => F(x) * Math.cos(th) - mu * normal(x, th);
+
+// Camino A -- la formula cerrada, la que se saca en el papel integrando a mano.
+const cerrada = (th, mu) => mu > 0
+  ? 900 * Math.cos(th) - 45 * Math.sin(th) - 98
+  : 900 * Math.cos(th);
+
+// Camino B -- el area bajo la MISMA curva que el panel de abajo dibuja, por trapecios.
+//
+// Los dos caminos no comparten una sola linea de codigo, y ese es todo el punto. El
+// error clasico de este ejercicio es escribir N = mg (olvidarse de que F aprieta): con
+// ese error la formula cerrada de arriba sigue dando el mismo numero y el area se va
+// 22.50 J a 30 grados -- medido. Con 400 trapecios sobre un integrando lineal la
+// cuadratura es EXACTA (la diferencia medida entre los dos caminos, con el modelo bien,
+// es del orden de 1e-13 J en todo el rango del deslizador): lo que la lectura compara
+// son las dos EXPRESIONES, no la precision del metodo.
+function area(f, a, b, n = 400) {
+  const h = (b - a) / n;
+  let s = 0;
+  for (let i = 0; i < n; i++) s += (f(a + i * h) + f(a + (i + 1) * h)) / 2 * h;
+  return s;
+}
+
+// Sufijo `_W1` por la Global Constraint del espacio de nombres: `energia.html` es UN
+// modulo, y los widgets 2, 3 y 4 declaran sus propios margenes mas abajo.
+const MARGEN_W1 = { L: 52, R: 24, T: 18, B: 32 };
+const HUECO_ROTULO_W1 = COLGADO_ROTULO_EJE + 8;
+const ALTO_PANEL_MINIMO_W1 = 95 + HUECO_ROTULO_W1;
+
+// El bloque no se anima: se dibuja fijo a mitad del tramo. Este widget no tiene
+// reproducción -- lo que se manipula es theta, no el tiempo.
+const X_BLOQUE_W1 = 15;
+
+let theta = 30 * Math.PI / 180;
+let conRoceW1 = true;
+
+// Los dos paneles, con su propio rango vertical cada uno -- el uso de panelesApilados
+// que agrega esta tarea. El rango horizontal (9 a 21) es compartido y sale del
+// `encuadre` del widget, asi que no hace falta repetirlo aca.
+const capasW1 = l => panelesApilados({
+  lienzo: l, margen: { L: MARGEN_W1.L, R: MARGEN_W1.R }, hueco: HUECO_ROTULO_W1,
+  paneles: [
+    { yMin: -0.35, yMax: 1.05 },
+    { yMin: 0, yMax: 130 },
+  ],
+});
+
+function pintarW1(ctx, l) {
+  const p = pagina.paleta();
+  const [{ lp: esc }, { lp: gr }] = capasW1(l);
+  const th = theta;
+  const mu = conRoceW1 ? MU : 0;
+
+  // --- la escena ---
+  // El panel de arriba es anisotropo (escala x != escala y), asi que un cajon pedido
+  // en unidades del marco saldria deformado y distinto en cada viewport: se pide en
+  // pixeles y se divide por la escala de cada eje.
+  const ANCHO_PX = 34, ALTO_PX = 22;
+  const anchoU = ANCHO_PX / esc.escala.x, altoU = ALTO_PX / esc.escala.y;
+  suelo(ctx, esc, { color: p.rule, desde: 9, hasta: 21, y: 0 });
+  bloque(ctx, esc, [X_BLOQUE_W1, altoU / 2], { ancho: anchoU, alto: altoU, color: p.band, borde: p.ink });
+
+  // La flecha de F, toda en pixeles, con la punta apoyada en el vertice de arriba del
+  // bloque y la cola arriba y atras (la fuerza llega desde arriba). La flecha mas larga
+  // posible es F(20) = 120 N a theta = 0: se le da el 60% del alto util del panel.
+  const altoUtil = esc.py(-0.35) - esc.py(1.05);
+  const K_PX = 0.6 * altoUtil / 120;
+  const [bx, by] = esc.p([X_BLOQUE_W1, altoU / 2]);
+  // Componentes EN PIXELES: en pantalla la y crece hacia abajo y la fuerza baja, asi
+  // que su componente vertical SUMA a `by`.
+  const dxPx = K_PX * F(X_BLOQUE_W1) * Math.cos(th);
+  const dyPx = K_PX * F(X_BLOQUE_W1) * Math.sin(th);
+  // El rotulo va por `rotulo:` (que llama a `colocarEtiqueta` por dentro), nunca un
+  // `texto()` a mano al lado de la punta. `rdx`/`rdy` lo corren hacia la cola para que
+  // no se meta en el panel de abajo.
+  vectorPx(ctx, bx - dxPx, by - dyPx, bx, by,
+    { color: p.red, grosor: 2, punta: 9, rotulo: 'F', rdx: -18, rdy: -8 });
+
+  // --- el grafico ---
+  // El area se raya, no se rellena: no hay primitiva de relleno en el motor. Sin la
+  // casilla la curva es F(x)*cos(th) (tangencial con mu=0); con la casilla, la fuerza
+  // tangencial neta -- es la misma funcion con otro mu, no se escriben dos.
+  for (let xp = gr.px(X0); xp <= gr.px(X1) + 0.01; xp += 6) {
+    const xu = gr.ux(xp);
+    punteado(ctx, xp, gr.py(0), xp, gr.py(tangencial(xu, th, mu)),
+      { color: p.blueSoft, guiones: [2, 3] });
+  }
+  curva(ctx, gr, xg => [xg, tangencial(xg, th, mu)], X0, X1, { color: p.red, grosor: 1.8 });
+  eje(ctx, gr, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', etiquetaY: 'F∥ [N]' });
+
+  // --- las lecturas ---
+  // El chequeo compara dos caminos que no comparten una linea de codigo: el area bajo
+  // la MISMA curva que se dibujo arriba (por trapecios) contra la formula cerrada del
+  // papel. Sin guarda de "-0,00": `num()` ya normaliza el cero negativo.
+  const chequeo = area(u => tangencial(u, th, mu), X0, X1) - cerrada(th, mu);
+  leer('w1-w', num(900 * Math.cos(th), 1) + ' J');
+  leer('w1-n', num(normal(X0, th), 0) + ' → ' + num(normal(X1, th), 0) + ' N');
+  leer('w1-k', num(cerrada(th, mu), 1) + ' J');
+  leer('w1-v', num(Math.sqrt(2 * cerrada(th, mu) / M), 2) + ' m/s');
+  leer('w1-chequeo', num(chequeo, 2) + ' J');
+}
+
+const widgetW1 = crearWidget({
+  pagina, canvas: el('w1-cv'),
+  margen: MARGEN_W1,
+  // Metros contra newtons abajo y metros contra "aire de dibujo" arriba: no hay una
+  // escala fisica unica que le sirva a los dos.
+  escalaUniforme: false,
+  altoMin: 2 * ALTO_PANEL_MINIMO_W1 + MARGEN_W1.T + MARGEN_W1.B,
+  // El rango horizontal es el mismo para los dos paneles -- el tramo del ejercicio, con
+  // un metro de aire a cada lado.
+  encuadre: () => ({ xMin: 9, xMax: 21, yMin: 0, yMax: 2 }),
+  dibujar: pintarW1,
+});
+
+deslizador({
+  entrada: el('w1-theta'), salida: el('w1-theta-out'), pagina,
+  formato: v => num(v, 0) + '°',
+  alCambiar: v => { theta = v * Math.PI / 180; widgetW1.repintar(); },
+});
+casilla({
+  entrada: el('w1-roce'), pagina,
+  alCambiar: v => { conRoceW1 = v; widgetW1.repintar(); },
+});
+
+/* ---------- arranque ---------- */
+
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
