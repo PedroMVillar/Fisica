@@ -149,13 +149,71 @@ try {
   </div>
 </section>
 
-<div class="columna columna-final">
+<div class="columna">
   <p class="parrafo-suelto">Los números a 5°: v<sub>B</sub> = 0,3138 m/s, θ<sub>C</sub> = 7,07°. Sube <b class="negrita">más abierto</b> de lo que bajó, y no porque haya ganado nada: llega a la misma altura que tenía al empezar —eso es lo que dice la conservación— pero como ahora gira con la mitad del radio, la misma altura pide más ángulo. La energía fija la altura; la geometría decide el ángulo.</p>
   <p class="parrafo">Y en el mismo instante, sin que nadie toque nada, la cuerda pasa de tirar 9,875 a 9,949 N/kg. La velocidad no cambió ni un milímetro por segundo. Lo único que cambió es el radio, y el radio entra en la tensión (T/m = g cos θ + v²/r) y <b class="negrita">no</b> entra en la energía. Llevá el deslizador a 50°: ahí el salto es de 16,801 a 23,803 N/kg —un 42 %— y las dos flechas se separan a la vista.</p>
   <p class="parrafo">Por qué la energía no se entera: la tensión de la cuerda <b class="negrita">no hace trabajo, nunca</b>, porque es perpendicular a la velocidad en todo instante. El clavo cambia hacia dónde apunta esa tensión, no cuánta energía hay. Si alguna vez un problema parece pedir «la energía que aportó la cuerda», la respuesta es cero y la pregunta estaba mal.</p>
 
   <h3 class="titulo-seccion">Lo mismo, sin nada que gire</h3>
   <p class="parrafo">Un embalaje de 250 kg cuelga de un cable de 10 m y se lo aparta 1 m de la vertical (θ = 5,74°). Cuatro preguntas y cuatro respuestas que este ensayo ya tiene todas: (a) sostenerlo ahí pide <i>F</i> = <i>mg</i> tan θ = <b class="negrita">246,23 N</b>; (b) sostenerlo <b class="negrita">no hace trabajo</b>: el desplazamiento es cero, y no importa cuánto te canses; (c) moverlo de lado <b class="negrita">sí</b> hizo trabajo, porque al apartarse el embalaje <b class="negrita">subió</b> d<i>h</i> = <i>L</i> − √(<i>L</i>² − <i>l</i>²) = 0,050126 m, así que <i>W</i> = <i>mg</i>·d<i>h</i> = <b class="negrita">122,81 J</b> — y ojo con la trampa: <i>F</i>·<i>l</i> = 246,2 J <b class="negrita">no</b> es la respuesta, porque <i>F</i> no vale 246,23 N durante el traslado, vale eso sólo al final (arranca en cero); (d) la tensión del cable <b class="negrita">no trabaja en ningún instante</b>, por lo mismo que en el péndulo de arriba.</p>
+
+  <h2 class="titulo-seccion">04 · Sólo la altura, hasta que deja de serlo</h2>
+  <p class="parrafo">Hasta acá cada balance miraba un tramo. Ahora un sistema entero, con subidas y bajadas, y una sola cuenta que vale de punta a punta. Y con ella la afirmación más fuerte —y más fácil de creer de más— del tema: mientras no haya rozamiento, la velocidad en cualquier punto depende <b class="negrita">sólo de la altura de ese punto</b>, no de qué forma tuvo el camino para llegar. La segunda escena es donde esa afirmación se acaba. Una aclaración antes de arrancar: el enunciado del ejercicio 7 no da la masa del carro, así que todas las energías de este widget están <b class="negrita">por kilogramo</b>.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación 4</span>
+      <span class="titulo-fila">Sólo la altura</span>
+      <span class="nota-fila">— la barra no cambia de largo en todo el recorrido, suba o baje; recién el freno le saca. Todo esto es por kilogramo: el enunciado no da la masa.</span>
+    </div>
+    <canvas id="w4-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="w4-play" class="boton-primario">Reproducir</button>
+        <button id="w4-reset" class="boton">Reiniciar</button>
+      </div>
+      <label class="control" style="flex:1 1 130px;min-width:110px">
+        <span class="rotulo-campo">v₀ <output id="w4-v0-out" class="valor-control">2,0 m/s</output></span>
+        <input id="w4-v0" type="range" min="1" max="5" step="0.1" value="2" style="width:100%">
+      </label>
+      <label class="control" style="flex:1 1 130px;min-width:110px">
+        <span class="rotulo-campo">h <output id="w4-h-out" class="valor-control">3,0 m</output></span>
+        <input id="w4-h" type="range" min="1.5" max="4" step="0.1" value="3" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="w4-escena" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">El cuadrante (ej. 8)
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>v <b id="w4-v" class="lectura-valor azul">2,0000 m/s</b></span>
+      <span>v marcha − v(y) <b id="w4-chequeo" class="lectura-valor tenue">0,0000 m/s</b></span>
+      <span>a medida − a cerrada <b id="w4-chequeo-a" class="lectura-valor tenue">—</b></span>
+      <span>v<sub>B</sub> <b id="w4-vb" class="lectura-valor">2,0000 m/s</b></span>
+      <span>v<sub>C</sub> <b id="w4-vc" class="lectura-valor">5,7793 m/s</b></span>
+      <span>a del freno <b id="w4-a" class="lectura-valor roja">6,2800 m/s²</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p class="parrafo-suelto">Los números: con v₀ = 2 m/s y h = 3 m, E = 31,4 J por kilogramo, v<sub>B</sub> = 2,0000 m/s, v<sub>C</sub> = 5,7793 m/s, v<sub>D</sub> = 7,9246 m/s, y el freno tiene que dar <i>a</i> = 6,2800 m/s². Mirá v<sub>B</sub>: es <b class="negrita">exactamente</b> v₀, aunque entre A y B el carro haya bajado a un valle y subido de nuevo pasando por 7,14 m/s. Misma altura, misma velocidad. El camino del medio no dejó rastro.</p>
+  <p class="parrafo">Movés el deslizador de <i>h</i> y la barra cambia de reparto pero no de largo, en todo el recorrido. Eso es la conservación, dibujada. Recién en el tramo D-E aparece el cuarto segmento, y ahí el freno se lleva los 31,4 J enteros a lo largo de los 5 m: no es casualidad, es lo que significa «detenerse en E». Y la lectura que respalda esa frase no es la barra —una barra llena puede estar llena por definición— sino v marcha − v(y): una de las dos velocidades sale de integrar la segunda ley contra la <b class="negrita">pendiente</b> del perfil, la otra de la <b class="negrita">altura</b> y nada más. Que su resta no se despegue de cero en ningún punto del recorrido es lo que dice, con un número, que la forma del camino no entró en la cuenta.</p>
+  <p class="parrafo">Marcá la casilla. Acá el mismo truco falla: en el arco no se puede escribir μ·<i>N</i>·<i>d</i> porque no se sabe <i>N</i> en cada punto —cambia con el ángulo y con la velocidad— y el enunciado ni da el μ del arco. Pero la energía sigue siendo una cuenta, y la cuenta se puede cerrar por el otro lado: arriba había 14,700 J, abajo quedan 6,480 J, así que el rozamiento del arco se llevó 8,220 J. <b class="negrita">No se integró nada.</b> Es el teorema trabajo-energía haciendo lo único que a veces se puede hacer.</p>
+  <p class="parrafo">Y en el tramo llano, donde <i>N</i> sí es constante, la cuenta vuelve a funcionar como en la sección 02: μ = v<sub>B</sub>²/(2<i>gd</i>) = 0,2449, y μ<i>mgd</i> = 6,4800 J = K<sub>B</sub>. Las dos maneras conviven en el mismo ejercicio: una para donde se puede y otra para donde no.</p>
+</div>
+
+<div class="columna columna-final">
+  <h2 class="titulo-seccion">Para tener a mano</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>El trabajo es la <b class="negrita">componente de la fuerza en la dirección del movimiento</b>, integrada a lo largo del camino. <i>F</i>·<i>d</i> es un caso particular: fuerza constante y paralela.</li>
+    <li>Una fuerza perpendicular a la velocidad no hace trabajo <b class="negrita">nunca</b>: la normal, la tensión de una cuerda que gira, la del cable que sostiene. Que toque no significa que transfiera.</li>
+    <li>La normal no es <i>mg</i> salvo que el piso sea horizontal y nada más empuje ni tire en vertical. Si la normal cambia, el rozamiento cambia con ella.</li>
+    <li>El peso y el resorte son conservativos: su trabajo depende sólo del punto inicial y del final. Por eso valen como energía potencial, y por eso el camino no importa.</li>
+    <li>El rozamiento no es conservativo: se cuenta aparte, siempre resta, y a veces no se puede integrar — ahí se lo despeja del balance entre dos estados donde sí se conoce todo.</li>
+    <li>La energía cinética va con <i>v</i>². Bajar la velocidad a la mitad cuesta las <b class="negrita">tres cuartas partes</b> de la energía, no la mitad.</li>
+  </ol>
 
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
@@ -823,6 +881,347 @@ const pulsoW3 = () => {
 };
 pagina.alTocar(pulsoW3);
 pulsoW3();
+
+/* ---------- widget 4: solo la altura, hasta que deja de serlo ---------- */
+
+// Practico 3, ej. 7 y 8. El ej. 7 no da masa: TODAS las energias de este widget son
+// POR KILOGRAMO. Verificado en "Ej 7 (numerico)" con m=1, v0=2, h=3, L=5:
+//   E = 31.4 J   v_B = 2.0000 m/s (= v0)   v_C = 5.7793 m/s   v_D = 7.9246 m/s
+//   a = 6.2800 m/s^2   recorrido A-D = 11.6561 m en 2.6146 s   frenado D-E en 1.2619 s
+//   (duracion total 3.8765 s)
+// Verificado en "Ej 8": R = 1.5 m, v_B = 3.6 m/s, d = 2.7 m ->
+//   mu = 0.244898   K_B = 6.480 J   mgR = 14.700 J   W_roce(arco) = -8.220 J
+
+// --- el perfil de la montana rusa (este plan lo inventa: las alturas de A, B, C y
+// D-E salen del enunciado; las abscisas y la forma entre nodos, no -- revisar a ojo).
+const X_D_W4 = 8, X_E_W4 = 13;
+const L_W4 = X_E_W4 - X_D_W4;                         // 5 m, el L del enunciado
+const NODOS_W4 = h => [[0, h], [2, 0.2 * h], [4, h], [6.5, h / 2], [X_D_W4, 0], [X_E_W4, 0]];
+function perfilW4(x, h) {
+  const n = NODOS_W4(h);
+  for (let i = 0; i < n.length - 1; i++) {
+    const [x0, y0] = n[i], [x1, y1] = n[i + 1];
+    if (x >= x0 && x <= x1) {
+      const u = (x - x0) / (x1 - x0);
+      return y0 + (y1 - y0) * (0.5 - 0.5 * Math.cos(Math.PI * u));
+    }
+  }
+  return 0;
+}
+
+// La PENDIENTE local del perfil, por diferencia centrada. El min/max acota el punto de
+// evaluacion: `perfilW4` vale 0 fuera de [0, X_E_W4], asi que sin acotar la pendiente en
+// x = 0 explotaria (division por un EPS del lado de afuera).
+const EPS_W4 = 1e-6;
+const pendienteW4 = (x, h) => {
+  const xc = Math.min(Math.max(x, EPS_W4), X_E_W4 - EPS_W4);
+  return (perfilW4(xc + EPS_W4, h) - perfilW4(xc - EPS_W4, h)) / (2 * EPS_W4);
+};
+
+// Camino B del chequeo del tramo A-D (Paso 4): integra v dv/ds = -g sen(theta) A LO
+// LARGO DE LA PISTA, con sen(theta) = y'/sqrt(1+y'^2) sacado de la PENDIENTE local del
+// perfil -- este camino no mira `h` ni una sola vez. El camino A, la forma cerrada
+// v(y) = sqrt(v0^2 + 2g(h-y)), no mira la pendiente ni una sola vez: son dos cuentas que
+// no comparten una linea de codigo. Corre UNA vez por cambio de deslizador (no por
+// cuadro) y de paso devuelve la tabla que la animacion necesita para invertir x(t): la
+// integracion del tiempo (dt = ds/v) es una acumulacion mas del mismo bucle.
+//
+// n = 2000 esta medido, no elegido a ojo: con ese paso el peor residuo contra la forma
+// cerrada es 1,7e-5 m/s en todo el rango de los dos deslizadores (imprime 0,0000 a
+// cuatro decimales); con n = 200 el peor caso sube a 1,1e-3 y la lectura titilaria.
+function marchaNewtonW4(h, v0, n = 2000) {
+  const dx = X_D_W4 / n;
+  const senTheta = m => m / Math.hypot(1, m);           // NO `m` a secas: ver el Paso 8
+  const f = m => -2 * G * senTheta(m);
+  let v2 = v0 * v0, s = 0, t = 0;
+  const tabla = [{ x: 0, s: 0, t: 0, v: v0 }];
+  for (let i = 0; i < n; i++) {
+    const x0 = i * dx, x1 = x0 + dx;
+    const m0 = pendienteW4(x0, h), m1 = pendienteW4(x1, h);
+    const ds0 = Math.hypot(1, m0) * dx, ds1 = Math.hypot(1, m1) * dx;
+    const va = Math.sqrt(v2);
+    v2 += 0.5 * (f(m0) * ds0 + f(m1) * ds1);            // trapecio sobre el arco
+    const vb = Math.sqrt(v2);
+    s += 0.5 * (ds0 + ds1);
+    t += 0.5 * (ds0 / va + ds1 / vb);                   // dt = ds / v, el mismo trapecio
+    tabla.push({ x: x1, s, t, v: vb });
+  }
+  return tabla;
+}
+
+// Invierte la tabla de `marchaNewtonW4` por tiempo: busca binario (la tabla es
+// monotona en t porque v > 0 en todo el tramo A-D con los rangos de los dos
+// deslizadores) e interpola linealmente x, s y v entre los dos puntos que rodean `t`.
+function enTiempoW4(tabla, t) {
+  const ultimo = tabla[tabla.length - 1];
+  if (t <= 0) return tabla[0];
+  if (t >= ultimo.t) return ultimo;
+  let lo = 0, hi = tabla.length - 1;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) >> 1;
+    if (tabla[mid].t <= t) lo = mid; else hi = mid;
+  }
+  const a = tabla[lo], b = tabla[hi];
+  const u = (t - a.t) / (b.t - a.t);
+  return { x: a.x + (b.x - a.x) * u, s: a.s + (b.s - a.s) * u, v: a.v + (b.v - a.v) * u };
+}
+
+const energiaTotalW4 = (v0, h) => 0.5 * v0 * v0 + G * h;               // por kg
+const vCerradaW4 = (v0, h, y) => Math.sqrt(v0 * v0 + 2 * G * (h - y)); // v(y), Camino A
+const aCerradaW4 = (v0, h) => (v0 * v0 + 2 * G * h) / (2 * L_W4);      // a del papel
+
+// El estado derivado de (h, v0): la marcha de Newton, la velocidad y el tiempo en D
+// (donde arranca el freno), y la desaceleracion CON LA QUE FRENA LA ANIMACION -- que
+// no es `aCerradaW4`: sale de la v_D que dio la marcha y de L_W4, para que el carro
+// se detenga exactamente en E pase lo que pase con los dos deslizadores.
+function calcularCaminoW4(h, v0) {
+  const tabla = marchaNewtonW4(h, v0);
+  const ultimo = tabla[tabla.length - 1];
+  const vD = ultimo.v;
+  const aAnimacion = vD * vD / (2 * L_W4);
+  return { tabla, vD, aAnimacion, tAD: ultimo.t, duracion: ultimo.t + vD / aAnimacion };
+}
+
+let hW4 = 3, v0W4 = 2, escenaCuadranteW4 = false;
+let caminoW4 = calcularCaminoW4(hW4, v0W4);
+
+const MARGEN_W4 = { L: 30, R: 24, T: 64, B: 26 };         // T de 64: el aire de la barra
+
+function encuadreW4() {
+  return escenaCuadranteW4
+    ? { xMin: -0.4, xMax: 4.5, yMin: -0.3, yMax: 1.9 }
+    : { xMin: 0, xMax: X_E_W4, yMin: -0.3, yMax: hW4 + 0.4 };
+}
+
+// --- la segunda escena: el cuadrante del ej. 8 ---
+// Centro de la circunferencia en (R8, R8), con el piso en y = 0: phi = 0 es A (arriba,
+// tangente vertical, donde se suelta el bloque) y phi = pi/2 es B (abajo, tangente
+// horizontal).
+const R8_W4 = 1.5, D8_W4 = 2.7;
+const X_B8_W4 = R8_W4, X_C8_W4 = R8_W4 + D8_W4;           // 1.5 , 4.2
+const arcoPuntoW4 = phi => [R8_W4 - R8_W4 * Math.cos(phi), R8_W4 - R8_W4 * Math.sin(phi)];
+
+// El enunciado DA v_B (no se deriva de una ley de rozamiento del arco: no la hay,
+// N cambia con el angulo y con la velocidad y el enunciado no da el mu de ahi). Con
+// v_B dado, el resto de este ejercicio es un solo balance de energia despejado dos
+// veces -- ver el comentario del chequeo, mas abajo, sobre por que esta escena no
+// tiene uno.
+const VB8_W4 = 3.6;
+const MU8_W4 = VB8_W4 * VB8_W4 / (2 * G * D8_W4);         // 0.244898, tramo llano
+const KB8_W4 = 0.5 * VB8_W4 * VB8_W4;                     // 6.480 J, por kg
+const MGR8_W4 = G * R8_W4;                                // 14.700 J, por kg
+const QARCO8_W4 = MGR8_W4 - KB8_W4;                       // 8.220 J -- NO mu*N*d, ver abajo
+const A8_W4 = VB8_W4 * VB8_W4 / (2 * D8_W4);              // 2.4000 m/s^2 (= mu*g)
+const T_FRENO8_W4 = VB8_W4 / A8_W4;                       // 1.5 s exactos (2d/v_B)
+
+// El ritmo del arco es puro dibujo, como el angulo de widgetW3: no hay ley de
+// rozamiento conocida punto a punto (solo el balance total A-B), asi que no hay un
+// "tiempo fisico" que integrar aca. VELOCIDAD_ANIM_ARCO_W4 es solo el paso con que se
+// recorre a ojo -- no entra en ninguna lectura de resultado (v_B, K_B, mgR, etc. son
+// todos constantes de arriba, no salen de este reloj).
+const VELOCIDAD_ANIM_ARCO_W4 = 2;
+const T_ARCO8_W4 = (R8_W4 * Math.PI / 2) / VELOCIDAD_ANIM_ARCO_W4;
+const DURACION_CUADRANTE_W4 = T_ARCO8_W4 + T_FRENO8_W4;
+
+// Posicion y energia durante el arco. LA LEY DE ROZAMIENTO DEL ARCO NO SE CONOCE (N
+// cambia con el angulo y la velocidad, y el enunciado no da el mu ahi): lo unico que
+// se conoce con certeza son los dos EXTREMOS, A (K=0, Q=0) y B (K=K_B, Q=8.220 J). Para
+// que el dibujo no salte de golpe en B, se reparte K y Q proporcional a sen(phi) --que
+// es tambien la fraccion de altura ya descendida-- una convencion de trazo, EXACTA en
+// los dos extremos y arbitraria en el medio, no una ley fisica verificada. Por eso esta
+// escena no lleva chequeo (ver el comentario junto a los `leer('w4-chequeo...` de abajo).
+function estadoArcoW4(t) {
+  const phi = Math.min(t / T_ARCO8_W4, 1) * (Math.PI / 2);
+  const frac = Math.sin(phi);
+  const [x, y] = arcoPuntoW4(phi);
+  return { x, y, v: VB8_W4 * Math.sqrt(frac), K: KB8_W4 * frac, U: MGR8_W4 * (1 - frac), Q: QARCO8_W4 * frac };
+}
+
+// El tramo llano SI se conoce entero: N = mg (piso horizontal) y por eso mu = v_B^2/(2gd)
+// vale. Formulas reales, no interpoladas.
+function estadoLlanoW4(tf) {
+  const s = Math.min(VB8_W4 * tf - 0.5 * A8_W4 * tf * tf, D8_W4);
+  const v = Math.max(0, VB8_W4 - A8_W4 * tf);
+  const Q = MU8_W4 * G * s;
+  return { x: X_B8_W4 + s, y: 0, v, K: KB8_W4 - Q, U: 0, Q };
+}
+
+function pintarW4(ctx, l) {
+  const p = pagina.paleta();
+  const X_BARRA = 28, ALTO_BARRA = 22, Y_BARRA = 16;
+
+  if (escenaCuadranteW4) {
+    const t = escenaW4.t;
+    const e = t <= T_ARCO8_W4 ? estadoArcoW4(t) : estadoLlanoW4(t - T_ARCO8_W4);
+
+    presupuestoPx(ctx, X_BARRA, Y_BARRA, l.ancho - X_BARRA - 24, ALTO_BARRA, [
+      { valor: e.K, color: p.blue, etiqueta: 'cinética' },
+      { valor: e.U, color: p.graph, etiqueta: 'potencial' },
+      { valor: e.Q, color: p.red, etiqueta: 'disipado' },
+    ], { total: MGR8_W4, colorBorde: p.rule, colorTexto: p.paper });
+
+    curva(ctx, l, phi => arcoPuntoW4(phi), 0, Math.PI / 2, { color: p.graph, grosor: 1.6 });
+    suelo(ctx, l, { color: p.rule, desde: X_B8_W4, hasta: X_C8_W4, y: 0 });
+    cuerpo(ctx, l, [e.x, e.y], { radio: 6, color: p.ink });
+
+    leer('w4-v', num(e.v, 4) + ' m/s');
+    leer('w4-vb', num(VB8_W4, 4) + ' m/s');
+    leer('w4-vc', num(0, 4) + ' m/s');                    // se detiene en C: v = 0
+    leer('w4-a', num(A8_W4, 4) + ' m/s²');
+    // Sin chequeo a proposito: mu = v_B^2/(2gd) y mu*m*g*d = K_B son la MISMA ecuacion
+    // despejada de dos maneras (el enunciado no da un segundo dato independiente para
+    // el arco), asi que cualquier resta entre las dos daria cero por construccion --
+    // exactamente lo que el Paso 4 de esta tarea (y la Tarea 4 Paso 2) prohiben llamar
+    // un canario. Esta escena dibuja un resultado, no lo verifica.
+    leer('w4-chequeo', '—');
+    leer('w4-chequeo-a', '—');
+    return;
+  }
+
+  const h = hW4, v0 = v0W4;
+  const { tabla, vD, aAnimacion, tAD } = caminoW4;
+  const t = escenaW4.t;
+  const total = energiaTotalW4(v0, h);
+  let x, y, v, K, U, Q;
+
+  if (t <= tAD) {
+    const pt = enTiempoW4(tabla, t);
+    x = pt.x; v = pt.v; y = perfilW4(x, h);
+    K = 0.5 * v * v; U = G * y; Q = 0;
+
+    // Chequeo del tramo sin friccion (Paso 4): la marcha (`pt.v`, integra la PENDIENTE
+    // del perfil) contra la forma cerrada v(y) (mira la ALTURA y `h`, no la pendiente).
+    // Muerde cuando el perfil y el balance describen curvas distintas -- ver el Paso 8
+    // de esta tarea para el numero que da roto a proposito.
+    const vCerrada = vCerradaW4(v0, h, y);
+    leer('w4-chequeo', num(v - vCerrada, 4) + ' m/s');
+    leer('w4-chequeo-a', '—');                            // antes de D: no aplica
+  } else {
+    const tf = t - tAD;
+    const s = Math.min(vD * tf - 0.5 * aAnimacion * tf * tf, L_W4);
+    v = Math.max(0, vD - aAnimacion * tf);
+    x = X_D_W4 + s; y = 0;
+    K = 0.5 * v * v; U = 0; Q = total - K;
+
+    // Chequeo del tramo de freno (Paso 4): la animacion frena con `aAnimacion` (sale de
+    // la v_D de LA MARCHA y de L_W4, no de la formula del enunciado). `aMedida` es la
+    // aceleracion que alguien leeria con un cronometro (v y s ya generados con
+    // `aAnimacion`, asi que da lo mismo salvo redondeo); `aCerrada` es la formula del
+    // papel, que no pasa por la marcha ni por el perfil. La resta vale
+    // (v_D,marcha^2 - (v0^2+2gh)) / (2L): da cero si y solo si la marcha llega a D con
+    // la v que la forma cerrada predice Y el tramo del dibujo mide L_W4 -- o sea, dice
+    // que el carro se detiene EXACTAMENTE en E.
+    const aCerrada = aCerradaW4(v0, h);
+    const aMedida = s > 1e-9 ? (vD * vD - v * v) / (2 * s) : aAnimacion;
+    leer('w4-chequeo', '—');                              // en el freno: no aplica
+    leer('w4-chequeo-a', num(aMedida - aCerrada, 4) + ' m/s²');
+  }
+
+  // La barra: cinetica de la VELOCIDAD (marcha o frenado), potencial de la ALTURA del
+  // perfil, disipado de `total - K` en el freno -- tres origenes distintos, igual que
+  // el widget 2. Que se vea llena en todo el recorrido es entonces una consecuencia
+  // medible (el residuo de la marcha, ~1e-5) y no una identidad algebraica.
+  presupuestoPx(ctx, X_BARRA, Y_BARRA, l.ancho - X_BARRA - 24, ALTO_BARRA, [
+    { valor: K, color: p.blue, etiqueta: 'cinética' },
+    { valor: U, color: p.graph, etiqueta: 'potencial' },
+    { valor: Q, color: p.red, etiqueta: 'disipado' },
+  ], { total, colorBorde: p.rule, colorTexto: p.paper });
+
+  curva(ctx, l, xg => [xg, perfilW4(xg, h)], 0, X_E_W4, { color: p.graph, grosor: 1.6 });
+  suelo(ctx, l, { color: p.rule, desde: X_D_W4, hasta: X_E_W4, y: 0 });
+  cuerpo(ctx, l, [x, y], { radio: 6, color: p.ink });
+
+  leer('w4-v', num(v, 4) + ' m/s');
+  leer('w4-vb', num(v0, 4) + ' m/s');                     // v_B = v0, siempre -- Ej 7 (b)
+  leer('w4-vc', num(vCerradaW4(v0, h, h / 2), 4) + ' m/s');
+  leer('w4-a', num(aCerradaW4(v0, h), 4) + ' m/s²');
+}
+
+const widgetW4 = crearWidget({
+  pagina, canvas: el('w4-cv'),
+  margen: MARGEN_W4,
+  escalaUniforme: true,
+  // `centrar: true` es lo que la escena del cuadrante necesita para que el punto de
+  // detencion quede adentro del marco a cualquier ancho (Paso 5 y Paso 8.5): sin esto
+  // el sobrante horizontal se va entero al margen derecho y el bloque en C queda mas
+  // pegado al borde de lo medido en el plan. En la escena de la montana rusa el efecto
+  // es cosmetico -solo cambia como se reparte el aire vertical a un ancho angosto,
+  // donde antes se iba todo arriba de la barra- y no mueve ninguna lectura.
+  centrar: true,
+  encuadre: encuadreW4,
+  dibujar: pintarW4,
+});
+
+let enReposoW4 = true;
+const rotularW4 = () => rotuloReproducir(el('w4-play'), escenaW4, enReposoW4);
+
+const escenaW4 = crearEscena({
+  dibujar: () => widgetW4.repintar(),
+  duracion: caminoW4.duracion,
+  alCambiar: rotularW4,
+});
+
+deslizador({
+  entrada: el('w4-v0'), salida: el('w4-v0-out'), pagina,
+  formato: v => num(v, 1) + ' m/s',
+  alCambiar: v => {
+    v0W4 = v;
+    caminoW4 = calcularCaminoW4(hW4, v0W4);
+    if (!escenaCuadranteW4) escenaW4.duracion = caminoW4.duracion;
+    widgetW4.repintar();
+  },
+});
+deslizador({
+  entrada: el('w4-h'), salida: el('w4-h-out'), pagina,
+  formato: v => num(v, 1) + ' m',
+  alCambiar: v => {
+    hW4 = v;
+    caminoW4 = calcularCaminoW4(hW4, v0W4);
+    if (!escenaCuadranteW4) escenaW4.duracion = caminoW4.duracion;
+    widgetW4.repintar();
+  },
+});
+casilla({
+  entrada: el('w4-escena'), pagina,
+  alCambiar: v => {
+    escenaCuadranteW4 = v;
+    // El ejercicio 8 no tiene parametros libres: los deslizadores de esta escena no
+    // hacen nada, y se deshabilitan en vez de dejarlos moviendo una escena que los
+    // ignora (Paso 5).
+    el('w4-v0').disabled = v;
+    el('w4-h').disabled = v;
+    enReposoW4 = true;
+    escenaW4.duracion = v ? DURACION_CUADRANTE_W4 : caminoW4.duracion;
+    escenaW4.reiniciar();
+    rotularW4();
+  },
+});
+boton({
+  elemento: el('w4-play'), pagina,
+  alApretar: () => {
+    if (escenaW4.estado === 'reproduciendo') {
+      escenaW4.pausar();
+    } else {
+      if (enReposoW4 || escenaW4.t >= escenaW4.duracion - 1e-6) {
+        enReposoW4 = false;
+        escenaW4.reiniciar();
+      }
+      escenaW4.reproducir();
+    }
+    rotularW4();
+  },
+});
+boton({
+  elemento: el('w4-reset'),
+  alApretar: () => { enReposoW4 = true; escenaW4.reiniciar(); rotularW4(); },
+});
+
+rotularW4();
+const pulsoW4 = () => {
+  el('w4-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
+};
+pagina.alTocar(pulsoW4);
+pulsoW4();
 
 /* ---------- arranque ---------- */
 
