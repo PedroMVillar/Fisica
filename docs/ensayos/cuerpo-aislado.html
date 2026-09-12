@@ -177,7 +177,8 @@ try {
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget, panelesApilados } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
-import { eje, bloque, suelo, arco, componentes, vectorPx, curva, cuerpo, punteado, texto, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { eje, bloque, suelo, arco, componentes, vectorPx, curva, cuerpo, punteado, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { colocarEtiqueta } from '../motor/etiqueta.js';
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
 import { num } from '../motor/formato.js';
@@ -515,7 +516,7 @@ function pintar2(ctx, l) {
   const aOpt = estado2(THETA_OPT, F).a;
   if (aOpt > 0) {
     cuerpo(ctx, lpG, [thetaOptGrados, aOpt], { radio: 4, color: p.ink });
-    texto(ctx, 'óptimo', lpG.px(thetaOptGrados) + 8, lpG.py(aOpt) - 10, { color: p.ink });
+    colocarEtiqueta(ctx, 'óptimo', lpG.px(thetaOptGrados), lpG.py(aOpt), { dx: 8, dy: -10, color: p.ink });
   }
 
   leer('w2-theta-val', num(thetaGrados, 0) + '°');

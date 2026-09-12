@@ -92,7 +92,7 @@ try {
 <script type="module">
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget } from '../motor/widget.js';
-import { eje, curva, cuerpo, punteado, texto, vectorPx } from '../motor/dibujo.js';
+import { eje, curva, cuerpo, punteado, vectorPx } from '../motor/dibujo.js';
 import { colocarEtiqueta } from '../motor/etiqueta.js';
 import { deslizador, boton } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
@@ -137,9 +137,6 @@ function formatearGrande(x) {
   if (x >= 1e3) return num(x / 1e3, x / 1e3 >= 10 ? 0 : 1) + ' mil';
   return num(x, 0);
 }
-
-// [x+dx, y+dy]: para no repetir la aritmetica de desplazar un rotulo en cada llamada.
-const desplazar = ([x, y], dx, dy) => [x + dx, y + dy];
 
 /* ---------- el widget ---------- */
 
@@ -186,7 +183,10 @@ function widgetLaTierra(pagina) {
     if (l.xMin <= 0 && 0 <= l.xMax && l.yMin <= 0 && 0 <= l.yMax) {
       eje(ctx, l, { color: p.rule });
       cuerpo(ctx, l, [0, 0], { radio: 7, color: p.ink });
-      texto(ctx, 'Sol', ...desplazar(l.p([0, 0]), 12, -8), { color: p.dim, px: 10, peso: 400 });
+      {
+        const [sx, sy] = l.p([0, 0]);
+        colocarEtiqueta(ctx, 'Sol', sx, sy, { dx: 12, dy: -8, color: p.dim, px: 10, peso: 400 });
+      }
     }
 
     // El camino sin gravedad: la tangente, punteada.

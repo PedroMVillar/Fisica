@@ -263,11 +263,15 @@ function widgetSecante(pagina) {
     // P arriba y a la izquierda, Q abajo y a la derecha: Q *es* el cruce de la secante
     // con la curva, asi que cualquier desplazamiento hacia arriba lo deja debajo de una
     // de las dos lineas, y P arriba se despega de la fila de numeros del eje.
-    texto(ctx, 'P', l.px(T_P) - 16, l.py(x(T_P)) - 20, { color: p.ink });
+    //
+    // P pasa por `colocarEtiqueta` con `evitar` por omision (nunca hace falta que
+    // esquive nada, T_P es constante) pero SI tiene que registrarse: si no quedara en
+    // el registro, ningun otro rotulo de este widget sabria que esta ahi y podria
+    // pisarlo sin que nada lo evite.
+    colocarEtiqueta(ctx, 'P', l.px(T_P), l.py(x(T_P)), { dx: -16, dy: -20, color: p.ink });
     // `evitar: false`: a proposito. El ejercicio ES arrastrar Q hasta que se superponga
     // a P -asi la secante se vuelve tangente-, asi que Q no puede esquivar a P cuando
-    // se acercan. P queda con `texto()` de siempre (nunca se mueve, T_P es constante:
-    // no hay nada que esquivar del otro lado).
+    // se acercan.
     colocarEtiqueta(ctx, 'Q', l.px(tQ), l.py(x(tQ)), { dx: 12, dy: Q_ABAJO, color: p.blue, evitar: false });
 
     // Tres decimales en la pendiente y en la diferencia, no dos: con dos, en el mínimo

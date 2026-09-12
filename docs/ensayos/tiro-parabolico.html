@@ -471,10 +471,13 @@ function widgetGalileo(pagina) {
     const a = soltado(t), b = lanzado(t);
     cuerpo(ctx, l, a, { radio: 6.5, color: p.ink });
     cuerpo(ctx, l, b, { radio: 6.5, color: p.blue });
-    texto(ctx, 'soltado', l.px(X0) - 11, l.py(altura) - 13,
-      { color: p.dim, px: 10, peso: 400, alineacion: 'right' });
-    texto(ctx, 'lanzado', l.px(X0) + 11, l.py(altura) - 13,
-      { color: p.blue, px: 10, peso: 400 });
+    // 'soltado' cuelga a la IZQUIERDA de X0 y 'lanzado' a la derecha: los dos cuerpos
+    // caen siempre a la misma altura (`yEn` es la misma funcion para los dos, ese es
+    // el punto del widget), asi que sus rotulos podrian pisarse si el ancho del canvas
+    // fuera chico; a 390px con X0 cerca del margen izquierdo, 'soltado' puede salirse
+    // por ese borde.
+    colocarEtiqueta(ctx, 'soltado', l.px(X0), l.py(altura), { dx: -11, dy: -13, color: p.dim, px: 10, peso: 400, alineacion: 'right' });
+    colocarEtiqueta(ctx, 'lanzado', l.px(X0), l.py(altura), { dx: 11, dy: -13, color: p.blue, px: 10, peso: 400 });
 
     leer('w2-t', num(t, 2) + ' s');
     leer('w2-alt', num(Math.max(0, yEn(t)), 1) + ' m');
