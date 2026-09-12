@@ -813,6 +813,18 @@ function pintarW3(ctx, l) {
   // w3-td contra el bloque "Ej 1" (a mano, Paso 6) y las dos flechas dibujadas: no
   // hay una resta automatica que lo haga.
   //
+  // Por que no se construyo un segundo chequeo para la tension (decision de revision,
+  // no reabrir): la candidata obvia era comparar la aceleracion centripeta CONTRA la
+  // trayectoria dibujada, pero el tiempo de esta animacion es de dibujo, no fisico
+  // (`VELOCIDAD_ANIM_W3` de mas arriba: el angulo avanza LINEAL, no integra la ecuacion
+  // del pendulo) -- diferenciar el dibujo daria una aceleracion DE DIBUJO, no una fisica.
+  // El camino genuino exigiria integrar la ODE del pendulo en tiempo real, cambiando
+  // ademas una resta EXACTA por una comparacion con tolerancia: no vale la maquina para
+  // vigilar una lectura secundaria. El guardian real es manual y vive en el Paso 6 de
+  // verificacion: medir las dos flechas en PIXELES. Con los radios sin alternar (el
+  // error que este comentario describe) quedan identicas incluso a 50 grados, donde
+  // tienen que diferir 37 px (36,80 px medidos a 880, ver el comentario de `K_T_W3`).
+  //
   // La masa, a diferencia del widget 2, ni siquiera aparece como parametro: `vB_W3`,
   // `thC_W3` y `tension_W3` son las formulas de v y T POR UNIDAD DE MASA que trae el
   // enunciado, asi que la masa ya se cancelo antes de escribir la primera linea de
