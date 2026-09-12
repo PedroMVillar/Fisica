@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script de la nota es `type="module"` y se difiere hasta despues del
+// parseo, asi que aplicar el tema desde ahi regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahi la excepcion abortaria el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>La Tierra que cae · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div style="max-width:680px;margin:0 auto;padding:56px 24px 0;display:flex;flex-direction:column;gap:0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ejemplo · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">La Tierra que cae</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Seis milímetros por segundo cuadrado alcanzan para no salir despedida.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Es el ejercicio 12 de la Guía 1, y pide una cosa nada más.</p>
+
+  <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:24px 0 0">
+    <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0">La Tierra gira alrededor del Sol en una órbita aproximadamente circular con una velocidad constante de 30 km/s. ¿Cuál es la aceleración de la Tierra respecto al Sol? Considere el radio de la órbita terrestre igual a 150 × 10⁶ km.</p>
+  </div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">La cuenta que pide es de una sola línea —<i>a</i> = <i>v²/R</i>—, sin nada que derivar y sin ningún dato que no esté ya en el enunciado. Lo raro no es resolverla: es lo que devuelve. El resultado es <i>a</i> = 6.0 × 10⁻³ m/s², seis milésimas de metro por segundo cuadrado, un número tan chico que parece un error de tipeo. ¿Esa nada de aceleración alcanza para mantener a todo un planeta dando vueltas alrededor del Sol?</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Lo que cuesta de este ejercicio no es calcular el número: es creerle. Abajo hay una manera de verlo sin fe de por medio —en vez de preguntar cuánto vale la aceleración, la simulación pregunta cuánto se desvía la Tierra de la recta que traía, y deja mover el reloj para mirarlo crecer.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">La caída que no se ve</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— empezá en un segundo y mirá la última lectura.</span>
+    </div>
+    <canvas id="w1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w1-un-segundo" class="boton">Un segundo</button>
+      </div>
+      <label class="control" style="flex:1 1 240px;min-width:200px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">tiempo de viaje <output id="w1-t-out" style="color:var(--ink);font-variant-numeric:tabular-nums">1.00 s</output></span>
+        <input id="w1-t-slider" type="range" min="0" max="1" step="0.001" value="0" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>tiempo de viaje <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.00 s</b></span>
+      <span>arco recorrido <b id="w1-arco" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">30.0 km</b></span>
+      <span>separación de la recta <b id="w1-caida" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">3.0 mm</b></span>
+      <span>exageración del eje horizontal <b id="w1-exag" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">× 16 millones</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Cómo se resuelve</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>En un movimiento circular uniforme la aceleración apunta al centro y vale <i>v²/R</i>. No hay que derivar nada: es la fórmula del capítulo.</li>
+    <li>Pasar las unidades antes de dividir. 30 km/s = 3 × 10⁴ m/s y 150 × 10⁶ km = 1.5 × 10¹¹ m. La mitad de los errores de este ejercicio son de acá.</li>
+    <li><i>a</i> = (3 × 10⁴)² / 1.5 × 10¹¹ = 9 × 10⁸ / 1.5 × 10¹¹ = 6.0 × 10⁻³ m/s².</li>
+    <li>Chequear que el número tenga sentido: seis milímetros por segundo cuadrado. En un segundo eso desvía a la Tierra 3 milímetros de la recta que traía —el segmento rojo del dibujo—, mientras avanza 30 kilómetros. Uno en diez millones.</li>
+  </ol>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Eso es lo que la nota vino a decir: la aceleración no mide cuánto se mueve algo, mide cuánto <i>cambia</i> su movimiento. El Sol no tiene que tironear fuerte, porque no tiene apuro —tiene que tironear <i>siempre</i>. Movés el control de arriba hasta el mes y esos milímetros por segundo cuadrado, sostenidos sin pausa, se vuelven veinte mil millones de metros de desvío: el tamaño exacto que hace falta para que la recta se cierre sobre sí misma y sea una órbita.</p>
+</div>
+
+<div class="columna columna-final">
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:flex-end;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 2, pp. 25–47 · <a href="../recursos/practico_1_2026.pdf">práctico 1, ej. 12</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget } from '../motor/widget.js';
+import { eje, curva, cuerpo, punteado, texto, vectorPx } from '../motor/dibujo.js';
+import { deslizador, boton } from '../motor/controles.js';
+import { conectarTema } from '../motor/tema.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+// La fisica entera del ejemplo cabe en tres lineas: es el ejercicio 12 de la Guia 1,
+// resuelto. A_C tiene que dar 6.0e-3 -- lo confirma
+// parcial-1/soluciones/verificacion-practico-1.py ("Ej 12: a_c = v^2/R = 6.0000e-03
+// m/s^2") -- y es el numero que reaparece en la prosa y en los cuatro pasos de mas
+// abajo.
+const R = 1.5e11;          // 150 millones de km, en metros
+const V = 3.0e4;           // 30 km/s, en metros por segundo
+const OMEGA = V / R;       // rad/s
+const A_C = V * V / R;     // 6.0e-3 m/s^2, el numero del ejercicio
+
+/* ---------- formato ---------- */
+
+// Tres ayudantes cortos, porque esta nota sola recorre catorce ordenes de magnitud --
+// de milimetros a miles de millones de kilometros, de segundos a meses -- y un
+// toFixed fijo no le sirve a ninguna de las tres cantidades.
+
+function formatearTiempo(s) {
+  if (s < 60) return s.toFixed(s < 10 ? 2 : 1) + ' s';
+  if (s < 3600) return (s / 60).toFixed(1) + ' min';
+  if (s < 86400) return (s / 3600).toFixed(1) + ' h';
+  if (s < 86400 * 30) return (s / 86400).toFixed(1) + ' d';
+  return (s / (86400 * 30)).toFixed(1) + ' meses';
+}
+
+function formatearLargo(m) {
+  if (m < 1) return (m * 1000).toFixed(1) + ' mm';
+  if (m < 1000) return m.toFixed(2) + ' m';
+  return (m / 1000).toFixed(1) + ' km';
+}
+
+function formatearGrande(x) {
+  if (x >= 1e9) return (x / 1e9).toFixed(x / 1e9 >= 10 ? 0 : 1) + ' mil millones';
+  if (x >= 1e6) return (x / 1e6).toFixed(x / 1e6 >= 10 ? 0 : 1) + ' millones';
+  if (x >= 1e3) return (x / 1e3).toFixed(x / 1e3 >= 10 ? 0 : 1) + ' mil';
+  return x.toFixed(0);
+}
+
+// [x+dx, y+dy]: para no repetir la aritmetica de desplazar un rotulo en cada llamada.
+const desplazar = ([x, y], dx, dy) => [x + dx, y + dy];
+
+/* ---------- el widget ---------- */
+
+function widgetLaTierra(pagina) {
+  const T_EJERCICIO = 1;                    // un segundo: la escala del enunciado
+  const T_MAXIMO = 90 * 24 * 3600;          // tres meses
+  let t = T_EJERCICIO;
+
+  const real = s => [R * Math.cos(OMEGA * s), R * Math.sin(OMEGA * s)];
+  const recto = s => [R, V * s];            // sin gravedad, sigue la tangente
+  const caida = s => {
+    const [rx, ry] = real(s), [tx, ty] = recto(s);
+    return Math.hypot(rx - tx, ry - ty);
+  };
+
+  const canvas = el('w1-cv');
+  const widget = crearWidget({
+    pagina, canvas,
+    margen: { L: 74, R: 30, T: 30, B: 42 },
+    // Escala independiente por eje: la separacion de la tangente y el arco recorrido
+    // difieren en siete ordenes de magnitud al segundo de viaje. Con escala uniforme
+    // el dibujo seria una raya vertical. La lectura de "exageracion" dice cuanto se
+    // estiro el eje horizontal, para que el estiramiento sea un dato y no una trampa.
+    escalaUniforme: false,
+    encuadre: () => {
+      const puntos = [[R, 0], real(t), recto(t)];
+      const xs = puntos.map(p => p[0]), ys = puntos.map(p => p[1]);
+      const x0 = Math.min(...xs), x1 = Math.max(...xs);
+      const y0 = Math.min(...ys), y1 = Math.max(...ys);
+      const aireX = Math.max((x1 - x0) * 0.35, 1e-4);
+      const aireY = Math.max((y1 - y0) * 0.12, 1e-4);
+      return { xMin: x0 - aireX, xMax: x1 + aireX, yMin: y0 - aireY, yMax: y1 + aireY };
+    },
+    dibujar: pintar,
+  });
+
+  function pintar(ctx, l) {
+    const p = pagina.paleta();
+
+    // El Sol, cuando entra en el encuadre. Casi nunca entra: a un segundo de viaje el
+    // encuadre mide centimetros y el Sol esta a 150 millones de kilometros. Cuando por
+    // fin entra -pasado un buen tramo de la orbita- se dibujan tambien los ejes, que
+    // hasta ese punto no aportaban nada: no hay "cero" visible al que referirlos.
+    if (l.xMin <= 0 && 0 <= l.xMax && l.yMin <= 0 && 0 <= l.yMax) {
+      eje(ctx, l, { color: p.rule });
+      cuerpo(ctx, l, [0, 0], { radio: 7, color: p.ink });
+      texto(ctx, 'Sol', ...desplazar(l.p([0, 0]), 12, -8), { color: p.dim, px: 10, peso: 400 });
+    }
+
+    // El camino sin gravedad: la tangente, punteada.
+    punteado(ctx, ...l.p([R, 0]), ...l.p(recto(t)), { color: p.rule, guiones: [4, 5] });
+    texto(ctx, 'sin gravedad', ...desplazar(l.p(recto(t)), 8, -6),
+      { color: p.dim, px: 10, peso: 400 });
+
+    // El camino real: el arco de la orbita.
+    curva(ctx, l, real, 0, t, { color: p.graph, grosor: 1.9 });
+
+    // Lo que cayo: el segmento rojo entre los dos extremos. Es el ejercicio entero.
+    const [ax, ay] = l.p(recto(t)), [bx, by] = l.p(real(t));
+    vectorPx(ctx, ax, ay, bx, by, { color: p.red, grosor: 2, punta: 8 });
+
+    cuerpo(ctx, l, [R, 0], { radio: 4, color: p.dim });
+    cuerpo(ctx, l, real(t), { radio: 5.5, color: p.blue });
+
+    const exageracion = l.escala.x / l.escala.y;
+    leer('w1-t', formatearTiempo(t));
+    leer('w1-arco', formatearLargo(V * t));
+    leer('w1-caida', formatearLargo(caida(t)));
+    leer('w1-exag', exageracion >= 1.05 ? '× ' + formatearGrande(exageracion) : 'sin exagerar');
+  }
+
+  const aLog = v => T_EJERCICIO * Math.pow(T_MAXIMO / T_EJERCICIO, v);
+  deslizador({
+    entrada: el('w1-t-slider'),
+    salida: el('w1-t-out'),
+    formato: v => formatearTiempo(aLog(v)), pagina,
+    alCambiar: v => { t = aLog(v); widget.repintar(); },
+  });
+  boton({
+    elemento: el('w1-un-segundo'), pagina,
+    alApretar: () => {
+      t = T_EJERCICIO;
+      el('w1-t-slider').value = '0';
+      el('w1-t-out').textContent = formatearTiempo(t);
+      widget.repintar();
+    },
+  });
+}
+
+/* ---------- arranque ---------- */
+
+const pagina = crearPagina({ documento: document });
+widgetLaTierra(pagina);
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
