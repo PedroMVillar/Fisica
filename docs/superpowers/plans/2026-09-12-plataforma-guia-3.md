@@ -1447,6 +1447,20 @@ mostrar que la simulación de arriba no muestre ya.
 2. **Medí las dos flechas a 50°**: tienen que dar 88 px y 125 px a 880, con 37 px de
    diferencia. A 5°, las dos alrededor de 52 px y la diferencia bajo 1 px — eso está bien,
    es lo esperado, no un defecto.
+
+   **Y este paso no es cosmético: es el único guardián de la tensión.** Descubierto
+   midiendo, durante la ejecución: la lectura de chequeo de este widget compara `v` antes y
+   después del enganche, y **nunca llama a la fórmula de la tensión**. Una rotura ahí
+   —`v²/r` por `v/r`, o no alternar los radios al enganchar— deja el chequeo en `0,0000`
+   para todo θ_A. Se evaluó construir un segundo chequeo y **se descartó con argumento**: el
+   tiempo de esta animación es ficticio (el ángulo avanza lineal), así que diferenciar la
+   trayectoria dibujada daría una aceleración de dibujo y no una física; un camino genuino
+   exigiría integrar la ODE del péndulo en tiempo real, que es justo lo que el diseño evitó,
+   y cambiaría una resta exacta por una comparación con tolerancia. No vale la máquina.
+
+   Lo que sí atrapa las dos roturas es **medir estas flechas**: con los radios sin alternar
+   quedan idénticas incluso a 50°, donde tienen que diferir 37 px. Así que el guardián de la
+   tensión en este widget es manual y vive en este paso. Saltearlo es quedarse sin él.
 3. La cuerda se quiebra en el clavo en el segundo tramo. Reproducí y mirá el instante del
    quiebre cuadro por cuadro si hace falta.
 4. Rompelo a propósito: cambiá `vB` por `Math.sqrt(2 * G * R3 * (1 - Math.cos(thA)))` (el
