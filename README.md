@@ -81,7 +81,23 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 
 - [`flashcards/fisica-1.tsv`](./flashcards) — 189 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `cinematica-2d`, `movimiento-circular`, `movimiento-armonico-simple`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
 - [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa del Parcial I en un solo panel de 67 × 76 cm, con tres niveles de jerarquía y un color por familia. Se lee en pantalla o se imprime en A1: a esa cantidad de nodos, forzarlo a un A4 bajaría la letra a 2 pt. Refleja los 54 conceptos que había al cerrar el capítulo 4; los capítulos 5 y 6 sumaron 31 más y todavía no se regeneró.
-- [Ensayos interactivos](https://pedromvillar.github.io/Fisica/) — simulaciones para construir intuición antes de leer el apunte o la hoja resumen. En construcción: hoy están "Derivada e integral, vistas", "Tiro parabólico" y "Movimiento circular".
+- [Ensayos interactivos](https://pedromvillar.github.io/Fisica/) — simulaciones para construir intuición antes de leer el apunte o la hoja resumen.
+
+| Ensayo | Construye | Cubre |
+|---|---|---|
+| Derivada e integral, vistas | La pendiente de una curva de posición y el área bajo una de velocidad, con los tres gráficos —posición, velocidad, aceleración— sincronizados y un modo para dibujar la curva a mano | Práctico 1, ej. 1 a 8 |
+| Tiro parabólico | Las dos componentes del movimiento por separado —caída libre en *y*, velocidad constante en *x*— sobre la misma trayectoria, con el reloj como único vínculo entre ambas | Práctico 1, ej. 9, 10 y 15 |
+| Movimiento circular | Las dos aceleraciones del movimiento circular —tangencial y centrípeta— y cómo el período y la frecuencia se leen del mismo giro | Práctico 1, ej. 11 a 14 |
+| Diagrama de cuerpo aislado | El diagrama de un solo cuerpo con sus fuerzas de contacto y la resultante, variando plano, ángulo y rozamiento | Práctico 2, ej. 1, 6, 8, 9, 10, 13, 18 y 19 |
+| Sistemas acoplados | Dos cuerpos atados por una cuerda, cada uno con su propio diagrama, y la tensión que sale de resolverlos como un sistema | Práctico 2, ej. 2 a 7 |
+| Fuerzas que dependen de la posición | La fuerza elástica y la gravitatoria como funciones de la posición, no como números fijos, y el punto de equilibrio de cada una | Práctico 2, ej. 11 a 18 |
+
+| Ejemplo resuelto | Construye | Cubre |
+|---|---|---|
+| La Tierra que cae | La aceleración centrípeta de la Tierra alrededor del Sol, vista como una caída continua que nunca llega a tocar | Práctico 1, ej. 12 |
+| El auto y el camión | El cruce de dos parábolas de posición como la respuesta geométrica al problema de alcance | Práctico 1, ej. 5 |
+
+Todavía no está la Guía 3 completa —trabajo, energía y cantidad de movimiento— ni el diseño de la portada, que lo hace el dueño del repositorio directamente.
 
 ### Hojas resumen
 
