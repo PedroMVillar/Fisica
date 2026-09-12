@@ -219,7 +219,7 @@ try {
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget } from '../motor/widget.js';
 import { crearEscena } from '../motor/escena.js';
-import { eje, curva, cuerpo, vectorPx, punteado, texto } from '../motor/dibujo.js';
+import { eje, curva, cuerpo, vectorPx, punteado, texto, suelo } from '../motor/dibujo.js';
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
 import { crearTiro } from '../fisica/tiro.js';
@@ -229,29 +229,6 @@ const el = id => document.getElementById(id);
 
 // Los dos ayudantes que comparten los widgets del ensayo.
 const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
-
-// Traducción literal de `ground()` del diseño (Tiro parabolico.dc.html:431-437):
-// una línea horizontal en `color` más rayitas de 6 px cada 9 px con globalAlpha 0.5.
-// El diseño recibe `xmin` como parámetro opcional (por defecto 0); acá se lee `l.xMin`
-// directo del lienzo. Es equivalente sólo mientras ningún `encuadre()` fije un `xMin`
-// distinto de cero — ninguno de los widgets de este ensayo lo hace.
-function suelo(ctx, l, color) {
-  const y = l.py(0), x0 = l.px(l.xMin), x1 = l.px(l.xMax);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(x0, y);
-  ctx.lineTo(x1, y);
-  ctx.stroke();
-  ctx.globalAlpha = 0.5;
-  for (let x = x0; x < x1; x += 9) {
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x - 6, y + 6);
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
-}
 
 /* ---------- widget 1: las dos sombras ---------- */
 
@@ -475,7 +452,7 @@ function widgetGalileo(pagina) {
     const lanzado = s => [X0 + vx * s, yEn(s)];
 
     eje(ctx, l, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', etiquetaY: 'y [m]' });
-    suelo(ctx, l, p.graph);
+    suelo(ctx, l, { color: p.graph, desde: l.xMin, hasta: l.xMax });
     curva(ctx, l, lanzado, 0, tf(), { color: p.graph, guiones: [3, 5], grosor: 1.2 });
 
     // Las líneas horizontales que unen las dos alturas: son el argumento entero del

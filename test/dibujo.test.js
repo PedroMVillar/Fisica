@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { crearLienzo } from '../docs/motor/lienzo.js';
-import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva, acotarFlecha, marcaDeTope } from '../docs/motor/dibujo.js';
+import { vector, vectorPx, cuerpo, traza, eje, punteado, texto, curva, acotarFlecha, marcaDeTope, bloque, suelo } from '../docs/motor/dibujo.js';
 
 function ctxFalso() {
   const ops = [];
@@ -303,4 +303,52 @@ test('marcaDeTope dibuja dos trazos perpendiculares a la flecha', () => {
     assert.ok(Math.abs(moves[i][1] - lines[i][1]) < 1e-9, 'trazo vertical');
     assert.ok(Math.abs(moves[i][2] - lines[i][2]) > 1, 'con largo');
   }
+});
+
+test('bloque dibuja un rectangulo cerrado de cuatro esquinas', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  bloque(c, l, [5, 5], { ancho: 2, alto: 1, color: '#000' });
+  const nombres = c.ops.map(o => o[0]);
+  assert.equal(c.ops.filter(o => o[0] === 'moveTo').length, 1);
+  assert.equal(c.ops.filter(o => o[0] === 'lineTo').length, 3);
+  assert.ok(nombres.includes('closePath'));
+  assert.ok(nombres.includes('fill'));
+});
+
+test('el bloque queda centrado en el punto que se le da', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  bloque(c, l, [5, 5], { ancho: 2, alto: 1, color: '#000' });
+  const xs = c.ops.filter(o => o[0] === 'moveTo' || o[0] === 'lineTo').map(o => o[1]);
+  const ys = c.ops.filter(o => o[0] === 'moveTo' || o[0] === 'lineTo').map(o => o[2]);
+  const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
+  const cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+  assert.ok(Math.abs(cx - l.p([5, 5])[0]) < 1e-9);
+  assert.ok(Math.abs(cy - l.p([5, 5])[1]) < 1e-9);
+});
+
+test('con borde, el bloque ademas se contornea', () => {
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  bloque(c, l, [5, 5], { ancho: 2, alto: 1, color: '#000', borde: '#f00' });
+  assert.ok(c.ops.some(o => o[0] === 'stroke'));
+});
+
+test('suelo dibuja la linea y sus rayitas dentro del rango pedido', () => {
+  const l = crearLienzo({ ancho: 400, alto: 200, xMin: -5, xMax: 15, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  suelo(c, l, { color: '#000', desde: 0, hasta: 10 });
+  const xs = c.ops.filter(o => o[0] === 'moveTo').map(o => o[1]);
+  assert.ok(Math.min(...xs) >= l.p([0, 0])[0] - 1e-9, 'no arranca antes');
+  assert.ok(Math.max(...xs) <= l.p([10, 0])[0] + 1e-9, 'no termina despues');
+  assert.ok(xs.length > 3, 'hay rayitas, no solo la linea');
+});
+
+test('suelo puede ir a una altura distinta de cero', () => {
+  const l = crearLienzo({ ancho: 400, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  suelo(c, l, { color: '#000', desde: 0, hasta: 10, y: 4 });
+  const ys = c.ops.filter(o => o[0] === 'moveTo').map(o => o[2]);
+  assert.ok(Math.abs(Math.max(...ys) - l.p([0, 4])[1]) < 1e-9);
 });

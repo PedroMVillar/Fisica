@@ -29,7 +29,11 @@
 //      alguna etiqueta, dibuja marcas y rótulos con `texto` y queda en el
 //      estado que haya dejado la última llamada (rótulo de y si hay
 //      `etiquetaY`, si no el de x).
-//    - `cuerpo`, `traza` y `marcaDeTope` no tocan ninguno de los tres.
+//    - `cuerpo`, `traza`, `marcaDeTope` y `bloque` no tocan ninguno de los tres.
+//    - `suelo` tampoco toca `setLineDash`/`font`/`textAlign`, pero sí toca
+//      `globalAlpha` para las rayitas (a 0.5) y lo repone a 1 antes de salir:
+//      a diferencia de las tres propiedades de arriba, `globalAlpha` sale
+//      siempre en el mismo estado en el que entró.
 //
 // De las tres reglas, la 2 está fijada por prueba en test/dibujo.test.js, que
 // afirma que `cuerpo` emite exactamente ['beginPath', 'arc', 'fill'] — o sea
@@ -162,6 +166,57 @@ export function marcaDeTope(ctx, x, y, dx, dy, { color } = {}) {
     ctx.lineTo(x + Math.cos(angulo) * d + nx * 5, y + Math.sin(angulo) * d + ny * 5);
     ctx.stroke();
   }
+}
+
+// Un rectangulo con medidas en unidades fisicas, centrado en un punto del marco. Las
+// cuatro esquinas se calculan en el marco y se mapean una por una con `l.p`, en vez de
+// rotar el contexto: asi el bloque queda consistente con el lienzo inclinado y con lo
+// que `arrastrable` devuelve, que es lo que se rompe cuando uno gira el contexto a mano.
+export function bloque(ctx, l, centro, { ancho, alto, color, borde, angulo = 0 } = {}) {
+  exigirColor(color, 'bloque');
+  const [cx, cy] = centro;
+  const cos = Math.cos(angulo), sen = Math.sin(angulo);
+  const esquinas = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => {
+    const dx = (sx * ancho) / 2, dy = (sy * alto) / 2;
+    return l.p([cx + dx * cos - dy * sen, cy + dx * sen + dy * cos]);
+  });
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(esquinas[0][0], esquinas[0][1]);
+  for (let i = 1; i < 4; i++) ctx.lineTo(esquinas[i][0], esquinas[i][1]);
+  ctx.closePath();
+  ctx.fill();
+  if (borde) {
+    ctx.strokeStyle = borde;
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+  }
+}
+
+// La linea del suelo con sus rayitas. Viene del ensayo de tiro parabolico, donde estaba
+// escrita suponiendo que el encuadre arranca en cero; aca el rango es explicito, que es
+// lo que un plano inclinado necesita. Las rayitas se dibujan en el marco del lienzo, asi
+// que sobre un lienzo inclinado salen perpendiculares al plano, como corresponde.
+export function suelo(ctx, l, { color, desde, hasta, y = 0 } = {}) {
+  exigirColor(color, 'suelo');
+  const [x0, y0] = l.p([desde, y]);
+  const [x1, y1] = l.p([hasta, y]);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.stroke();
+  const largo = Math.hypot(x1 - x0, y1 - y0);
+  const ux = (x1 - x0) / largo, uy = (y1 - y0) / largo;
+  ctx.globalAlpha = 0.5;
+  for (let d = 0; d < largo; d += 9) {
+    ctx.beginPath();
+    ctx.moveTo(x0 + ux * d, y0 + uy * d);
+    ctx.lineTo(x0 + ux * (d - 6) - uy * 6, y0 + uy * (d - 6) + ux * 6);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
 }
 
 export function traza(ctx, l, puntos, { color, grosor = 2 } = {}) {
