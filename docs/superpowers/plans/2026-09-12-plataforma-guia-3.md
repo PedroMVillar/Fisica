@@ -2663,11 +2663,27 @@ la fila es falsa.
    ni uno más—. Si dan más, hay un `style` inventado y hay que cambiarlo por una clase de
    `base.css`. Si dan menos, se perdió algo del esqueleto al copiarlo.
 
-   **Ojo con cuándo se mide.** Los nueve son los de la página **terminada**. Dos de ellos
-   viven en el `<ol>` de `Para tener a mano`, que no lo escribe la tarea que crea la página
-   sino la que la cierra: `energia.html` da **7** desde la Tarea 3 hasta la 6, y recién
-   llega a 9 cuando la Tarea 6 agrega ese cierre. Medido durante la ejecución. Un 7 en ese
-   momento no es un `style` perdido.
+   **Corregido durante la ejecución: el número correcto es 8, y 9 nunca fue un objetivo.**
+   Dos cosas se midieron al cerrar el ensayo 7:
+
+   - El noveno `style` del esqueleto es `style="font-weight:500;font-variant-numeric:tabular-nums"`
+     sobre un `<b>` de las lecturas (`cuerpo-aislado.html:62`), y esa declaración es
+     **palabra por palabra `.lectura-valor`** (`base.css:51`). O sea: el noveno del
+     esqueleto es deuda del esqueleto, un inline que duplica una clase que ya existe. Una
+     página nueva que use la clase ahí hace lo correcto y da **8**. (Migrar ese inline en
+     `cuerpo-aislado.html` es trabajo de un plan de deuda, no de éste.)
+   - Perseguir el 9 como objetivo hace daño: la Tarea 6 llegó a nueve **duplicando** el
+     `style` inline de una casilla que ya tenía su clase `.rotulo-campo` a tres líneas de
+     distancia en el mismo archivo. El conteo daba bien y la composición estaba mal.
+     Corregido: la casilla usa la clase, el archivo da 8, y sus ocho son un subconjunto
+     exacto de los del esqueleto.
+
+   **La regla es la composición, no el número.** El grep sirve para *encontrar* un `style`
+   inventado, no para certificar que no lo hay: lo que hay que comparar es el conjunto
+   contra el del esqueleto —`diff <(grep -o 'style="[^"]*font[^"]*"' esqueleto | sort)
+   <(... página nueva | sort)`—, y la única diferencia admisible es que a la página nueva le
+   falte el inline de `tabular-nums` porque usa la clase. Y el conteo va subiendo mientras
+   la página se escribe: no es un número que tenga que cerrar en cada tarea.
 7. `node --test "test/**/*.test.js"`: **247 pruebas, 0 fallas** (240 de base + 7 de
    `presupuestoPx`: las seis que este plan dictaba más la del orden del borde, que sumó la
    revisión de la Tarea 2 al encontrar un mutante que sobrevivía a las seis).
