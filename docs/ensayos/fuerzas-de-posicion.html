@@ -144,6 +144,7 @@ import { crearEscena } from '../motor/escena.js';
 import { eje, curva, cuerpo, punteado, texto, bloque, vectorPx, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
+import { num, exp } from '../motor/formato.js';
 
 const el = id => document.getElementById(id);
 const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
@@ -416,18 +417,18 @@ function pintar(ctx, l) {
   punteado(ctx, xCapa.lp.px(t), xCapa.techo, xCapa.lp.px(t), xCapa.techo + 3 * xCapa.alturaPanel,
     { color: p.blueSoft, guiones: [3, 4] });
 
-  leer('w1-omega', osc.omega.toFixed(2) + ' rad/s');
-  leer('w1-T', osc.periodo.toFixed(2) + ' s');
-  leer('w1-f', osc.frecuencia.toFixed(3) + ' Hz');
-  leer('w1-vmax', (A_OSC * osc.omega).toFixed(3) + ' m/s');
-  leer('w1-amax', (A_OSC * osc.omega * osc.omega).toFixed(3) + ' m/s²');
+  leer('w1-omega', num(osc.omega, 2) + ' rad/s');
+  leer('w1-T', num(osc.periodo, 2) + ' s');
+  leer('w1-f', num(osc.frecuencia, 3) + ' Hz');
+  leer('w1-vmax', num(A_OSC * osc.omega, 3) + ' m/s');
+  leer('w1-amax', num(A_OSC * osc.omega * osc.omega, 3) + ' m/s²');
 
   // La lectura que es la prueba (Paso 2 del brief): se evaluan a(t) y x(t) en el
   // instante actual y se suman -- no se escribe un cero. Si alguien le cambiara el
   // signo a `osc.a`, esto dejaria de dar cero.
   const pruebaCruda = osc.a(t) + osc.omega * osc.omega * (osc.x(t) - X0);
   const prueba = Math.abs(pruebaCruda) < 1e-9 ? 0 : pruebaCruda; // limpia el -0.000 del punto flotante
-  leer('w1-mas', prueba.toFixed(3) + ' m/s²');
+  leer('w1-mas', num(prueba, 3) + ' m/s²');
 }
 
 let enReposo = true;
@@ -441,12 +442,12 @@ const escena = crearEscena({
 
 deslizador({
   entrada: el('w1-k'), salida: el('w1-k-out'), pagina,
-  formato: v => v.toFixed(1) + ' N/m',
+  formato: v => num(v, 1) + ' N/m',
   alCambiar: () => { escena.duracion = periodoActual(); widget.repintar(); },
 });
 deslizador({
   entrada: el('w1-m'), salida: el('w1-m-out'), pagina,
-  formato: v => v.toFixed(1) + ' kg',
+  formato: v => num(v, 1) + ' kg',
   alCambiar: () => { escena.duracion = periodoActual(); widget.repintar(); },
 });
 boton({
@@ -702,17 +703,17 @@ function pintar2(ctx, l) {
   punteado(ctx, panel2.lp.px(s), panel2.techo, panel2.lp.px(s), panel2.techo + panel2.alturaPanel,
     { color: p.blueSoft, guiones: [3, 4] });
 
-  leer('w2-ft', fT.toExponential(4) + ' N');
-  leer('w2-fl', fL.toExponential(4) + ' N');
-  leer('w2-fn', (neta >= 0 ? '+' : '') + neta.toExponential(4) + ' N');
+  leer('w2-ft', exp(fT, 4) + ' N');
+  leer('w2-fl', exp(fL, 4) + ' N');
+  leer('w2-fn', (neta >= 0 ? '+' : '') + exp(neta, 4) + ' N');
   // Calculada con la formula (Paso 2 del brief: "tiene que... moverse si alguien
   // cambiara una masa"), no escrita a mano.
-  leer('w2-eq', S_EQUILIBRIO.toFixed(3) + ' d');
+  leer('w2-eq', num(S_EQUILIBRIO, 3) + ' d');
 }
 
 deslizador({
   entrada: el('w2-s'), salida: el('w2-s-out'), pagina,
-  formato: v => v.toFixed(3) + ' d',
+  formato: v => num(v, 3) + ' d',
   alCambiar: () => widget2.repintar(),
 });
 const casillaLog = casilla({

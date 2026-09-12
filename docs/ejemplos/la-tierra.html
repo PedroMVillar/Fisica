@@ -40,7 +40,7 @@ try {
     <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0">La Tierra gira alrededor del Sol en una órbita aproximadamente circular con una velocidad constante de 30 km/s. ¿Cuál es la aceleración de la Tierra respecto al Sol? Considere el radio de la órbita terrestre igual a 150 × 10⁶ km.</p>
   </div>
 
-  <p class="parrafo" style="margin-top:22px">La cuenta que pide es de una sola línea —<i>a</i> = <i>v²/R</i>—, sin nada que derivar y sin ningún dato que no esté ya en el enunciado. Lo raro no es resolverla: es lo que devuelve. El resultado es <i>a</i> = 6.0 × 10⁻³ m/s², seis milésimas de metro por segundo cuadrado, un número tan chico que parece un error de tipeo. ¿Esa nada de aceleración alcanza para mantener a todo un planeta dando vueltas alrededor del Sol?</p>
+  <p class="parrafo" style="margin-top:22px">La cuenta que pide es de una sola línea —<i>a</i> = <i>v²/R</i>—, sin nada que derivar y sin ningún dato que no esté ya en el enunciado. Lo raro no es resolverla: es lo que devuelve. El resultado es <i>a</i> = 6,0 × 10⁻³ m/s², seis milésimas de metro por segundo cuadrado, un número tan chico que parece un error de tipeo. ¿Esa nada de aceleración alcanza para mantener a todo un planeta dando vueltas alrededor del Sol?</p>
   <p class="parrafo">Lo que cuesta de este ejercicio no es calcular el número: es creerle. Abajo hay una manera de verlo sin fe de por medio —en vez de preguntar cuánto vale la aceleración, la simulación pregunta cuánto se desvía la Tierra de la recta que traía, y deja mover el reloj para mirarlo crecer.</p>
 </div>
 
@@ -57,14 +57,14 @@ try {
         <button id="w1-un-segundo" class="boton">Un segundo</button>
       </div>
       <label class="control" style="flex:1 1 240px;min-width:200px">
-        <span class="rotulo-campo">tiempo de viaje <output id="w1-t-out" class="valor-control">1.00 s</output></span>
+        <span class="rotulo-campo">tiempo de viaje <output id="w1-t-out" class="valor-control">1,00 s</output></span>
         <input id="w1-t-slider" type="range" min="0" max="1" step="0.001" value="0" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>tiempo de viaje <b id="w1-t" class="lectura-valor">1.00 s</b></span>
-      <span>arco recorrido <b id="w1-arco" class="lectura-valor azul">30.0 km</b></span>
-      <span>separación de la recta <b id="w1-caida" class="lectura-valor roja">3.0 mm</b></span>
+      <span>tiempo de viaje <b id="w1-t" class="lectura-valor">1,00 s</b></span>
+      <span>arco recorrido <b id="w1-arco" class="lectura-valor azul">30,0 km</b></span>
+      <span>separación de la recta <b id="w1-caida" class="lectura-valor roja">3,0 mm</b></span>
       <span>exageración del eje horizontal <b id="w1-exag" class="lectura-valor">× 16 millones</b></span>
     </div>
   </div>
@@ -74,8 +74,8 @@ try {
   <h2 class="titulo-seccion">Cómo se resuelve</h2>
   <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
     <li>En un movimiento circular uniforme la aceleración apunta al centro y vale <i>v²/R</i>. No hay que derivar nada: es la fórmula del capítulo.</li>
-    <li>Pasar las unidades antes de dividir. 30 km/s = 3 × 10⁴ m/s y 150 × 10⁶ km = 1.5 × 10¹¹ m. La mitad de los errores de este ejercicio son de acá.</li>
-    <li><i>a</i> = (3 × 10⁴)² / 1.5 × 10¹¹ = 9 × 10⁸ / 1.5 × 10¹¹ = 6.0 × 10⁻³ m/s².</li>
+    <li>Pasar las unidades antes de dividir. 30 km/s = 3 × 10⁴ m/s y 150 × 10⁶ km = 1,5 × 10¹¹ m. La mitad de los errores de este ejercicio son de acá.</li>
+    <li><i>a</i> = (3 × 10⁴)² / 1,5 × 10¹¹ = 9 × 10⁸ / 1,5 × 10¹¹ = 6,0 × 10⁻³ m/s².</li>
     <li>Chequear que el número tenga sentido: seis milímetros por segundo cuadrado. En un segundo eso desvía a la Tierra 3 milímetros de la recta que traía —el segmento rojo del dibujo—, mientras avanza 30 kilómetros. Uno en diez millones.</li>
   </ol>
   <p class="parrafo" style="margin-top:22px">Eso es lo que la nota vino a decir: la aceleración no mide cuánto se mueve algo, mide cuánto <i>cambia</i> su movimiento. El Sol no tiene que tironear fuerte, porque no tiene apuro —tiene que tironear <i>siempre</i>. Movés el control de arriba hasta el mes y esos milímetros por segundo cuadrado, sostenidos sin pausa, se vuelven veinte mil millones de metros de desvío: el tamaño exacto que hace falta para que la recta se cierre sobre sí misma y sea una órbita.</p>
@@ -95,6 +95,7 @@ import { crearWidget } from '../motor/widget.js';
 import { eje, curva, cuerpo, punteado, texto, vectorPx } from '../motor/dibujo.js';
 import { deslizador, boton } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
+import { num } from '../motor/formato.js';
 
 const el = id => document.getElementById(id);
 const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
@@ -116,24 +117,24 @@ const A_C = V * V / R;     // 6.0e-3 m/s^2, el numero del ejercicio
 // toFixed fijo no le sirve a ninguna de las tres cantidades.
 
 function formatearTiempo(s) {
-  if (s < 60) return s.toFixed(s < 10 ? 2 : 1) + ' s';
-  if (s < 3600) return (s / 60).toFixed(1) + ' min';
-  if (s < 86400) return (s / 3600).toFixed(1) + ' h';
-  if (s < 86400 * 30) return (s / 86400).toFixed(1) + ' d';
-  return (s / (86400 * 30)).toFixed(1) + ' meses';
+  if (s < 60) return num(s, s < 10 ? 2 : 1) + ' s';
+  if (s < 3600) return num(s / 60, 1) + ' min';
+  if (s < 86400) return num(s / 3600, 1) + ' h';
+  if (s < 86400 * 30) return num(s / 86400, 1) + ' d';
+  return num(s / (86400 * 30), 1) + ' meses';
 }
 
 function formatearLargo(m) {
-  if (m < 1) return (m * 1000).toFixed(1) + ' mm';
-  if (m < 1000) return m.toFixed(2) + ' m';
-  return (m / 1000).toFixed(1) + ' km';
+  if (m < 1) return num(m * 1000, 1) + ' mm';
+  if (m < 1000) return num(m, 2) + ' m';
+  return num(m / 1000, 1) + ' km';
 }
 
 function formatearGrande(x) {
-  if (x >= 1e9) return (x / 1e9).toFixed(x / 1e9 >= 10 ? 0 : 1) + ' mil millones';
-  if (x >= 1e6) return (x / 1e6).toFixed(x / 1e6 >= 10 ? 0 : 1) + ' millones';
-  if (x >= 1e3) return (x / 1e3).toFixed(x / 1e3 >= 10 ? 0 : 1) + ' mil';
-  return x.toFixed(0);
+  if (x >= 1e9) return num(x / 1e9, x / 1e9 >= 10 ? 0 : 1) + ' mil millones';
+  if (x >= 1e6) return num(x / 1e6, x / 1e6 >= 10 ? 0 : 1) + ' millones';
+  if (x >= 1e3) return num(x / 1e3, x / 1e3 >= 10 ? 0 : 1) + ' mil';
+  return num(x, 0);
 }
 
 // [x+dx, y+dy]: para no repetir la aritmetica de desplazar un rotulo en cada llamada.

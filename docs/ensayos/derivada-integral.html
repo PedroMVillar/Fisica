@@ -51,21 +51,21 @@ try {
     <canvas id="w1-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span class="rotulo-campo">Δt <output id="w1-dt-out" class="valor-control">0.600 s</output></span>
+        <span class="rotulo-campo">Δt <output id="w1-dt-out" class="valor-control">0,600 s</output></span>
         <input id="w1-dt" type="range" min="0.001" max="0.8" step="0.001" value="0.6" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>pendiente PQ <b id="w1-pend" class="lectura-valor azul">7.440 m/s</b></span>
-      <span>velocidad en P <b id="w1-lim" class="lectura-valor">3.84 m/s</b></span>
-      <span>diferencia <b id="w1-error" class="lectura-valor roja">3.600 m/s</b></span>
+      <span>pendiente PQ <b id="w1-pend" class="lectura-valor azul">7,440 m/s</b></span>
+      <span>velocidad en P <b id="w1-lim" class="lectura-valor">3,84 m/s</b></span>
+      <span>diferencia <b id="w1-error" class="lectura-valor roja">3,600 m/s</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p class="parrafo-suelto">Mirá las dos últimas lecturas. La pendiente de PQ se acerca a 3.84 y la diferencia se hace cada vez más chica, pero nunca da cero: siempre queda algo. Y no es un defecto de la cuenta ni del redondeo. Con Δt = 0 los dos puntos serían el mismo punto, Δx también sería cero, y la división 0/0 no existe. Así que la velocidad instantánea no es «la pendiente cuando Δt vale cero» —ahí no hay ninguna pendiente que calcular— sino el número al que la pendiente se acerca mientras Δt se achica. Eso es un límite: el nombre del acercamiento, no el del punto final.</p>
-  <p class="parrafo" style="margin-top:22px">Ese acercamiento el apunte lo escribe <i>v</i> = d<i>x</i>/d<i>t</i>. La <i>d</i> no es un número chiquito que multiplica: es la marca de que la cuenta Δ<i>x</i>/Δ<i>t</i> ya se hizo con Δ<i>t</i> yendo a cero. Y no es adorno teórico. El ejercicio 1 del práctico da exactamente esta curva, <i>x</i>(<i>t</i>) = −3 + 2<i>t</i><sup>3</sup>, y pide velocidades instantáneas leídas del gráfico: en <i>t</i> = 0 la curva está horizontal, así que la velocidad es 0; en <i>t</i> = 0.8 s vale 3.84 m/s, que es el número al que viste llegar la pendiente.</p>
+  <p class="parrafo-suelto">Mirá las dos últimas lecturas. La pendiente de PQ se acerca a 3,84 y la diferencia se hace cada vez más chica, pero nunca da cero: siempre queda algo. Y no es un defecto de la cuenta ni del redondeo. Con Δt = 0 los dos puntos serían el mismo punto, Δx también sería cero, y la división 0/0 no existe. Así que la velocidad instantánea no es «la pendiente cuando Δt vale cero» —ahí no hay ninguna pendiente que calcular— sino el número al que la pendiente se acerca mientras Δt se achica. Eso es un límite: el nombre del acercamiento, no el del punto final.</p>
+  <p class="parrafo" style="margin-top:22px">Ese acercamiento el apunte lo escribe <i>v</i> = d<i>x</i>/d<i>t</i>. La <i>d</i> no es un número chiquito que multiplica: es la marca de que la cuenta Δ<i>x</i>/Δ<i>t</i> ya se hizo con Δ<i>t</i> yendo a cero. Y no es adorno teórico. El ejercicio 1 del práctico da exactamente esta curva, <i>x</i>(<i>t</i>) = −3 + 2<i>t</i><sup>3</sup>, y pide velocidades instantáneas leídas del gráfico: en <i>t</i> = 0 la curva está horizontal, así que la velocidad es 0; en <i>t</i> = 0,8 s vale 3,84 m/s, que es el número al que viste llegar la pendiente.</p>
 
   <h2 class="titulo-seccion">02 · Tres gráficos, un solo movimiento</h2>
   <p class="parrafo">Los tres gráficos de abajo describen un solo movimiento: uno en posición, uno en velocidad y uno en aceleración. Los tres comparten el eje horizontal, así que cada instante es una columna vertical que los atraviesa a los tres a la vez. Mirados por separado son tres dibujos sueltos; leídos juntos, siguiendo esa columna, son una sola historia.</p>
@@ -86,16 +86,16 @@ try {
       </div>
     </div>
     <div class="lecturas">
-      <span>t <b id="w2-t" class="lectura-valor">1.70 s</b></span>
-      <span>x <b id="w2-x" class="lectura-valor">17.45 m</b></span>
-      <span>v <b id="w2-v" class="lectura-valor azul">0.00 m/s</b></span>
-      <span>a <b id="w2-a" class="lectura-valor roja">-10.0 m/s²</b></span>
+      <span>t <b id="w2-t" class="lectura-valor">1,70 s</b></span>
+      <span>x <b id="w2-x" class="lectura-valor">17,45 m</b></span>
+      <span>v <b id="w2-v" class="lectura-valor azul">0,00 m/s</b></span>
+      <span>a <b id="w2-a" class="lectura-valor roja">-10,0 m/s²</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p class="parrafo-suelto">Donde <i>x</i> tiene su máximo —<i>t</i> = 1.7 s, <i>x</i> = 17.45 m— la velocidad vale cero, porque ahí la curva de posición está horizontal: no hay pendiente que leer. Arrastrá el cursor hasta esa cima y mirá el punto azul del panel del medio: cae justo sobre el cero.</p>
+  <p class="parrafo-suelto">Donde <i>x</i> tiene su máximo —<i>t</i> = 1,7 s, <i>x</i> = 17,45 m— la velocidad vale cero, porque ahí la curva de posición está horizontal: no hay pendiente que leer. Arrastrá el cursor hasta esa cima y mirá el punto azul del panel del medio: cae justo sobre el cero.</p>
   <p class="parrafo" style="margin-top:22px">La aceleración, en cambio, no se entera de nada de eso: es constante y negativa, −10 m/s², en todo el recorrido. Se ve en que <i>v</i> es una recta que baja sin pausa y en que <i>x</i> es una parábola con la concavidad siempre hacia abajo. El ejercicio 4 cobra justo esta distinción: velocidad cero no es lo mismo que aceleración cero. En la cima de la curva, el móvil deja de avanzar un instante, pero nunca deja de frenar.</p>
 
   <h2 class="titulo-seccion">03 · Dibujá vos</h2>
@@ -137,21 +137,21 @@ try {
     <canvas id="w4-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span class="rotulo-campo">t <output id="w4-hasta-out" class="valor-control">1.70 s</output></span>
+        <span class="rotulo-campo">t <output id="w4-hasta-out" class="valor-control">1,70 s</output></span>
         <input id="w4-hasta" type="range" min="0" max="3.4" step="0.01" value="1.7" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>t <b id="w4-t" class="lectura-valor">1.70 s</b></span>
-      <span>desplazamiento <b id="w4-desp" class="lectura-valor">14.45 m</b></span>
-      <span>camino recorrido <b id="w4-cam" class="lectura-valor">14.45 m</b></span>
-      <span>v <b id="w4-v" class="lectura-valor azul">0.00 m/s</b></span>
+      <span>t <b id="w4-t" class="lectura-valor">1,70 s</b></span>
+      <span>desplazamiento <b id="w4-desp" class="lectura-valor">14,45 m</b></span>
+      <span>camino recorrido <b id="w4-cam" class="lectura-valor">14,45 m</b></span>
+      <span>v <b id="w4-v" class="lectura-valor azul">0,00 m/s</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna columna-final">
-  <p class="parrafo-suelto">Llevá el slider hasta <i>t</i> = 3.4 s y mirá las dos lecturas de abajo: el desplazamiento vuelve a 0.00 m, pero el camino recorrido llega a 28.90 m. No es una contradicción, es la respuesta a dos preguntas distintas. El móvil subió 14.45 m y después bajó esos mismos 14.45 m: como desplazamiento, la vuelta se cancela con la ida y por eso el área azul y el área roja se restan hasta dar cero; como camino recorrido, las dos partes del viaje se suman igual, sin importar de qué lado del eje quedaron.</p>
+  <p class="parrafo-suelto">Llevá el slider hasta <i>t</i> = 3,4 s y mirá las dos lecturas de abajo: el desplazamiento vuelve a 0,00 m, pero el camino recorrido llega a 28,90 m. No es una contradicción, es la respuesta a dos preguntas distintas. El móvil subió 14,45 m y después bajó esos mismos 14,45 m: como desplazamiento, la vuelta se cancela con la ida y por eso el área azul y el área roja se restan hasta dar cero; como camino recorrido, las dos partes del viaje se suman igual, sin importar de qué lado del eje quedaron.</p>
   <p class="parrafo" style="margin-top:22px">Es el mismo ejercicio 4 de la sección 02, cerrando el círculo: la curva de posición que viste ahí y la curva de velocidad que acabás de integrar acá describen un solo movimiento, leído en las dos direcciones.</p>
 
   <h2 class="titulo-seccion">Para resolver 1 a 8</h2>
@@ -177,6 +177,7 @@ import { deslizador, boton } from '../motor/controles.js';
 import { arrastrable } from '../motor/arrastre.js';
 import { derivar, derivarMuestras, suavizar, integrar } from '../fisica/calculo.js';
 import { conectarTema } from '../motor/tema.js';
+import { num } from '../motor/formato.js';
 
 const el = id => document.getElementById(id);
 const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
@@ -273,14 +274,14 @@ function widgetSecante(pagina) {
     // Que la diferencia nunca dé cero se apoya tambien en el min="0.001" del slider:
     // con un minimo mas chico la pantalla mostraria 0.000 y contradiria al parrafo de
     // cierre. Los dos numeros van juntos.
-    leer('w1-pend', pendiente.toFixed(3) + ' m/s');
-    leer('w1-lim', V_P.toFixed(2) + ' m/s');
-    leer('w1-error', Math.abs(pendiente - V_P).toFixed(3) + ' m/s');
+    leer('w1-pend', num(pendiente, 3) + ' m/s');
+    leer('w1-lim', num(V_P, 2) + ' m/s');
+    leer('w1-error', num(Math.abs(pendiente - V_P), 3) + ' m/s');
   }
 
   deslizador({
     entrada: el('w1-dt'), salida: el('w1-dt-out'),
-    formato: v => v.toFixed(3) + ' s', pagina,
+    formato: v => num(v, 3) + ' s', pagina,
     alCambiar: v => { dt = v; widget.repintar(); },
   });
 }
@@ -381,10 +382,10 @@ function widgetPaneles(pagina) {
     punteado(ctx, primero.px(cursor), techo, primero.px(cursor), techo + 3 * alturaPanel,
       { color: p.blueSoft, guiones: [3, 4] });
 
-    leer('w2-t', cursor.toFixed(2) + ' s');
-    leer('w2-x', x(cursor).toFixed(2) + ' m');
-    leer('w2-v', v(cursor).toFixed(2) + ' m/s');
-    leer('w2-a', a(cursor).toFixed(1) + ' m/s²');
+    leer('w2-t', num(cursor, 2) + ' s');
+    leer('w2-x', num(x(cursor), 2) + ' m');
+    leer('w2-v', num(v(cursor), 2) + ' m/s');
+    leer('w2-a', num(a(cursor), 1) + ' m/s²');
   }
 
   arrastrable({
@@ -630,17 +631,17 @@ function widgetArea(pagina) {
     // toFixed(2) convierte ese resto en "-0.00", que contradice al párrafo de
     // cierre. Por debajo de este umbral -muy por encima del ruido de Simpson y muy
     // por debajo del decimal que se muestra- se redondea a 0 antes de formatear.
-    const sinCeroNegativo = m => (Math.abs(m) < 1e-6 ? 0 : m).toFixed(2);
+    const sinCeroNegativo = m => num(Math.abs(m) < 1e-6 ? 0 : m, 2);
 
-    leer('w4-t', hasta.toFixed(2) + ' s');
+    leer('w4-t', num(hasta, 2) + ' s');
     leer('w4-desp', sinCeroNegativo(desplazamiento) + ' m');
-    leer('w4-cam', camino.toFixed(2) + ' m');
-    leer('w4-v', v(hasta).toFixed(2) + ' m/s');
+    leer('w4-cam', num(camino, 2) + ' m');
+    leer('w4-v', num(v(hasta), 2) + ' m/s');
   }
 
   deslizador({
     entrada: el('w4-hasta'), salida: el('w4-hasta-out'),
-    formato: v => v.toFixed(2) + ' s', pagina,
+    formato: v => num(v, 2) + ' s', pagina,
     alCambiar: t => { hasta = t; widget.repintar(); },
   });
 }

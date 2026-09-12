@@ -137,6 +137,7 @@ import { crearEscena } from '../motor/escena.js';
 import { bloque, suelo, vectorPx, cuerpo, acotarFlecha, marcaDeTope } from '../motor/dibujo.js';
 import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
+import { num } from '../motor/formato.js';
 
 const el = id => document.getElementById(id);
 const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
@@ -283,13 +284,13 @@ function pintar(ctx, l) {
   if (aislar) pintarAislado(ctx, l, p, mB, a, tDesdeA, tDesdeB);
   else pintarEscena(ctx, l, p, a, escena.t);
 
-  leer('w1-a', a.toFixed(3) + ' m/s²');
-  leer('w1-ta', tDesdeA.toFixed(2) + ' N');
-  leer('w1-tb', tDesdeB.toFixed(2) + ' N');
+  leer('w1-a', num(a, 3) + ' m/s²');
+  leer('w1-ta', num(tDesdeA, 2) + ' N');
+  leer('w1-tb', num(tDesdeB, 2) + ' N');
   // El signo del cero: tDesdeA y tDesdeB son literalmente el mismo numero (misma
   // cuerda), pero la resta de dos flotantes casi iguales puede dejar un -1e-13 que
   // toFixed imprimiria como "-0.00". Mismo retoque que usan los otros ensayos.
-  const dif = (tDesdeA - tDesdeB).toFixed(2);
+  const dif = num(tDesdeA - tDesdeB, 2);
   leer('w1-dif', (dif === '-0.00' ? '0.00' : dif) + ' N');
 }
 
@@ -427,7 +428,7 @@ const escena = crearEscena({
 
 deslizador({
   entrada: el('w1-mb'), salida: el('w1-mb-out'), pagina,
-  formato: v => v.toFixed(1) + ' kg',
+  formato: v => num(v, 1) + ' kg',
   alCambiar: v => {
     escena.duracion = duracion(estadoPlano(v).a);
     widget.repintar();
@@ -764,15 +765,15 @@ function pintar2(ctx, l) {
   if (vertical) pintarVertical(ctx, l, p, a, T);
   else pintarHorizontal(ctx, l, p, a, T);
 
-  leer('w2-a', a.toFixed(3) + ' m/s²');
-  leer('w2-t1', T[0].toFixed(2) + ' N');
-  leer('w2-t2', T[1].toFixed(2) + ' N');
-  leer('w2-t3', T[2].toFixed(2) + ' N');
+  leer('w2-a', num(a, 3) + ' m/s²');
+  leer('w2-t1', num(T[0], 2) + ' N');
+  leer('w2-t2', num(T[1], 2) + ' N');
+  leer('w2-t3', num(T[2], 2) + ' N');
 }
 
 deslizador({
   entrada: el('w2-F'), salida: el('w2-F-out'), pagina,
-  formato: v => v.toFixed(0) + ' N',
+  formato: v => num(v, 0) + ' N',
   alCambiar: () => widget2.repintar(),
 });
 casilla({
