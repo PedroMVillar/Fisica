@@ -77,6 +77,18 @@ test('cinco etiquetas desde un punto caen las cinco dentro y sin pisarse', () =>
   }
 });
 
+// --- El color es obligatorio y no tiene valor por defecto ---------------
+//
+// Mismo contrato que `texto()` y el resto de las primitivas de dibujo (ver
+// test/dibujo.test.js): omitirlo no tiene que dibujar "algo", tiene que fallar.
+test('colocarEtiqueta falla si se omite el color', () => {
+  reiniciarEtiquetas({ ancho: 400, alto: 200 });
+  const c = ctxFalso();
+  assert.throws(() => colocarEtiqueta(c, 'v', 100, 100, undefined), /falta el color/);
+  assert.throws(() => colocarEtiqueta(c, 'v', 100, 100, {}), /falta el color/);
+  assert.deepEqual(c.ops, [], 'tiene que fallar antes de dibujar nada');
+});
+
 test('con evitar:false la etiqueta se queda donde le dicen aunque pise', () => {
   // La convergencia de Q sobre P en derivada-integral es el punto del ejercicio.
   reiniciarEtiquetas({ ancho: 400, alto: 200 });

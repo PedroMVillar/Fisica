@@ -30,6 +30,30 @@
 // tiene que poder superponerse a `P` a medida que el usuario arrastra Q hacia P y la
 // secante se vuelve tangente -esquivarlo ahi rompe la leccion. Ver el comentario en el
 // sitio que lo usa.
+//
+// LIMITE CONOCIDO: el registro solo sabe de los rotulos que pasaron POR
+// `colocarEtiqueta`. Un `texto()` llamado directo (docs/motor/dibujo.js) nunca entra
+// -ni se registra para que otros lo esquiven, ni esquiva a los que ya estan- y eso
+// incluye las marcas de `eje()`, que rotula sus numeros y su titulo de eje con `texto()`
+// interno, nunca con esto. En el sitio quedan 12 llamadas directas a `texto()` en
+// cuatro paginas (fuerzas-de-posicion.html, tiro-parabolico.html, derivada-integral.html
+// y los ejes de las nueve), varias colgadas de un punto que el usuario arrastra -asi que
+// pueden superponerse a un rotulo migrado sin que ninguno de los dos lo note.
+// Cerrar ese primer punto no es un cambio chico: exigiria que `eje()` conociera los
+// rotulos de los demas widgets de la pagina, algo que hoy no sabe ni necesita saber para
+// nada mas.
+//
+// Segundo limite, relacionado: `crearWidget` (docs/motor/widget.js) pasa el
+// {ancho, alto} del CANVAS ENTERO como limites, incluso para un widget de
+// `panelesApilados` que solo dibuja en una franja de ese canvas. El recorte de borde y
+// el esquive de colisiones no conocen el borde del panel, asi que un rotulo cerca del
+// borde inferior de un panel puede quedar clampeado o empujado por esquive hacia el
+// panel vecino en vez de hacia el borde real de su propio panel. No es una regresion
+// -antes de este modulo no habia recorte de ningun tipo- y la probabilidad es baja (el
+// esquive tiene que empujar justo a traves de esa frontera), pero conviene tenerlo
+// presente si algun rotulo de un widget apilado aparece mal puesto.
+
+import { exigirColor } from './color.js';
 
 // Alto de linea usado solo para decidir colisiones (no para medir glifos de verdad):
 // dos rotulos cuya diferencia en y es menor que esto se consideran en la misma fila.
@@ -82,6 +106,7 @@ export function colocarEtiqueta(ctx, cadena, x, y, opciones = {}) {
     dx = 8, dy = -6, color, px = 11, peso = 500, alineacion = 'left',
     limites = limitesActuales, evitar = true,
   } = opciones;
+  exigirColor(color, 'colocarEtiqueta');
 
   ctx.font = `${peso} ${px}px "JetBrains Mono", ui-monospace, monospace`;
   ctx.fillStyle = color;

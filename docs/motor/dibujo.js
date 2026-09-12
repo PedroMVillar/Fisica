@@ -60,14 +60,7 @@
 
 import { marca } from './formato.js';
 import { colocarEtiqueta } from './etiqueta.js';
-
-function exigirColor(color, primitiva) {
-  if (typeof color !== 'string' || color === '') {
-    throw new TypeError(
-      `${primitiva}: falta el color. Es obligatorio y sin default: pasalo desde los tokens CSS del widget.`
-    );
-  }
-}
+import { exigirColor } from './color.js';
 
 // La geometría sale literal del `arrow` del diseño
 // (docs/plataforma/diseno/Tiro parabolico.dc.html:402-419).

@@ -59,7 +59,7 @@ Aplican a todas las tareas.
 | `docs/motor/formato.js` | **nuevo** — `num`, `exp` y `marca`, el único lugar donde un número se convierte en texto |
 | `docs/motor/dibujo.js` | `eje()` deriva los decimales del paso y rotula con coma |
 | `docs/motor/etiqueta.js` | **nuevo** — `colocarEtiqueta`, que ubica un rótulo sin salirse del canvas ni pisar a otro |
-| `docs/estilos/base.css` | recibe ocho clases tipográficas |
+| `docs/estilos/base.css` | recibe diez clases tipográficas |
 | las 9 páginas | adoptan las clases, y sus 117 lecturas pasan por `formato.js` |
 | `docs/ensayos/sistemas-acoplados.html` | además, la frase del ejercicio 2 |
 | `docs/plataforma/decisiones.md` | **nuevo** — las dos decisiones del dueño, por escrito |
@@ -69,7 +69,7 @@ Aplican a todas las tareas.
 | Fase | Tarea | Qué deja |
 |---|---|---|
 | A — el formato | 1 | `formato.js` con sus pruebas |
-| B — los barridos | 2 | las ocho clases tipográficas aplicadas a las 9 páginas |
+| B — los barridos | 2 | las diez clases tipográficas aplicadas a las 9 páginas |
 | | 3 | los 117 sitios y la prosa de 5 páginas, convertidos a coma |
 | C — el motor | 4 | `eje()` arreglado: decimales del paso, rótulos con coma |
 | | 5 | `colocarEtiqueta` y los 18 sitios que rotulan cuerpos |

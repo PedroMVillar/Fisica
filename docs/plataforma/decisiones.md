@@ -38,7 +38,7 @@ pantalla que dos tonos de azul uno al lado del otro. **Esto no es deriva y no se
 algo que no sea aceleración o fuerza tiene que preguntar primero.
 
 La excepción cubre **toda** la página — no sólo el punto que dibuja al camión — y son
-exactamente estas cuatro apariciones:
+exactamente estas cinco apariciones:
 
 | Qué es | Dónde |
 |---|---|
