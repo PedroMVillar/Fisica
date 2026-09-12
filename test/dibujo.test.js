@@ -335,6 +335,30 @@ test('con borde, el bloque ademas se contornea', () => {
   assert.ok(c.ops.some(o => o[0] === 'stroke'));
 });
 
+test('bloque rota las esquinas segun su propio angulo, no el del lienzo', () => {
+  // angulo = 30 grados: ni 0 ni multiplo de 90, para que un angulo ignorado en
+  // silencio (destructuring que se cae, o cos/sen calculados y nunca aplicados) no
+  // pueda pasar por casualidad. Las posiciones esperadas se calculan aca con la
+  // formula de rotacion, no llamando a `bloque`: si la funcion ignora `angulo`, las
+  // esquinas reales quedan en el rectangulo sin rotar y no coinciden.
+  const l = crearLienzo({ ancho: 200, alto: 200, xMin: 0, xMax: 10, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  const angulo = Math.PI / 6;
+  bloque(c, l, [5, 5], { ancho: 2, alto: 1, color: '#000', angulo });
+
+  const cos = Math.cos(angulo), sen = Math.sin(angulo);
+  const esperadas = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => {
+    const dx = sx * 1, dy = sy * 0.5; // ancho/2, alto/2
+    return l.p([5 + dx * cos - dy * sen, 5 + dx * sen + dy * cos]);
+  });
+  const puntos = c.ops.filter(o => o[0] === 'moveTo' || o[0] === 'lineTo').map(o => [o[1], o[2]]);
+  assert.equal(puntos.length, 4);
+  for (let i = 0; i < 4; i++) {
+    assert.ok(Math.abs(puntos[i][0] - esperadas[i][0]) < 1e-9, `esquina ${i}, x`);
+    assert.ok(Math.abs(puntos[i][1] - esperadas[i][1]) < 1e-9, `esquina ${i}, y`);
+  }
+});
+
 test('suelo dibuja la linea y sus rayitas dentro del rango pedido', () => {
   const l = crearLienzo({ ancho: 400, alto: 200, xMin: -5, xMax: 15, yMin: 0, yMax: 10 });
   const c = ctxFalso();
@@ -351,4 +375,34 @@ test('suelo puede ir a una altura distinta de cero', () => {
   suelo(c, l, { color: '#000', desde: 0, hasta: 10, y: 4 });
   const ys = c.ops.filter(o => o[0] === 'moveTo').map(o => o[2]);
   assert.ok(Math.abs(Math.max(...ys) - l.p([0, 4])[1]) < 1e-9);
+});
+
+test('el rayado de suelo cae del lado del terreno con escala anisotropa y lienzo inclinado', () => {
+  // Caso que se invierte con una construccion que obtiene el lado rotando un cuarto de
+  // vuelta la tangente ya calculada en pixeles: escala anisotropa 1:3 (kx=1, ky=3) con
+  // el lienzo a -30 grados. El lado correcto se define de forma independiente de la
+  // implementacion: es la direccion en la que mapea con `l.p` el paso de un `y` de
+  // marco a `y - 1` (hacia adentro del terreno). El rayado tiene que apuntar del mismo
+  // lado que esa direccion -- que su producto punto con ella de positivo -- y no del
+  // lado contrario, que es lo que pasaba antes de este arreglo (el producto punto daba
+  // negativo con estos mismos numeros).
+  const l = crearLienzo({
+    ancho: 100, alto: 300, xMin: 0, xMax: 100, yMin: 0, yMax: 100, angulo: -Math.PI / 6,
+  });
+  const c = ctxFalso();
+  suelo(c, l, { color: '#000', desde: 0, hasta: 10, y: 0 });
+  const moves = c.ops.filter(o => o[0] === 'moveTo');
+  const lines = c.ops.filter(o => o[0] === 'lineTo');
+  // ops[0] es la linea del suelo en si; la primera rayita es el par de indice 1.
+  const [mx, my] = moves[1].slice(1);
+  const [lx, ly] = lines[1].slice(1);
+  const rayitaX = lx - mx, rayitaY = ly - my;
+
+  const [x0, y0] = l.p([0, 0]);
+  const [xAdentro, yAdentro] = l.p([0, -1]);
+  const largo = Math.hypot(xAdentro - x0, yAdentro - y0);
+  const nx = (xAdentro - x0) / largo, ny = (yAdentro - y0) / largo;
+
+  const dot = rayitaX * nx + rayitaY * ny;
+  assert.ok(dot > 0, `el rayado quedo del lado del aire, no del terreno (producto punto ${dot})`);
 });

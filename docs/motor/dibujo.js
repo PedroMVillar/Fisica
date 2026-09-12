@@ -193,10 +193,21 @@ export function bloque(ctx, l, centro, { ancho, alto, color, borde, angulo = 0 }
   }
 }
 
-// La linea del suelo con sus rayitas. Viene del ensayo de tiro parabolico, donde estaba
-// escrita suponiendo que el encuadre arranca en cero; aca el rango es explicito, que es
-// lo que un plano inclinado necesita. Las rayitas se dibujan en el marco del lienzo, asi
-// que sobre un lienzo inclinado salen perpendiculares al plano, como corresponde.
+// La linea del suelo con sus rayitas a 45 grados (no perpendiculares: la convencion de
+// ingenieria para representar terreno es un rayado a 45 grados entre la linea y la
+// direccion "hacia adentro" del terreno, y eso es lo que dibuja esto, igual que el
+// ensayo de tiro parabolico del que se muda). Aca el rango es explicito en vez de
+// asumir que el encuadre arranca en cero, que es lo que un plano inclinado necesita.
+//
+// El lado del rayado (que las rayitas caigan del lado del terreno y no del aire) sale
+// de mapear con `l.p` el paso de un `y` de marco a `y - 1`, no de rotar un cuarto de
+// vuelta la tangente ya calculada en pixeles. Son dos cosas distintas: con angulo
+// distinto de cero y escala anisotropa (`l.escala.x != l.escala.y`) rotar la tangente
+// en pixeles mezcla la direccion del suelo con la deformacion de la escala, y para
+// algunas combinaciones (por ejemplo escala 1:3 con -30 grados) el resultado cae del
+// lado equivocado de la linea. Mapear directamente el vector "hacia -y del marco" no
+// tiene ese problema: es geometricamente el lado correcto para cualquier angulo y
+// cualquier escala, porque es la definicion misma de "hacia el terreno".
 export function suelo(ctx, l, { color, desde, hasta, y = 0 } = {}) {
   exigirColor(color, 'suelo');
   const [x0, y0] = l.p([desde, y]);
@@ -209,11 +220,14 @@ export function suelo(ctx, l, { color, desde, hasta, y = 0 } = {}) {
   ctx.stroke();
   const largo = Math.hypot(x1 - x0, y1 - y0);
   const ux = (x1 - x0) / largo, uy = (y1 - y0) / largo;
+  const [xAdentro, yAdentro] = l.p([desde, y - 1]);
+  const largoAdentro = Math.hypot(xAdentro - x0, yAdentro - y0);
+  const nx = (xAdentro - x0) / largoAdentro, ny = (yAdentro - y0) / largoAdentro;
   ctx.globalAlpha = 0.5;
   for (let d = 0; d < largo; d += 9) {
     ctx.beginPath();
     ctx.moveTo(x0 + ux * d, y0 + uy * d);
-    ctx.lineTo(x0 + ux * (d - 6) - uy * 6, y0 + uy * (d - 6) + ux * 6);
+    ctx.lineTo(x0 + ux * (d - 6) + nx * 6, y0 + uy * (d - 6) + ny * 6);
     ctx.stroke();
   }
   ctx.globalAlpha = 1;
