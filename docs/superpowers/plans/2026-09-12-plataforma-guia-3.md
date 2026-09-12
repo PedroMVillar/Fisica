@@ -934,6 +934,18 @@ Con θ = 30° y la casilla marcada, las cinco lecturas tienen que dar `779,4 J`,
 2. Sin rozamiento a θ = 30°: `K final` tiene que dar `779,4 J` y `v final`, `8,83 m/s`.
 3. θ = 0 y θ = 60, los dos extremos: el chequeo sigue en `0,00 J` y la curva no se sale
    del panel por arriba ni cruza el cero por abajo.
+
+   **Pero ojo con qué prueba cada extremo, medido durante la ejecución:** a θ = 0 el
+   chequeo **no vigila `normal()`**. Con el modelo roto a `() => M * G` la lectura sigue
+   dando `0,00 J` ahí, y no porque el canario falle sino porque `sen 0 = 0` hace que el
+   modelo roto y el correcto sean **el mismo número** — a θ = 0 la fuerza es horizontal y
+   de verdad no aprieta contra el piso. Lo mismo pasa con la casilla de rozamiento
+   destildada, en cualquier θ: sin μ, el término que contiene `normal()` se anula y el
+   chequeo no lo ejercita.
+
+   O sea: el canario del Paso 7.6 sólo muerde **con rozamiento y con θ ≠ 0**. Verificar
+   «los dos extremos» y quedarse tranquilo es justamente la conclusión equivocada. A
+   θ = 30 salta a 22,50 J y a θ = 60 a 38,97 J; a θ = 0, a nada.
 4. **Medí la flecha**, no la mires: a 880 px tiene que dar **70,6 px** a θ = 0 y sus
    componentes **(35,3; 61,2)** a θ = 60°, con el bloque en x = 15 (F = 90 N). El módulo
    no cambia con θ: sólo se reparte entre las componentes.
