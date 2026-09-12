@@ -644,10 +644,16 @@ test('presupuestoPx: lo que falta para llegar al total queda sin pintar', () => 
   assert.deepEqual(borde.slice(1), [0, 0, 200, 20]);
 });
 
-test('presupuestoPx: un segmento negativo tira TypeError', () => {
+test('presupuestoPx: un segmento negativo, NaN o infinito tira TypeError', () => {
   const c = ctxFalso();
-  assert.throws(() => presupuestoPx(c, 0, 0, 200, 20,
-    [{ valor: -1, color: '#1b4fd4' }], { total: 10, colorBorde: '#dcd8ce' }), TypeError);
+  // `!(-1 >= 0)` y `!(NaN >= 0)` son true, pero `!(Infinity >= 0)` es false: sin exigir
+  // que el valor sea finito, un segmento infinito pasaba la guarda y llegaba a
+  // `fillRect(cursor, y, Infinity, alto)`, comportamiento de canvas no especificado.
+  for (const valor of [-1, NaN, Infinity]) {
+    assert.throws(() => presupuestoPx(c, 0, 0, 200, 20,
+      [{ valor, color: '#1b4fd4' }], { total: 10, colorBorde: '#dcd8ce' }), TypeError,
+      `valor ${valor} tendria que tirar TypeError`);
+  }
 });
 
 test('presupuestoPx: total cero no dibuja nada', () => {
@@ -675,4 +681,20 @@ test('presupuestoPx: un segmento mas angosto que minEtiquetaPx no lleva rotulo',
     { total: 100, colorBorde: '#dcd8ce', colorTexto: '#8e8a80', minEtiquetaPx: 24 });
   const rotulos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
   assert.deepEqual(rotulos, ['cinetica'], '5/100*200 = 10 px, menos que 24');
+});
+
+test('presupuestoPx: el borde se dibuja despues del ultimo relleno, no antes', () => {
+  // Cuando la suma da exactamente el total -el caso "normal" de una barra de energia-
+  // el ultimo segmento llega justo hasta `x + ancho`. Si el borde se trazara ANTES que
+  // los rellenos, el fillRect opaco del ultimo segmento lo taparia del lado derecho.
+  // `c.ops` ya guarda las llamadas en el orden en que se hacen -no hace falta una
+  // estructura nueva- asi que alcanza con comparar posiciones dentro de esa lista.
+  const c = ctxFalso();
+  presupuestoPx(c, 0, 0, 200, 20,
+    [{ valor: 40, color: '#1b4fd4' }, { valor: 60, color: '#c02a24' }],
+    { total: 100, colorBorde: '#dcd8ce' });
+  const iUltimoFill = c.ops.map(o => o[0]).lastIndexOf('fillRect');
+  const iBorde = c.ops.map(o => o[0]).indexOf('strokeRect');
+  assert.ok(iUltimoFill >= 0 && iBorde >= 0, 'tienen que existir ambas llamadas');
+  assert.ok(iBorde > iUltimoFill, 'el strokeRect del borde va despues de todos los fillRect');
 });

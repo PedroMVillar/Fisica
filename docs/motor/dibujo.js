@@ -442,10 +442,13 @@ export function presupuestoPx(ctx, x, y, ancho, alto, segmentos,
     exigirColor(s.color, 'presupuestoPx (segmento)');
     // Un presupuesto de energia no tiene segmentos negativos: si hace falta mostrar el
     // trabajo negativo de un agente externo (la mano del ej. 5), son DOS barras --
-    // "entra" y "sale" -- no un segmento al reves dentro de la misma.
-    if (!(s.valor >= 0)) {
+    // "entra" y "sale" -- no un segmento al reves dentro de la misma. `Number.isFinite`
+    // hace falta ademas de `>= 0`: `!(Infinity >= 0)` da `false`, asi que sin esta
+    // guarda un valor infinito pasaba de largo y terminaba en
+    // `fillRect(cursor, y, Infinity, alto)`, comportamiento de canvas no especificado.
+    if (!(Number.isFinite(s.valor) && s.valor >= 0)) {
       throw new TypeError(
-        `presupuestoPx: el segmento "${s.etiqueta ?? ''}" vale ${s.valor}. Un presupuesto no admite valores negativos ni NaN: partilo en dos barras.`);
+        `presupuestoPx: el segmento "${s.etiqueta ?? ''}" vale ${s.valor}. Un presupuesto no admite valores negativos, NaN ni infinitos: partilo en dos barras.`);
     }
   }
   // Sin total no hay escala que definir; dividir por cero daria NaN en cada ancho.
@@ -468,8 +471,16 @@ export function presupuestoPx(ctx, x, y, ancho, alto, segmentos,
   ctx.strokeStyle = colorBorde;
   ctx.lineWidth = 1;
   ctx.strokeRect(x, y, ancho, alto);
-  // El medio pixel de tolerancia es contra el ruido de punto flotante cuando la suma da
-  // exactamente el total, que es el caso normal en los widgets de energia.
+  // La tolerancia es media unidad de pixel, no un margen contra el ruido de punto
+  // flotante -ese ruido es del orden de 1e-10, ocho o nueve ordenes de magnitud mas
+  // chico que esto-. Media unidad de pixel es lo razonable contra el antialiasing del
+  // canvas y el redondeo de la geometria, pero en unidades del `total` deja pasar mas
+  // de lo que suena: en una barra de 828 px con un total de 541,2 J, medio pixel son
+  // `0.5 * 541.2 / 828` = 0,33 J de desborde que no dispara la marca de tope. Eso esta
+  // bien -no es el trabajo de esta marca detectar diferencias de esa escala- porque
+  // quien vigila que el modelo cierre es la lectura de chequeo del widget
+  // (`total - suma`, calculada aparte), no esta marca: la marca avisa un desborde
+  // visible, no certifica precision numerica.
   if (cursor > x + ancho + 0.5) {
     marcaDeTope(ctx, cursor, y + alto / 2, 1, 0, { color: colorBorde });
   }
