@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script del ensayo es `type="module"` y se difiere hasta después del
+// parseo, así que aplicar el tema desde ahí regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahí la excepción abortaría el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>Fuerzas que dependen de la posición · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div class="columna" style="padding-top:56px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ensayo 6 · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Fuerzas que dependen de la posición</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Cuando la fuerza cambia según dónde está el cuerpo, la aceleración deja de ser un número.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">En toda la guía hasta acá, <i>a</i> salía de una cuenta con números fijos —sen α, μ, una masa, un ángulo— y de ahí las fórmulas de siempre: MRU, MRUV, tiro parabólico, todas exactas porque <i>a</i> no cambiaba mientras el cuerpo se movía. Con una fuerza que depende de dónde está el cuerpo, esa salida se cierra: <i>a</i> depende de <i>x</i>, y <i>x</i> depende de <i>a</i>, sin ningún número fijo que sacar de la ecuación antes de resolverla.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">La buena noticia es que los dos casos que pide esta guía —el resorte y la gravedad— tienen solución conocida, y las dos se entienden mirando, no derivando. En el resorte, <i>F</i> = −<i>kx</i> produce un coseno: el cuerpo oscila para siempre entre dos extremos simétricos. En la gravedad, <i>F</i> ∝ 1/<i>r</i>² produce, en cambio, un punto de equilibrio donde no hay nada —ni fuerza, ni aceleración— porque ahí dos atracciones opuestas se cancelan exactamente.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · La fuerza que empuja siempre hacia el centro</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">La ley de Hooke no dice que el resorte tire fuerte: dice que tira <b style="font-weight:600">proporcional al estiramiento y en contra</b>. Cuanto más lejos del equilibrio, más fuerte tira, y siempre hacia el equilibrio, nunca en la dirección en la que el bloque se movió. Ese «en contra» es lo que hace que el bloque no se quede quieto justo ahí: llega al equilibrio con velocidad, se pasa de largo, y recién del otro lado el resorte empieza a tirar en sentido contrario. Eso, repetido sin parar, es la oscilación.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El resorte y sus tres gráficos</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— la aceleración es el espejo de la posición, escalado por ω².</span>
+    </div>
+    <canvas id="w1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w1-play" class="boton-primario">Reproducir</button>
+        <button id="w1-reset" class="boton">Reiniciar</button>
+      </div>
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">constante k <output id="w1-k-out" style="color:var(--ink);font-variant-numeric:tabular-nums">8.0 N/m</output></span>
+        <input id="w1-k" type="range" min="2" max="20" step="0.5" value="8" style="width:100%">
+      </label>
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">masa m <output id="w1-m-out" style="color:var(--ink);font-variant-numeric:tabular-nums">2.0 kg</output></span>
+        <input id="w1-m" type="range" min="0.5" max="5" step="0.1" value="2" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>ω <b id="w1-omega" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">2.00 rad/s</b></span>
+      <span>T <b id="w1-T" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.14 s</b></span>
+      <span>f <b id="w1-f" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.318 Hz</b></span>
+      <span>v máx <b id="w1-vmax" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">0.300 m/s</b></span>
+      <span>a máx <b id="w1-amax" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.600 m/s²</b></span>
+      <span>a + ω²(x−x₀) <b id="w1-mas" style="color:var(--dim);font-weight:500;font-variant-numeric:tabular-nums">0.000 m/s²</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con los valores del ejercicio —<i>k</i> = 8 N/m, <i>m</i> = 2 kg— ω = 2 rad/s, el período es 3,14 s y la frecuencia 0,318 Hz. El bloque va y viene entre 0,25 m y 0,55 m, y esa amplitud —0,15 m— es exactamente la distancia a la que se lo llevó antes de soltarlo, ni más ni menos, porque partió del reposo: sin velocidad inicial no hay margen para que llegue más lejos de donde el enunciado lo dejó.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Mirá los tres gráficos juntos. La velocidad es cero justo donde la posición está en un extremo —ahí el bloque cambia de sentido— y máxima al pasar por el equilibrio. La aceleración, en cambio, es el espejo exacto de la posición: donde <i>x</i> está en su máximo, <i>a</i> está en su mínimo, y viceversa. Eso último no es una coincidencia del dibujo: es <i>a</i> = −ω²(<i>x</i> − <i>x</i><sub>0</sub>), que es la segunda ley con <i>F</i> = −<i>k</i>(<i>x</i> − <i>x</i><sub>0</sub>) dividida por <i>m</i>. La lectura de la derecha, <i>a</i> + ω²(<i>x</i> − <i>x</i><sub>0</sub>), lo confirma dando cero en todo instante —no porque se haya escrito un cero, sino porque las dos funciones, evaluadas juntas, se cancelan siempre.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Mové los deslizadores: la frecuencia depende <b style="font-weight:600">sólo</b> de <i>k</i>/<i>m</i>. Ni de la amplitud —que no cambia, porque sigue siendo la distancia a la que se soltó el bloque—, ni de con cuánta fuerza se lo soltó. Un resorte más duro o un bloque más liviano oscilan más rápido, y nada más entra en la cuenta: es por eso que un reloj de péndulo anda igual con la cuerda floja que apretada, siempre que no le toques la masa ni la constante.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Y los otros tres ejercicios de resortes de la guía, cada uno en una frase. El dinamómetro del ejercicio 11, donde <i>k</i> = 2 N / 0,117 m = 17,09 N/m y 0,4 N estiran 2,34 cm. Los dos resortes en paralelo del ejercicio 12, que suman sus constantes —50 + 100 = 150 N/m— y con 0,5 m de estiramiento dan 75 N contra un peso de 24,5 N, o sea 20,20 m/s² hacia arriba. Y el ejercicio 14, que es el más lindo de los tres porque junta este ensayo con el 4: un resorte de 400 N/m y largo natural 0,5 m hace girar una masa de 2 kg, y es <b style="font-weight:600">el resorte</b> el que provee la fuerza centrípeta. Con radio 1 m la velocidad es 10,00 m/s; al doble de velocidad el resorte se estira hasta 1,686 m, porque al alejarse necesita más fuerza y estirándose la consigue.</p>
+</div>
+
+<div class="columna columna-final">
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="sistemas-acoplados.html">Ensayo 5 · Sistemas acoplados</a>
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0"><a href="../recursos/practico_2_2026.pdf">práctico 2, ej. 11 a 18</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget, panelesApilados } from '../motor/widget.js';
+import { crearEscena } from '../motor/escena.js';
+import { eje, curva, cuerpo, punteado, texto, bloque, vectorPx, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { deslizador, boton, rotuloReproducir } from '../motor/controles.js';
+import { conectarTema } from '../motor/tema.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+const pagina = crearPagina({ documento: document });
+
+/* ---------- widget 1: el resorte y sus tres graficos ---------- */
+
+// Guia 2, ej. 17. Bloque de 2 kg, resorte de 8 N/m, equilibrio en 0.40 m, soltado desde
+// 0.55 m. Verificado en el bloque "Ej 17" de verificacion-practico-2.py:
+//   omega = 2 rad/s, T = 3.142 s, f = 0.318 Hz, A = 0.15 m
+//   x(t) = 0.40 + 0.15 cos(2t), v_max = 0.3 m/s, a_max = 0.6 m/s^2, extremos 0.25 y 0.55
+const X0 = 0.40;      // m, posicion de equilibrio: ahi el resorte no tira
+const A_OSC = 0.15;   // m, amplitud: 0.55 - 0.40, la distancia a la que se lo lleva
+
+// Soltado desde el reposo en el extremo: la solucion arranca en el maximo, asi que es un
+// coseno puro, sin fase. v y a son sus derivadas -- las mismas que el ensayo 1 dibujaba
+// a mano, ahora con una funcion que sale de la fisica y no de un menu.
+function oscilador(k, m) {
+  const omega = Math.sqrt(k / m);
+  return {
+    omega,
+    periodo: 2 * Math.PI / omega,
+    frecuencia: omega / (2 * Math.PI),
+    x: t => X0 + A_OSC * Math.cos(omega * t),
+    v: t => -A_OSC * omega * Math.sin(omega * t),
+    a: t => -A_OSC * omega * omega * Math.cos(omega * t),
+  };
+}
+
+// Extremos de los dos deslizadores (Paso 2 del brief: k entre 2 y 20 N/m, m entre 0.5 y
+// 5 kg) que hacen falta para el peor caso de mas abajo: omega = sqrt(k/m) es maxima con
+// el resorte mas duro (k mas grande) y el bloque mas liviano (m mas chica), asi que solo
+// esos dos extremos entran en la cuenta.
+const K_MAX = 20, M_MIN = 0.5;
+
+function leerK() { return parseFloat(el('w1-k').value); }
+function leerM() { return parseFloat(el('w1-m').value); }
+function periodoActual() { return oscilador(leerK(), leerM()).periodo; }
+
+// El rango de x(t) es FIJO, no depende de k ni de m: el bloque siempre arranca del
+// reposo en 0.55 m (Paso 5, parrafo 1), asi que la amplitud -y por lo tanto los dos
+// extremos- no cambia aunque cambie el resorte o la masa. Eso es justamente lo que el
+// parrafo 3 del cierre pide mostrar: la frecuencia depende de k/m, la amplitud no.
+const X_MIN_MOV = X0 - A_OSC; // 0.25 m, extremo comprimido
+const X_MAX_MOV = X0 + A_OSC; // 0.55 m, extremo estirado (de donde se suelta)
+
+// v_max y a_max SI dependen de k/m (v_max = A*omega, a_max = A*omega^2): el rango
+// vertical de esos dos paneles se fija con el PEOR CASO de todo el rango de los dos
+// deslizadores -omega maxima, en k=K_MAX, m=M_MIN- para que ningun valor de la mesa
+// saque la curva de su panel.
+const OMEGA_MAX_GLOBAL = Math.sqrt(K_MAX / M_MIN); // 6.325 rad/s
+const V_MAX_GLOBAL = A_OSC * OMEGA_MAX_GLOBAL;      // 0.949 m/s
+const A_MAX_GLOBAL = A_OSC * OMEGA_MAX_GLOBAL ** 2; // 6.0 m/s^2 (20/0.5 = 40 exacto)
+
+// 15% de aire sobre el peor caso para el panel de a: ni el caso del ejercicio ni el
+// peor caso de arriba tocan el borde del panel.
+const AIRE = 1.15;
+const PANEL_A_LIM = A_MAX_GLOBAL * AIRE;
+
+// El panel de v NO usa el mismo 15%: con PANEL_V_LIM = 0.949*1.15 = 1.09, `eje()`
+// elegia un paso de 0.2 -- diez marcas en un panel de unos 95 px de alto, que se pisaban
+// unas con otras (t14-bug-eje-1decimal-antes.png). 1.25 m/s sigue cubriendo el peor caso
+// (0.949 m/s) con un 32% de margen, y ademas hace que `eje()` elija un paso de 0.5:
+// solo cuatro marcas, bien separadas.
+const PANEL_V_LIM = 1.25; // m/s
+
+// El panel de x usa un margen fijo, no el mismo factor AIRE: con el 15% proporcional a
+// la amplitud (0,15 m) el rango daba 0,345 m, y `eje()` (motor/dibujo.js) elegia un paso
+// de 0,05 -- mas fino que el unico decimal que sus rotulos redondean. Dos marcas vecinas
+// (0,25 y 0,30, por ejemplo) se leian las dos "0.3" (bug medido en
+// t14-bug-eje-1decimal-antes.png). Con 0,10 m de margen el rango da 0,50 m exactos,
+// `eje()` elige paso=0.1, y cada marca cae en un multiplo de 0.1 que redondea sin
+// ambiguedad.
+const MARGEN_PANEL_X = 0.10; // m
+const PANEL_X_MIN = X_MIN_MOV - MARGEN_PANEL_X; // 0.15 m
+const PANEL_X_MAX = X_MAX_MOV + MARGEN_PANEL_X; // 0.65 m
+
+// --- geometria de la escena (panel 1) ---
+//
+// Vista de arriba de la mesa lisa: la pared a la izquierda, atada al resorte en x=0, y
+// el bloque a la derecha. El bloque es chico respecto de los 0.30 m que separan los dos
+// extremos del movimiento, para que el resorte y las flechas tengan lugar sin que el
+// bloque las tape.
+const ANCHO_BLOQUE = 0.07; // m, elegido chico frente a los 0.30 m de recorrido
+const ALTO_BLOQUE = 0.035; // m, proporcion 2:1 igual que los otros ensayos
+
+const PAD_ESCENA = 0.05; // m, aire a cada lado de la pared y del extremo maximo
+const XMIN_ESCENA = -PAD_ESCENA;
+const XMAX_ESCENA = X_MAX_MOV + ANCHO_BLOQUE / 2 + PAD_ESCENA;
+const YMIN_ESCENA = -ALTO_BLOQUE / 2 - 0.015;
+const YMAX_ESCENA = ALTO_BLOQUE / 2 + 0.09; // dos filas de flechas apiladas arriba del bloque
+
+// El zigzag del resorte: N vueltas fijas y una amplitud en PIXELES (no en metros: asi se
+// ve igual de "resorte" con independencia de cuanto valga la escala de este panel en
+// cada ancho de pantalla). Con N fijo, al comprimirse el resorte (el bloque se acerca a
+// la pared) las vueltas se ven mas juntas, y al estirarse mas separadas -- la lectura
+// que pide el Paso 4. Medido en t14-1280-*.png y t14-390-*.png: con menos de 5 vueltas
+// no se lee como resorte a 390 px, y con una amplitud mayor a 10 px la zigzag se mete
+// dentro del bloque en el extremo mas comprimido (0.25 m).
+const VUELTAS_RESORTE = 6;
+const AMPLITUD_RESORTE_PX = 8;
+
+// Las flechas de fuerza y de velocidad, en pixeles fijos: el peor caso de cada una
+// (F_MAX_GLOBAL con el resorte mas duro del deslizador, V_MAX_GLOBAL de mas arriba)
+// mide LARGO_MAX_FLECHA_PX -- medido para que quepa con aire de sobra en el panel de
+// escena incluso a 390 px de viewport.
+const F_MAX_GLOBAL = K_MAX * A_OSC; // 3.0 N, con k = K_MAX
+const LARGO_MAX_FLECHA_PX = 42;
+const K_FUERZA_PX = LARGO_MAX_FLECHA_PX / F_MAX_GLOBAL;
+const K_VEL_PX = LARGO_MAX_FLECHA_PX / V_MAX_GLOBAL;
+
+// El resorte: un zigzag de `vueltas` picos entre dos puntos, con amplitud perpendicular
+// en pixeles. No es una primitiva de motor/dibujo.js (Paso 4: la lista de primitivas que
+// consume este widget no la incluye) -- se dibuja a mano, como el plano inclinado de
+// sistemas-acoplados.html.
+function resorte(ctx, l, xDesde, xHasta, y, { vueltas, amplitudPx, color }) {
+  const [x0, y0] = l.p([xDesde, y]);
+  const [x1] = l.p([xHasta, y]);
+  const interiores = 2 * vueltas;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(x0, y0);
+  for (let i = 1; i <= interiores; i++) {
+    const x = x0 + (x1 - x0) * (i / (interiores + 1));
+    const signo = i % 2 === 1 ? -1 : 1;
+    ctx.lineTo(x, y0 + signo * amplitudPx);
+  }
+  ctx.lineTo(x1, y0);
+  ctx.stroke();
+}
+
+// La pared: una linea vertical con el mismo hachurado a 45 grados que `suelo`
+// (motor/dibujo.js), rotado 90 grados -- tampoco es una primitiva del motor, por la
+// misma razon que `resorte`.
+function pared(ctx, l, x, yMin, yMax, { color }) {
+  const [xpx, y0] = l.p([x, yMax]);
+  const [, y1] = l.p([x, yMin]);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(xpx, y0);
+  ctx.lineTo(xpx, y1);
+  ctx.stroke();
+  ctx.globalAlpha = 0.5;
+  for (let d = 0; d <= y1 - y0; d += 9) {
+    ctx.beginPath();
+    ctx.moveTo(xpx, y0 + d);
+    ctx.lineTo(xpx - 7, y0 + d - 7);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function pintarEscena(ctx, l, p, osc, t, k) {
+  const xB = osc.x(t);
+  const v = osc.v(t);
+  const F = -k * (xB - X0); // -k(x-x0): la fuerza del resorte en este instante
+  const bordeIzq = xB - ANCHO_BLOQUE / 2;
+
+  pared(ctx, l, 0, YMIN_ESCENA, YMAX_ESCENA, { color: p.ink });
+  resorte(ctx, l, 0, bordeIzq, 0, { vueltas: VUELTAS_RESORTE, amplitudPx: AMPLITUD_RESORTE_PX, color: p.rule });
+
+  // La marca de la posicion de equilibrio: punteada vertical con su rotulo.
+  const [xEqPx, yTopPx] = l.p([X0, YMAX_ESCENA]);
+  const [, yBotPx] = l.p([X0, YMIN_ESCENA]);
+  punteado(ctx, xEqPx, yTopPx, xEqPx, yBotPx, { color: p.rule });
+  texto(ctx, 'x₀', xEqPx, yBotPx + 13, { color: p.dim, px: 10, alineacion: 'center' });
+
+  bloque(ctx, l, [xB, 0], { ancho: ANCHO_BLOQUE, alto: ALTO_BLOQUE, color: p.band, borde: p.ink });
+
+  // Las dos flechas, apiladas arriba del bloque para no superponerse: son colineales
+  // (la fuerza y la velocidad son siempre horizontales en este movimiento), y en parte
+  // del ciclo apuntan al mismo lado y en parte a lados opuestos -- dibujarlas en la
+  // misma fila las haria coincidir a veces y taparse otras.
+  const [cxPx, topPx] = l.p([xB, ALTO_BLOQUE / 2]);
+  const filaFuerza = topPx - 11;
+  const filaVelocidad = topPx - 28;
+
+  // `vectorPx` toma pixeles de pantalla y no pasa por `l.p`: por eso el origen se
+  // convierte una vez arriba y el desplazamiento se suma en pixeles crudos.
+  vectorPx(ctx, cxPx, filaFuerza, cxPx + F * K_FUERZA_PX, filaFuerza,
+    { color: p.red, grosor: 2, punta: 8, rotulo: 'F' });
+  vectorPx(ctx, cxPx, filaVelocidad, cxPx + v * K_VEL_PX, filaVelocidad,
+    { color: p.blue, grosor: 2, punta: 8, rotulo: 'v' });
+}
+
+const MARGEN = { L: 62, R: 24, T: 20, B: 34 };
+const HUECO_ROTULO = COLGADO_ROTULO_EJE + 8;
+const ALTO_PANEL_MINIMO = 95 + HUECO_ROTULO;
+
+const widget = crearWidget({
+  pagina, canvas: el('w1-cv'),
+  margen: MARGEN,
+  // Segundos contra metros en tres de los cuatro paneles, y metros contra "aire de
+  // dibujo" en el de arriba: no hay una sola escala fisica que le sirva a los cuatro.
+  escalaUniforme: false,
+  altoMin: 4 * ALTO_PANEL_MINIMO + MARGEN.T + MARGEN.B,
+  // El rango horizontal del lienzo EXTERIOR es el que heredan los tres graficos de
+  // abajo (Paso 4): 0 a un periodo, que cambia con los deslizadores. El panel de la
+  // escena pide el suyo propio en metros (mas abajo, en PANELES) y lo pisa.
+  encuadre: () => ({ xMin: 0, xMax: periodoActual(), yMin: 0, yMax: 4 }),
+  dibujar: pintar,
+});
+
+function pintar(ctx, l) {
+  const p = pagina.paleta();
+  const k = leerK(), m = leerM();
+  const osc = oscilador(k, m);
+  const t = escena.t;
+
+  // Cuatro paneles: la escena (metros, rango propio) y las tres curvas (segundos,
+  // heredado del lienzo exterior). `panelesApilados` es el mecanismo de la Tarea 3 que
+  // hace posible que el primero tenga un rango horizontal distinto de los otros tres.
+  const PANELES = [
+    { xMin: XMIN_ESCENA, xMax: XMAX_ESCENA, yMin: YMIN_ESCENA, yMax: YMAX_ESCENA },
+    { etiqueta: 'x [m]', yMin: PANEL_X_MIN, yMax: PANEL_X_MAX, color: p.graph, f: osc.x },
+    { etiqueta: 'v [m/s]', yMin: -PANEL_V_LIM, yMax: PANEL_V_LIM, color: p.blue, f: osc.v },
+    { etiqueta: 'a [m/s²]', yMin: -PANEL_A_LIM, yMax: PANEL_A_LIM, color: p.red, f: osc.a },
+  ];
+  const [escenaCapa, xCapa, vCapa, aCapa] = panelesApilados({
+    lienzo: l, margen: { L: MARGEN.L, R: MARGEN.R }, hueco: HUECO_ROTULO, paneles: PANELES,
+  });
+
+  pintarEscena(ctx, escenaCapa.lp, p, osc, t, k);
+
+  [xCapa, vCapa, aCapa].forEach((capa, i) => {
+    const esElDeAbajo = i === 2;
+    eje(ctx, capa.lp, {
+      color: p.rule, colorTexto: p.dim, etiquetaY: capa.panel.etiqueta,
+      marcasX: esElDeAbajo,
+      etiquetaX: esElDeAbajo ? 't [s]' : undefined,
+    });
+    curva(ctx, capa.lp, tt => [tt, capa.panel.f(tt)], 0, osc.periodo, { color: capa.panel.color, grosor: 1.8 });
+    cuerpo(ctx, capa.lp, [t, capa.panel.f(t)], { radio: 4.5, color: capa.panel.color });
+  });
+
+  // El cursor compartido: una sola linea vertical que cruza los tres graficos de abajo
+  // (no la escena, que ya muestra el instante actual con el bloque mismo).
+  punteado(ctx, xCapa.lp.px(t), xCapa.techo, xCapa.lp.px(t), xCapa.techo + 3 * xCapa.alturaPanel,
+    { color: p.blueSoft, guiones: [3, 4] });
+
+  leer('w1-omega', osc.omega.toFixed(2) + ' rad/s');
+  leer('w1-T', osc.periodo.toFixed(2) + ' s');
+  leer('w1-f', osc.frecuencia.toFixed(3) + ' Hz');
+  leer('w1-vmax', (A_OSC * osc.omega).toFixed(3) + ' m/s');
+  leer('w1-amax', (A_OSC * osc.omega * osc.omega).toFixed(3) + ' m/s²');
+
+  // La lectura que es la prueba (Paso 2 del brief): se evaluan a(t) y x(t) en el
+  // instante actual y se suman -- no se escribe un cero. Si alguien le cambiara el
+  // signo a `osc.a`, esto dejaria de dar cero.
+  const pruebaCruda = osc.a(t) + osc.omega * osc.omega * (osc.x(t) - X0);
+  const prueba = Math.abs(pruebaCruda) < 1e-9 ? 0 : pruebaCruda; // limpia el -0.000 del punto flotante
+  leer('w1-mas', prueba.toFixed(3) + ' m/s²');
+}
+
+let enReposo = true;
+const rotular = () => rotuloReproducir(el('w1-play'), escena, enReposo);
+
+const escena = crearEscena({
+  dibujar: () => widget.repintar(),
+  duracion: periodoActual(),
+  alCambiar: rotular,
+});
+
+deslizador({
+  entrada: el('w1-k'), salida: el('w1-k-out'), pagina,
+  formato: v => v.toFixed(1) + ' N/m',
+  alCambiar: () => { escena.duracion = periodoActual(); widget.repintar(); },
+});
+deslizador({
+  entrada: el('w1-m'), salida: el('w1-m-out'), pagina,
+  formato: v => v.toFixed(1) + ' kg',
+  alCambiar: () => { escena.duracion = periodoActual(); widget.repintar(); },
+});
+boton({
+  elemento: el('w1-play'), pagina,
+  alApretar: () => {
+    if (escena.estado === 'reproduciendo') {
+      escena.pausar();
+    } else {
+      if (enReposo || escena.t >= escena.duracion - 1e-6) {
+        enReposo = false;
+        escena.reiniciar();
+      }
+      escena.reproducir();
+    }
+    rotular();
+  },
+});
+// Sin `pagina`, igual que en los otros ensayos: el reset es el unico control que no
+// apaga el pulso del boton.
+boton({
+  elemento: el('w1-reset'),
+  alApretar: () => { enReposo = true; escena.reiniciar(); rotular(); },
+});
+
+/* ---------- arranque ---------- */
+
+rotular();
+const pulso = () => {
+  el('w1-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
+};
+pagina.alTocar(pulso);
+pulso();
+
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
