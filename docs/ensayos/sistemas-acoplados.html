@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script del ensayo es `type="module"` y se difiere hasta después del
+// parseo, así que aplicar el tema desde ahí regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahí la excepción abortaría el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>Sistemas acoplados · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div class="columna" style="padding-top:56px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ensayo 5 · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Sistemas acoplados</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Dos cuerpos atados son un problema solo, y se resuelve haciendo dos dibujos.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La cuerda ideal —sin masa, inextensible— hace dos cosas, y hay que decirlas por separado porque cada una es una ecuación distinta. Inextensible significa que las dos aceleraciones tienen el <b style="font-weight:600">mismo módulo</b>: es un vínculo geométrico, no una fuerza, y no depende de cuánto pese nada. Sin masa significa que la tensión es la <b style="font-weight:600">misma en los dos extremos</b> de la cuerda: eso sí sale de la segunda ley aplicada a la cuerda misma, con <i>m</i> = 0 —una cuerda con masa aceleraría distinto en cada punta, y las dos tensiones diferirían justo en lo que hace falta para acelerarla a ella.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Por qué el diagrama del conjunto no alcanza: la tensión es una fuerza interna al sistema de los dos cuerpos, así que se cancela sola en la suma —lo que A tira de la cuerda, la cuerda se lo devuelve a A en sentido contrario— y por eso el diagrama del conjunto da la aceleración pero se queda mudo sobre <i>T</i>. Para que <i>T</i> aparezca en alguna ecuación hay que cortar la cuerda, separar los dos cuerpos, y dibujar cada uno por su lado.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · Cortar la cuerda</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Antes de cortar nada, mirá primero quién gana. No hace falta ninguna cuenta fina: de un lado tira <i>m</i><sub>A</sub><i>g</i> sen α, del otro <i>m</i><sub>B</sub><i>g</i>, y con los números de este ejercicio son 47,18 N contra 39,20 N. Gana A, y por poco. Recién después de decidir el sentido se puede escribir la segunda ley, porque el signo de <i>a</i> depende de haber elegido un sentido positivo <i>antes</i> y haberlo respetado en los dos cuerpos —si a mitad de camino se cambia de opinión sobre qué lado es positivo para uno de los dos, la cuenta queda mal sin que ningún paso individual esté mal.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Cortar la cuerda</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— las dos tensiones se calculan por separado, de dos ecuaciones distintas, y dan lo mismo.</span>
+    </div>
+    <canvas id="w1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w1-play" class="boton-primario">Reproducir</button>
+        <button id="w1-reset" class="boton">Reiniciar</button>
+      </div>
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">masa de B <output id="w1-mb-out" style="color:var(--ink);font-variant-numeric:tabular-nums">4.0 kg</output></span>
+        <input id="w1-mb" type="range" min="0" max="10" step="0.1" value="4" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="w1-aislar" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Aislar los cuerpos
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>a <b id="w1-a" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.665 m/s²</b></span>
+      <span>T desde A <b id="w1-ta" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">41.86 N</b></span>
+      <span>T desde B <b id="w1-tb" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">41.86 N</b></span>
+      <span>diferencia <b id="w1-dif" style="color:var(--dim);font-weight:500;font-variant-numeric:tabular-nums">0.00 N</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con B de 4 kg, <i>a</i> = 0,665 m/s² y <i>T</i> = 41,86 N. Comparala con el peso de B, que vale 39,20 N: la cuerda tira <b style="font-weight:600">más</b> de lo que B pesa, y tiene que ser así —B no está colgado quieto, está subiendo cada vez más rápido. Una cuerda que sólo sostiene tira igual al peso; una que además acelera hacia arriba tiene que tirar de más, porque esa diferencia es justamente lo que le da la aceleración.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Subí el deslizador de B: en algún punto el sistema se frena y después se da vuelta. El punto de equilibrio está en <i>m</i><sub>B</sub> = <i>m</i><sub>A</sub> sen α ≈ 4,8 kg, y no es casualidad que justo ahí la aceleración cambie de signo —es la misma comparación de fuerzas del principio de esta sección, sólo que ahora escrita como ecuación en vez de como intuición.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Que las dos tensiones den lo mismo no es una comprobación de que la cuenta esté bien hecha: es lo que <i>significa</i> «cuerda sin masa». Si la cuerda pesara, las dos puntas tirarían distinto, y esa diferencia sería exactamente la que acelera a la cuerda misma —que es el ejercicio 3, donde <i>F</i><sub>BC</sub>/<i>F</i> = <i>M</i>/(<i>M</i> + <i>m</i>).</p>
+</div>
+
+<div class="columna columna-final">
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="cuerpo-aislado.html">Ensayo 4 · Diagrama de cuerpo aislado</a>
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 3 · <a href="../recursos/resumen-sistemas-acoplados.pdf">hoja resumen</a> · <a href="../recursos/practico_2_2026.pdf">práctico 2, ej. 2 a 7</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget } from '../motor/widget.js';
+import { crearEscena } from '../motor/escena.js';
+import { bloque, suelo, vectorPx, cuerpo } from '../motor/dibujo.js';
+import { deslizador, casilla, boton, rotuloReproducir } from '../motor/controles.js';
+import { conectarTema } from '../motor/tema.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+/* ---------- widget 1: cortar la cuerda ---------- */
+
+// Guia 2, ej. 4. A (8 kg) en un plano liso de 37 grados, atado por una cuerda que pasa
+// por una polea en la cima y sostiene a B, que cuelga. Verificado en el bloque "Ej 4":
+//   m_A g sen37 = 47.18 N  vs  m_B g = 39.20 N  ->  A baja, B sube
+//   a = 0.665 m/s^2   T = 41.86 N
+const G = 9.8;
+const M_A = 8, ALFA = 37 * Math.PI / 180;
+
+// El sentido positivo: A baja por el plano y B sube. Si `a` sale negativa, el sistema
+// va para el otro lado -- y eso pasa de verdad al subir el deslizador de m_B, que es
+// justamente lo que el widget deja probar.
+function estadoPlano(mB) {
+  const a = (M_A * G * Math.sin(ALFA) - mB * G) / (M_A + mB);
+  // Las dos tensiones, cada una de la ecuacion de SU cuerpo. Estan escritas por separado
+  // a proposito: la lectura de la pagina muestra la resta, y esa resta es la prueba.
+  const tDesdeA = M_A * (G * Math.sin(ALFA) - a);   // m_A a = m_A g sen(alfa) - T
+  const tDesdeB = mB * (G + a);                      // m_B a = T - m_B g
+  return { a, tDesdeA, tDesdeB };
+}
+
+// El punto de equilibrio que usa el segundo parrafo de cierre: la masa de B con la que
+// el sistema queda quieto. Se calcula, no se escribe -- da unos 4.8 kg.
+const M_EQ = M_A * Math.sin(ALFA);
+
+// El controlador de esta tarea (no el brief): el lienzo va SIN angulo. La escena tiene
+// un plano inclinado Y un cuerpo colgando en vertical al mismo tiempo, y no hay un marco
+// girado que le sirva a los dos -- si se girara el lienzo el peso de B dejaria de
+// apuntar hacia abajo de la pantalla. El plano se dibuja como una recta a mano (no con
+// `suelo`, que sólo sabe dibujar lineas horizontales del marco) y el bloque A entra con
+// su propio angulo (`bloque(..., {angulo: ALFA})`), independiente del angulo del lienzo
+// (que siempre es 0 en este widget).
+const DIR_PLANO = [Math.cos(ALFA), Math.sin(ALFA)];   // a lo largo del plano, hacia la polea
+const NORMAL_PLANO = [-Math.sin(ALFA), Math.cos(ALFA)]; // perpendicular al plano, hacia afuera
+
+// Los limites de las dos masas del deslizador de fuerza: hace falta el de B para saber
+// cual es la fuerza mas grande que puede aparecer en el diagrama aislado (mas abajo).
+const MB_MIN = 0, MB_MAX = 10;
+
+// Misma silueta 2:1 que los otros ensayos (cuerpo-aislado.html, movimiento-circular.html):
+// suficientemente ancha para leerse como rectangulo incluso a 390px de viewport.
+const ANCHO_BLOQUE = 2, ALTO_BLOQUE = 1;
+
+// --- geometria de la escena principal ---
+//
+// El largo del plano (en unidades del marco, no metros del enunciado -- el ejercicio no
+// da ninguna longitud) se elige para que el bloque A quepa varias veces a lo largo con
+// margen de sobra para el recorrido de la animacion (ver S0 y el limite de viaje mas
+// abajo): con LARGO_PLANO = 6 y A arrancando en el medio (S0 = 3), al bloque le sobran
+// 3 unidades de plano a cada lado, bastante mas que su propio medio-ancho (1).
+const LARGO_PLANO = 6;
+// La polea esta exactamente en la cima del plano: su altura sale de la geometria del
+// plano (LARGO_PLANO * sen ALFA), no es un numero aparte inventado.
+const ALTURA_POLEA = LARGO_PLANO * Math.sin(ALFA);
+const RUN_PLANO = LARGO_PLANO * Math.cos(ALFA);
+const POLEA = [0, ALTURA_POLEA];
+const BASE_PLANO = [-RUN_PLANO, 0];
+// A arranca en el punto medio del plano (medido en S, la distancia a la polea): con el
+// mismo presupuesto de recorrido para los dos lados (ver mas abajo), asi la animacion
+// se ve simetrica aunque el deslizador cambie de signo la aceleracion.
+const S0 = LARGO_PLANO / 2;
+// B cuelga de la polea por una soga vertical: su altura de arranque (la del extremo
+// superior de su bloque, donde ata la cuerda) es el punto medio del segmento vertical
+// entre el piso (y=0) y la polea, por la misma razon de simetria que S0.
+const YB0 = ALTURA_POLEA / 2;
+
+// El piso corre por debajo de los dos: la base del plano y el punto donde cuelga B. Se
+// extiende un poco mas alla de cada extremo del encuadre para que no se vean sus puntas.
+const XMIN_ESCENA = BASE_PLANO[0] - 0.8;
+const XMAX_ESCENA = 1.6;
+const YMIN_ESCENA = -0.6;
+const YMAX_ESCENA = ALTURA_POLEA + 1.0;
+const FLOOR_DESDE = XMIN_ESCENA + 0.3, FLOOR_HASTA = XMAX_ESCENA - 0.3;
+
+// Cuanto puede viajar el sistema antes de que un cuerpo choque con su tope fisico: A
+// contra la base del plano o contra la polea, B contra el piso o contra la polea --
+// restando en cada caso el medio-ancho/alto del bloque, para que sea el BORDE del
+// bloque el que llega al tope, no su centro. `a >= 0` es "A baja, B sube" (el sentido
+// por defecto del ejercicio); `a < 0` es el sentido contrario.
+function limiteViaje(a) {
+  return a >= 0
+    ? Math.min(LARGO_PLANO - S0 - ANCHO_BLOQUE / 2, ALTURA_POLEA - ALTO_BLOQUE / 2 - YB0)
+    : Math.min(S0 - ANCHO_BLOQUE / 2, YB0 - ALTO_BLOQUE / 2);
+}
+
+// La duracion: el tiempo que tarda el cuerpo que primero llega a su tope en recorrer
+// `limiteViaje(a)`, partiendo del reposo con aceleracion constante `a`. Con los numeros
+// de arriba, en los dos sentidos el limite lo pone B (llega antes a la polea subiendo, o
+// al piso bajando, que lo que tarda A en llegar a su propio extremo) -- confirmado
+// numericamente: limiteViaje(+) = limiteViaje(-) = 1.305, contra 2 de A en los dos casos.
+function duracion(a) {
+  if (a === 0) return Infinity; // el deslizador nunca cae exacto en el equilibrio (paso 0.1)
+  return Math.sqrt(2 * limiteViaje(a) / Math.abs(a));
+}
+
+// La velocidad maxima que puede alcanzar el sistema en TODO el rango del deslizador: se
+// necesita para fijar una escala de pixeles por (m/s) que no cambie de un frame a otro.
+// |a| es maxima en mB=0 (a(mB) es monotona decreciente en mB, ver Paso 3), y ahi vale
+// G sen(ALFA) = 5.898 m/s^2; con el limite de viaje de ese sentido (limiteViaje(+) por
+// ser a>0), v_max = sqrt(2 * limiteViaje(+) * G sen(ALFA)).
+const V_MAX = Math.sqrt(2 * limiteViaje(G * Math.sin(ALFA)) * G * Math.sin(ALFA));
+
+// La fuerza mas grande que puede aparecer en el diagrama aislado, en TODO el rango del
+// deslizador de mB: el peso de B en el tope del deslizador (98 N) supera al peso de A
+// (78.4 N), a la normal de A (62.6 N, fija) y a la tension maxima (69.8 N, confirmado
+// evaluando estadoPlano en todo el rango). Se evalua una sola vez, igual que T_MAX3 en
+// cuerpo-aislado.html.
+const FUERZA_MAX = Math.max(M_A * G, MB_MAX * G);
+
+// --- geometria del diagrama aislado (casilla marcada) ---
+//
+// Dos origenes en un solo lienzo sin angulo, uno a la izquierda y otro a la derecha del
+// encuadre -- `panelesApilados` apila en vertical, y esta division es horizontal, asi
+// que no sirve aca (Paso 4). XLIM2 y XP definen un encuadre de 12 unidades de ancho con
+// los dos origenes exactamente en el centro de su mitad (-3 y +3), asi cada panel tiene
+// el mismo aire a su alrededor.
+const XLIM2 = 6, XP = 3, YLIM2 = 3;
+
+let aislar = false;
+
+const pagina = crearPagina({ documento: document });
+
+function leerMB() { return parseFloat(el('w1-mb').value); }
+
+const widget = crearWidget({
+  pagina, canvas: el('w1-cv'),
+  margen: { L: 40, R: 40, T: 26, B: 26 },
+  centrar: true,
+  encuadre: () => aislar
+    ? { xMin: -XLIM2, xMax: XLIM2, yMin: -YLIM2, yMax: YLIM2 }
+    : { xMin: XMIN_ESCENA, xMax: XMAX_ESCENA, yMin: YMIN_ESCENA, yMax: YMAX_ESCENA },
+  dibujar: pintar,
+});
+
+function pintar(ctx, l) {
+  const p = pagina.paleta();
+  const mB = leerMB();
+  const { a, tDesdeA, tDesdeB } = estadoPlano(mB);
+
+  if (aislar) pintarAislado(ctx, l, p, mB, a, tDesdeA, tDesdeB);
+  else pintarEscena(ctx, l, p, a, escena.t);
+
+  leer('w1-a', a.toFixed(3) + ' m/s²');
+  leer('w1-ta', tDesdeA.toFixed(2) + ' N');
+  leer('w1-tb', tDesdeB.toFixed(2) + ' N');
+  // El signo del cero: tDesdeA y tDesdeB son literalmente el mismo numero (misma
+  // cuerda), pero la resta de dos flotantes casi iguales puede dejar un -1e-13 que
+  // toFixed imprimiria como "-0.00". Mismo retoque que usan los otros ensayos.
+  const dif = (tDesdeA - tDesdeB).toFixed(2);
+  leer('w1-dif', (dif === '-0.00' ? '0.00' : dif) + ' N');
+}
+
+// La escena principal: los dos cuerpos parten del reposo en S0/YB0 y se mueven con
+// aceleracion constante `a` -- A a lo largo del plano, B en vertical -- recorriendo el
+// mismo modulo de desplazamiento, hasta que uno de los dos llega a su tope (ver
+// `limiteViaje`).
+function pintarEscena(ctx, l, p, a, t) {
+  const delta = 0.5 * a * t * t;      // desplazamiento a lo largo del recorrido
+  const v = a * t;                    // rapidez con signo, misma para los dos cuerpos
+
+  const sA = S0 + delta;              // posicion de A sobre el plano, medida desde la polea
+  const puntoPlanoA = [POLEA[0] - sA * DIR_PLANO[0], POLEA[1] - sA * DIR_PLANO[1]];
+  // El centro del bloque A no cae sobre la recta del plano sino desplazado medio-alto
+  // hacia afuera, en la direccion normal -- para que el bloque quede APOYADO sobre el
+  // plano, no partido a la mitad por la linea.
+  const centroA = [
+    puntoPlanoA[0] + (ALTO_BLOQUE / 2) * NORMAL_PLANO[0],
+    puntoPlanoA[1] + (ALTO_BLOQUE / 2) * NORMAL_PLANO[1],
+  ];
+
+  const yB = YB0 + delta;             // altura del extremo superior de B (donde ata la cuerda)
+  const centroB = [0, yB - ALTO_BLOQUE / 2];
+  const puntoCuerdaB = [0, yB];
+
+  suelo(ctx, l, { color: p.rule, desde: FLOOR_DESDE, hasta: FLOOR_HASTA, y: 0 });
+
+  // El plano: una recta a 37 grados, dibujada a mano porque `suelo` sólo sabe trazar
+  // horizontales del marco y este lienzo no rota (ver el comentario de DIR_PLANO).
+  const [bx, by] = l.p(BASE_PLANO), [px, py] = l.p(POLEA);
+  ctx.strokeStyle = p.rule;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(bx, by);
+  ctx.lineTo(px, py);
+  ctx.stroke();
+
+  cuerpo(ctx, l, POLEA, { radio: 4, color: p.dim });
+
+  // La cuerda: de A a la polea, y de la polea al extremo superior de B.
+  const [ax, ay] = l.p(puntoPlanoA), [cbx, cby] = l.p(puntoCuerdaB);
+  ctx.strokeStyle = p.rule;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(ax, ay);
+  ctx.lineTo(px, py);
+  ctx.lineTo(cbx, cby);
+  ctx.stroke();
+
+  bloque(ctx, l, centroA, { ancho: ANCHO_BLOQUE, alto: ALTO_BLOQUE, color: p.band, borde: p.ink, angulo: ALFA });
+  bloque(ctx, l, centroB, { ancho: ANCHO_BLOQUE, alto: ALTO_BLOQUE, color: p.band, borde: p.ink });
+
+  // Las velocidades, en azul, salen de a*t -- semantica de "reparto de color" (azul es
+  // cinematica). Escala fija en base a V_MAX, para que la flecha no cambie de tamaño
+  // relativo de un frame a otro dentro de la misma corrida.
+  const semialto = (l.alto - l.margen.T - l.margen.B) / 2;
+  // 0.3 (no 0.8 como en un diagrama de fuerzas puro): aca la flecha de velocidad es una
+  // anotacion sobre una escena que ya tiene que mostrar el plano, la polea y los dos
+  // cuerpos, asi que no puede acaparar la mitad del panel.
+  const K_VEL = (0.3 * semialto) / V_MAX;
+
+  const velA = [-v * DIR_PLANO[0], -v * DIR_PLANO[1]];
+  const [oax, oay] = l.p(centroA);
+  vectorPx(ctx, oax, oay, oax + velA[0] * K_VEL, oay - velA[1] * K_VEL,
+    { color: p.blue, grosor: 2.2, punta: 9, rotulo: 'v' });
+
+  const velB = [0, v];
+  const [obx, oby] = l.p(centroB);
+  vectorPx(ctx, obx, oby, obx + velB[0] * K_VEL, oby - velB[1] * K_VEL,
+    { color: p.blue, grosor: 2.2, punta: 9, rotulo: 'v' });
+}
+
+// Suma vectorial de N fuerzas (arrays [x,y]): la resultante de cada cuerpo se arma asi,
+// componente a componente, y no se escribe la formula ya simplificada -- si alguien
+// rompe una de las fuerzas de arriba, esta resultante lo delata.
+const sumaVec = (...vecs) => vecs.reduce((s, v) => [s[0] + v[0], s[1] + v[1]], [0, 0]);
+
+// El diagrama aislado (casilla marcada): dos diagramas de cuerpo aislado lado a lado,
+// con la MISMA escala de fuerza-a-pixel para los dos -- es lo que garantiza que las dos
+// flechas de T salgan del mismo largo en pixeles, porque tDesdeA y tDesdeB son el mismo
+// numero (Paso 3).
+function pintarAislado(ctx, l, p, mB, a, tDesdeA, tDesdeB) {
+  // La normal de A no depende de mB: el equilibrio perpendicular al plano no involucra
+  // a la tension (que es enteramente a lo largo del plano), asi que N_A sale solo del
+  // peso de A. Ver la derivacion completa en el informe de la tarea.
+  const N_A = M_A * G * Math.cos(ALFA);
+
+  const pesoA = [0, -M_A * G];
+  const normalA = [N_A * NORMAL_PLANO[0], N_A * NORMAL_PLANO[1]];
+  const tensionA = [tDesdeA * DIR_PLANO[0], tDesdeA * DIR_PLANO[1]]; // hacia la polea, "arriba del plano"
+  const resA = sumaVec(pesoA, normalA, tensionA);
+
+  const pesoB = [0, -mB * G];
+  const tensionB = [0, tDesdeB]; // vertical, tirando hacia arriba
+  const resB = sumaVec(pesoB, tensionB);
+
+  const semialto = (l.alto - l.margen.T - l.margen.B) / 2;
+  const K = (0.8 * semialto) / FUERZA_MAX;
+
+  const origenA = [-XP, 0], origenB = [XP, 0];
+  bloque(ctx, l, origenA, { ancho: ANCHO_BLOQUE, alto: ALTO_BLOQUE, color: p.band, borde: p.ink, angulo: ALFA });
+  bloque(ctx, l, origenB, { ancho: ANCHO_BLOQUE, alto: ALTO_BLOQUE, color: p.band, borde: p.ink });
+
+  const [oax, oay] = l.p(origenA);
+  for (const [vec, rotulo] of [[pesoA, 'P'], [normalA, 'N'], [tensionA, 'T']]) {
+    vectorPx(ctx, oax, oay, oax + vec[0] * K, oay - vec[1] * K,
+      { color: p.red, grosor: 2, punta: 9, rotulo });
+  }
+  if (Math.hypot(resA[0], resA[1]) * K > 1) {
+    vectorPx(ctx, oax, oay, oax + resA[0] * K, oay - resA[1] * K,
+      { color: p.blue, grosor: 2.6, punta: 11, rotulo: 'R' });
+  }
+
+  const [obx, oby] = l.p(origenB);
+  for (const [vec, rotulo] of [[pesoB, 'P'], [tensionB, 'T']]) {
+    vectorPx(ctx, obx, oby, obx + vec[0] * K, oby - vec[1] * K,
+      { color: p.red, grosor: 2, punta: 9, rotulo });
+  }
+  if (Math.hypot(resB[0], resB[1]) * K > 1) {
+    vectorPx(ctx, obx, oby, obx + resB[0] * K, oby - resB[1] * K,
+      { color: p.blue, grosor: 2.6, punta: 11, rotulo: 'R' });
+  }
+}
+
+// No hace falta un instante de reposo especial: en reposo (t=0) los dos cuerpos estan
+// en S0/YB0, que ya es una posicion representativa (el punto medio del recorrido).
+let enReposo = true;
+const rotular = () => rotuloReproducir(el('w1-play'), escena, enReposo);
+
+const escena = crearEscena({
+  dibujar: () => widget.repintar(),
+  duracion: duracion(estadoPlano(4).a),
+  alCambiar: rotular,
+});
+
+deslizador({
+  entrada: el('w1-mb'), salida: el('w1-mb-out'), pagina,
+  formato: v => v.toFixed(1) + ' kg',
+  alCambiar: v => {
+    escena.duracion = duracion(estadoPlano(v).a);
+    widget.repintar();
+  },
+});
+casilla({
+  entrada: el('w1-aislar'), pagina,
+  alCambiar: v => { aislar = v; widget.repintar(); },
+});
+boton({
+  elemento: el('w1-play'), pagina,
+  alApretar: () => {
+    if (escena.estado === 'reproduciendo') {
+      escena.pausar();
+    } else {
+      if (enReposo || escena.t >= escena.duracion - 1e-6) {
+        enReposo = false;
+        escena.reiniciar();
+      }
+      escena.reproducir();
+    }
+    rotular();
+  },
+});
+// Sin `pagina`, igual que en los otros ensayos: el reset es el unico control que no
+// apaga el pulso del boton.
+boton({
+  elemento: el('w1-reset'),
+  alApretar: () => { enReposo = true; escena.reiniciar(); rotular(); },
+});
+
+rotular();
+const pulso = () => {
+  el('w1-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
+};
+pagina.alTocar(pulso);
+pulso();
+
+/* ---------- arranque ---------- */
+
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
