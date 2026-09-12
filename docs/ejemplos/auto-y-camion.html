@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script de la nota es `type="module"` y se difiere hasta despues del
+// parseo, asi que aplicar el tema desde ahi regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahi la excepcion abortaria el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>El auto y el camión · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div style="max-width:680px;margin:0 auto;padding:56px 24px 0;display:flex;flex-direction:column;gap:0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ejemplo · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">El auto y el camión</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Alcanzar a alguien es cruzarse con su curva.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Es el ejercicio 5 de la Guía 1, y el planteo en sí no tiene ningún truco: dos posiciones, un origen común, un reloj común. Lo que lo vuelve incómodo es otra cosa.</p>
+
+  <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:24px 0 0">
+    <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0">Un automóvil y un camión parten en el mismo instante, encontrándose inicialmente el auto a cierta distancia detrás del camión. Este último tiene una aceleración constante de 1.2 m/s², mientras que el auto acelera a 1.8 m/s². El auto alcanza al camión cuando éste ha recorrido 45 metros. ¿Cuánto tiempo tarda? ¿Cuál era la distancia inicial? ¿Con qué velocidad va cada uno al encontrarse?</p>
+  </div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Lo incómodo es que el enunciado da el dato del final —los 45 m que el camión ya recorrió cuando lo alcanzan— y pregunta por el principio, la distancia con la que arrancaron. Hay que leerlo al revés: primero sale el tiempo, con el tiempo sale la distancia inicial, y recién con las dos cosas salen las velocidades que pide la última pregunta.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El cruce de las curvas</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— mirá la separación bajar a 0.0 m justo cuando los dos puntos se tocan en la marca del cruce.</span>
+    </div>
+    <canvas id="w1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w1-play" class="boton-primario">Reproducir</button>
+        <button id="w1-reset" class="boton">Reiniciar</button>
+      </div>
+      <label class="control" style="flex:1 1 220px;min-width:190px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">distancia inicial <output id="w1-d0-out" style="color:var(--ink);font-variant-numeric:tabular-nums">22.5 m</output></span>
+        <input id="w1-d0" type="range" min="5" max="60" step="0.5" value="22.5" style="width:100%">
+      </label>
+      <div style="display:flex;gap:8px">
+        <button id="w1-ejercicio" class="boton">El del ejercicio</button>
+      </div>
+    </div>
+    <div class="lecturas">
+      <span>tiempo transcurrido <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.03 s</b></span>
+      <span>separación <b id="w1-sep" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">14.2 m</b></span>
+      <span>instante del encuentro <b id="w1-tenc" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">8.66 s</b></span>
+      <span>recorrido del camión <b id="w1-camion" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">45.0 m</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Cómo se resuelve</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>Escribir las dos posiciones desde el mismo origen y el mismo reloj. El auto en <i>0</i>, el camión en <i>d</i><sub>0</sub>. Ése es todo el trabajo: el resto es álgebra.</li>
+    <li>Alcanzar significa estar en el mismo lugar al mismo tiempo, o sea igualar las dos. Queda ½ (<i>a</i><sub>auto</sub> − <i>a</i><sub>camión</sub>) <i>t</i><sup>2</sup> = <i>d</i><sub>0</sub>: el encuentro depende sólo de la <b style="font-weight:600">diferencia</b> de aceleraciones, no de cuánto acelera cada uno.</li>
+    <li>El enunciado no da <i>d</i><sub>0</sub>, da que el camión recorrió 45 m. De ahí sale el tiempo primero: 45 = ½ · 1.2 · <i>t</i><sup>2</sup>, o sea <i>t</i> = 8.66 s.</li>
+    <li>Con el tiempo, el resto cae solo. El auto recorrió ½ · 1.8 · 8.66² = 67.5 m, así que la distancia inicial era 67.5 − 45 = 22.5 m. Y las velocidades son <i>a</i> · <i>t</i>: 15.59 m/s el auto y 10.39 m/s el camión.</li>
+  </ol>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">El gráfico de abajo tiene la respuesta dibujada desde el primer instante: el cruce de las dos parábolas ya está ahí, marcado, antes de que ningún auto llegue. Por eso conviene dibujarlo antes de despejar nada —se ve de entrada si hay encuentro, más o menos cuándo, y si la cuenta después da cualquier cosa. Dejar de ver un sistema de dos ecuaciones y empezar a ver dos curvas que se acercan es, en el fondo, todo lo que este ejercicio pide.</p>
+</div>
+
+<div class="columna columna-final">
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:flex-end;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 1, pp. 3–24 · práctico 1, ej. 5</p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget, panelesApilados } from '../motor/widget.js';
+import { crearEscena } from '../motor/escena.js';
+import { eje, curva, cuerpo, punteado, texto, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { deslizador, boton, rotuloReproducir } from '../motor/controles.js';
+import { conectarTema } from '../motor/tema.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+// [x+dx, y+dy]: para no repetir la aritmetica de desplazar un rotulo en cada llamada.
+const desplazar = ([x, y], dx, dy) => [x + dx, y + dy];
+
+/* ---------- el widget ---------- */
+
+function widgetAutoYCamion(pagina) {
+  // El ejercicio 5 de la Guia 1, resuelto. Los cuatro numeros del enunciado -t_enc =
+  // 8.660 s, d0 = 22.50 m, v_auto = 15.59 m/s, v_camion = 10.39 m/s- salen todos de
+  // parcial-1/soluciones/verificacion-practico-1.py ("Ej 5: t_enc = 8.660 s   d0 =
+  // 22.50 m   v_auto = 15.59  v_camion = 10.39 m/s") y son los que reaparecen en la
+  // prosa y en los cuatro pasos de mas arriba.
+  const A_AUTO = 1.8, A_CAMION = 1.2;        // m/s^2
+  const D0_EJERCICIO = 22.5;                  // distancia inicial del enunciado, en metros
+  let d0 = D0_EJERCICIO;
+
+  // Las dos posiciones. El auto arranca en 0 y el camion d0 metros adelante.
+  const xAuto = s => 0.5 * A_AUTO * s * s;
+  const xCamion = s => d0 + 0.5 * A_CAMION * s * s;
+
+  // El encuentro sale de igualarlas: 1/2 (a_auto - a_camion) t^2 = d0. Depende solo de
+  // la DIFERENCIA de aceleraciones, que es la lectura que conviene que el lector note.
+  const tEncuentro = () => Math.sqrt(2 * d0 / (A_AUTO - A_CAMION));
+
+  const FRACCION_REPOSO = 0.35;
+  const VELOCIDAD = 0.6;
+
+  const MARGEN = { L: 62, R: 24, T: 20, B: 34 };
+  const HUECO_ROTULO = COLGADO_ROTULO_EJE + 8;
+  const canvas = el('w1-cv');
+
+  let escena = null;
+  let enReposo = true;
+
+  const widget = crearWidget({
+    pagina, canvas, margen: MARGEN,
+    escalaUniforme: false,
+    altoMin: 2 * (95 + HUECO_ROTULO) + MARGEN.T + MARGEN.B,
+    encuadre: () => ({ xMin: 0, xMax: tEncuentro() * 1.25, yMin: 0, yMax: 2 }),
+    dibujar: pintar,
+  });
+
+  // Rango vertical del grafico / horizontal de la ruta: tiene que cubrir la posicion
+  // MAXIMA que el auto alcanza durante TODA la reproduccion, no solo hasta el
+  // encuentro. La escena corre hasta `duracion = tEncuentro() * 1.25` (paso 4), y como
+  // xAuto(s) es cuadratica, xAuto(1.25 * tEnc) = 1.5625 * xAuto(tEnc) -- un 25% mas de
+  // lo que da `xAuto(tEncuentro()) * 1.25`. Con ese numero literal (el del brief) el
+  // auto y el camion se salen del lienzo -invisibles, fuera del canvas- durante el
+  // ultimo medio segundo largo de cada reproduccion, en la franja de la ruta: se
+  // verifico en pantalla (t5-widget-1280-fin.png / t5-crop-fin-route.png, ver
+  // t5-verificar.mjs) que a t = duracion la ruta queda sin autos. Evaluar xAuto en el
+  // instante final real -mas un 5% de aire- corrige eso sin tocar nada mas del
+  // widget; es el mismo numero para las dos franjas, como en el codigo original.
+  const rangoMaximo = () => xAuto(tEncuentro() * 1.25) * 1.05;
+
+  const capas = l => panelesApilados({
+    lienzo: l, margen: MARGEN, hueco: HUECO_ROTULO,
+    paneles: [
+      // La ruta: el eje horizontal son METROS, no segundos. Va de un poco antes del
+      // auto hasta un poco despues de donde se encuentran.
+      { yMin: 0, yMax: 1, xMin: -8, xMax: rangoMaximo() },
+      // El grafico: el eje horizontal son SEGUNDOS, heredados del lienzo de afuera.
+      { yMin: 0, yMax: rangoMaximo() },
+    ],
+  });
+
+  function pintar(ctx, l) {
+    const p = pagina.paleta();
+    const t = escena.t, tEnc = tEncuentro();
+    const [ruta, grafico] = capas(l);
+
+    // --- la ruta ---
+    eje(ctx, ruta.lp, { color: p.rule, colorTexto: p.dim, etiquetaX: 'x [m]', marcasY: false });
+    cuerpo(ctx, ruta.lp, [xAuto(t), 0.35], { radio: 7, color: p.blue });
+    cuerpo(ctx, ruta.lp, [xCamion(t), 0.35], { radio: 9, color: p.red });
+    texto(ctx, 'auto', ...desplazar(ruta.lp.p([xAuto(t), 0.35]), 0, -16),
+      { color: p.blue, alineacion: 'center' });
+    texto(ctx, 'camión', ...desplazar(ruta.lp.p([xCamion(t), 0.35]), 0, -18),
+      { color: p.red, alineacion: 'center' });
+
+    // La distancia entre los dos, dibujada como el segmento que se achica. Es la
+    // lectura que el parrafo pide mirar.
+    if (xCamion(t) - xAuto(t) > 0.5) {
+      punteado(ctx, ...ruta.lp.p([xAuto(t), 0.62]), ...ruta.lp.p([xCamion(t), 0.62]),
+        { color: p.dim });
+    }
+
+    // --- el grafico ---
+    eje(ctx, grafico.lp, { color: p.rule, colorTexto: p.dim,
+      etiquetaX: 't [s]', etiquetaY: 'x [m]' });
+    curva(ctx, grafico.lp, s => [s, xAuto(s)], 0, l.xMax, { color: p.blue, grosor: 1.9 });
+    curva(ctx, grafico.lp, s => [s, xCamion(s)], 0, l.xMax, { color: p.red, grosor: 1.9 });
+
+    // El cruce: el punto donde las dos curvas se tocan, marcado desde el principio.
+    // Que este ahi antes de que los autos lleguen es el punto de la nota -- la
+    // respuesta se ve venir.
+    punteado(ctx, ...grafico.lp.p([tEnc, 0]), ...grafico.lp.p([tEnc, xAuto(tEnc)]),
+      { color: p.rule });
+    cuerpo(ctx, grafico.lp, [tEnc, xAuto(tEnc)], { radio: 5, color: p.ink });
+    texto(ctx, 'se alcanzan', ...desplazar(grafico.lp.p([tEnc, xAuto(tEnc)]), 10, -8),
+      { color: p.ink });
+
+    cuerpo(ctx, grafico.lp, [t, xAuto(t)], { radio: 4, color: p.blue });
+    cuerpo(ctx, grafico.lp, [t, xCamion(t)], { radio: 4, color: p.red });
+
+    leer('w1-t', t.toFixed(2) + ' s');
+    leer('w1-sep', Math.max(0, xCamion(t) - xAuto(t)).toFixed(1) + ' m');
+    leer('w1-tenc', tEnc.toFixed(2) + ' s');
+    leer('w1-camion', (0.5 * A_CAMION * tEnc * tEnc).toFixed(1) + ' m');
+  }
+
+  const rotular = () => rotuloReproducir(el('w1-play'), escena, enReposo);
+
+  escena = crearEscena({
+    dibujar: () => widget.repintar(),
+    duracion: tEncuentro() * 1.25,
+    velocidad: VELOCIDAD,
+    alCambiar: rotular,
+  });
+
+  // Mueve el reloj de verdad al instante de reposo cuando corresponde, y siempre
+  // sincroniza la duracion con tEncuentro(). Igual que en los widgets de tiro: no
+  // repinta por si sola cuando !enReposo (`escena.duracion` solo repinta si el nuevo
+  // tope obliga a recortar `t`); quien llama es responsable de pedir el repintado.
+  const alReposo = () => {
+    escena.duracion = tEncuentro() * 1.25;
+    if (enReposo) escena.ir(FRACCION_REPOSO * tEncuentro() * 1.25);
+  };
+
+  // Cambiar la distancia inicial solo mueve la duracion y el encuadre: la escena no
+  // se rehace, asi que arrastrar el slider no puede congelar ni reiniciar el reloj.
+  function recalcular() {
+    alReposo();
+    widget.repintar();
+    rotular();
+  }
+
+  deslizador({
+    entrada: el('w1-d0'), salida: el('w1-d0-out'), pagina,
+    formato: v => v.toFixed(1) + ' m',
+    alCambiar: v => { d0 = v; recalcular(); },
+  });
+
+  boton({
+    elemento: el('w1-play'), pagina,
+    alApretar: () => {
+      if (escena.estado === 'reproduciendo') {
+        escena.pausar();
+      } else {
+        if (enReposo || escena.t >= escena.duracion - 1e-6) {
+          enReposo = false;
+          escena.reiniciar();
+        }
+        escena.reproducir();
+      }
+      rotular();
+    },
+  });
+  // Sin `pagina` a proposito, igual que el reset de los widgets de tiro: el pulso del
+  // boton "Reproducir" sobrevive a un Reiniciar.
+  boton({
+    elemento: el('w1-reset'),
+    alApretar: () => { enReposo = true; escena.reiniciar(); alReposo(); rotular(); },
+  });
+  boton({
+    elemento: el('w1-ejercicio'), pagina,
+    alApretar: () => {
+      d0 = D0_EJERCICIO;
+      el('w1-d0').value = String(D0_EJERCICIO);
+      el('w1-d0-out').textContent = D0_EJERCICIO.toFixed(1) + ' m';
+      recalcular();
+    },
+  });
+
+  // Arranca quieto en 0.35 · duracion, no en t = 0, como todos los widgets del
+  // proyecto que tienen Reproducir/Reiniciar.
+  alReposo();
+  rotular();
+  const pulso = () => {
+    el('w1-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
+  };
+  pagina.alTocar(pulso);
+  pulso();
+}
+
+/* ---------- arranque ---------- */
+
+const pagina = crearPagina({ documento: document });
+widgetAutoYCamion(pagina);
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
