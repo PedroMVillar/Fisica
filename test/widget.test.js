@@ -185,6 +185,33 @@ test('cada repintado arranca con globalAlpha en 1 y sin guiones, aunque el anter
   }
 });
 
+// Tarea 6 le dio `angulo` a crearLienzo, pero crearWidget no lo reenviaba: destructuraba
+// solo xMin/xMax/yMin/yMax del resultado de encuadre() y armaba el lienzo con esos
+// cuatro, tirando el angulo pedido.
+test('crearWidget reenvia el angulo del encuadre al lienzo', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 },
+    encuadre: () => ({ xMin: -1, xMax: 1, yMin: -1, yMax: 1, angulo: 0.5 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  assert.equal(w.lienzo().angulo, 0.5);
+});
+
+test('sin angulo en el encuadre, el lienzo queda en cero', () => {
+  const p = crearPagina({ documento: documentoFalso() });
+  const cv = canvasFalso(800, 400);
+  const w = crearWidget({
+    pagina: p, canvas: cv, dpr: 1, margen: { L: 0, R: 0, T: 0, B: 0 },
+    encuadre: () => ({ xMin: -1, xMax: 1, yMin: -1, yMax: 1 }),
+    dibujar: () => {},
+  });
+  w.repintar();
+  assert.equal(w.lienzo().angulo, 0);
+});
+
 test('el lienzo del widget lleva el margen que se le dio', () => {
   const p = crearPagina({ documento: documentoFalso() });
   const cv = canvasFalso(800, 400);

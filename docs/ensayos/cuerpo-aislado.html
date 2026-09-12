@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script del ensayo es `type="module"` y se difiere hasta después del
+// parseo, así que aplicar el tema desde ahí regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahí la excepción abortaría el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>Diagrama de cuerpo aislado · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div class="columna" style="padding-top:56px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ensayo 4 · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Diagrama de cuerpo aislado</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Antes de escribir una sola ecuación hay que decidir qué cuerpo se mira y qué lo toca.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Aislar un cuerpo no es un trámite antes de la parte «de verdad» del problema: es la decisión más importante que se toma en todo el ejercicio. El diagrama de cuerpo aislado no describe la escena completa —el plano, la polea, el otro bloque, la cuerda que sigue de largo—, describe <i>un</i> cuerpo, y absolutamente todo lo que no sea ese cuerpo entra al dibujo únicamente por lo que le hace: una tensión, una normal, un peso. Elegir mal el cuerpo, o dibujar algo que no lo toca, tuerce la cuenta entera antes de plantear la primera ecuación.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">El error más común al aprender esto es dibujar una flecha «hacia donde va» el cuerpo. La velocidad no es una fuerza —no la produce nada que lo esté tocando—, y en este ensayo no se dibuja ni una sola vez. Todo lo que aparece a continuación son fuerzas: cosas que empujan o tiran, con un origen físico señalable.</p>
+
+  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · Cuatro flechas y ninguna más</h2>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">El bloque A de este ejercicio tiene exactamente cuatro fuerzas actuando: su peso, la normal que le hace el plano, la tensión de la cuerda AB que lo sostiene paralela al plano, y la tensión de la cuerda AC que lo tira horizontalmente hacia afuera. Nada más lo toca. La casilla de abajo tiene un truco que vale la pena decir en voz alta: los ejes con que se mira el problema se pueden <i>elegir</i>, y elegirlos a lo largo del plano —en vez de horizontal-vertical, la elección de siempre— no es una maña para que las cuentas den más fácil. Es mirar el problema desde el lugar donde es fácil: sobre esos ejes la normal y el peso caen, cada uno, sobre un solo eje, y no hay que descomponer más que uno de los cuatro.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
+      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El diagrama que se endereza</span>
+      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— la resultante vale cero, y sale de sumar las cuatro flechas.</span>
+    </div>
+    <canvas id="w1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <label class="control" style="flex:1 1 170px;min-width:150px">
+        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">inclinación α <output id="w1-alfa-out" style="color:var(--ink);font-variant-numeric:tabular-nums">30°</output></span>
+        <input id="w1-alfa" type="range" min="0" max="45" step="1" value="30" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="w1-ejes" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">El plano es el suelo
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>α <b id="w1-alfa-val" style="font-weight:500;font-variant-numeric:tabular-nums">30°</b></span>
+      <span>T<sub>AB</sub> <b id="w1-P" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">574.9 N</b></span>
+      <span>N <b id="w1-N" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">799.7 N</b></span>
+      <span>resultante <b id="w1-res" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">0.0 N</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna columna-final">
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Que la resultante dé cero arriba no es un resultado que salga del dibujo: es el <i>dato</i> del problema —el bloque está en equilibrio— y de ahí salen las dos incógnitas, <i>T</i><sub>AB</sub> y <i>N</i>. Con α = 30° eso da <i>T</i><sub>AB</sub> = 574,9 N y <i>N</i> = 799,7 N, los dos números del ejercicio 1. La cuenta no cambia de naturaleza cuando cambian los datos: son siempre las mismas dos ecuaciones, una por eje, resueltas para las dos fuerzas que no se conocen.</p>
+  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Movés el ángulo y mirá qué le pasa a <i>N</i>. No vale <i>mg</i>, y no sólo porque el plano esté inclinado: la cuerda horizontal también le saca carga, tirando del bloque hacia afuera del plano. La normal es lo que el plano tiene que hacer para que el bloque no se hunda en él, ni un newton más ni uno menos, y eso depende de todo lo demás que actúa sobre el cuerpo — es el error más caro de este tema, y el que este widget está pensado para que no se cometa nunca más.</p>
+
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="movimiento-circular.html">Ensayo 3 · Movimiento circular</a>
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 3 · <a href="../recursos/resumen-cuerpo-aislado.pdf">hoja resumen</a> · <a href="../recursos/practico_2_2026.pdf">práctico 2, ej. 1 a 8</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget } from '../motor/widget.js';
+import { eje, bloque, suelo, arco, componentes, vectorPx } from '../motor/dibujo.js';
+import { deslizador, casilla } from '../motor/controles.js';
+import { conectarTema } from '../motor/tema.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+/* ---------- widget 1: el diagrama que se endereza ---------- */
+
+// Guia 2, ej. 1. Bloque A de 100 kg en un plano liso que sube hacia la derecha. La
+// cuerda AB va paralela al plano tirando hacia arriba; la cuerda AC es horizontal y tira
+// hacia la izquierda con la tension de un cuerpo Q de 10 kg colgado de una polea.
+// Verificado en el bloque "Ej 1" de verificacion-practico-2.py:
+//   alfa = 30 grados  ->  T_C = 98.0 N,  P = 574.9 N,  N = 799.7 N
+const G = 9.8;
+const M_A = 100;      // kg, el bloque
+const M_Q = 10;       // kg, el cuerpo que cuelga de la cuerda horizontal
+const T_C = M_Q * G;  // 98.0 N
+
+// Las cuatro fuerzas, en el marco del plano: x a lo largo hacia arriba, y perpendicular
+// saliente. El peso vale (0, -M_A*G) en el mundo, y `l.aMarco` lo trae a este marco --
+// esa es exactamente la descomposicion que la casilla hace visible.
+function fuerzas(alfa) {
+  const sen = Math.sin(alfa), cos = Math.cos(alfa);
+  const P = M_A * G * sen + T_C * cos;   // tension de AB, a lo largo del plano
+  const N = M_A * G * cos - T_C * sen;   // normal del plano
+  return {
+    P, N,
+    // nombre, vector en el marco del plano, y letra del rotulo
+    lista: [
+      ['peso',    [-M_A * G * sen, -M_A * G * cos], 'P'],
+      ['normal',  [0, N],                           'N'],
+      ['AB',      [P, 0],                           'T'],
+      ['AC',      [-T_C * cos, T_C * sen],          'Q'],
+    ],
+  };
+}
+
+// Los tres largos del dibujo son unidades del marco (no newtons):
+//
+// - ANCHO_BLOQUE = 2, ALTO_BLOQUE = 1: un rectangulo 2:1, la silueta habitual de un
+//   cajon apoyado -- suficientemente ancho para leerse como rectangulo (no como una
+//   raya) incluso en el canvas mas chico (390px de viewport), y suficientemente bajo
+//   para no competir en tamano con el plano.
+// - LADO = 5: el plano tiene que "llegar a los bordes" del encuadre cuadrado (Paso 5),
+//   asi que su extremo es tambien el borde del cuadrado. Ese extremo esta a
+//   (LADO, -ALTO_BLOQUE/2) -- no a (LADO, 0) -- porque `suelo` se dibuja en
+//   y = -ALTO_BLOQUE/2, la base del bloque. La distancia real del bloque (el origen) a
+//   ese punto es sqrt(LADO^2 + (ALTO_BLOQUE/2)^2). Partiendo de un semilargo de plano de
+//   4 unidades (2 veces el ancho del bloque a cada lado, para que el plano se vea
+//   claramente mas largo que el bloque) esa distancia da sqrt(4^2+0.5^2) = 4.03,
+//   redondeada para arriba a 5. Con LADO=5 el error que introduce reusar el mismo LADO
+//   para el extremo del plano es sqrt(5^2+0.5^2)-5 = 0.025 unidades -- con la escala mas
+//   chica que se mide en la Tarea 9 (~30-40 px/unidad a 390px de viewport) eso es menos
+//   de 1 px, invisible, y confirmado por captura en el Paso 7.
+const LADO = 5;
+const ANCHO_BLOQUE = 2;
+const ALTO_BLOQUE = 1;
+
+let alfa = 30 * Math.PI / 180;
+let verEjes = false;
+
+const pagina = crearPagina({ documento: document });
+
+function pintar(ctx, l) {
+  const p = pagina.paleta();
+  const { P, N, lista } = fuerzas(alfa);
+  // La flecha mas larga es el peso: 980 N. Se le da el 80% del semialto util, y de ahi
+  // sale cuantos pixeles vale un newton. Nada de constantes magicas.
+  const semialto = (l.alto - l.margen.T - l.margen.B) / 2;
+  const K_FUERZA = (0.8 * semialto) / (M_A * G);
+  const O = [0, 0];              // el bloque, en el origen del marco del plano
+  const [ox, oy] = l.p(O);
+
+  // El plano y el bloque, dibujados en el marco: en el marco el plano SIEMPRE es
+  // horizontal, y lo que gira es el lienzo. Por eso el mismo codigo sirve con la
+  // casilla marcada y sin marcar.
+  suelo(ctx, l, { color: p.rule, desde: -LADO, hasta: LADO, y: -ALTO_BLOQUE / 2 });
+  bloque(ctx, l, O, { ancho: ANCHO_BLOQUE, alto: ALTO_BLOQUE, color: p.band, borde: p.ink });
+
+  // Sin la casilla, el angulo del plano se marca con un arquito rotulado entre la
+  // horizontal de la pantalla y la linea del plano. Con la casilla marcada el plano YA
+  // es la horizontal, asi que el arco no tiene nada que marcar y no se dibuja.
+  if (!verEjes) {
+    arco(ctx, l, [-LADO * 0.8, -ALTO_BLOQUE / 2],
+      { radio: 34, desde: 0, hasta: alfa, color: p.rule, rotulo: 'α', colorTexto: p.dim });
+  }
+
+  // Los ejes del marco solo cuando la casilla esta marcada: sin marcar, los ejes que
+  // valen son los de la pantalla y dibujar los del plano confundiria.
+  if (verEjes) {
+    eje(ctx, l, { color: p.rule, colorTexto: p.dim, etiquetaX: 'u', etiquetaY: 'n' });
+    // La descomposicion del peso: las dos punteadas que cierran el rectangulo entre
+    // el bloque y la punta de la flecha del peso. Es la unica fuerza que no esta sobre
+    // un eje, y es la que el alumno tiene que aprender a partir.
+    const [wx, wy] = lista[0][1];
+    // `componentes` trabaja en unidades del marco, y las flechas estan en pixeles:
+    // hay que traer la punta de vuelta a unidades. Con `escalaUniforme: true` las dos
+    // escalas son iguales, pero se divide por la que corresponde a cada eje igual,
+    // para que no dependa de eso.
+    componentes(ctx, l, O, [wx * K_FUERZA / l.escala.x, wy * K_FUERZA / l.escala.y],
+      { color: p.dim });
+  }
+
+  // Las cuatro fuerzas, en rojo, con largo en pixeles. El vector esta expresado en el
+  // marco del plano, pero se dibuja en pixeles de PANTALLA: hay que rotarlo con
+  // `l.aMundo` antes de escalarlo, o la flecha quedaria siempre en la orientacion del
+  // marco sin importar el angulo del lienzo -- que es exactamente lo que la casilla
+  // tiene que cambiar. (`componentes`, mas arriba, hace este mismo giro puertas adentro
+  // porque recibe unidades del marco y llama a `l.p`; `vectorPx` no pasa por `l.p`, asi
+  // que el giro hay que pedirlo a mano.)
+  for (const [, [fx, fy], rotulo] of lista) {
+    const [mx, my] = l.aMundo([fx, fy]);
+    vectorPx(ctx, ox, oy, ox + mx * K_FUERZA, oy - my * K_FUERZA,
+      { color: p.red, grosor: 2, punta: 9, rotulo });
+  }
+
+  // La resultante, en azul. Se suma en el codigo: es la lectura que el parrafo de abajo
+  // manda mirar, y tiene que moverse si alguien rompe el modelo. Mismo giro que las
+  // cuatro de arriba, por el mismo motivo.
+  const rx = lista.reduce((s, f) => s + f[1][0], 0);
+  const ry = lista.reduce((s, f) => s + f[1][1], 0);
+  const modulo = Math.hypot(rx, ry);
+  if (modulo * K_FUERZA > 1) {
+    const [mrx, mry] = l.aMundo([rx, ry]);
+    vectorPx(ctx, ox, oy, ox + mrx * K_FUERZA, oy - mry * K_FUERZA,
+      { color: p.blue, grosor: 2.6, punta: 11, rotulo: 'R' });
+  }
+
+  leer('w1-alfa-val', (alfa * 180 / Math.PI).toFixed(0) + '°');
+  leer('w1-P', P.toFixed(1) + ' N');
+  leer('w1-N', N.toFixed(1) + ' N');
+  // El signo del cero: la cancelacion deja a veces un -1e-13 que toFixed imprimiria
+  // como "-0.0". Mismo retoque que usa el widget 1 del ensayo de circular.
+  const res = modulo.toFixed(1);
+  leer('w1-res', (res === '-0.0' ? '0.0' : res) + ' N');
+}
+
+const widget = crearWidget({
+  pagina, canvas: el('w1-cv'),
+  margen: { L: 40, R: 40, T: 26, B: 26 },
+  // Cuadrado y centrado: al girar el marco, la distancia al origen no cambia, asi que
+  // un cuadrado centrado en el bloque contiene el dibujo a cualquier angulo. Con
+  // escala uniforme, ademas, el bloque no se deforma al girar.
+  centrar: true,
+  encuadre: () => ({
+    xMin: -LADO, xMax: LADO, yMin: -LADO, yMax: LADO,
+    // Sin la casilla se mira el marco del plano desde afuera y el plano se ve
+    // inclinado; con la casilla el marco y la pantalla coinciden y el plano se
+    // endereza. El dibujo de adentro es el mismo en los dos casos.
+    angulo: verEjes ? 0 : alfa,
+  }),
+  dibujar: pintar,
+});
+
+deslizador({
+  entrada: el('w1-alfa'), salida: el('w1-alfa-out'), pagina,
+  formato: v => v.toFixed(0) + '°',
+  alCambiar: v => { alfa = v * Math.PI / 180; widget.repintar(); },
+});
+casilla({
+  entrada: el('w1-ejes'), pagina,
+  alCambiar: v => { verEjes = v; widget.repintar(); },
+});
+
+/* ---------- arranque ---------- */
+
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>

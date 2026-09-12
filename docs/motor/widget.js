@@ -48,7 +48,7 @@ export function crearWidget({
         || (canvas.parentElement ? canvas.parentElement.getBoundingClientRect().width : 0);
       if (!ancho) return;
 
-      const { xMin = 0, xMax, yMin = 0, yMax } = encuadre();
+      const { xMin = 0, xMax, yMin = 0, yMax, angulo = 0 } = encuadre();
       const anchoUtil = ancho - margen.L - margen.R;
       const alto = escalaUniforme
         ? acotarAlto(margen.T + margen.B + anchoUtil * ((yMax - yMin) / (xMax - xMin)))
@@ -103,7 +103,7 @@ export function crearWidget({
         const sobranteY = altoUtil - sc * (yMax - yMin);
         const reparto = centrar ? 0.5 : 0;
         l = crearLienzo({
-          ancho, alto, xMin, xMax, yMin, yMax,
+          ancho, alto, xMin, xMax, yMin, yMax, angulo,
           margen: {
             L: margen.L + sobranteX * reparto, R: margen.R + sobranteX * (1 - reparto),
             B: margen.B + sobranteY * reparto, T: margen.T + sobranteY * (1 - reparto),
@@ -114,7 +114,7 @@ export function crearWidget({
         // cae exacto en el borde derecho del area util y yMax en el borde superior.
         // No hay nada que estirar, asi que el lienzo reporta los bordes pedidos sin
         // ajuste alguno -la distincion "pedido vs. estirado" de arriba no existe aca.
-        l = crearLienzo({ ancho, alto, margen, xMin, xMax, yMin, yMax });
+        l = crearLienzo({ ancho, alto, margen, xMin, xMax, yMin, yMax, angulo });
       }
 
       dibujar(ctx, l, pagina);
