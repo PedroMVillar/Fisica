@@ -338,6 +338,39 @@ test('eje con yMin = 0 deja la etiqueta del eje x donde estaba', () => {
   assert.equal(rotulo[3], l.py(0) + 28);
 });
 
+test('eje rotula con coma', () => {
+  const l = crearLienzo({ ancho: 400, alto: 200, xMin: 0, xMax: 2, yMin: 0, yMax: 1 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666' });
+  const rotulos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
+  assert.ok(rotulos.some(r => r.includes(',')), 'algun rotulo decimal lleva coma');
+  assert.ok(!rotulos.some(r => r.includes('.')), 'ninguno lleva punto');
+});
+
+test('eje no repite rotulos cuando el paso es fino', () => {
+  // Rango angosto en x: paso 0.05, que con un decimal fijo daba "0,3" dos veces. El
+  // rango de y es amplio a proposito (paso 2, sin decimales) para que sus rotulos no
+  // puedan coincidir por casualidad con los de x -- con yMax: 1 (paso 0.2, un decimal)
+  // el 0.40 de x y el 0.4 de y redondean al mismo texto "0,4" aunque son ejes y
+  // cantidades distintas, lo que no tiene nada que ver con el bug que esta prueba busca.
+  const l = crearLienzo({ ancho: 400, alto: 200, xMin: 0.25, xMax: 0.55, yMin: 0, yMax: 10 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666' });
+  const rotulos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
+  assert.equal(new Set(rotulos).size, rotulos.length, 'no hay rotulos repetidos');
+});
+
+test('eje sigue rotulando los enteros sin decimales', () => {
+  // El comportamiento de HOY, que no puede cambiar: con paso 0.5 el -1 se rotula "-1",
+  // no "-1,0". Es la unica forma de que las paginas existentes no se muevan.
+  const l = crearLienzo({ ancho: 400, alto: 400, xMin: -2, xMax: 2, yMin: -2, yMax: 2 });
+  const c = ctxFalso();
+  eje(c, l, { color: '#000', colorTexto: '#666' });
+  const rotulos = c.ops.filter(o => o[0] === 'fillText').map(o => o[1]);
+  assert.ok(rotulos.includes('-1'), 'el -1 va sin decimales');
+  assert.ok(!rotulos.includes('-1,0'), 'y no con un cero de mas');
+});
+
 test('acotarFlecha deja pasar una flecha mas corta que el tope', () => {
   const [dx, dy, acotada] = acotarFlecha(30, 40, 100);
   assert.equal(dx, 30);

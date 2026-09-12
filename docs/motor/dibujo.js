@@ -54,6 +54,8 @@
 // colores de tema claro sobre una página oscura. El color sale siempre de los
 // tokens CSS leídos por el widget.
 
+import { marca } from './formato.js';
+
 function exigirColor(color, primitiva) {
   if (typeof color !== 'string' || color === '') {
     throw new TypeError(
@@ -371,8 +373,12 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX =
       ctx.lineTo(l.px(x), l.py(anclaY) + 4);
       ctx.stroke();
       // El cero no se rotula: se lee del cruce de los ejes y ahi choca con el de y.
+      // Los decimales del rotulo salen de `sx`, el paso de ESTE eje -- no de un decimal
+      // fijo -- porque con un paso fino (0.05) un decimal solo repite rotulo ("0,3" dos
+      // veces seguidas). `marca()` calcula cuantos decimales hacen falta a partir del
+      // paso y ademas evita que un entero salga con un ",0" de mas.
       if (Math.abs(x) > 1e-9) {
-        texto(ctx, String(Math.round(x * 10) / 10), l.px(x), l.py(anclaY) + 16,
+        texto(ctx, marca(x, sx), l.px(x), l.py(anclaY) + 16,
           { color: colorTexto, px: 10, peso: 400, alineacion: 'center' });
       }
     }
@@ -386,7 +392,9 @@ export function eje(ctx, l, { color, colorTexto, etiquetaX, etiquetaY, marcasX =
       ctx.moveTo(l.px(anclaX), l.py(y));
       ctx.lineTo(l.px(anclaX) - 4, l.py(y));
       ctx.stroke();
-      texto(ctx, String(Math.round(y * 10) / 10), l.px(anclaX) - 8, l.py(y) + 3.5,
+      // Mismo motivo que en el bucle de x: los decimales salen de `sy`, el paso de este
+      // eje, via `marca()`.
+      texto(ctx, marca(y, sy), l.px(anclaX) - 8, l.py(y) + 3.5,
         { color: colorTexto, px: 10, peso: 400, alineacion: 'right' });
     }
   }
