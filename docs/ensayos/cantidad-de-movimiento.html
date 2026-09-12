@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script del ensayo es `type="module"` y se difiere hasta después del
+// parseo, así que aplicar el tema desde ahí regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahí la excepción abortaría el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>Cantidad de movimiento · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div class="columna" style="padding-top:56px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ensayo 8 · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Cantidad de movimiento</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Lo que un choque no puede cambiar, pase lo que pase con la energía.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p class="parrafo-suelto">Todo lo que este ensayo hace sale de la segunda ley escrita de otra manera. <i>F</i> = <i>ma</i> es lo mismo que <i>F</i> = Δ<i>p</i>/Δ<i>t</i>, y despejando, <i>F</i>·Δ<i>t</i> = Δ<i>p</i>. Eso tiene nombre —impulso— y es la herramienta que hace falta antes de poder hablar de choques, porque en un choque no se conoce la fuerza ni el tiempo por separado, pero el producto sí.</p>
+  <p class="parrafo" style="margin-top:22px">Y de ahí sale la ley entera. Si dos cuerpos se empujan entre sí, se empujan con fuerzas iguales y opuestas durante el mismo tiempo, así que reciben impulsos iguales y opuestos: lo que uno gana de cantidad de movimiento, el otro lo pierde, y el total no se mueve. <b class="negrita">No hace falta saber nada de la fuerza</b> —cuánto valió, cuánto duró, si fue elástica o no—, y por eso la conservación de <i>p</i> funciona donde la energía no ayuda.</p>
+
+  <h2 class="titulo-seccion">01 · El impulso no sabe a qué velocidad vas</h2>
+  <p class="parrafo">La intuición dice que en el segundo segundo de caída «pasa más», porque el cuerpo va más rápido. Y algo sí pasa más: recorre más metros y gana más energía cinética —eso va con <i>v</i>²—. Pero el impulso no: el impulso es la fuerza por el tiempo, y la fuerza es siempre la misma (el peso) y el tiempo es siempre un segundo. El widget deja elegir cualquier intervalo de la caída, no sólo los dos del enunciado, y lo que tiene que quedar claro es que el ancho del intervalo es lo único que manda.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación 1</span>
+      <span class="titulo-fila">El impulso de una fuerza constante</span>
+      <span class="nota-fila">— dos franjas del mismo ancho valen lo mismo, esté el cuerpo lento o rápido.</span>
+    </div>
+    <canvas id="m1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="m1-b1" class="boton">Primer segundo</button>
+        <button id="m1-b2" class="boton">Segundo segundo</button>
+      </div>
+      <label class="control" style="flex:1 1 150px;min-width:130px">
+        <span class="rotulo-campo">t inicial <output id="m1-t1-out" class="valor-control">0,00 s</output></span>
+        <input id="m1-t1" type="range" min="0" max="3.5" step="0.05" value="0" style="width:100%">
+      </label>
+      <label class="control" style="flex:1 1 150px;min-width:130px">
+        <span class="rotulo-campo">Δt <output id="m1-dt-out" class="valor-control">1,00 s</output></span>
+        <input id="m1-dt" type="range" min="0.1" max="1.5" step="0.05" value="1" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>J = mg·Δt <b id="m1-j" class="lectura-valor roja">19,6 N·s</b></span>
+      <span>Δp = m·Δv <b id="m1-dp" class="lectura-valor azul">19,6 N·s</b></span>
+      <span>J − Δp <b id="m1-chequeo" class="lectura-valor tenue">0,0 N·s</b></span>
+      <span>v al empezar <b id="m1-v1" class="lectura-valor">0,00 m/s</b></span>
+      <span>v al terminar <b id="m1-v2" class="lectura-valor">9,80 m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p class="parrafo-suelto">Apretá Primer segundo y después Segundo segundo, y mirá las dos franjas: el mismo ancho, la misma área, 19,6 N·s las dos. Y mirá las velocidades: en la primera el cuerpo va de 0,00 a 9,80 m/s; en la segunda, de 9,80 a 19,60 m/s. Va al doble de velocidad y recibe <b class="negrita">exactamente el mismo impulso</b>, porque el impulso no mira la velocidad: mira la fuerza y el reloj.</p>
+  <p class="parrafo">Estirá Δt hasta el final: el impulso total de la caída es 88,544 N·s, y ese número se puede sacar de dos maneras que no se parecen en nada —mg·t<sub>cl</sub>, o m·√(2<i>gh</i>)— y dan lo mismo hasta el cuarto decimal. Eso es el <b class="negrita">teorema impulso-cantidad de movimiento</b>: no es una fórmula nueva, es la segunda ley integrada en el tiempo.</p>
+  <p class="parrafo">Y la advertencia que hace falta antes de la sección siguiente: nada de esto dice una palabra sobre la energía. La energía cinética en el segundo segundo crece mucho más que en el primero (va con <i>v</i>²), y al impulso no le importa. Son <b class="negrita">dos contabilidades distintas</b> sobre el mismo movimiento.</p>
+</div>
+
+<div class="columna columna-final">
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="energia.html">Ensayo 7 · Trabajo y energía</a>
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0"><a href="../recursos/practico_3_2026.pdf">práctico 3, ej. 9 a 12</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget, panelesApilados } from '../motor/widget.js';
+import { eje, curva, cuerpo, punteado, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { colocarEtiqueta } from '../motor/etiqueta.js';
+import { deslizador, boton } from '../motor/controles.js';
+import { conectarTema } from '../motor/tema.js';
+import { num } from '../motor/formato.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+// `G` es de la PAGINA, no de este widget: va arriba de todo, fuera del bloque del
+// widget 1, porque los widgets 2 y 3 (Tareas 8 y 9) tambien la usan y el modulo es
+// uno solo -- dos `const G` en el mismo modulo son un SyntaxError.
+const G = 9.8;
+
+const pagina = crearPagina({ documento: document });
+
+/* ---------- widget 1: el impulso de una fuerza constante ---------- */
+
+// Practico 3, ej. 9. Cuerpo de 2 kg que cae desde 100 m. Verificado en el bloque "Ej 9":
+//   J(primer segundo) = J(segundo segundo) = 19.6 N s
+//   t_cl = 4.5175 s   J total = 88.544 N s = m sqrt(2 g h) = 88.544 N s
+// Sufijo `_M1` por la Global Constraint del espacio de nombres: `cantidad-de-movimiento.html`
+// es UN modulo, y las Tareas 8 y 9 declaran sus propios widgets mas abajo con nombres
+// tan genericos como "V", "F" o "H" para SU ejercicio. Sin el sufijo eso es un
+// SyntaxError (dos `const` iguales) y la pagina no carga.
+const M_M1 = 2, H_M1 = 100;
+const T_CL_M1 = Math.sqrt(2 * H_M1 / G);          // 4.5175 s
+const V_M1 = t => G * t;                          // la curva que el panel de arriba DIBUJA
+const F_M1 = () => M_M1 * G;                      // la recta que el panel de abajo dibuja
+
+// Camino A: el area bajo la recta de F_M1(t) en el intervalo, sumada sobre las MISMAS
+// muestras que se dibujan.
+function areaF_M1(t1, t2, n = 200) {
+  const h = (t2 - t1) / n;
+  let s = 0;
+  for (let i = 0; i < n; i++) s += (F_M1(t1 + i * h) + F_M1(t1 + (i + 1) * h)) / 2 * h;
+  return s;
+}
+// Camino B: la variacion de cantidad de movimiento leida de los EXTREMOS de la curva
+// v(t) que el panel de arriba dibuja.
+const deltaP_M1 = (t1, t2) => M_M1 * (V_M1(t2) - V_M1(t1));
+
+// Hay que ser honesto sobre que prueba este chequeo y que no -- medido, no razonado.
+//
+// Los dos caminos comparten la MISMA `G` y la MISMA `M_M1`, y las dos son un factor
+// que multiplica por igual a los dos lados de la resta (F_M1 = M_M1*G es constante, y
+// el area de un rectangulo constante en [t1,t2] es M_M1*G*(t2-t1); deltaP_M1 da
+// exactamente lo mismo por la otra cuenta). Un error en CUALQUIERA de esas dos
+// constantes compartidas es invisible para este chequeo en TODO el rango de los dos
+// deslizadores -- no es una coincidencia de un punto del rango, es una identidad
+// algebraica que vale siempre. Medido cambiando `G` a 9.81 en las dos formulas (sin
+// tocar nada mas): el chequeo se queda en el ruido de punto flotante (~10⁻¹³ N·s) en
+// los seis puntos muestreados -(t1,Δt) = (0,1) (1,1) (0,1.5) (3.5,1.5) (2,0.5) y
+// (0.05,0.1)-, exactamente igual que con G = 9.8. Lo mismo pasa cambiando `M_M1` de 2 a
+// cualquier otro numero: multiplica por igual a los dos lados y se cancela en la
+// resta, en cualquier t1 y cualquier Δt -- el mismo fenomeno que M_W2 en energia.html.
+//
+// Lo que SI caza -y es el error real de este ejercicio, el que confunde velocidad con
+// posicion- es que `V_M1` no sea la derivada de la curva que corresponde a `F_M1`.
+// Medido rompiendo `V_M1` por `t => 0.5 * G * t * t` (posicion en vez de velocidad),
+// con `G` y `M_M1` sin tocar: el chequeo salta a 9,80 N·s en [0,1], −9,80 en [1,2],
+// 7,35 en [0,1.5], −60,01 en el rincon [3.5, 4.5175], −12,25 en [2,2.5] y 1,76 en el
+// intervalo minimo [0.05, 0.15] -Δt = 0,1 s, el minimo que deja el deslizador-: en
+// NINGUN punto del rango se queda en cero. Por eso la lectura que carga el concepto de
+// esta seccion no es la resta -que puede estar en cero por dos motivos muy distintos-:
+// es que `J` de 19,6 N·s en los dos segundos, con `v al empezar` pasando de 0,00 a
+// 9,80 m/s. Esa es la que hay que mirar, y el parrafo de cierre la nombra.
+
+// Sufijo `_M1`, igual que las constantes fisicas de arriba.
+const MARGEN_M1 = { L: 56, R: 24, T: 18, B: 34 };
+const HUECO_ROTULO_M1 = COLGADO_ROTULO_EJE + 8;       // 23 px
+const ALTO_PANEL_MINIMO_M1 = 95 + HUECO_ROTULO_M1;    // 118 px
+
+// Los dos paneles, con su propio rango vertical cada uno: 48 m/s deja aire sobre los
+// 44,27 m/s finales (la velocidad al tocar el piso), y 24 N sobre los 19,6 N del peso.
+const capasM1 = l => panelesApilados({
+  lienzo: l, margen: { L: MARGEN_M1.L, R: MARGEN_M1.R }, hueco: HUECO_ROTULO_M1,
+  paneles: [
+    { yMin: 0, yMax: 48 },
+    { yMin: 0, yMax: 24 },
+  ],
+});
+
+let t1_M1 = 0, dt_M1 = 1;
+
+function pintarM1(ctx, l) {
+  const p = pagina.paleta();
+  const [{ lp: gv }, { lp: gf }] = capasM1(l);
+  const t1 = t1_M1;
+  // `t1 + Δt` se recorta a T_CL_M1: el cuerpo toca el piso ahi, y un intervalo que lo
+  // pase estaria midiendo el impulso de una caida que no ocurrio.
+  const t2 = Math.min(t1 + dt_M1, T_CL_M1);
+
+  // --- panel superior: v(t) ---
+  curva(ctx, gv, t => [t, V_M1(t)], 0, T_CL_M1, { color: p.blue, grosor: 1.8 });
+  eje(ctx, gv, { color: p.rule, colorTexto: p.dim, etiquetaY: 'v [m/s]', marcasX: false });
+
+  // El intervalo se marca con dos verticales punteadas en --dim...
+  punteado(ctx, gv.px(t1), gv.py(0), gv.px(t1), gv.py(V_M1(t1)), { color: p.dim, guiones: [2, 3] });
+  punteado(ctx, gv.px(t2), gv.py(0), gv.px(t2), gv.py(V_M1(t2)), { color: p.dim, guiones: [2, 3] });
+
+  // ...y dos `cuerpo` sobre la curva en los extremos, con su velocidad colgada por
+  // `colocarEtiqueta` -no `texto()`, porque cuelga de un punto que se mueve con el
+  // deslizador-. Ojo con el segundo limite del modulo (`etiqueta.js`): `crearWidget`
+  // pasa el {ancho, alto} del CANVAS ENTERO como limites, tambien para este widget de
+  // `panelesApilados`, asi que un rotulo colgado hacia ABAJO cerca del piso de este
+  // panel (v = 0, que es justo la frontera con el panel de F de aqui abajo) podria
+  // terminar empujado al panel vecino. Colgarlos hacia ARRIBA (`dy` negativo) evita el
+  // problema de raiz: nunca se acercan a esa frontera.
+  cuerpo(ctx, gv, [t1, V_M1(t1)], { radio: 4, color: p.blue });
+  colocarEtiqueta(ctx, num(V_M1(t1), 2) + ' m/s', gv.px(t1), gv.py(V_M1(t1)), { dx: 6, dy: -12, color: p.blue });
+  cuerpo(ctx, gv, [t2, V_M1(t2)], { radio: 4, color: p.blue });
+  colocarEtiqueta(ctx, num(V_M1(t2), 2) + ' m/s', gv.px(t2), gv.py(V_M1(t2)), { dx: 6, dy: -12, color: p.blue });
+
+  // --- panel inferior: F(t) ---
+  curva(ctx, gf, t => [t, F_M1()], 0, T_CL_M1, { color: p.red, grosor: 1.8 });
+  eje(ctx, gf, { color: p.rule, colorTexto: p.dim, etiquetaX: 't [s]', etiquetaY: 'F [N]' });
+
+  // La franja se raya con `punteado` vertical cada 6 px entre el eje y la recta, igual
+  // que en el widget 1 del ensayo 7 (energia.html): es el area que representa J.
+  const peso = F_M1();
+  for (let xp = gf.px(t1); xp <= gf.px(t2) + 0.01; xp += 6) {
+    punteado(ctx, xp, gf.py(0), xp, gf.py(peso), { color: p.blueSoft, guiones: [2, 3] });
+  }
+
+  // --- las lecturas ---
+  const J = areaF_M1(t1, t2);
+  const dp = deltaP_M1(t1, t2);
+  leer('m1-j', num(J, 1) + ' N·s');
+  leer('m1-dp', num(dp, 1) + ' N·s');
+  leer('m1-chequeo', num(J - dp, 1) + ' N·s');
+  leer('m1-v1', num(V_M1(t1), 2) + ' m/s');
+  leer('m1-v2', num(V_M1(t2), 2) + ' m/s');
+}
+
+const widgetM1 = crearWidget({
+  pagina, canvas: el('m1-cv'),
+  margen: MARGEN_M1, escalaUniforme: false,
+  altoMin: 2 * ALTO_PANEL_MINIMO_M1 + MARGEN_M1.T + MARGEN_M1.B,
+  encuadre: () => ({ xMin: 0, xMax: 4.6, yMin: 0, yMax: 2 }),
+  dibujar: pintarM1,
+});
+
+deslizador({
+  entrada: el('m1-t1'), salida: el('m1-t1-out'), pagina,
+  formato: v => num(v, 2) + ' s',
+  alCambiar: v => { t1_M1 = v; widgetM1.repintar(); },
+});
+deslizador({
+  entrada: el('m1-dt'), salida: el('m1-dt-out'), pagina,
+  formato: v => num(v, 2) + ' s',
+  alCambiar: v => { dt_M1 = v; widgetM1.repintar(); },
+});
+
+// Mover los dos deslizadores desde un boton es asignar Y despachar: `deslizador()`
+// repinta su <output> solo dentro de su propio listener de 'input', y asignar
+// `.value` desde JS no lo dispara solo (docs/ensayos/movimiento-circular.html:513).
+const fijarDeslizadorM1 = (entrada, valor) => {
+  entrada.value = String(valor);
+  entrada.dispatchEvent(new Event('input'));
+};
+boton({
+  elemento: el('m1-b1'), pagina,
+  alApretar: () => { fijarDeslizadorM1(el('m1-t1'), 0); fijarDeslizadorM1(el('m1-dt'), 1); },
+});
+boton({
+  elemento: el('m1-b2'), pagina,
+  alApretar: () => { fijarDeslizadorM1(el('m1-t1'), 1); fijarDeslizadorM1(el('m1-dt'), 1); },
+});
+
+/* ---------- arranque ---------- */
+
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
