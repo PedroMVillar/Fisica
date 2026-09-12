@@ -191,25 +191,47 @@ function periodoActual() { return oscilador(leerK(), leerM()).periodo; }
 const X_MIN_MOV = X0 - A_OSC; // 0.25 m, extremo comprimido
 const X_MAX_MOV = X0 + A_OSC; // 0.55 m, extremo estirado (de donde se suelta)
 
-// v_max y a_max SI dependen de k/m (v_max = A*omega, a_max = A*omega^2): el rango
-// vertical de esos dos paneles se fija con el PEOR CASO de todo el rango de los dos
-// deslizadores -omega maxima, en k=K_MAX, m=M_MIN- para que ningun valor de la mesa
-// saque la curva de su panel.
+// v_max y a_max SI dependen de k/m (v_max = A*omega, a_max = A*omega^2). Las flechas de
+// la escena (mas abajo, K_VEL_PX) siguen escaladas contra el PEOR CASO global -tienen
+// que caber en el mismo panel de escena sin importar el deslizador- pero los paneles de
+// v y a NO: se redibujan enteros cada vez que se mueve un deslizador (Paso 4) y cada
+// curva cubre un periodo completo, asi que nada les impide escalar con el k/m ACTUAL en
+// vez del peor caso de toda la mesa. Con el peor caso fijo, el caso del ejercicio
+// (k=8, m=2, a_max=0.6) ocupaba menos de un decimo del panel de a: el widget existe
+// para mostrar que a(t) es el espejo de x(t), y a esa escala no se ve.
 const OMEGA_MAX_GLOBAL = Math.sqrt(K_MAX / M_MIN); // 6.325 rad/s
 const V_MAX_GLOBAL = A_OSC * OMEGA_MAX_GLOBAL;      // 0.949 m/s
 const A_MAX_GLOBAL = A_OSC * OMEGA_MAX_GLOBAL ** 2; // 6.0 m/s^2 (20/0.5 = 40 exacto)
 
-// 15% de aire sobre el peor caso para el panel de a: ni el caso del ejercicio ni el
-// peor caso de arriba tocan el borde del panel.
+// 15% de aire sobre el pico, igual que antes -el mismo AIRE, ahora aplicado al pico del
+// k/m actual en vez de al del peor caso global.
 const AIRE = 1.15;
-const PANEL_A_LIM = A_MAX_GLOBAL * AIRE;
 
-// El panel de v NO usa el mismo 15%: con PANEL_V_LIM = 0.949*1.15 = 1.09, `eje()`
-// elegia un paso de 0.2 -- diez marcas en un panel de unos 95 px de alto, que se pisaban
-// unas con otras (t14-bug-eje-1decimal-antes.png). 1.25 m/s sigue cubriendo el peor caso
-// (0.949 m/s) con un 32% de margen, y ademas hace que `eje()` elija un paso de 0.5:
-// solo cuatro marcas, bien separadas.
-const PANEL_V_LIM = 1.25; // m/s
+// El panel de v seguia sin poder usar el mismo 15% relativo: manteniendo la MISMA
+// proporcion de margen que ya elegia esta seccion contra el peor caso global (1.25 m/s
+// sobre un pico de 0.949 m/s, un 32%) evita el mismo problema que documentaba el
+// comentario anterior -con el 15% del panel de a, `eje()` elegia un paso de 0.2 y
+// terminaba con diez marcas en un panel de unos 95 px de alto, pisandose unas con otras
+// (t14-bug-eje-1decimal-antes.png)- para cualquier pico, no solo para el peor caso.
+const AIRE_V = 1.25 / V_MAX_GLOBAL; // ~1.318
+
+// Piso comun a los dos paneles. `eje()` (motor/dibujo.js) redondea las etiquetas a un
+// decimal; un rango (yMax - yMin) menor a 0.5 le hace elegir un paso mas fino que 0.1, y
+// dos marcas vecinas terminan rotulando lo mismo (el mismo bug de un decimal que ya
+// disparo el Ruling 20, medido en t14-bug-eje-1decimal-antes.png). Con k y m en su
+// extremo mas blando/pesado el pico de a y de v cae por debajo de ese piso -medido: en
+// k=2 N/m (m en su valor por defecto de 2 kg), a_max*AIRE da 0.17, con rango 0.35 y
+// `eje()` eligiendo un paso de 0.05 (duplica "0.1")-, asi que hay que sostenerlo aca. Es
+// el rango mas chico que deja a `eje()` en un paso de al menos 0.1: la esquina exacta
+// entre el paso seguro y el que duplica etiquetas.
+const PISO_RANGO_PANEL = 0.25;
+
+function limitePanelA(k, m) {
+  return Math.max(A_OSC * (k / m) * AIRE, PISO_RANGO_PANEL);
+}
+function limitePanelV(k, m) {
+  return Math.max(A_OSC * Math.sqrt(k / m) * AIRE_V, PISO_RANGO_PANEL);
+}
 
 // El panel de x usa un margen fijo, no el mismo factor AIRE: con el 15% proporcional a
 // la amplitud (0,15 m) el rango daba 0,345 m, y `eje()` (motor/dibujo.js) elegia un paso
@@ -356,14 +378,21 @@ function pintar(ctx, l) {
   const osc = oscilador(k, m);
   const t = escena.t;
 
+  // Escala de v y a contra el k/m ACTUAL (no el peor caso global): se recalcula en cada
+  // pintado, pero el widget solo repinta al mover un deslizador o avanzar `t` dentro del
+  // mismo periodo, asi que durante la reproduccion k y m no cambian y el rango se
+  // mantiene fijo -es solo al soltar un deslizador que este numero cambia.
+  const panelALim = limitePanelA(k, m);
+  const panelVLim = limitePanelV(k, m);
+
   // Cuatro paneles: la escena (metros, rango propio) y las tres curvas (segundos,
   // heredado del lienzo exterior). `panelesApilados` es el mecanismo de la Tarea 3 que
   // hace posible que el primero tenga un rango horizontal distinto de los otros tres.
   const PANELES = [
     { xMin: XMIN_ESCENA, xMax: XMAX_ESCENA, yMin: YMIN_ESCENA, yMax: YMAX_ESCENA },
     { etiqueta: 'x [m]', yMin: PANEL_X_MIN, yMax: PANEL_X_MAX, color: p.graph, f: osc.x },
-    { etiqueta: 'v [m/s]', yMin: -PANEL_V_LIM, yMax: PANEL_V_LIM, color: p.blue, f: osc.v },
-    { etiqueta: 'a [m/s²]', yMin: -PANEL_A_LIM, yMax: PANEL_A_LIM, color: p.red, f: osc.a },
+    { etiqueta: 'v [m/s]', yMin: -panelVLim, yMax: panelVLim, color: p.blue, f: osc.v },
+    { etiqueta: 'a [m/s²]', yMin: -panelALim, yMax: panelALim, color: p.red, f: osc.a },
   ];
   const [escenaCapa, xCapa, vCapa, aCapa] = panelesApilados({
     lienzo: l, margen: { L: MARGEN.L, R: MARGEN.R }, hueco: HUECO_ROTULO, paneles: PANELES,
