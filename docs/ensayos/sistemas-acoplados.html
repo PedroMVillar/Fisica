@@ -34,19 +34,19 @@ try {
   <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Dos cuerpos atados son un problema solo, y se resuelve haciendo dos dibujos.</p>
   <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
 
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La cuerda ideal —sin masa, inextensible— hace dos cosas, y hay que decirlas por separado porque cada una es una ecuación distinta. Inextensible significa que las dos aceleraciones tienen el <b style="font-weight:600">mismo módulo</b>: es un vínculo geométrico, no una fuerza, y no depende de cuánto pese nada. Sin masa significa que la tensión es la <b style="font-weight:600">misma en los dos extremos</b> de la cuerda: eso sí sale de la segunda ley aplicada a la cuerda misma, con <i>m</i> = 0 —una cuerda con masa aceleraría distinto en cada punta, y las dos tensiones diferirían justo en lo que hace falta para acelerarla a ella.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Por qué el diagrama del conjunto no alcanza: la tensión es una fuerza interna al sistema de los dos cuerpos, así que se cancela sola en la suma —lo que A tira de la cuerda, la cuerda se lo devuelve a A en sentido contrario— y por eso el diagrama del conjunto da la aceleración pero se queda mudo sobre <i>T</i>. Para que <i>T</i> aparezca en alguna ecuación hay que cortar la cuerda, separar los dos cuerpos, y dibujar cada uno por su lado.</p>
+  <p class="parrafo-suelto">La cuerda ideal —sin masa, inextensible— hace dos cosas, y hay que decirlas por separado porque cada una es una ecuación distinta. Inextensible significa que las dos aceleraciones tienen el <b class="negrita">mismo módulo</b>: es un vínculo geométrico, no una fuerza, y no depende de cuánto pese nada. Sin masa significa que la tensión es la <b class="negrita">misma en los dos extremos</b> de la cuerda: eso sí sale de la segunda ley aplicada a la cuerda misma, con <i>m</i> = 0 —una cuerda con masa aceleraría distinto en cada punta, y las dos tensiones diferirían justo en lo que hace falta para acelerarla a ella.</p>
+  <p class="parrafo" style="margin-top:22px">Por qué el diagrama del conjunto no alcanza: la tensión es una fuerza interna al sistema de los dos cuerpos, así que se cancela sola en la suma —lo que A tira de la cuerda, la cuerda se lo devuelve a A en sentido contrario— y por eso el diagrama del conjunto da la aceleración pero se queda mudo sobre <i>T</i>. Para que <i>T</i> aparezca en alguna ecuación hay que cortar la cuerda, separar los dos cuerpos, y dibujar cada uno por su lado.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · Cortar la cuerda</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Antes de cortar nada, mirá primero quién gana. No hace falta ninguna cuenta fina: de un lado tira <i>m</i><sub>A</sub><i>g</i> sen α, del otro <i>m</i><sub>B</sub><i>g</i>, y con los números de este ejercicio son 47,18 N contra 39,20 N. Gana A, y por poco. Recién después de decidir el sentido se puede escribir la segunda ley, porque el signo de <i>a</i> depende de haber elegido un sentido positivo <i>antes</i> y haberlo respetado en los dos cuerpos —si a mitad de camino se cambia de opinión sobre qué lado es positivo para uno de los dos, la cuenta queda mal sin que ningún paso individual esté mal.</p>
+  <h2 class="titulo-seccion">01 · Cortar la cuerda</h2>
+  <p class="parrafo">Antes de cortar nada, mirá primero quién gana. No hace falta ninguna cuenta fina: de un lado tira <i>m</i><sub>A</sub><i>g</i> sen α, del otro <i>m</i><sub>B</sub><i>g</i>, y con los números de este ejercicio son 47,18 N contra 39,20 N. Gana A, y por poco. Recién después de decidir el sentido se puede escribir la segunda ley, porque el signo de <i>a</i> depende de haber elegido un sentido positivo <i>antes</i> y haberlo respetado en los dos cuerpos —si a mitad de camino se cambia de opinión sobre qué lado es positivo para uno de los dos, la cuenta queda mal sin que ningún paso individual esté mal.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Cortar la cuerda</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— las dos tensiones se calculan por separado, de dos ecuaciones distintas, y dan lo mismo.</span>
+      <span class="rotulo-mono">Simulación 1</span>
+      <span class="titulo-fila">Cortar la cuerda</span>
+      <span class="nota-fila">— las dos tensiones se calculan por separado, de dos ecuaciones distintas, y dan lo mismo.</span>
     </div>
     <canvas id="w1-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -55,7 +55,7 @@ try {
         <button id="w1-reset" class="boton">Reiniciar</button>
       </div>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">masa de B <output id="w1-mb-out" style="color:var(--ink);font-variant-numeric:tabular-nums">4.0 kg</output></span>
+        <span class="rotulo-campo">masa de B <output id="w1-mb-out" class="valor-control">4.0 kg</output></span>
         <input id="w1-mb" type="range" min="0" max="10" step="0.1" value="4" style="width:100%">
       </label>
       <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
@@ -63,34 +63,34 @@ try {
       </label>
     </div>
     <div class="lecturas">
-      <span>a <b id="w1-a" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.665 m/s²</b></span>
-      <span>T desde A <b id="w1-ta" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">41.86 N</b></span>
-      <span>T desde B <b id="w1-tb" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">41.86 N</b></span>
-      <span>diferencia <b id="w1-dif" style="color:var(--dim);font-weight:500;font-variant-numeric:tabular-nums">0.00 N</b></span>
+      <span>a <b id="w1-a" class="lectura-valor">0.665 m/s²</b></span>
+      <span>T desde A <b id="w1-ta" class="lectura-valor roja">41.86 N</b></span>
+      <span>T desde B <b id="w1-tb" class="lectura-valor roja">41.86 N</b></span>
+      <span>diferencia <b id="w1-dif" class="lectura-valor tenue">0.00 N</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con B de 4 kg, <i>a</i> = 0,665 m/s² y <i>T</i> = 41,86 N. Comparala con el peso de B, que vale 39,20 N: la cuerda tira <b style="font-weight:600">más</b> de lo que B pesa, y tiene que ser así —B no está colgado quieto, está subiendo cada vez más rápido. Una cuerda que sólo sostiene tira igual al peso; una que además acelera hacia arriba tiene que tirar de más, porque esa diferencia es justamente lo que le da la aceleración.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Subí el deslizador de B: en algún punto el sistema se frena y después se da vuelta. El punto de equilibrio está en <i>m</i><sub>B</sub> = <i>m</i><sub>A</sub> sen α ≈ 4,8 kg, y no es casualidad que justo ahí la aceleración cambie de signo —es la misma comparación de fuerzas del principio de esta sección, sólo que ahora escrita como ecuación en vez de como intuición.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Que las dos tensiones den lo mismo no es una comprobación de que la cuenta esté bien hecha: es lo que <i>significa</i> «cuerda sin masa». Si la cuerda pesara, las dos puntas tirarían distinto, y esa diferencia sería exactamente la que acelera a la cuerda misma —que es el ejercicio 3, donde <i>F</i><sub>BC</sub>/<i>F</i> = <i>M</i>/(<i>M</i> + <i>m</i>).</p>
+  <p class="parrafo-suelto">Con B de 4 kg, <i>a</i> = 0,665 m/s² y <i>T</i> = 41,86 N. Comparala con el peso de B, que vale 39,20 N: la cuerda tira <b class="negrita">más</b> de lo que B pesa, y tiene que ser así —B no está colgado quieto, está subiendo cada vez más rápido. Una cuerda que sólo sostiene tira igual al peso; una que además acelera hacia arriba tiene que tirar de más, porque esa diferencia es justamente lo que le da la aceleración.</p>
+  <p class="parrafo">Subí el deslizador de B: en algún punto el sistema se frena y después se da vuelta. El punto de equilibrio está en <i>m</i><sub>B</sub> = <i>m</i><sub>A</sub> sen α ≈ 4,8 kg, y no es casualidad que justo ahí la aceleración cambie de signo —es la misma comparación de fuerzas del principio de esta sección, sólo que ahora escrita como ecuación en vez de como intuición.</p>
+  <p class="parrafo">Que las dos tensiones den lo mismo no es una comprobación de que la cuenta esté bien hecha: es lo que <i>significa</i> «cuerda sin masa». Si la cuerda pesara, las dos puntas tirarían distinto, y esa diferencia sería exactamente la que acelera a la cuerda misma —que es el ejercicio 3, donde <i>F</i><sub>BC</sub>/<i>F</i> = <i>M</i>/(<i>M</i> + <i>m</i>).</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · Cada cuerda lleva lo que tiene adelante</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Una cuerda intermedia no «reparte» la fuerza aplicada entre los cuerpos que sostiene. Tiene un trabajo concreto y acotado —acelerar todo lo que cuelga de ella hacia adelante— y su tensión es exactamente esa masa acumulada por la aceleración del conjunto, ni más ni menos. De ahí sale el resultado que sorprende la primera vez: la cuerda de más atrás, la que menos carga tiene por delante, es la que soporta <b style="font-weight:600">menos</b> tensión —al revés de la intuición de que «la del medio hace de todo un poco».</p>
+  <h2 class="titulo-seccion">02 · Cada cuerda lleva lo que tiene adelante</h2>
+  <p class="parrafo">Una cuerda intermedia no «reparte» la fuerza aplicada entre los cuerpos que sostiene. Tiene un trabajo concreto y acotado —acelerar todo lo que cuelga de ella hacia adelante— y su tensión es exactamente esa masa acumulada por la aceleración del conjunto, ni más ni menos. De ahí sale el resultado que sorprende la primera vez: la cuerda de más atrás, la que menos carga tiene por delante, es la que soporta <b class="negrita">menos</b> tensión —al revés de la intuición de que «la del medio hace de todo un poco».</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Tres bloques y dos cuerdas</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— cambiá a vertical: la aceleración se da vuelta y las tensiones no se mueven.</span>
+      <span class="rotulo-mono">Simulación 2</span>
+      <span class="titulo-fila">Tres bloques y dos cuerdas</span>
+      <span class="nota-fila">— cambiá a vertical: la aceleración se da vuelta y las tensiones no se mueven.</span>
     </div>
     <canvas id="w2-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">fuerza F <output id="w2-F-out" style="color:var(--ink);font-variant-numeric:tabular-nums">60 N</output></span>
+        <span class="rotulo-campo">fuerza F <output id="w2-F-out" class="valor-control">60 N</output></span>
         <input id="w2-F" type="range" min="0" max="900" step="10" value="60" style="width:100%">
       </label>
       <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
@@ -98,24 +98,24 @@ try {
       </label>
     </div>
     <div class="lecturas">
-      <span>a <b id="w2-a" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.857 m/s²</b></span>
-      <span>T<sub>1</sub> <b id="w2-t1" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">17.14 N</b></span>
-      <span>T<sub>2</sub> <b id="w2-t2" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">34.29 N</b></span>
-      <span>T<sub>3</sub> <b id="w2-t3" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">60.00 N</b></span>
+      <span>a <b id="w2-a" class="lectura-valor">0.857 m/s²</b></span>
+      <span>T<sub>1</sub> <b id="w2-t1" class="lectura-valor roja">17.14 N</b></span>
+      <span>T<sub>2</sub> <b id="w2-t2" class="lectura-valor roja">34.29 N</b></span>
+      <span>T<sub>3</sub> <b id="w2-t3" class="lectura-valor roja">60.00 N</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con <i>F</i> = 60 N la escalera de tensiones es 17,14 / 34,29 / 60 N: cada escalón es la masa acumulada hasta ahí —20, 40 y 70 kg— por la misma aceleración, 0,857 m/s². La cuerda de más atrás, la que sólo tiene que arrastrar los 20 kg del bloque que le sigue, es la que menos tensión soporta; la última —que ya es la fuerza aplicada entera— es la que más.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Pasá el widget a vertical. La aceleración se da vuelta —60 N no alcanzan para sostener los 686 N que pesan los tres bloques juntos, y el conjunto baja con <i>a</i> = −8,94 m/s²— pero las dos tensiones no se mueven de 17,14 y 34,29 N. La cuenta lo explica: en vertical cada tensión vale la masa acumulada por (<i>a</i> + <i>g</i>), y <i>a</i> + <i>g</i> da exactamente lo mismo que valía <i>a</i> sola en horizontal, porque <i>a</i> = <i>F</i>/<i>M</i> − <i>g</i>. La gravedad entra dos veces en la cuenta —restando en la aceleración, sumando en cada tensión— y las dos entradas se cancelan.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Y la generalización, que es lo que hay que llevarse: <b style="font-weight:600">la tensión de una cuerda no depende de qué hay detrás de ella</b>. Ni de la masa de atrás, ni de si hay gravedad de por medio. Es exactamente lo que hace falta para acelerar lo que tiene adelante, y nada más. En el ejercicio 5, dos bloques de 2 y 1 kg en contacto con 3 N empujando dan <i>a</i> = 1 m/s², y la fuerza de contacto entre ellos vale 1 N si empujás al de 2 kg y 2 N si empujás al de 1 kg: la misma idea que este widget, con «adelante» cambiado de lado.</p>
+  <p class="parrafo-suelto">Con <i>F</i> = 60 N la escalera de tensiones es 17,14 / 34,29 / 60 N: cada escalón es la masa acumulada hasta ahí —20, 40 y 70 kg— por la misma aceleración, 0,857 m/s². La cuerda de más atrás, la que sólo tiene que arrastrar los 20 kg del bloque que le sigue, es la que menos tensión soporta; la última —que ya es la fuerza aplicada entera— es la que más.</p>
+  <p class="parrafo">Pasá el widget a vertical. La aceleración se da vuelta —60 N no alcanzan para sostener los 686 N que pesan los tres bloques juntos, y el conjunto baja con <i>a</i> = −8,94 m/s²— pero las dos tensiones no se mueven de 17,14 y 34,29 N. La cuenta lo explica: en vertical cada tensión vale la masa acumulada por (<i>a</i> + <i>g</i>), y <i>a</i> + <i>g</i> da exactamente lo mismo que valía <i>a</i> sola en horizontal, porque <i>a</i> = <i>F</i>/<i>M</i> − <i>g</i>. La gravedad entra dos veces en la cuenta —restando en la aceleración, sumando en cada tensión— y las dos entradas se cancelan.</p>
+  <p class="parrafo">Y la generalización, que es lo que hay que llevarse: <b class="negrita">la tensión de una cuerda no depende de qué hay detrás de ella</b>. Ni de la masa de atrás, ni de si hay gravedad de por medio. Es exactamente lo que hace falta para acelerar lo que tiene adelante, y nada más. En el ejercicio 5, dos bloques de 2 y 1 kg en contacto con 3 N empujando dan <i>a</i> = 1 m/s², y la fuerza de contacto entre ellos vale 1 N si empujás al de 2 kg y 2 N si empujás al de 1 kg: la misma idea que este widget, con «adelante» cambiado de lado.</p>
 </div>
 
 <div class="columna columna-final">
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para tener a mano</h2>
+  <h2 class="titulo-seccion">Para tener a mano</h2>
   <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
-    <li>Un sistema acoplado se resuelve con un diagrama <b style="font-weight:600">por cuerpo</b>, no con uno del conjunto. El del conjunto sirve sólo para la aceleración.</li>
+    <li>Un sistema acoplado se resuelve con un diagrama <b class="negrita">por cuerpo</b>, no con uno del conjunto. El del conjunto sirve sólo para la aceleración.</li>
     <li>La cuerda ideal aporta dos cosas distintas: inextensible da un vínculo entre aceleraciones; sin masa da una tensión igual en los dos extremos.</li>
     <li>Elegí un sentido positivo <i>antes</i> de escribir nada, y respetalo en los dos cuerpos. Si la aceleración sale negativa, el sistema va para el otro lado y la cuenta ya lo dijo.</li>
     <li>La tensión de una cuerda es la masa de lo que tiene adelante por la aceleración —más el peso de eso, si la cosa va en vertical.</li>

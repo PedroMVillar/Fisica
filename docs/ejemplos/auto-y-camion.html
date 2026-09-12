@@ -34,21 +34,21 @@ try {
   <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Alcanzar a alguien es cruzarse con su curva.</p>
   <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
 
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Es el ejercicio 5 de la Guía 1, y el planteo en sí no tiene ningún truco: dos posiciones, un origen común, un reloj común. Lo que lo vuelve incómodo es otra cosa.</p>
+  <p class="parrafo-suelto">Es el ejercicio 5 de la Guía 1, y el planteo en sí no tiene ningún truco: dos posiciones, un origen común, un reloj común. Lo que lo vuelve incómodo es otra cosa.</p>
 
   <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:24px 0 0">
     <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0">Un automóvil y un camión parten en el mismo instante, encontrándose inicialmente el auto a cierta distancia detrás del camión. Este último tiene una aceleración constante de 1.2 m/s², mientras que el auto acelera a 1.8 m/s². El auto alcanza al camión cuando éste ha recorrido 45 metros. ¿Cuánto tiempo tarda? ¿Cuál era la distancia inicial? ¿Con qué velocidad va cada uno al encontrarse?</p>
   </div>
 
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Lo incómodo es que el enunciado da el dato del final —los 45 m que el camión ya recorrió cuando lo alcanzan— y pregunta por el principio, la distancia con la que arrancaron. Hay que leerlo al revés: primero sale el tiempo, con el tiempo sale la distancia inicial, y recién con las dos cosas salen las velocidades que pide la última pregunta.</p>
+  <p class="parrafo" style="margin-top:22px">Lo incómodo es que el enunciado da el dato del final —los 45 m que el camión ya recorrió cuando lo alcanzan— y pregunta por el principio, la distancia con la que arrancaron. Hay que leerlo al revés: primero sale el tiempo, con el tiempo sale la distancia inicial, y recién con las dos cosas salen las velocidades que pide la última pregunta.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El cruce de las curvas</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— mirá la separación bajar a 0.0 m justo cuando los dos puntos se tocan en la marca del cruce.</span>
+      <span class="rotulo-mono">Simulación</span>
+      <span class="titulo-fila">El cruce de las curvas</span>
+      <span class="nota-fila">— mirá la separación bajar a 0.0 m justo cuando los dos puntos se tocan en la marca del cruce.</span>
     </div>
     <canvas id="w1-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -57,7 +57,7 @@ try {
         <button id="w1-reset" class="boton">Reiniciar</button>
       </div>
       <label class="control" style="flex:1 1 220px;min-width:190px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">distancia inicial <output id="w1-d0-out" style="color:var(--ink);font-variant-numeric:tabular-nums">22.5 m</output></span>
+        <span class="rotulo-campo">distancia inicial <output id="w1-d0-out" class="valor-control">22.5 m</output></span>
         <input id="w1-d0" type="range" min="5" max="60" step="0.5" value="22.5" style="width:100%">
       </label>
       <div style="display:flex;gap:8px">
@@ -65,23 +65,23 @@ try {
       </div>
     </div>
     <div class="lecturas">
-      <span>tiempo transcurrido <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.03 s</b></span>
-      <span>separación <b id="w1-sep" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">14.2 m</b></span>
-      <span>instante del encuentro <b id="w1-tenc" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">8.66 s</b></span>
-      <span>recorrido del camión <b id="w1-camion" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">45.0 m</b></span>
+      <span>tiempo transcurrido <b id="w1-t" class="lectura-valor">3.03 s</b></span>
+      <span>separación <b id="w1-sep" class="lectura-valor roja">14.2 m</b></span>
+      <span>instante del encuentro <b id="w1-tenc" class="lectura-valor">8.66 s</b></span>
+      <span>recorrido del camión <b id="w1-camion" class="lectura-valor">45.0 m</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Cómo se resuelve</h2>
+  <h2 class="titulo-seccion">Cómo se resuelve</h2>
   <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
     <li>Escribir las dos posiciones desde el mismo origen y el mismo reloj. El auto en <i>0</i>, el camión en <i>d</i><sub>0</sub>. Ése es todo el trabajo: el resto es álgebra.</li>
-    <li>Alcanzar significa estar en el mismo lugar al mismo tiempo, o sea igualar las dos. Queda ½ (<i>a</i><sub>auto</sub> − <i>a</i><sub>camión</sub>) <i>t</i><sup>2</sup> = <i>d</i><sub>0</sub>: el encuentro depende sólo de la <b style="font-weight:600">diferencia</b> de aceleraciones, no de cuánto acelera cada uno.</li>
+    <li>Alcanzar significa estar en el mismo lugar al mismo tiempo, o sea igualar las dos. Queda ½ (<i>a</i><sub>auto</sub> − <i>a</i><sub>camión</sub>) <i>t</i><sup>2</sup> = <i>d</i><sub>0</sub>: el encuentro depende sólo de la <b class="negrita">diferencia</b> de aceleraciones, no de cuánto acelera cada uno.</li>
     <li>El enunciado no da <i>d</i><sub>0</sub>, da que el camión recorrió 45 m. De ahí sale el tiempo primero: 45 = ½ · 1.2 · <i>t</i><sup>2</sup>, o sea <i>t</i> = 8.66 s.</li>
     <li>Con el tiempo, el resto cae solo. El auto recorrió ½ · 1.8 · 8.66² = 67.5 m, así que la distancia inicial era 67.5 − 45 = 22.5 m. Y las velocidades son <i>a</i> · <i>t</i>: 15.59 m/s el auto y 10.39 m/s el camión.</li>
   </ol>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">El gráfico de abajo tiene la respuesta dibujada desde el primer instante: el cruce de las dos parábolas ya está ahí, marcado, antes de que ningún auto llegue. Por eso conviene dibujarlo antes de despejar nada —se ve de entrada si hay encuentro, más o menos cuándo, y si la cuenta después da cualquier cosa. Dejar de ver un sistema de dos ecuaciones y empezar a ver dos curvas que se acercan es, en el fondo, todo lo que este ejercicio pide.</p>
+  <p class="parrafo" style="margin-top:22px">El gráfico de abajo tiene la respuesta dibujada desde el primer instante: el cruce de las dos parábolas ya está ahí, marcado, antes de que ningún auto llegue. Por eso conviene dibujarlo antes de despejar nada —se ve de entrada si hay encuentro, más o menos cuándo, y si la cuenta después da cualquier cosa. Dejar de ver un sistema de dos ecuaciones y empezar a ver dos curvas que se acercan es, en el fondo, todo lo que este ejercicio pide.</p>
 </div>
 
 <div class="columna columna-final">

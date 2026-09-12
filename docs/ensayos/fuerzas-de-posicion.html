@@ -34,19 +34,19 @@ try {
   <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Cuando la fuerza cambia según dónde está el cuerpo, la aceleración deja de ser un número.</p>
   <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
 
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">En toda la guía hasta acá, <i>a</i> salía de una cuenta con números fijos —sen α, μ, una masa, un ángulo— y de ahí las fórmulas de siempre: MRU, MRUV, tiro parabólico, todas exactas porque <i>a</i> no cambiaba mientras el cuerpo se movía. Con una fuerza que depende de dónde está el cuerpo, esa salida se cierra: <i>a</i> depende de <i>x</i>, y <i>x</i> depende de <i>a</i>, sin ningún número fijo que sacar de la ecuación antes de resolverla.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">La buena noticia es que los dos casos que pide esta guía —el resorte y la gravedad— tienen solución conocida, y las dos se entienden mirando, no derivando. En el resorte, <i>F</i> = −<i>kx</i> produce un coseno: el cuerpo oscila para siempre entre dos extremos simétricos. En la gravedad, <i>F</i> ∝ 1/<i>r</i>² produce, en cambio, un punto de equilibrio donde no hay nada —ni fuerza, ni aceleración— porque ahí dos atracciones opuestas se cancelan exactamente.</p>
+  <p class="parrafo-suelto">En toda la guía hasta acá, <i>a</i> salía de una cuenta con números fijos —sen α, μ, una masa, un ángulo— y de ahí las fórmulas de siempre: MRU, MRUV, tiro parabólico, todas exactas porque <i>a</i> no cambiaba mientras el cuerpo se movía. Con una fuerza que depende de dónde está el cuerpo, esa salida se cierra: <i>a</i> depende de <i>x</i>, y <i>x</i> depende de <i>a</i>, sin ningún número fijo que sacar de la ecuación antes de resolverla.</p>
+  <p class="parrafo" style="margin-top:22px">La buena noticia es que los dos casos que pide esta guía —el resorte y la gravedad— tienen solución conocida, y las dos se entienden mirando, no derivando. En el resorte, <i>F</i> = −<i>kx</i> produce un coseno: el cuerpo oscila para siempre entre dos extremos simétricos. En la gravedad, <i>F</i> ∝ 1/<i>r</i>² produce, en cambio, un punto de equilibrio donde no hay nada —ni fuerza, ni aceleración— porque ahí dos atracciones opuestas se cancelan exactamente.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · La fuerza que empuja siempre hacia el centro</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">La ley de Hooke no dice que el resorte tire fuerte: dice que tira <b style="font-weight:600">proporcional al estiramiento y en contra</b>. Cuanto más lejos del equilibrio, más fuerte tira, y siempre hacia el equilibrio, nunca en la dirección en la que el bloque se movió. Ese «en contra» es lo que hace que el bloque no se quede quieto justo ahí: llega al equilibrio con velocidad, se pasa de largo, y recién del otro lado el resorte empieza a tirar en sentido contrario. Eso, repetido sin parar, es la oscilación.</p>
+  <h2 class="titulo-seccion">01 · La fuerza que empuja siempre hacia el centro</h2>
+  <p class="parrafo">La ley de Hooke no dice que el resorte tire fuerte: dice que tira <b class="negrita">proporcional al estiramiento y en contra</b>. Cuanto más lejos del equilibrio, más fuerte tira, y siempre hacia el equilibrio, nunca en la dirección en la que el bloque se movió. Ese «en contra» es lo que hace que el bloque no se quede quieto justo ahí: llega al equilibrio con velocidad, se pasa de largo, y recién del otro lado el resorte empieza a tirar en sentido contrario. Eso, repetido sin parar, es la oscilación.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El resorte y sus tres gráficos</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— la aceleración es el espejo de la posición, escalado por ω².</span>
+      <span class="rotulo-mono">Simulación 1</span>
+      <span class="titulo-fila">El resorte y sus tres gráficos</span>
+      <span class="nota-fila">— la aceleración es el espejo de la posición, escalado por ω².</span>
     </div>
     <canvas id="w1-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -55,48 +55,48 @@ try {
         <button id="w1-reset" class="boton">Reiniciar</button>
       </div>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">constante k <output id="w1-k-out" style="color:var(--ink);font-variant-numeric:tabular-nums">8.0 N/m</output></span>
+        <span class="rotulo-campo">constante k <output id="w1-k-out" class="valor-control">8.0 N/m</output></span>
         <input id="w1-k" type="range" min="2" max="20" step="0.5" value="8" style="width:100%">
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">masa m <output id="w1-m-out" style="color:var(--ink);font-variant-numeric:tabular-nums">2.0 kg</output></span>
+        <span class="rotulo-campo">masa m <output id="w1-m-out" class="valor-control">2.0 kg</output></span>
         <input id="w1-m" type="range" min="0.5" max="5" step="0.1" value="2" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>ω <b id="w1-omega" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">2.00 rad/s</b></span>
-      <span>T <b id="w1-T" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.14 s</b></span>
-      <span>f <b id="w1-f" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.318 Hz</b></span>
-      <span>v máx <b id="w1-vmax" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">0.300 m/s</b></span>
-      <span>a máx <b id="w1-amax" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.600 m/s²</b></span>
-      <span>a + ω²(x−x₀) <b id="w1-mas" style="color:var(--dim);font-weight:500;font-variant-numeric:tabular-nums">0.000 m/s²</b></span>
+      <span>ω <b id="w1-omega" class="lectura-valor">2.00 rad/s</b></span>
+      <span>T <b id="w1-T" class="lectura-valor">3.14 s</b></span>
+      <span>f <b id="w1-f" class="lectura-valor">0.318 Hz</b></span>
+      <span>v máx <b id="w1-vmax" class="lectura-valor azul">0.300 m/s</b></span>
+      <span>a máx <b id="w1-amax" class="lectura-valor roja">0.600 m/s²</b></span>
+      <span>a + ω²(x−x₀) <b id="w1-mas" class="lectura-valor tenue">0.000 m/s²</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con los valores del ejercicio —<i>k</i> = 8 N/m, <i>m</i> = 2 kg— ω = 2 rad/s, el período es 3,14 s y la frecuencia 0,318 Hz. El bloque va y viene entre 0,25 m y 0,55 m, y esa amplitud —0,15 m— es exactamente la distancia a la que se lo llevó antes de soltarlo, ni más ni menos, porque partió del reposo: sin velocidad inicial no hay margen para que llegue más lejos de donde el enunciado lo dejó.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Mirá los tres gráficos juntos. La velocidad es cero justo donde la posición está en un extremo —ahí el bloque cambia de sentido— y máxima al pasar por el equilibrio. La aceleración, en cambio, es el espejo exacto de la posición: donde <i>x</i> está en su máximo, <i>a</i> está en su mínimo, y viceversa. Eso último no es una coincidencia del dibujo: es <i>a</i> = −ω²(<i>x</i> − <i>x</i><sub>0</sub>), que es la segunda ley con <i>F</i> = −<i>k</i>(<i>x</i> − <i>x</i><sub>0</sub>) dividida por <i>m</i>. La lectura de la derecha, <i>a</i> + ω²(<i>x</i> − <i>x</i><sub>0</sub>), lo confirma dando cero en todo instante —no porque se haya escrito un cero, sino porque las dos funciones, evaluadas juntas, se cancelan siempre.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Mové los deslizadores: la frecuencia depende <b style="font-weight:600">sólo</b> de <i>k</i>/<i>m</i>. Ni de la amplitud —que no cambia, porque sigue siendo la distancia a la que se soltó el bloque—, ni de con cuánta fuerza se lo soltó. Un resorte más duro o un bloque más liviano oscilan más rápido, y nada más entra en la cuenta: es por eso que un reloj de péndulo anda igual con la cuerda floja que apretada, siempre que no le toques la masa ni la constante.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Y los otros tres ejercicios de resortes de la guía, cada uno en una frase. El dinamómetro del ejercicio 11, donde <i>k</i> = 2 N / 0,117 m = 17,09 N/m y 0,4 N estiran 2,34 cm. Los dos resortes en paralelo del ejercicio 12, que suman sus constantes —50 + 100 = 150 N/m— y con 0,5 m de estiramiento dan 75 N contra un peso de 24,5 N, o sea 20,20 m/s² hacia arriba. Y el ejercicio 14, que es el más lindo de los tres porque junta este ensayo con el 4: un resorte de 400 N/m y largo natural 0,5 m hace girar una masa de 2 kg, y es <b style="font-weight:600">el resorte</b> el que provee la fuerza centrípeta. Con radio 1 m la velocidad es 10,00 m/s; al doble de velocidad el resorte se estira hasta 1,686 m, porque al alejarse necesita más fuerza y estirándose la consigue.</p>
+  <p class="parrafo-suelto">Con los valores del ejercicio —<i>k</i> = 8 N/m, <i>m</i> = 2 kg— ω = 2 rad/s, el período es 3,14 s y la frecuencia 0,318 Hz. El bloque va y viene entre 0,25 m y 0,55 m, y esa amplitud —0,15 m— es exactamente la distancia a la que se lo llevó antes de soltarlo, ni más ni menos, porque partió del reposo: sin velocidad inicial no hay margen para que llegue más lejos de donde el enunciado lo dejó.</p>
+  <p class="parrafo">Mirá los tres gráficos juntos. La velocidad es cero justo donde la posición está en un extremo —ahí el bloque cambia de sentido— y máxima al pasar por el equilibrio. La aceleración, en cambio, es el espejo exacto de la posición: donde <i>x</i> está en su máximo, <i>a</i> está en su mínimo, y viceversa. Eso último no es una coincidencia del dibujo: es <i>a</i> = −ω²(<i>x</i> − <i>x</i><sub>0</sub>), que es la segunda ley con <i>F</i> = −<i>k</i>(<i>x</i> − <i>x</i><sub>0</sub>) dividida por <i>m</i>. La lectura de la derecha, <i>a</i> + ω²(<i>x</i> − <i>x</i><sub>0</sub>), lo confirma dando cero en todo instante —no porque se haya escrito un cero, sino porque las dos funciones, evaluadas juntas, se cancelan siempre.</p>
+  <p class="parrafo">Mové los deslizadores: la frecuencia depende <b class="negrita">sólo</b> de <i>k</i>/<i>m</i>. Ni de la amplitud —que no cambia, porque sigue siendo la distancia a la que se soltó el bloque—, ni de con cuánta fuerza se lo soltó. Un resorte más duro o un bloque más liviano oscilan más rápido, y nada más entra en la cuenta: es por eso que un reloj de péndulo anda igual con la cuerda floja que apretada, siempre que no le toques la masa ni la constante.</p>
+  <p class="parrafo">Y los otros tres ejercicios de resortes de la guía, cada uno en una frase. El dinamómetro del ejercicio 11, donde <i>k</i> = 2 N / 0,117 m = 17,09 N/m y 0,4 N estiran 2,34 cm. Los dos resortes en paralelo del ejercicio 12, que suman sus constantes —50 + 100 = 150 N/m— y con 0,5 m de estiramiento dan 75 N contra un peso de 24,5 N, o sea 20,20 m/s² hacia arriba. Y el ejercicio 14, que es el más lindo de los tres porque junta este ensayo con el 4: un resorte de 400 N/m y largo natural 0,5 m hace girar una masa de 2 kg, y es <b class="negrita">el resorte</b> el que provee la fuerza centrípeta. Con radio 1 m la velocidad es 10,00 m/s; al doble de velocidad el resorte se estira hasta 1,686 m, porque al alejarse necesita más fuerza y estirándose la consigue.</p>
 </div>
 
 <div class="columna">
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · El punto donde nadie tira</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">La gravedad no se apaga con la distancia: se diluye. Nunca llega a cero —por lejos que estén dos cuerpos, cada uno sigue tirando del otro, aunque sea poquísimo— pero cae con el cuadrado de la distancia, y entre dos cuerpos eso alcanza para que exista un punto donde las dos atracciones se cancelan exactamente. No es «donde no hay gravedad»: es donde hay <b style="font-weight:600">dos</b>, tirando cada una para su lado, y se anulan. Son dos cosas completamente distintas, y vale la pena decirlo así.</p>
+  <h2 class="titulo-seccion">02 · El punto donde nadie tira</h2>
+  <p class="parrafo">La gravedad no se apaga con la distancia: se diluye. Nunca llega a cero —por lejos que estén dos cuerpos, cada uno sigue tirando del otro, aunque sea poquísimo— pero cae con el cuadrado de la distancia, y entre dos cuerpos eso alcanza para que exista un punto donde las dos atracciones se cancelan exactamente. No es «donde no hay gravedad»: es donde hay <b class="negrita">dos</b>, tirando cada una para su lado, y se anulan. Son dos cosas completamente distintas, y vale la pena decirlo así.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Entre la Tierra y la Luna</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— el punto de empate está al 90 % del camino, no a la mitad; las flechas no están a escala de newtons: leé los números.</span>
+      <span class="rotulo-mono">Simulación 2</span>
+      <span class="titulo-fila">Entre la Tierra y la Luna</span>
+      <span class="nota-fila">— el punto de empate está al 90 % del camino, no a la mitad; las flechas no están a escala de newtons: leé los números.</span>
     </div>
     <canvas id="w2-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
       <label class="control" style="flex:2 1 220px;min-width:200px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">posición s <output id="w2-s-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0.500 d</output></span>
+        <span class="rotulo-campo">posición s <output id="w2-s-out" class="valor-control">0.500 d</output></span>
         <input id="w2-s" type="range" min="0.10" max="0.99" step="0.001" value="0.500" style="width:100%">
       </label>
       <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
@@ -104,22 +104,22 @@ try {
       </label>
     </div>
     <div class="lecturas">
-      <span>F Tierra <b id="w2-ft" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">1.0808e-2 N</b></span>
-      <span>F Luna <b id="w2-fl" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">1.3307e-4 N</b></span>
-      <span>neta <b id="w2-fn" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">-1.0675e-2 N</b></span>
-      <span>punto de empate <b id="w2-eq" style="color:var(--dim);font-weight:500;font-variant-numeric:tabular-nums">0.900 d</b></span>
+      <span>F Tierra <b id="w2-ft" class="lectura-valor roja">1.0808e-2 N</b></span>
+      <span>F Luna <b id="w2-fl" class="lectura-valor roja">1.3307e-4 N</b></span>
+      <span>neta <b id="w2-fn" class="lectura-valor azul">-1.0675e-2 N</b></span>
+      <span>punto de empate <b id="w2-eq" class="lectura-valor tenue">0.900 d</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">El empate está en <i>r</i>/<i>d</i> = 1/(1 + √(<i>M</i><sub>L</sub>/<i>M</i><sub>T</sub>)). Con la Tierra unas 81 veces más masiva que la Luna, esa raíz vale cerca de 1/9, y el cociente completo da 0,900: el punto queda al 90 % del camino, mucho más cerca de la Luna que de la Tierra. Que la respuesta dependa de la <b style="font-weight:600">raíz</b> del cociente de masas, y no del cociente mismo, es lo que la hace menos extrema de lo que uno esperaría —81 veces más masa no manda el punto a menos del 2 % del camino, lo manda apenas al 90 %—. (Los tamaños de la Tierra y la Luna en el dibujo son decorativos, no están a escala: a la escala real de <i>d</i> = 3,84×10⁸ m los dos cuerpos serían puntos invisibles.)</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Que la fuerza neta sea cero justo ahí no significa que ahí no pase nada. Una masa soltada exactamente en ese punto se queda, pero es un equilibrio <b style="font-weight:600">inestable</b>: un milímetro para cualquier lado y la cancelación se rompe, empujándola siempre para afuera, nunca de vuelta. El gráfico de abajo lo muestra: la curva cruza el cero con pendiente —no se aplana ahí— y a los dos lados del cruce el signo de la neta apunta siempre hacia afuera del punto de empate.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">El ejercicio 16 es la misma idea con tres cuerpos en vez de dos: tres masas iguales en los vértices de un triángulo equilátero de lado <i>L</i> sienten, cada una, una fuerza de las otras dos que suma √3 <i>Gm</i>²/<i>L</i>² apuntando al baricentro. Y en el baricentro mismo el campo es cero por simetría —las tres masas están tirando, pero para direcciones que se cancelan entre sí—: otra vez, cero <b style="font-weight:600">no</b> es ausencia de gravedad, es el resultado de que haya varias tirando a la vez.</p>
+  <p class="parrafo-suelto">El empate está en <i>r</i>/<i>d</i> = 1/(1 + √(<i>M</i><sub>L</sub>/<i>M</i><sub>T</sub>)). Con la Tierra unas 81 veces más masiva que la Luna, esa raíz vale cerca de 1/9, y el cociente completo da 0,900: el punto queda al 90 % del camino, mucho más cerca de la Luna que de la Tierra. Que la respuesta dependa de la <b class="negrita">raíz</b> del cociente de masas, y no del cociente mismo, es lo que la hace menos extrema de lo que uno esperaría —81 veces más masa no manda el punto a menos del 2 % del camino, lo manda apenas al 90 %—. (Los tamaños de la Tierra y la Luna en el dibujo son decorativos, no están a escala: a la escala real de <i>d</i> = 3,84×10⁸ m los dos cuerpos serían puntos invisibles.)</p>
+  <p class="parrafo">Que la fuerza neta sea cero justo ahí no significa que ahí no pase nada. Una masa soltada exactamente en ese punto se queda, pero es un equilibrio <b class="negrita">inestable</b>: un milímetro para cualquier lado y la cancelación se rompe, empujándola siempre para afuera, nunca de vuelta. El gráfico de abajo lo muestra: la curva cruza el cero con pendiente —no se aplana ahí— y a los dos lados del cruce el signo de la neta apunta siempre hacia afuera del punto de empate.</p>
+  <p class="parrafo">El ejercicio 16 es la misma idea con tres cuerpos en vez de dos: tres masas iguales en los vértices de un triángulo equilátero de lado <i>L</i> sienten, cada una, una fuerza de las otras dos que suma √3 <i>Gm</i>²/<i>L</i>² apuntando al baricentro. Y en el baricentro mismo el campo es cero por simetría —las tres masas están tirando, pero para direcciones que se cancelan entre sí—: otra vez, cero <b class="negrita">no</b> es ausencia de gravedad, es el resultado de que haya varias tirando a la vez.</p>
 </div>
 
 <div class="columna columna-final">
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para tener a mano</h2>
+  <h2 class="titulo-seccion">Para tener a mano</h2>
   <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
     <li>Si la fuerza depende de la posición, la aceleración no es un número: las fórmulas de aceleración constante no sirven, hay que ir a la ecuación de movimiento o a un caso ya resuelto.</li>
     <li>Ley de Hooke: <i>F</i> = −<i>k</i>(<i>x</i> − <i>x</i><sub>0</sub>), y el signo menos es todo: es lo que produce la oscilación, y no una fuga.</li>

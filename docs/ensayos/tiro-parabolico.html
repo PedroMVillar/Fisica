@@ -34,19 +34,19 @@ try {
   <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Son dos movimientos independientes que sólo comparten el reloj.</p>
   <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
 
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Ya leíste que el tiro parabólico «se descompone en <i>x</i> e <i>y</i>». La frase se puede repetir sin creerla: mientras uno la dice, sigue imaginando una piedra que traza una curva, una sola cosa moviéndose de un modo complicado. Y con esa imagen no hay ejercicio que salga, porque la curva no tiene ecuación fácil pero sus dos sombras sí.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Este ensayo tiene un solo objetivo: que dejes de ver una curva y empieces a ver dos movimientos que corren en paralelo, cada uno con su ecuación de siempre, atados únicamente por el hecho de que comparten la variable <i>t</i>.</p>
+  <p class="parrafo-suelto">Ya leíste que el tiro parabólico «se descompone en <i>x</i> e <i>y</i>». La frase se puede repetir sin creerla: mientras uno la dice, sigue imaginando una piedra que traza una curva, una sola cosa moviéndose de un modo complicado. Y con esa imagen no hay ejercicio que salga, porque la curva no tiene ecuación fácil pero sus dos sombras sí.</p>
+  <p class="parrafo" style="margin-top:22px">Este ensayo tiene un solo objetivo: que dejes de ver una curva y empieces a ver dos movimientos que corren en paralelo, cada uno con su ecuación de siempre, atados únicamente por el hecho de que comparten la variable <i>t</i>.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · Dos movimientos, un reloj</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Mirá la simulación de abajo, pero no mires el proyectil: mirá las dos sombras que deja sobre los ejes. Poné a andar el tiro y fijate en las huellas que cada sombra va marcando, una cada dos décimas de segundo.</p>
+  <h2 class="titulo-seccion">01 · Dos movimientos, un reloj</h2>
+  <p class="parrafo">Mirá la simulación de abajo, pero no mires el proyectil: mirá las dos sombras que deja sobre los ejes. Poné a andar el tiro y fijate en las huellas que cada sombra va marcando, una cada dos décimas de segundo.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Las dos sombras</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— las huellas de abajo están siempre a la misma distancia; las de la izquierda, no.</span>
+      <span class="rotulo-mono">Simulación 1</span>
+      <span class="titulo-fila">Las dos sombras</span>
+      <span class="nota-fila">— las huellas de abajo están siempre a la misma distancia; las de la izquierda, no.</span>
     </div>
     <canvas id="w1-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -55,11 +55,11 @@ try {
         <button id="w1-reset" class="boton">Reiniciar</button>
       </div>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">v₀ <output id="w1-v0-out" style="color:var(--ink);font-variant-numeric:tabular-nums">24.0 m/s</output></span>
+        <span class="rotulo-campo">v₀ <output id="w1-v0-out" class="valor-control">24.0 m/s</output></span>
         <input id="w1-v0" type="range" min="8" max="40" step="0.5" value="24" style="width:100%">
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">ángulo α <output id="w1-ang-out" style="color:var(--ink);font-variant-numeric:tabular-nums">50°</output></span>
+        <span class="rotulo-campo">ángulo α <output id="w1-ang-out" class="valor-control">50°</output></span>
         <input id="w1-ang" type="range" min="5" max="85" step="1" value="50" style="width:100%">
       </label>
       <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer;padding-bottom:4px">
@@ -67,33 +67,33 @@ try {
       </label>
     </div>
     <div class="lecturas">
-      <span>t <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.31 s</b></span>
-      <span>x <b id="w1-x" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">20.3 m</b></span>
-      <span>y <b id="w1-y" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">15.7 m</b></span>
-      <span>vₓ <b id="w1-vx" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">15.4 m/s</b></span>
-      <span><i>v</i><sub>y</sub> <b id="w1-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">5.5 m/s</b></span>
+      <span>t <b id="w1-t" class="lectura-valor">1.31 s</b></span>
+      <span>x <b id="w1-x" class="lectura-valor">20.3 m</b></span>
+      <span>y <b id="w1-y" class="lectura-valor">15.7 m</b></span>
+      <span>vₓ <b id="w1-vx" class="lectura-valor azul">15.4 m/s</b></span>
+      <span><i>v</i><sub>y</sub> <b id="w1-vy" class="lectura-valor azul">5.5 m/s</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La sombra de abajo se mueve como un auto en una ruta recta sin acelerador: pasos iguales en tiempos iguales. La sombra de la izquierda sube, va frenando, se detiene un instante en la altura máxima y vuelve acelerando. Son los dos movimientos que ya conocés del capítulo 1, uno al lado del otro, sin mezclarse.</p>
+  <p class="parrafo-suelto">La sombra de abajo se mueve como un auto en una ruta recta sin acelerador: pasos iguales en tiempos iguales. La sombra de la izquierda sube, va frenando, se detiene un instante en la altura máxima y vuelve acelerando. Son los dos movimientos que ya conocés del capítulo 1, uno al lado del otro, sin mezclarse.</p>
   <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:26px 0 0">
     <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0"><i>x</i>(<i>t</i>) = <i>v</i><sub>0</sub> cos α · <i>t</i><br><i>y</i>(<i>t</i>) = <i>v</i><sub>0</sub> sen α · <i>t</i> − ½ <i>g t</i><sup>2</sup></p>
     <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:12px 0 0;color:var(--dim)"><i>v</i><sub><i>x</i></sub> = <i>v</i><sub>0</sub> cos α  (constante)   ·   <i>v</i><sub><i>y</i></sub> = <i>v</i><sub>0</sub> sen α − <i>g t</i></p>
   </div>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:26px 0 0;text-wrap:pretty">No hay nada nuevo acá. La primera línea es un movimiento uniforme; la segunda, un uniformemente acelerado con <i>a</i> = −<i>g</i>. Lo único que las relaciona es la <i>t</i>, y esa <i>t</i> es la misma para las dos porque el proyectil es uno solo. De ahí sale casi toda la técnica del tema: <b style="font-weight:600">cuando un dato es de un eje y la pregunta es del otro, el puente siempre es el tiempo</b>.</p>
+  <p class="parrafo" style="margin-top:26px">No hay nada nuevo acá. La primera línea es un movimiento uniforme; la segunda, un uniformemente acelerado con <i>a</i> = −<i>g</i>. Lo único que las relaciona es la <i>t</i>, y esa <i>t</i> es la misma para las dos porque el proyectil es uno solo. De ahí sale casi toda la técnica del tema: <b class="negrita">cuando un dato es de un eje y la pregunta es del otro, el puente siempre es el tiempo</b>.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · La caída no sabe del avance</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Antes de tocar nada, contestá para vos: si de la misma altura uno lanza una bala horizontalmente a 15 m/s y la otra simplemente se suelta, ¿cuál toca el piso primero? La respuesta correcta es la que casi nadie se cree hasta verla.</p>
+  <h2 class="titulo-seccion">02 · La caída no sabe del avance</h2>
+  <p class="parrafo">Antes de tocar nada, contestá para vos: si de la misma altura uno lanza una bala horizontalmente a 15 m/s y la otra simplemente se suelta, ¿cuál toca el piso primero? La respuesta correcta es la que casi nadie se cree hasta verla.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Galileo</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— subí la velocidad horizontal todo lo que quieras: las líneas punteadas siguen siendo horizontales.</span>
+      <span class="rotulo-mono">Simulación 2</span>
+      <span class="titulo-fila">Galileo</span>
+      <span class="nota-fila">— subí la velocidad horizontal todo lo que quieras: las líneas punteadas siguen siendo horizontales.</span>
     </div>
     <canvas id="w2-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -102,37 +102,37 @@ try {
         <button id="w2-reset" class="boton">Reiniciar</button>
       </div>
       <label class="control" style="flex:1 1 200px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">vₓ del lanzado <output id="w2-vx-out" style="color:var(--ink);font-variant-numeric:tabular-nums">15.0 m/s</output></span>
+        <span class="rotulo-campo">vₓ del lanzado <output id="w2-vx-out" class="valor-control">15.0 m/s</output></span>
         <input id="w2-vx" type="range" min="0" max="30" step="0.5" value="15" style="width:100%">
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">altura <output id="w2-h-out" style="color:var(--ink);font-variant-numeric:tabular-nums">25 m</output></span>
+        <span class="rotulo-campo">altura <output id="w2-h-out" class="valor-control">25 m</output></span>
         <input id="w2-h" type="range" min="5" max="45" step="1" value="25" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>t <b id="w2-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.79 s</b></span>
-      <span>altura de los dos <b id="w2-alt" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">21.9 m</b></span>
-      <span>diferencia de alturas <b id="w2-dif" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.00 m</b></span>
-      <span>t de caída <b id="w2-tf" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">2.26 s</b></span>
+      <span>t <b id="w2-t" class="lectura-valor">0.79 s</b></span>
+      <span>altura de los dos <b id="w2-alt" class="lectura-valor">21.9 m</b></span>
+      <span>diferencia de alturas <b id="w2-dif" class="lectura-valor roja">0.00 m</b></span>
+      <span>t de caída <b id="w2-tf" class="lectura-valor">2.26 s</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Tocan juntas, y no es un detalle curioso: es la independencia otra vez. La ecuación de <i>y</i> no contiene <i>v</i><sub><i>x</i></sub> en ninguna parte, así que el tiempo de caída no puede depender de él. Por eso en los ejercicios de tiro horizontal el tiempo se calcula siempre con la altura, nunca con la velocidad de lanzamiento, y recién después ese tiempo se usa para averiguar cuánto avanzó.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Guardá el orden, porque es el esqueleto de los ejercicios 9 y 10: <b style="font-weight:600">el eje <i>y</i> da el tiempo; el eje <i>x</i> cobra ese tiempo</b>.</p>
+  <p class="parrafo-suelto">Tocan juntas, y no es un detalle curioso: es la independencia otra vez. La ecuación de <i>y</i> no contiene <i>v</i><sub><i>x</i></sub> en ninguna parte, así que el tiempo de caída no puede depender de él. Por eso en los ejercicios de tiro horizontal el tiempo se calcula siempre con la altura, nunca con la velocidad de lanzamiento, y recién después ese tiempo se usa para averiguar cuánto avanzó.</p>
+  <p class="parrafo" style="margin-top:22px">Guardá el orden, porque es el esqueleto de los ejercicios 9 y 10: <b class="negrita">el eje <i>y</i> da el tiempo; el eje <i>x</i> cobra ese tiempo</b>.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · De dónde sale el seno</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">«¿Por qué <i>v</i><sub>0</sub> sen α va en <i>y</i>?» no es una pregunta de física sino de triángulo, y se contesta una sola vez. Arrastrá la punta del vector: lo que se mueve es la velocidad inicial completa, y las dos líneas punteadas son sus sombras, las mismas de la primera simulación pero en el instante cero.</p>
+  <h2 class="titulo-seccion">03 · De dónde sale el seno</h2>
+  <p class="parrafo">«¿Por qué <i>v</i><sub>0</sub> sen α va en <i>y</i>?» no es una pregunta de física sino de triángulo, y se contesta una sola vez. Arrastrá la punta del vector: lo que se mueve es la velocidad inicial completa, y las dos líneas punteadas son sus sombras, las mismas de la primera simulación pero en el instante cero.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 3</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El triángulo de v₀</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— arrastrá la punta de la flecha.</span>
+      <span class="rotulo-mono">Simulación 3</span>
+      <span class="titulo-fila">El triángulo de v₀</span>
+      <span class="nota-fila">— arrastrá la punta de la flecha.</span>
     </div>
     <canvas id="w3-cv" style="cursor:grab"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -145,32 +145,32 @@ try {
       </label>
     </div>
     <div class="lecturas">
-      <span>v₀ <b id="w3-v0" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">25.1 m/s</b></span>
-      <span>α <b id="w3-ang" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">50°</b></span>
-      <span><span id="w3-lx">vₓ = v₀·cos α</span> <b id="w3-vx" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">16.1 m/s</b></span>
-      <span><span id="w3-ly">v_y = v₀·sen α</span> <b id="w3-vy" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">19.2 m/s</b></span>
+      <span>v₀ <b id="w3-v0" class="lectura-valor">25.1 m/s</b></span>
+      <span>α <b id="w3-ang" class="lectura-valor">50°</b></span>
+      <span><span id="w3-lx">vₓ = v₀·cos α</span> <b id="w3-vx" class="lectura-valor azul">16.1 m/s</b></span>
+      <span><span id="w3-ly">v_y = v₀·sen α</span> <b id="w3-vy" class="lectura-valor azul">19.2 m/s</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Coseno y seno no están pegados a <i>x</i> y a <i>y</i>: están pegados al lado <b style="font-weight:600">adyacente</b> y al <b style="font-weight:600">opuesto</b> al ángulo. Si el enunciado mide el ángulo desde la vertical —y algunos lo hacen— tildá la casilla y mirá cómo se intercambian sin que el vector se mueva ni un milímetro. Es el error más fácil de cometer y el más fácil de evitar: antes de escribir cos, preguntate junto a cuál de los dos ejes está el ángulo dibujado.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Con las dos sombras del vector inicial ya tenés todo. Poniendo <i>y</i> = 0 sale el tiempo de vuelo, y con él el alcance:</p>
+  <p class="parrafo-suelto">Coseno y seno no están pegados a <i>x</i> y a <i>y</i>: están pegados al lado <b class="negrita">adyacente</b> y al <b class="negrita">opuesto</b> al ángulo. Si el enunciado mide el ángulo desde la vertical —y algunos lo hacen— tildá la casilla y mirá cómo se intercambian sin que el vector se mueva ni un milímetro. Es el error más fácil de cometer y el más fácil de evitar: antes de escribir cos, preguntate junto a cuál de los dos ejes está el ángulo dibujado.</p>
+  <p class="parrafo" style="margin-top:22px">Con las dos sombras del vector inicial ya tenés todo. Poniendo <i>y</i> = 0 sale el tiempo de vuelo, y con él el alcance:</p>
   <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:24px 0 0">
     <p style="font:400 18px/1.9 'Source Serif 4',Georgia,serif;margin:0"><i>t</i><sub>vuelo</sub> = 2 <i>v</i><sub>0</sub> sen α / <i>g</i><br><i>y</i><sub>máx</sub> = <i>v</i><sub>0</sub><sup>2</sup> sen<sup>2</sup>α / 2<i>g</i><br><i>x</i><sub>alcance</sub> = <i>v</i><sub>0</sub><sup>2</sup> sen 2α / <i>g</i></p>
   </div>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:24px 0 0;text-wrap:pretty">No hace falta memorizarlas; sí conviene poder rearmarlas en treinta segundos. Y notá que el alcance máximo cae en α = 45° porque ahí sen 2α vale 1: el mejor tiro no es el más alto ni el más rápido en horizontal, es el que reparte.</p>
+  <p class="parrafo" style="margin-top:24px">No hace falta memorizarlas; sí conviene poder rearmarlas en treinta segundos. Y notá que el alcance máximo cae en α = 45° porque ahí sen 2α vale 1: el mejor tiro no es el más alto ni el más rápido en horizontal, es el que reparte.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">04 · Cuando el eje x deja de ser libre</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Hasta acá el eje horizontal no tenía aceleración. El ejercicio 15 le agrega una —un viento, un empuje— y conviene ver qué se rompe y qué no. Movés el slider y mirás sobre todo las dos lecturas de la derecha, que no se mueven.</p>
+  <h2 class="titulo-seccion">04 · Cuando el eje x deja de ser libre</h2>
+  <p class="parrafo">Hasta acá el eje horizontal no tenía aceleración. El ejercicio 15 le agrega una —un viento, un empuje— y conviene ver qué se rompe y qué no. Movés el slider y mirás sobre todo las dos lecturas de la derecha, que no se mueven.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 4</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Con viento</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— la curva gris es el tiro sin viento, para comparar.</span>
+      <span class="rotulo-mono">Simulación 4</span>
+      <span class="titulo-fila">Con viento</span>
+      <span class="nota-fila">— la curva gris es el tiro sin viento, para comparar.</span>
     </div>
     <canvas id="w4-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -183,23 +183,23 @@ try {
         <input id="w4-ax" type="range" min="-8" max="8" step="0.2" value="0" style="width:100%;accent-color:var(--red)">
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">ángulo α <output id="w4-ang-out" style="color:var(--ink);font-variant-numeric:tabular-nums">55°</output></span>
+        <span class="rotulo-campo">ángulo α <output id="w4-ang-out" class="valor-control">55°</output></span>
         <input id="w4-ang" type="range" min="15" max="80" step="1" value="55" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>alcance <b id="w4-alc" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">38.4 m</b></span>
-      <span>corrimiento <b id="w4-dif" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">+0.0 m</b></span>
-      <span>t de vuelo <b id="w4-tf" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.34 s</b></span>
-      <span>altura máx <b id="w4-hmax" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">13.7 m</b></span>
+      <span>alcance <b id="w4-alc" class="lectura-valor">38.4 m</b></span>
+      <span>corrimiento <b id="w4-dif" class="lectura-valor roja">+0.0 m</b></span>
+      <span>t de vuelo <b id="w4-tf" class="lectura-valor">3.34 s</b></span>
+      <span>altura máx <b id="w4-hmax" class="lectura-valor">13.7 m</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna columna-final">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La trayectoria se deforma, el vértice se corre, la simetría se pierde. Pero el tiempo de vuelo y la altura máxima no cambian ni un decimal, porque los decide sólo el eje <i>y</i> y al eje <i>y</i> no le pasó nada. La independencia, que en las tres primeras simulaciones era una afirmación, acá se vuelve una herramienta: te deja tocar un eje entero sabiendo exactamente qué resultados quedan intactos.</p>
+  <p class="parrafo-suelto">La trayectoria se deforma, el vértice se corre, la simetría se pierde. Pero el tiempo de vuelo y la altura máxima no cambian ni un decimal, porque los decide sólo el eje <i>y</i> y al eje <i>y</i> no le pasó nada. La independencia, que en las tres primeras simulaciones era una afirmación, acá se vuelve una herramienta: te deja tocar un eje entero sabiendo exactamente qué resultados quedan intactos.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para resolver 9, 10 y 15</h2>
+  <h2 class="titulo-seccion">Para resolver 9, 10 y 15</h2>
   <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
     <li>Elegí el origen y el sentido positivo, y anotalos. La mitad de los signos mal son de acá.</li>
     <li>Descomponé <i>v</i><sub>0</sub> mirando desde qué eje se mide el ángulo.</li>

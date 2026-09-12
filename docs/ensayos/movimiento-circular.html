@@ -34,19 +34,19 @@ try {
   <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">La aceleración tiene dos trabajos distintos, y sólo uno de ellos cambia la rapidez.</p>
   <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
 
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Decir que un movimiento circular uniforme tiene «velocidad constante» es un error que se comete casi siempre el primer día. Lo que es constante es la <i>rapidez</i>: el cuentakilómetros de la partícula no se mueve. La velocidad, en cambio, cambia todo el tiempo, porque cambia de dirección en cada instante — y toda vez que la velocidad cambia, por definición, hay aceleración, aunque su módulo no se mueva ni un poco.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Ese es el nudo de este ensayo: separar «cuánto» de «hacia dónde». La aceleración de un movimiento circular tiene, en general, dos partes que hacen trabajos distintos, y confundirlas es el error más común de la Guía 1 en este tema. Acá se ven una por una, hasta que la distinción deje de sonar a trabalenguas.</p>
+  <p class="parrafo-suelto">Decir que un movimiento circular uniforme tiene «velocidad constante» es un error que se comete casi siempre el primer día. Lo que es constante es la <i>rapidez</i>: el cuentakilómetros de la partícula no se mueve. La velocidad, en cambio, cambia todo el tiempo, porque cambia de dirección en cada instante — y toda vez que la velocidad cambia, por definición, hay aceleración, aunque su módulo no se mueva ni un poco.</p>
+  <p class="parrafo" style="margin-top:22px">Ese es el nudo de este ensayo: separar «cuánto» de «hacia dónde». La aceleración de un movimiento circular tiene, en general, dos partes que hacen trabajos distintos, y confundirlas es el error más común de la Guía 1 en este tema. Acá se ven una por una, hasta que la distinción deje de sonar a trabalenguas.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · Dos direcciones que giran con vos</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Hasta ahora los ejes de referencia estaban clavados en el piso: <i>x</i> e <i>y</i> no se movían aunque el móvil sí. Acá conviene un par de ejes distinto, que viaja pegado a la partícula y gira con ella: <i>r̂</i>, que siempre apunta desde el centro hacia afuera, y <i>θ̂</i>, perpendicular al anterior, en el sentido en que crece el ángulo. Son dos versores —módulo uno, sin unidades— y la simulación de abajo los dibuja rotando en tiempo real. Fijate en un detalle que no es casualidad: la flecha de la velocidad cae siempre sobre <i>θ̂</i> y nunca sobre <i>r̂</i>.</p>
+  <h2 class="titulo-seccion">01 · Dos direcciones que giran con vos</h2>
+  <p class="parrafo">Hasta ahora los ejes de referencia estaban clavados en el piso: <i>x</i> e <i>y</i> no se movían aunque el móvil sí. Acá conviene un par de ejes distinto, que viaja pegado a la partícula y gira con ella: <i>r̂</i>, que siempre apunta desde el centro hacia afuera, y <i>θ̂</i>, perpendicular al anterior, en el sentido en que crece el ángulo. Son dos versores —módulo uno, sin unidades— y la simulación de abajo los dibuja rotando en tiempo real. Fijate en un detalle que no es casualidad: la flecha de la velocidad cae siempre sobre <i>θ̂</i> y nunca sobre <i>r̂</i>.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Los versores que giran</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— la flecha azul nunca se apoya sobre la punteada gris.</span>
+      <span class="rotulo-mono">Simulación 1</span>
+      <span class="titulo-fila">Los versores que giran</span>
+      <span class="nota-fila">— la flecha azul nunca se apoya sobre la punteada gris.</span>
     </div>
     <canvas id="w1-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -55,32 +55,32 @@ try {
         <button id="w1-reset" class="boton">Reiniciar</button>
       </div>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">velocidad angular ω <output id="w1-omega-out" style="color:var(--ink);font-variant-numeric:tabular-nums">2.0 rad/s</output></span>
+        <span class="rotulo-campo">velocidad angular ω <output id="w1-omega-out" class="valor-control">2.0 rad/s</output></span>
         <input id="w1-omega" type="range" min="0.5" max="6" step="0.1" value="2" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>t <b id="w1-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00 s</b></span>
-      <span>θ <b id="w1-ang" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0°</b></span>
-      <span>rapidez <b id="w1-rap" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">3.00 m/s</b></span>
-      <span>r̂ · v <b id="w1-prod" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00</b></span>
+      <span>t <b id="w1-t" class="lectura-valor">0.00 s</b></span>
+      <span>θ <b id="w1-ang" class="lectura-valor">0°</b></span>
+      <span>rapidez <b id="w1-rap" class="lectura-valor azul">3.00 m/s</b></span>
+      <span>r̂ · v <b id="w1-prod" class="lectura-valor">0.00</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Que <i>v</i> quede siempre sobre <i>θ̂</i> no es un detalle del dibujo: es la definición misma de movimiento circular. La partícula se mueve sobre una circunferencia, así que en cada instante lo único que puede cambiar es su ángulo, nunca su distancia al centro — y la dirección que acompaña ese cambio de ángulo es, por construcción, <i>θ̂</i>. Por eso la posición y la velocidad son perpendiculares en todo momento, sea cual sea <i>ω</i>: es el inciso (d) del ejercicio 11, y no depende de que el movimiento sea uniforme. La aceleración, ya vas a ver, no tiene esa suerte.</p>
+  <p class="parrafo-suelto">Que <i>v</i> quede siempre sobre <i>θ̂</i> no es un detalle del dibujo: es la definición misma de movimiento circular. La partícula se mueve sobre una circunferencia, así que en cada instante lo único que puede cambiar es su ángulo, nunca su distancia al centro — y la dirección que acompaña ese cambio de ángulo es, por construcción, <i>θ̂</i>. Por eso la posición y la velocidad son perpendiculares en todo momento, sea cual sea <i>ω</i>: es el inciso (d) del ejercicio 11, y no depende de que el movimiento sea uniforme. La aceleración, ya vas a ver, no tiene esa suerte.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · Los dos trabajos de la aceleración</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">La aceleración de un movimiento circular general hace dos trabajos que conviene no mezclar. La componente que apunta hacia el centro —la normal, o centrípeta— no cambia la rapidez de la partícula: sólo tuerce la dirección de <i>v</i> lo justo para mantenerla sobre la circunferencia. La componente que va en la dirección del movimiento —la tangencial— es la única capaz de acelerar o frenar a la partícula, y no mueve un grado la dirección de nada. Mirá la flecha roja de abajo: con <i>γ</i> = 0 apunta exactamente al centro, porque no hay tangencial. Apenas <i>γ</i> deja de ser cero, esa misma flecha se inclina hacia adelante.</p>
+  <h2 class="titulo-seccion">02 · Los dos trabajos de la aceleración</h2>
+  <p class="parrafo">La aceleración de un movimiento circular general hace dos trabajos que conviene no mezclar. La componente que apunta hacia el centro —la normal, o centrípeta— no cambia la rapidez de la partícula: sólo tuerce la dirección de <i>v</i> lo justo para mantenerla sobre la circunferencia. La componente que va en la dirección del movimiento —la tangencial— es la única capaz de acelerar o frenar a la partícula, y no mueve un grado la dirección de nada. Mirá la flecha roja de abajo: con <i>γ</i> = 0 apunta exactamente al centro, porque no hay tangencial. Apenas <i>γ</i> deja de ser cero, esa misma flecha se inclina hacia adelante.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">aₜ y aₙ</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— subí γ apenas y mirá el ángulo de abajo dejar de ser 90°.</span>
+      <span class="rotulo-mono">Simulación 2</span>
+      <span class="titulo-fila">aₜ y aₙ</span>
+      <span class="nota-fila">— subí γ apenas y mirá el ángulo de abajo dejar de ser 90°.</span>
     </div>
     <canvas id="w2-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -90,7 +90,7 @@ try {
         <button id="w2-ej13" class="boton">Ej. 13</button>
       </div>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">velocidad angular ω <output id="w2-omega-out" style="color:var(--ink);font-variant-numeric:tabular-nums">2.0 rad/s</output></span>
+        <span class="rotulo-campo">velocidad angular ω <output id="w2-omega-out" class="valor-control">2.0 rad/s</output></span>
         <input id="w2-omega" type="range" min="0" max="6" step="0.1" value="2" style="width:100%">
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
@@ -99,27 +99,27 @@ try {
       </label>
     </div>
     <div class="lecturas">
-      <span>rapidez <b id="w2-rap" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">3.00 m/s</b></span>
-      <span>aₜ <b id="w2-at" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.00 m/s²</b></span>
-      <span>aₙ <b id="w2-an" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">6.00 m/s²</b></span>
-      <span>ángulo <b id="w2-ang" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">90.0°</b></span>
+      <span>rapidez <b id="w2-rap" class="lectura-valor azul">3.00 m/s</b></span>
+      <span>aₜ <b id="w2-at" class="lectura-valor roja">0.00 m/s²</b></span>
+      <span>aₙ <b id="w2-an" class="lectura-valor roja">6.00 m/s²</b></span>
+      <span>ángulo <b id="w2-ang" class="lectura-valor">90.0°</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Con <i>γ</i> = 0 el ángulo entre <i>v</i> y <i>a</i> marca 90° exactos en todo el recorrido, y la rapidez que leés arriba no se mueve un milímetro: es el movimiento circular uniforme, y es la única situación donde velocidad y aceleración son perpendiculares. Apretá <code>Ej. 13</code> —deja <i>ω</i> en 0 y <i>γ</i> en 4 sobre este mismo radio de 1.5 m, que es el ejercicio 13 tal cual— y dale a <code>Reproducir</code> hasta el final de la ventana. Arranca quieto, así que en <i>t</i> = 0 no hay velocidad y el ángulo no existe: la lectura muestra un guion, no 90°. La tangencial queda fija en 6 m/s² —no depende de <i>ω</i>, sólo de <i>γ</i> y de <i>R</i>— mientras la normal crece con el cuadrado de la velocidad angular: en <i>t</i> = 5 s ya vale 600 m/s² contra esos mismos 6, así que la aceleración total es prácticamente toda normal, 600.03 m/s², y la flecha roja apunta casi exacto al centro. Que la normal domine no quiere decir que la tangencial haya desaparecido: quiere decir que la rapidez cambia despacio comparada con lo rápido que cambia la dirección.</p>
+  <p class="parrafo-suelto">Con <i>γ</i> = 0 el ángulo entre <i>v</i> y <i>a</i> marca 90° exactos en todo el recorrido, y la rapidez que leés arriba no se mueve un milímetro: es el movimiento circular uniforme, y es la única situación donde velocidad y aceleración son perpendiculares. Apretá <code>Ej. 13</code> —deja <i>ω</i> en 0 y <i>γ</i> en 4 sobre este mismo radio de 1.5 m, que es el ejercicio 13 tal cual— y dale a <code>Reproducir</code> hasta el final de la ventana. Arranca quieto, así que en <i>t</i> = 0 no hay velocidad y el ángulo no existe: la lectura muestra un guion, no 90°. La tangencial queda fija en 6 m/s² —no depende de <i>ω</i>, sólo de <i>γ</i> y de <i>R</i>— mientras la normal crece con el cuadrado de la velocidad angular: en <i>t</i> = 5 s ya vale 600 m/s² contra esos mismos 6, así que la aceleración total es prácticamente toda normal, 600.03 m/s², y la flecha roja apunta casi exacto al centro. Que la normal domine no quiere decir que la tangencial haya desaparecido: quiere decir que la rapidez cambia despacio comparada con lo rápido que cambia la dirección.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · De las ecuaciones al círculo</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Un movimiento circular no siempre viene anunciado. A veces llega como dos ecuaciones sueltas, una para <i>x</i>(<i>t</i>) y otra para <i>y</i>(<i>t</i>), sin ningún <i>R</i> ni ningún <i>ω</i> a la vista, y hay que reconocer la circunferencia escondida ahí adentro. Es exactamente lo que pide el ejercicio 14: <i>x</i>(<i>t</i>) = sen(<i>ωt</i>), <i>y</i>(<i>t</i>) = cos(<i>ωt</i>) + 1, con <i>ω</i> = 2π rad/s. Escribí las dos expresiones en los campos de abajo —ya están cargadas con ese par— y mirá qué trayectoria dibujan.</p>
+  <h2 class="titulo-seccion">03 · De las ecuaciones al círculo</h2>
+  <p class="parrafo">Un movimiento circular no siempre viene anunciado. A veces llega como dos ecuaciones sueltas, una para <i>x</i>(<i>t</i>) y otra para <i>y</i>(<i>t</i>), sin ningún <i>R</i> ni ningún <i>ω</i> a la vista, y hay que reconocer la circunferencia escondida ahí adentro. Es exactamente lo que pide el ejercicio 14: <i>x</i>(<i>t</i>) = sen(<i>ωt</i>), <i>y</i>(<i>t</i>) = cos(<i>ωt</i>) + 1, con <i>ω</i> = 2π rad/s. Escribí las dos expresiones en los campos de abajo —ya están cargadas con ese par— y mirá qué trayectoria dibujan.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 3</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">De las ecuaciones al círculo</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— cambiá un 2 por un 3 y fijate si sigue siendo una circunferencia.</span>
+      <span class="rotulo-mono">Simulación 3</span>
+      <span class="titulo-fila">De las ecuaciones al círculo</span>
+      <span class="nota-fila">— cambiá un 2 por un 3 y fijate si sigue siendo una circunferencia.</span>
     </div>
     <canvas id="w3-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -129,42 +129,42 @@ try {
         <button id="w3-recta" class="boton">Recta</button>
       </div>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">x(t)</span>
+        <span class="rotulo-campo">x(t)</span>
         <input id="w3-x" type="text" value="sen(2 * pi * t)" spellcheck="false" style="box-sizing:border-box;width:100%;font:400 13px/1.3 'JetBrains Mono',monospace;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:8px 10px">
         <span id="w3-x-err" style="display:block;min-height:14px;overflow-wrap:anywhere;font:400 11px/1.3 'JetBrains Mono',monospace;color:var(--red)"></span>
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">y(t)</span>
+        <span class="rotulo-campo">y(t)</span>
         <input id="w3-y" type="text" value="cos(2 * pi * t) + 1" spellcheck="false" style="box-sizing:border-box;width:100%;font:400 13px/1.3 'JetBrains Mono',monospace;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:8px 10px">
         <span id="w3-y-err" style="display:block;min-height:14px;overflow-wrap:anywhere;font:400 11px/1.3 'JetBrains Mono',monospace;color:var(--red)"></span>
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">t <output id="w3-t-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0.00</output></span>
+        <span class="rotulo-campo">t <output id="w3-t-out" class="valor-control">0.00</output></span>
         <input id="w3-t" type="range" min="0" max="1" step="0.01" value="0" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>t <b id="w3-t-val" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00</b></span>
-      <span>x(t) <b id="w3-x-val" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.00 m</b></span>
-      <span>y(t) <b id="w3-y-val" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">2.00 m</b></span>
-      <span>distancia al centro <b id="w3-dist" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.00 m</b></span>
+      <span>t <b id="w3-t-val" class="lectura-valor">0.00</b></span>
+      <span>x(t) <b id="w3-x-val" class="lectura-valor">0.00 m</b></span>
+      <span>y(t) <b id="w3-y-val" class="lectura-valor">2.00 m</b></span>
+      <span>distancia al centro <b id="w3-dist" class="lectura-valor">1.00 m</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">El par del ejercicio 14 arranca en (0, 2) —arriba del centro (0, 1), no al costado— y gira en sentido horario: apenas <i>t</i> crece, <i>x</i> se hace positiva mientras <i>y</i> todavía baja, así que el cuerpo se mueve hacia la derecha y hacia abajo, el sentido de las agujas del reloj. La lectura que lo prueba es la cuarta: la distancia al centro que mejor ajusta la curva se queda clavada en 1.00 m para cualquier <i>t</i> que muevas, porque el candidato a centro es siempre el mismo punto (0, 1) y todo punto de la curva está a esa misma distancia. Probá <code>Elipse</code> y esa lectura empieza a moverse; probá <code>Recta</code> y ni siquiera hay un círculo que ajustarle a una línea. Es la misma idea del ejercicio: frente a un par de ecuaciones paramétricas, la prueba de que hay una circunferencia no es que «se vea redondo», es que esa distancia no dependa de <i>t</i>.</p>
+  <p class="parrafo-suelto">El par del ejercicio 14 arranca en (0, 2) —arriba del centro (0, 1), no al costado— y gira en sentido horario: apenas <i>t</i> crece, <i>x</i> se hace positiva mientras <i>y</i> todavía baja, así que el cuerpo se mueve hacia la derecha y hacia abajo, el sentido de las agujas del reloj. La lectura que lo prueba es la cuarta: la distancia al centro que mejor ajusta la curva se queda clavada en 1.00 m para cualquier <i>t</i> que muevas, porque el candidato a centro es siempre el mismo punto (0, 1) y todo punto de la curva está a esa misma distancia. Probá <code>Elipse</code> y esa lectura empieza a moverse; probá <code>Recta</code> y ni siquiera hay un círculo que ajustarle a una línea. Es la misma idea del ejercicio: frente a un par de ecuaciones paramétricas, la prueba de que hay una circunferencia no es que «se vea redondo», es que esa distancia no dependa de <i>t</i>.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">04 · Qué miden el período y la frecuencia</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">El período <i>T</i> y la frecuencia <i>f</i> no son dos ideas: son la misma idea contada al revés. <i>T</i> contesta «¿cuánto tarda una vuelta?» y se mide en segundos; <i>f</i> contesta «¿cuántas vueltas entran en un segundo?» y se mide en hertz. Una es la inversa de la otra, <i>f</i> = 1/<i>T</i>, y el ejercicio 11 las pide por nombre en su inciso (c). Abajo hay dos partículas girando a distinta velocidad angular: contá cuántas veces pasa cada una por su punto de partida mientras la otra todavía no completó una vuelta.</p>
+  <h2 class="titulo-seccion">04 · Qué miden el período y la frecuencia</h2>
+  <p class="parrafo">El período <i>T</i> y la frecuencia <i>f</i> no son dos ideas: son la misma idea contada al revés. <i>T</i> contesta «¿cuánto tarda una vuelta?» y se mide en segundos; <i>f</i> contesta «¿cuántas vueltas entran en un segundo?» y se mide en hertz. Una es la inversa de la otra, <i>f</i> = 1/<i>T</i>, y el ejercicio 11 las pide por nombre en su inciso (c). Abajo hay dos partículas girando a distinta velocidad angular: contá cuántas veces pasa cada una por su punto de partida mientras la otra todavía no completó una vuelta.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 4</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Período y frecuencia</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— contá las marcas de cada color en la línea de abajo.</span>
+      <span class="rotulo-mono">Simulación 4</span>
+      <span class="titulo-fila">Período y frecuencia</span>
+      <span class="nota-fila">— contá las marcas de cada color en la línea de abajo.</span>
     </div>
     <canvas id="w4-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -173,7 +173,7 @@ try {
         <button id="w4-reset" class="boton">Reiniciar</button>
       </div>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">ω<sub>A</sub> <output id="w4-oa-out" style="color:var(--ink);font-variant-numeric:tabular-nums">6.3 rad/s</output></span>
+        <span class="rotulo-campo">ω<sub>A</sub> <output id="w4-oa-out" class="valor-control">6.3 rad/s</output></span>
         <input id="w4-oa" type="range" min="1" max="14" step="0.1" value="6.3" style="width:100%">
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
@@ -182,18 +182,18 @@ try {
       </label>
     </div>
     <div class="lecturas">
-      <span><i>T</i><sub>A</sub> <b id="w4-ta" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.00 s</b></span>
-      <span><i>f</i><sub>A</sub> <b id="w4-fa" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.00 Hz</b></span>
-      <span><i>T</i><sub>B</sub> <b id="w4-tb" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.50 s</b></span>
-      <span><i>f</i><sub>B</sub> <b id="w4-fb" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">2.00 Hz</b></span>
+      <span><i>T</i><sub>A</sub> <b id="w4-ta" class="lectura-valor">1.00 s</b></span>
+      <span><i>f</i><sub>A</sub> <b id="w4-fa" class="lectura-valor">1.00 Hz</b></span>
+      <span><i>T</i><sub>B</sub> <b id="w4-tb" class="lectura-valor">0.50 s</b></span>
+      <span><i>f</i><sub>B</sub> <b id="w4-fb" class="lectura-valor">2.00 Hz</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna columna-final">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">La ventana de tiempo dura lo mismo que un período de la partícula más lenta —la que tenga menor velocidad angular, sea azul o roja— así que ésa completa siempre exactamente una vuelta, no importa cuánto muevas los sliders. La otra completa las que le tocan según la relación entre las dos velocidades. Con los valores por defecto la lenta es la azul: su ω vale 2π rad/s, así que su período es exactamente 1 s y su frecuencia 1 Hz —el mismo valor que arroja el ejercicio 14— y la roja, al doble de velocidad angular, da dos vueltas por cada una de la azul. Si invertís los sliders y la azul pasa a ser la rápida, los papeles se cambian solos: la ventana se acomoda a la roja, que vuelve a cerrar su única vuelta. Ninguna de las dos lecturas depende de qué tan grande sea la circunferencia: <i>T</i> y <i>f</i> son propiedades de ω, no del radio.</p>
+  <p class="parrafo-suelto">La ventana de tiempo dura lo mismo que un período de la partícula más lenta —la que tenga menor velocidad angular, sea azul o roja— así que ésa completa siempre exactamente una vuelta, no importa cuánto muevas los sliders. La otra completa las que le tocan según la relación entre las dos velocidades. Con los valores por defecto la lenta es la azul: su ω vale 2π rad/s, así que su período es exactamente 1 s y su frecuencia 1 Hz —el mismo valor que arroja el ejercicio 14— y la roja, al doble de velocidad angular, da dos vueltas por cada una de la azul. Si invertís los sliders y la azul pasa a ser la rápida, los papeles se cambian solos: la ventana se acomoda a la roja, que vuelve a cerrar su única vuelta. Ninguna de las dos lecturas depende de qué tan grande sea la circunferencia: <i>T</i> y <i>f</i> son propiedades de ω, no del radio.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para resolver 11 a 14</h2>
+  <h2 class="titulo-seccion">Para resolver 11 a 14</h2>
   <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
     <li>Separá siempre «cuánto» de «hacia dónde»: la rapidez la cambia sólo <i>a</i><sub>t</sub>.</li>
     <li>En el uniforme, <i>a</i><sub>t</sub> = 0 y toda la aceleración apunta al centro. No es que no haya aceleración: es que no cambia la rapidez.</li>

@@ -42,6 +42,40 @@ section { box-sizing: border-box; }
 
 canvas { width: 100%; aspect-ratio: 16/8; display: block; touch-action: none; }
 
+/* Las diez clases tipograficas. Salen de medir los 587 atributos `style` de las nueve
+   paginas y quedarse con los diez valores mas repetidos que son tipografia y no layout
+   (la medicion completa, con el conteo de los 60 valores distintos, esta en
+   .superpowers/investigacion-deuda/medicion.md). Cada declaracion es copia textual del
+   atributo que reemplaza. */
+
+.lectura-valor { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+.lectura-valor.roja { color: var(--red); }
+.lectura-valor.azul { color: var(--blue); }
+.lectura-valor.tenue { color: var(--dim); }
+
+/* Hermana de .lectura-valor y NO un modificador suyo: el eco en vivo del valor de un
+   slider vive en un <output> y va sin negrita; el resultado final vive en un <b> y va
+   con negrita. Son dos componentes distintos a proposito, verificado en las ocho
+   paginas con widgets. Fusionarlos pondria en negrita los ecos o se la sacaria a los
+   resultados -- un cambio visual real. */
+.valor-control { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.parrafo { font: 400 19px/1.62 'Source Serif 4', Georgia, serif; margin: 18px 0 0; text-wrap: pretty; }
+.parrafo-suelto { font: 400 19px/1.62 'Source Serif 4', Georgia, serif; margin: 30px 0 0; text-wrap: pretty; }
+
+.titulo-seccion { font: 600 13px/1 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin: 52px 0 0; }
+
+/* .rotulo-mono titula el widget ("Simulacion 1"); .rotulo-campo etiqueta un control.
+   Difieren solo en letter-spacing (.14em vs .1em) y tampoco es descuido: la distincion
+   es consistente en las ocho paginas. Dos roles, dos clases. */
+.rotulo-mono { font: 500 10.5px/1 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.rotulo-campo { font: 500 10.5px/1 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+
+.titulo-fila { font: 600 15px/1.2 'Source Serif 4', Georgia, serif; }
+.nota-fila { font: 400 13px/1.3 'Source Serif 4', Georgia, serif; color: var(--dim); }
+
+.negrita { font-weight: 600; }
+
 @keyframes tp-pulse{
   0%,100%{box-shadow:0 0 0 0 rgba(27,79,212,0)}
   50%{box-shadow:0 0 0 7px rgba(27,79,212,.16)}

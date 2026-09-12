@@ -34,49 +34,49 @@ try {
   <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">La velocidad es la pendiente y el desplazamiento es el área: la misma relación leída en dos direcciones.</p>
   <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
 
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Un gráfico de posición contra tiempo parece decir una sola cosa: dónde está el móvil en cada instante. Dice dos más, y son las que los ejercicios piden: cuán rápido va, y cómo cambia esa rapidez. Las dos están ahí, en la forma de la curva, antes de que aparezca ninguna fórmula.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Este ensayo tiene un solo objetivo: que puedas mirar una curva y leerle la velocidad sin calcular nada, y mirar una curva de velocidad y leerle el desplazamiento del mismo modo.</p>
+  <p class="parrafo-suelto">Un gráfico de posición contra tiempo parece decir una sola cosa: dónde está el móvil en cada instante. Dice dos más, y son las que los ejercicios piden: cuán rápido va, y cómo cambia esa rapidez. Las dos están ahí, en la forma de la curva, antes de que aparezca ninguna fórmula.</p>
+  <p class="parrafo" style="margin-top:22px">Este ensayo tiene un solo objetivo: que puedas mirar una curva y leerle la velocidad sin calcular nada, y mirar una curva de velocidad y leerle el desplazamiento del mismo modo.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · La pendiente que se afila</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Elegí dos instantes y marcá en el gráfico dónde está el móvil en cada uno. La velocidad media entre esos dos instantes no es otra cosa que la pendiente de la recta que une los dos puntos: cuánto cambió la posición dividido cuánto tardó en cambiar. Hasta ahí no hay nada que no sepas. Lo interesante empieza cuando el segundo punto se acerca al primero, porque la recta que los une va girando y su pendiente va a alguna parte. A esa parte adonde va la llamamos velocidad instantánea. Mové el slider hasta el fondo y mirá el número.</p>
+  <h2 class="titulo-seccion">01 · La pendiente que se afila</h2>
+  <p class="parrafo">Elegí dos instantes y marcá en el gráfico dónde está el móvil en cada uno. La velocidad media entre esos dos instantes no es otra cosa que la pendiente de la recta que une los dos puntos: cuánto cambió la posición dividido cuánto tardó en cambiar. Hasta ahí no hay nada que no sepas. Lo interesante empieza cuando el segundo punto se acerca al primero, porque la recta que los une va girando y su pendiente va a alguna parte. A esa parte adonde va la llamamos velocidad instantánea. Mové el slider hasta el fondo y mirá el número.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">De la secante a la tangente</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— achicá Δt y mirá el número de la pendiente, no la recta.</span>
+      <span class="rotulo-mono">Simulación 1</span>
+      <span class="titulo-fila">De la secante a la tangente</span>
+      <span class="nota-fila">— achicá Δt y mirá el número de la pendiente, no la recta.</span>
     </div>
     <canvas id="w1-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Δt <output id="w1-dt-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0.600 s</output></span>
+        <span class="rotulo-campo">Δt <output id="w1-dt-out" class="valor-control">0.600 s</output></span>
         <input id="w1-dt" type="range" min="0.001" max="0.8" step="0.001" value="0.6" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>pendiente PQ <b id="w1-pend" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">7.440 m/s</b></span>
-      <span>velocidad en P <b id="w1-lim" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">3.84 m/s</b></span>
-      <span>diferencia <b id="w1-error" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">3.600 m/s</b></span>
+      <span>pendiente PQ <b id="w1-pend" class="lectura-valor azul">7.440 m/s</b></span>
+      <span>velocidad en P <b id="w1-lim" class="lectura-valor">3.84 m/s</b></span>
+      <span>diferencia <b id="w1-error" class="lectura-valor roja">3.600 m/s</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Mirá las dos últimas lecturas. La pendiente de PQ se acerca a 3.84 y la diferencia se hace cada vez más chica, pero nunca da cero: siempre queda algo. Y no es un defecto de la cuenta ni del redondeo. Con Δt = 0 los dos puntos serían el mismo punto, Δx también sería cero, y la división 0/0 no existe. Así que la velocidad instantánea no es «la pendiente cuando Δt vale cero» —ahí no hay ninguna pendiente que calcular— sino el número al que la pendiente se acerca mientras Δt se achica. Eso es un límite: el nombre del acercamiento, no el del punto final.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Ese acercamiento el apunte lo escribe <i>v</i> = d<i>x</i>/d<i>t</i>. La <i>d</i> no es un número chiquito que multiplica: es la marca de que la cuenta Δ<i>x</i>/Δ<i>t</i> ya se hizo con Δ<i>t</i> yendo a cero. Y no es adorno teórico. El ejercicio 1 del práctico da exactamente esta curva, <i>x</i>(<i>t</i>) = −3 + 2<i>t</i><sup>3</sup>, y pide velocidades instantáneas leídas del gráfico: en <i>t</i> = 0 la curva está horizontal, así que la velocidad es 0; en <i>t</i> = 0.8 s vale 3.84 m/s, que es el número al que viste llegar la pendiente.</p>
+  <p class="parrafo-suelto">Mirá las dos últimas lecturas. La pendiente de PQ se acerca a 3.84 y la diferencia se hace cada vez más chica, pero nunca da cero: siempre queda algo. Y no es un defecto de la cuenta ni del redondeo. Con Δt = 0 los dos puntos serían el mismo punto, Δx también sería cero, y la división 0/0 no existe. Así que la velocidad instantánea no es «la pendiente cuando Δt vale cero» —ahí no hay ninguna pendiente que calcular— sino el número al que la pendiente se acerca mientras Δt se achica. Eso es un límite: el nombre del acercamiento, no el del punto final.</p>
+  <p class="parrafo" style="margin-top:22px">Ese acercamiento el apunte lo escribe <i>v</i> = d<i>x</i>/d<i>t</i>. La <i>d</i> no es un número chiquito que multiplica: es la marca de que la cuenta Δ<i>x</i>/Δ<i>t</i> ya se hizo con Δ<i>t</i> yendo a cero. Y no es adorno teórico. El ejercicio 1 del práctico da exactamente esta curva, <i>x</i>(<i>t</i>) = −3 + 2<i>t</i><sup>3</sup>, y pide velocidades instantáneas leídas del gráfico: en <i>t</i> = 0 la curva está horizontal, así que la velocidad es 0; en <i>t</i> = 0.8 s vale 3.84 m/s, que es el número al que viste llegar la pendiente.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · Tres gráficos, un solo movimiento</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Los tres gráficos de abajo describen un solo movimiento: uno en posición, uno en velocidad y uno en aceleración. Los tres comparten el eje horizontal, así que cada instante es una columna vertical que los atraviesa a los tres a la vez. Mirados por separado son tres dibujos sueltos; leídos juntos, siguiendo esa columna, son una sola historia.</p>
+  <h2 class="titulo-seccion">02 · Tres gráficos, un solo movimiento</h2>
+  <p class="parrafo">Los tres gráficos de abajo describen un solo movimiento: uno en posición, uno en velocidad y uno en aceleración. Los tres comparten el eje horizontal, así que cada instante es una columna vertical que los atraviesa a los tres a la vez. Mirados por separado son tres dibujos sueltos; leídos juntos, siguiendo esa columna, son una sola historia.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Los tres paneles</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— arrastrá el cursor hasta la cima de x y mirá dónde queda el punto azul.</span>
+      <span class="rotulo-mono">Simulación 2</span>
+      <span class="titulo-fila">Los tres paneles</span>
+      <span class="nota-fila">— arrastrá el cursor hasta la cima de x y mirá dónde queda el punto azul.</span>
     </div>
     <canvas id="w2-cv" style="cursor:grab"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -86,28 +86,28 @@ try {
       </div>
     </div>
     <div class="lecturas">
-      <span>t <b id="w2-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.70 s</b></span>
-      <span>x <b id="w2-x" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">17.45 m</b></span>
-      <span>v <b id="w2-v" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">0.00 m/s</b></span>
-      <span>a <b id="w2-a" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">-10.0 m/s²</b></span>
+      <span>t <b id="w2-t" class="lectura-valor">1.70 s</b></span>
+      <span>x <b id="w2-x" class="lectura-valor">17.45 m</b></span>
+      <span>v <b id="w2-v" class="lectura-valor azul">0.00 m/s</b></span>
+      <span>a <b id="w2-a" class="lectura-valor roja">-10.0 m/s²</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Donde <i>x</i> tiene su máximo —<i>t</i> = 1.7 s, <i>x</i> = 17.45 m— la velocidad vale cero, porque ahí la curva de posición está horizontal: no hay pendiente que leer. Arrastrá el cursor hasta esa cima y mirá el punto azul del panel del medio: cae justo sobre el cero.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">La aceleración, en cambio, no se entera de nada de eso: es constante y negativa, −10 m/s², en todo el recorrido. Se ve en que <i>v</i> es una recta que baja sin pausa y en que <i>x</i> es una parábola con la concavidad siempre hacia abajo. El ejercicio 4 cobra justo esta distinción: velocidad cero no es lo mismo que aceleración cero. En la cima de la curva, el móvil deja de avanzar un instante, pero nunca deja de frenar.</p>
+  <p class="parrafo-suelto">Donde <i>x</i> tiene su máximo —<i>t</i> = 1.7 s, <i>x</i> = 17.45 m— la velocidad vale cero, porque ahí la curva de posición está horizontal: no hay pendiente que leer. Arrastrá el cursor hasta esa cima y mirá el punto azul del panel del medio: cae justo sobre el cero.</p>
+  <p class="parrafo" style="margin-top:22px">La aceleración, en cambio, no se entera de nada de eso: es constante y negativa, −10 m/s², en todo el recorrido. Se ve en que <i>v</i> es una recta que baja sin pausa y en que <i>x</i> es una parábola con la concavidad siempre hacia abajo. El ejercicio 4 cobra justo esta distinción: velocidad cero no es lo mismo que aceleración cero. En la cima de la curva, el móvil deja de avanzar un instante, pero nunca deja de frenar.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · Dibujá vos</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Trazá con el mouse cualquier historia de posición que se te ocurra: arrancá quieto y acelerá, andá y frená, volvé sobre tus pasos. Mirá qué les pasa a los dos gráficos de abajo mientras lo hacés. No hay una curva correcta —ni una incorrecta—: el punto es justamente ver, en el momento, qué le hace tu trazo a la velocidad y a la aceleración.</p>
+  <h2 class="titulo-seccion">03 · Dibujá vos</h2>
+  <p class="parrafo">Trazá con el mouse cualquier historia de posición que se te ocurra: arrancá quieto y acelerá, andá y frená, volvé sobre tus pasos. Mirá qué les pasa a los dos gráficos de abajo mientras lo hacés. No hay una curva correcta —ni una incorrecta—: el punto es justamente ver, en el momento, qué le hace tu trazo a la velocidad y a la aceleración.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 3</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">Dibujá tu x(t)</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— dibujá un tramo horizontal y mirá el panel del medio.</span>
+      <span class="rotulo-mono">Simulación 3</span>
+      <span class="titulo-fila">Dibujá tu x(t)</span>
+      <span class="nota-fila">— dibujá un tramo horizontal y mirá el panel del medio.</span>
     </div>
     <canvas id="w3-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -121,40 +121,40 @@ try {
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Lo que acabás de descubrir dibujando son las mismas tres lecturas que este ensayo viene mostrando con fórmulas: un tramo horizontal en <i>x</i> da velocidad cero, porque no hay pendiente que leer; un tramo recto e inclinado da velocidad constante y aceleración cero, porque la pendiente no cambia; y sólo cuando la curva se dobla —cuando pasa de una recta a otra— aparece una aceleración distinta de cero. Es exactamente la lectura que pide el ejercicio 2, con su <i>x</i>(<i>t</i>) definida a trozos: cada tramo recto es un tramo de velocidad constante, y los quiebres entre tramos son donde vive la aceleración.</p>
+  <p class="parrafo-suelto">Lo que acabás de descubrir dibujando son las mismas tres lecturas que este ensayo viene mostrando con fórmulas: un tramo horizontal en <i>x</i> da velocidad cero, porque no hay pendiente que leer; un tramo recto e inclinado da velocidad constante y aceleración cero, porque la pendiente no cambia; y sólo cuando la curva se dobla —cuando pasa de una recta a otra— aparece una aceleración distinta de cero. Es exactamente la lectura que pide el ejercicio 2, con su <i>x</i>(<i>t</i>) definida a trozos: cada tramo recto es un tramo de velocidad constante, y los quiebres entre tramos son donde vive la aceleración.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">04 · El área también cuenta</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Ahora dale la vuelta a todo lo que viste. Si la velocidad es la pendiente de la posición, la posición tiene que poder leerse de la velocidad, y lo que se lee ahí no es una pendiente: es un área. Pero el signo importa, y ahí se separan dos cosas que suenan iguales y no lo son —cuánto se desplazó el móvil y cuánto camino recorrió—.</p>
+  <h2 class="titulo-seccion">04 · El área también cuenta</h2>
+  <p class="parrafo">Ahora dale la vuelta a todo lo que viste. Si la velocidad es la pendiente de la posición, la posición tiene que poder leerse de la velocidad, y lo que se lee ahí no es una pendiente: es un área. Pero el signo importa, y ahí se separan dos cosas que suenan iguales y no lo son —cuánto se desplazó el móvil y cuánto camino recorrió—.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 4</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El área es el desplazamiento</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— llevá el slider hasta el final y compará las dos lecturas de abajo.</span>
+      <span class="rotulo-mono">Simulación 4</span>
+      <span class="titulo-fila">El área es el desplazamiento</span>
+      <span class="nota-fila">— llevá el slider hasta el final y compará las dos lecturas de abajo.</span>
     </div>
     <canvas id="w4-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">t <output id="w4-hasta-out" style="color:var(--ink);font-variant-numeric:tabular-nums">1.70 s</output></span>
+        <span class="rotulo-campo">t <output id="w4-hasta-out" class="valor-control">1.70 s</output></span>
         <input id="w4-hasta" type="range" min="0" max="3.4" step="0.01" value="1.7" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>t <b id="w4-t" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">1.70 s</b></span>
-      <span>desplazamiento <b id="w4-desp" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">14.45 m</b></span>
-      <span>camino recorrido <b id="w4-cam" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">14.45 m</b></span>
-      <span>v <b id="w4-v" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">0.00 m/s</b></span>
+      <span>t <b id="w4-t" class="lectura-valor">1.70 s</b></span>
+      <span>desplazamiento <b id="w4-desp" class="lectura-valor">14.45 m</b></span>
+      <span>camino recorrido <b id="w4-cam" class="lectura-valor">14.45 m</b></span>
+      <span>v <b id="w4-v" class="lectura-valor azul">0.00 m/s</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna columna-final">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Llevá el slider hasta <i>t</i> = 3.4 s y mirá las dos lecturas de abajo: el desplazamiento vuelve a 0.00 m, pero el camino recorrido llega a 28.90 m. No es una contradicción, es la respuesta a dos preguntas distintas. El móvil subió 14.45 m y después bajó esos mismos 14.45 m: como desplazamiento, la vuelta se cancela con la ida y por eso el área azul y el área roja se restan hasta dar cero; como camino recorrido, las dos partes del viaje se suman igual, sin importar de qué lado del eje quedaron.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">Es el mismo ejercicio 4 de la sección 02, cerrando el círculo: la curva de posición que viste ahí y la curva de velocidad que acabás de integrar acá describen un solo movimiento, leído en las dos direcciones.</p>
+  <p class="parrafo-suelto">Llevá el slider hasta <i>t</i> = 3.4 s y mirá las dos lecturas de abajo: el desplazamiento vuelve a 0.00 m, pero el camino recorrido llega a 28.90 m. No es una contradicción, es la respuesta a dos preguntas distintas. El móvil subió 14.45 m y después bajó esos mismos 14.45 m: como desplazamiento, la vuelta se cancela con la ida y por eso el área azul y el área roja se restan hasta dar cero; como camino recorrido, las dos partes del viaje se suman igual, sin importar de qué lado del eje quedaron.</p>
+  <p class="parrafo" style="margin-top:22px">Es el mismo ejercicio 4 de la sección 02, cerrando el círculo: la curva de posición que viste ahí y la curva de velocidad que acabás de integrar acá describen un solo movimiento, leído en las dos direcciones.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para resolver 1 a 8</h2>
+  <h2 class="titulo-seccion">Para resolver 1 a 8</h2>
   <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
     <li>Mirá primero la forma, no la fórmula: dónde sube, dónde baja, dónde está horizontal.</li>
     <li>Un máximo o un mínimo de <i>x</i> es un cero de <i>v</i>. Un tramo recto de <i>x</i> es una <i>v</i> constante.</li>

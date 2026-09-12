@@ -34,24 +34,24 @@ try {
   <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Antes de escribir una sola ecuación hay que decidir qué cuerpo se mira y qué lo toca.</p>
   <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
 
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Aislar un cuerpo no es un trámite antes de la parte «de verdad» del problema: es la decisión más importante que se toma en todo el ejercicio. El diagrama de cuerpo aislado no describe la escena completa —el plano, la polea, el otro bloque, la cuerda que sigue de largo—, describe <i>un</i> cuerpo, y absolutamente todo lo que no sea ese cuerpo entra al dibujo únicamente por lo que le hace: una tensión, una normal, un peso. Elegir mal el cuerpo, o dibujar algo que no lo toca, tuerce la cuenta entera antes de plantear la primera ecuación.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:22px 0 0;text-wrap:pretty">El error más común al aprender esto es dibujar una flecha «hacia donde va» el cuerpo. La velocidad no es una fuerza —no la produce nada que lo esté tocando—, y en este ensayo no se dibuja ni una sola vez. Todo lo que aparece a continuación son fuerzas: cosas que empujan o tiran, con un origen físico señalable.</p>
+  <p class="parrafo-suelto">Aislar un cuerpo no es un trámite antes de la parte «de verdad» del problema: es la decisión más importante que se toma en todo el ejercicio. El diagrama de cuerpo aislado no describe la escena completa —el plano, la polea, el otro bloque, la cuerda que sigue de largo—, describe <i>un</i> cuerpo, y absolutamente todo lo que no sea ese cuerpo entra al dibujo únicamente por lo que le hace: una tensión, una normal, un peso. Elegir mal el cuerpo, o dibujar algo que no lo toca, tuerce la cuenta entera antes de plantear la primera ecuación.</p>
+  <p class="parrafo" style="margin-top:22px">El error más común al aprender esto es dibujar una flecha «hacia donde va» el cuerpo. La velocidad no es una fuerza —no la produce nada que lo esté tocando—, y en este ensayo no se dibuja ni una sola vez. Todo lo que aparece a continuación son fuerzas: cosas que empujan o tiran, con un origen físico señalable.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">01 · Cuatro flechas y ninguna más</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">El bloque A de este ejercicio tiene exactamente cuatro fuerzas actuando: su peso, la normal que le hace el plano, la tensión de la cuerda AB que lo sostiene paralela al plano, y la tensión de la cuerda AC que lo tira horizontalmente hacia afuera. Nada más lo toca. La casilla de abajo tiene un truco que vale la pena decir en voz alta: los ejes con que se mira el problema se pueden <i>elegir</i>, y elegirlos a lo largo del plano —en vez de horizontal-vertical, la elección de siempre— no es una maña para que las cuentas den más fácil. Es mirar el problema desde el lugar donde es fácil: sobre esos ejes la normal y el peso caen, cada uno, sobre un solo eje, y no hay que descomponer más que uno de los cuatro.</p>
+  <h2 class="titulo-seccion">01 · Cuatro flechas y ninguna más</h2>
+  <p class="parrafo">El bloque A de este ejercicio tiene exactamente cuatro fuerzas actuando: su peso, la normal que le hace el plano, la tensión de la cuerda AB que lo sostiene paralela al plano, y la tensión de la cuerda AC que lo tira horizontalmente hacia afuera. Nada más lo toca. La casilla de abajo tiene un truco que vale la pena decir en voz alta: los ejes con que se mira el problema se pueden <i>elegir</i>, y elegirlos a lo largo del plano —en vez de horizontal-vertical, la elección de siempre— no es una maña para que las cuentas den más fácil. Es mirar el problema desde el lugar donde es fácil: sobre esos ejes la normal y el peso caen, cada uno, sobre un solo eje, y no hay que descomponer más que uno de los cuatro.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 1</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El diagrama que se endereza</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— la resultante vale cero, y sale de sumar las cuatro flechas.</span>
+      <span class="rotulo-mono">Simulación 1</span>
+      <span class="titulo-fila">El diagrama que se endereza</span>
+      <span class="nota-fila">— la resultante vale cero, y sale de sumar las cuatro flechas.</span>
     </div>
     <canvas id="w1-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">inclinación α <output id="w1-alfa-out" style="color:var(--ink);font-variant-numeric:tabular-nums">30°</output></span>
+        <span class="rotulo-campo">inclinación α <output id="w1-alfa-out" class="valor-control">30°</output></span>
         <input id="w1-alfa" type="range" min="0" max="45" step="1" value="30" style="width:100%">
       </label>
       <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
@@ -60,64 +60,64 @@ try {
     </div>
     <div class="lecturas">
       <span>α <b id="w1-alfa-val" style="font-weight:500;font-variant-numeric:tabular-nums">30°</b></span>
-      <span>T<sub>AB</sub> <b id="w1-P" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">574.9 N</b></span>
-      <span>N <b id="w1-N" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">799.7 N</b></span>
-      <span>resultante <b id="w1-res" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">0.0 N</b></span>
+      <span>T<sub>AB</sub> <b id="w1-P" class="lectura-valor">574.9 N</b></span>
+      <span>N <b id="w1-N" class="lectura-valor">799.7 N</b></span>
+      <span>resultante <b id="w1-res" class="lectura-valor azul">0.0 N</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Que la resultante dé cero arriba no es un resultado que salga del dibujo: es el <i>dato</i> del problema —el bloque está en equilibrio— y de ahí salen las dos incógnitas, <i>T</i><sub>AB</sub> y <i>N</i>. Con α = 30° eso da <i>T</i><sub>AB</sub> = 574,9 N y <i>N</i> = 799,7 N, los dos números del ejercicio 1. La cuenta no cambia de naturaleza cuando cambian los datos: son siempre las mismas dos ecuaciones, una por eje, resueltas para las dos fuerzas que no se conocen.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Movés el ángulo y mirá qué le pasa a <i>N</i>. No vale <i>mg</i>, y no sólo porque el plano esté inclinado: la cuerda horizontal también le saca carga, tirando del bloque hacia afuera del plano. La normal es lo que el plano tiene que hacer para que el bloque no se hunda en él, ni un newton más ni uno menos, y eso depende de todo lo demás que actúa sobre el cuerpo — es el error más caro de este tema, y el que este widget está pensado para que no se cometa nunca más.</p>
+  <p class="parrafo-suelto">Que la resultante dé cero arriba no es un resultado que salga del dibujo: es el <i>dato</i> del problema —el bloque está en equilibrio— y de ahí salen las dos incógnitas, <i>T</i><sub>AB</sub> y <i>N</i>. Con α = 30° eso da <i>T</i><sub>AB</sub> = 574,9 N y <i>N</i> = 799,7 N, los dos números del ejercicio 1. La cuenta no cambia de naturaleza cuando cambian los datos: son siempre las mismas dos ecuaciones, una por eje, resueltas para las dos fuerzas que no se conocen.</p>
+  <p class="parrafo">Movés el ángulo y mirá qué le pasa a <i>N</i>. No vale <i>mg</i>, y no sólo porque el plano esté inclinado: la cuerda horizontal también le saca carga, tirando del bloque hacia afuera del plano. La normal es lo que el plano tiene que hacer para que el bloque no se hunda en él, ni un newton más ni uno menos, y eso depende de todo lo demás que actúa sobre el cuerpo — es el error más caro de este tema, y el que este widget está pensado para que no se cometa nunca más.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">02 · La normal no es el peso</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Casi todo el mundo escribe <i>N</i> = <i>mg</i> sin pensarlo, y casi siempre está mal. Acá se ve por qué de la peor manera posible para esa costumbre: se arrastra una caja tirando de una cuerda que forma un ángulo con el piso, la normal cambia mientras se tira, el rozamiento cambia con ella —porque depende de la normal—, y el resultado tiene un máximo que no está donde la intuición lo pone.</p>
+  <h2 class="titulo-seccion">02 · La normal no es el peso</h2>
+  <p class="parrafo">Casi todo el mundo escribe <i>N</i> = <i>mg</i> sin pensarlo, y casi siempre está mal. Acá se ve por qué de la peor manera posible para esa costumbre: se arrastra una caja tirando de una cuerda que forma un ángulo con el piso, la normal cambia mientras se tira, el rozamiento cambia con ella —porque depende de la normal—, y el resultado tiene un máximo que no está donde la intuición lo pone.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 2</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El ángulo óptimo</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— tirar derecho no es lo mejor, y el mejor ángulo no depende de cuánto tires.</span>
+      <span class="rotulo-mono">Simulación 2</span>
+      <span class="titulo-fila">El ángulo óptimo</span>
+      <span class="nota-fila">— tirar derecho no es lo mejor, y el mejor ángulo no depende de cuánto tires.</span>
     </div>
     <canvas id="w2-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">ángulo θ <output id="w2-theta-out" style="color:var(--ink);font-variant-numeric:tabular-nums">0°</output></span>
+        <span class="rotulo-campo">ángulo θ <output id="w2-theta-out" class="valor-control">0°</output></span>
         <input id="w2-theta" type="range" min="0" max="60" step="1" value="0" style="width:100%">
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">fuerza F <output id="w2-F-out" style="color:var(--ink);font-variant-numeric:tabular-nums">40 N</output></span>
+        <span class="rotulo-campo">fuerza F <output id="w2-F-out" class="valor-control">40 N</output></span>
         <input id="w2-F" type="range" min="20" max="60" step="1" value="40" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>θ <b id="w2-theta-val" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0°</b></span>
-      <span>N <b id="w2-N" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">98.0 N</b></span>
-      <span>rozamiento <b id="w2-f" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">39.2 N</b></span>
-      <span>a <b id="w2-a" style="color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums">0.080 m/s²</b></span>
-      <span>mejor θ <b id="w2-opt" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">21.8°</b></span>
+      <span>θ <b id="w2-theta-val" class="lectura-valor">0°</b></span>
+      <span>N <b id="w2-N" class="lectura-valor">98.0 N</b></span>
+      <span>rozamiento <b id="w2-f" class="lectura-valor">39.2 N</b></span>
+      <span>a <b id="w2-a" class="lectura-valor">0.080 m/s²</b></span>
+      <span>mejor θ <b id="w2-opt" class="lectura-valor azul">21.8°</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">Por qué hay un máximo: subir la cuerda cambia dos cosas a la vez, y en sentidos contrarios. Se pierde <i>F</i>(1 − cos θ) de tirón horizontal —la cuerda deja de empujar de lleno hacia adelante—, pero se gana μ<i>F</i> sen θ de rozamiento ahorrado —la cuerda alivia el piso, y el piso empuja de vuelta con menos fuerza—. Al principio, con θ chico, el ahorro de rozamiento gana; pasado cierto punto, la pérdida de tirón horizontal gana. En el medio hay un ángulo donde ninguno de los dos gana: el máximo.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Que ese ángulo óptimo cumpla tan θ = μ —y no dependa ni de la masa ni de la fuerza con que se tira— es el resultado del ejercicio 9, y es más fuerte de lo que parece: <b style="font-weight:600">el mejor ángulo es una propiedad del par de superficies</b>, no de cuánto empujes. Movés <i>F</i> de 20 a 60 N y «mejor θ» no se mueve, porque no depende de <i>F</i>.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Con μ = 0,4 sale 21,8°, y la diferencia contra tirar derecho es grande: con <i>F</i> = 40 N, la aceleración pasa de <i>a</i>(0°) = 0,080 m/s² a <i>a</i>(21,8°) = 0,388 m/s². Casi cinco veces, por levantar la cuerda veintipico de grados. Y por debajo de <i>F</i> = 36,40 N, ni el mejor ángulo alcanza: el rozamiento estático se lleva todo el tirón horizontal, la caja no se mueve a ningún θ, y el gráfico se queda plano en cero —el mismo rozamiento que «vale lo que haga falta» y no una fórmula fija.</p>
+  <p class="parrafo-suelto">Por qué hay un máximo: subir la cuerda cambia dos cosas a la vez, y en sentidos contrarios. Se pierde <i>F</i>(1 − cos θ) de tirón horizontal —la cuerda deja de empujar de lleno hacia adelante—, pero se gana μ<i>F</i> sen θ de rozamiento ahorrado —la cuerda alivia el piso, y el piso empuja de vuelta con menos fuerza—. Al principio, con θ chico, el ahorro de rozamiento gana; pasado cierto punto, la pérdida de tirón horizontal gana. En el medio hay un ángulo donde ninguno de los dos gana: el máximo.</p>
+  <p class="parrafo">Que ese ángulo óptimo cumpla tan θ = μ —y no dependa ni de la masa ni de la fuerza con que se tira— es el resultado del ejercicio 9, y es más fuerte de lo que parece: <b class="negrita">el mejor ángulo es una propiedad del par de superficies</b>, no de cuánto empujes. Movés <i>F</i> de 20 a 60 N y «mejor θ» no se mueve, porque no depende de <i>F</i>.</p>
+  <p class="parrafo">Con μ = 0,4 sale 21,8°, y la diferencia contra tirar derecho es grande: con <i>F</i> = 40 N, la aceleración pasa de <i>a</i>(0°) = 0,080 m/s² a <i>a</i>(21,8°) = 0,388 m/s². Casi cinco veces, por levantar la cuerda veintipico de grados. Y por debajo de <i>F</i> = 36,40 N, ni el mejor ángulo alcanza: el rozamiento estático se lleva todo el tirón horizontal, la caja no se mueve a ningún θ, y el gráfico se queda plano en cero —el mismo rozamiento que «vale lo que haga falta» y no una fórmula fija.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">03 · La resultante apunta al centro</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">En el diagrama de un cuerpo que gira no entra ninguna flecha nueva. Siguen ahí las tres de siempre —el peso, la tensión, la normal— y lo único que cambia es que ya no se cancelan entre sí: lo que sobra de sumarlas no da cero, apunta al centro de la circunferencia, y vale <i>m</i><i>ω</i>²<i>r</i>. Decilo así, en voz alta, porque es el error más repetido del tema: si alguna vez dibujaste una flecha llamada «fuerza centrípeta» <i>además</i> de las otras tres, contaste dos veces la misma cosa. No hay una cuarta fuerza escondida en ningún lado —«centrípeta» no es el nombre de algo que empuje o tire, es un adjetivo de la resultante: dice hacia dónde apunta lo que sobra de sumar las fuerzas que ya estaban dibujadas.</p>
+  <h2 class="titulo-seccion">03 · La resultante apunta al centro</h2>
+  <p class="parrafo">En el diagrama de un cuerpo que gira no entra ninguna flecha nueva. Siguen ahí las tres de siempre —el peso, la tensión, la normal— y lo único que cambia es que ya no se cancelan entre sí: lo que sobra de sumarlas no da cero, apunta al centro de la circunferencia, y vale <i>m</i><i>ω</i>²<i>r</i>. Decilo así, en voz alta, porque es el error más repetido del tema: si alguna vez dibujaste una flecha llamada «fuerza centrípeta» <i>además</i> de las otras tres, contaste dos veces la misma cosa. No hay una cuarta fuerza escondida en ningún lado —«centrípeta» no es el nombre de algo que empuje o tire, es un adjetivo de la resultante: dice hacia dónde apunta lo que sobra de sumar las fuerzas que ya estaban dibujadas.</p>
 </div>
 
 <section class="banda">
   <div class="marco-widget">
     <div class="encabezado-widget">
-      <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)">Simulación 3</span>
-      <span style="font:600 15px/1.2 'Source Serif 4',Georgia,serif">El cuerpo en el cono</span>
-      <span style="font:400 13px/1.3 'Source Serif 4',Georgia,serif;color:var(--dim)">— la flecha azul es horizontal y apunta al eje, siempre.</span>
+      <span class="rotulo-mono">Simulación 3</span>
+      <span class="titulo-fila">El cuerpo en el cono</span>
+      <span class="nota-fila">— la flecha azul es horizontal y apunta al eje, siempre.</span>
     </div>
     <canvas id="w3-cv"></canvas>
     <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
@@ -126,36 +126,36 @@ try {
         <button id="w3-reset" class="boton">Reiniciar</button>
       </div>
       <label class="control" style="flex:1 1 170px;min-width:150px">
-        <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">revoluciones por minuto <output id="w3-rpm-out" style="color:var(--ink);font-variant-numeric:tabular-nums">10.0 rpm</output></span>
+        <span class="rotulo-campo">revoluciones por minuto <output id="w3-rpm-out" class="valor-control">10.0 rpm</output></span>
         <input id="w3-rpm" type="range" min="0" max="59.8" step="0.1" value="10" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
-      <span>ω <b id="w3-omega" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">1.047 rad/s</b></span>
-      <span>r <b id="w3-r" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.433 m</b></span>
-      <span>T <b id="w3-T" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.637 N</b></span>
-      <span>N <b id="w3-N" style="color:var(--red);font-weight:500;font-variant-numeric:tabular-nums">0.990 N</b></span>
-      <span>resultante <b id="w3-res" style="color:var(--blue);font-weight:500;font-variant-numeric:tabular-nums">0.475 N</b></span>
+      <span>ω <b id="w3-omega" class="lectura-valor roja">1.047 rad/s</b></span>
+      <span>r <b id="w3-r" class="lectura-valor roja">0.433 m</b></span>
+      <span>T <b id="w3-T" class="lectura-valor roja">0.637 N</b></span>
+      <span>N <b id="w3-N" class="lectura-valor roja">0.990 N</b></span>
+      <span>resultante <b id="w3-res" class="lectura-valor azul">0.475 N</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:30px 0 0;text-wrap:pretty">A 10 rpm salen los números del ejercicio 18: <i>r</i> = 0,433 m, <i>v</i> = 0,453 m/s, <i>T</i> = 0,637 N y <i>N</i> = 0,990 N. El radio no se mueve si no tocás nada más: mientras el cuerpo siga apoyado contra el cono con el mismo ángulo α, <i>r</i> = <i>l</i> sen α es una cuenta de geometría pura, y no le importa qué tan rápido gires.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Subí las revoluciones y mirá qué le pasa a las otras dos lecturas: <i>T</i> crece y <i>N</i> baja. El cono aprieta cada vez menos, porque el hilo se va haciendo cargo de la vuelta él solo. A 59,8 rpm <i>N</i> llega a 0,00 N: de ahí para arriba el cuerpo se despega del cono, y estas dos ecuaciones —que suponen que la pared todavía lo toca— dejan de describir nada. Por eso el deslizador se frena justo ahí, y no un poco más allá.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">Y otra vez la idea central de esta sección: en ningún momento se dibujó una flecha llamada «centrípeta». Las flechas rojas son las tres de siempre —peso, tensión, normal—; «centrípeta» es un adjetivo de la <b style="font-weight:600">resultante</b>, no el nombre de una fuerza que haya que agregar al dibujo.</p>
+  <p class="parrafo-suelto">A 10 rpm salen los números del ejercicio 18: <i>r</i> = 0,433 m, <i>v</i> = 0,453 m/s, <i>T</i> = 0,637 N y <i>N</i> = 0,990 N. El radio no se mueve si no tocás nada más: mientras el cuerpo siga apoyado contra el cono con el mismo ángulo α, <i>r</i> = <i>l</i> sen α es una cuenta de geometría pura, y no le importa qué tan rápido gires.</p>
+  <p class="parrafo">Subí las revoluciones y mirá qué le pasa a las otras dos lecturas: <i>T</i> crece y <i>N</i> baja. El cono aprieta cada vez menos, porque el hilo se va haciendo cargo de la vuelta él solo. A 59,8 rpm <i>N</i> llega a 0,00 N: de ahí para arriba el cuerpo se despega del cono, y estas dos ecuaciones —que suponen que la pared todavía lo toca— dejan de describir nada. Por eso el deslizador se frena justo ahí, y no un poco más allá.</p>
+  <p class="parrafo">Y otra vez la idea central de esta sección: en ningún momento se dibujó una flecha llamada «centrípeta». Las flechas rojas son las tres de siempre —peso, tensión, normal—; «centrípeta» es un adjetivo de la <b class="negrita">resultante</b>, no el nombre de una fuerza que haya que agregar al dibujo.</p>
 
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Cinco variantes del mismo dibujo</h2>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty">El práctico 2 tiene otros cinco ejercicios que caen en este mismo tema y no llegan a tener su propia simulación, porque son variantes de lo que las tres de arriba ya muestran. No por eso quedan afuera de este ensayo.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty"><b style="font-weight:600">Ej. 6 — el límite de la cuerda.</b> Una bola de 10 kg cuelga de un hilo que aguanta hasta 500 N. Si el conjunto se acelera, la tensión crece con la aceleración; el hilo se corta cuando la aceleración llega a <i>a</i> = √(<i>T</i>² − (<i>mg</i>)²)/<i>m</i> = 49,03 m/s², y en ese instante el hilo forma 78,7° con la vertical. Es el widget 1 de este ensayo sin el plano: las mismas dos ecuaciones de siempre, con la incógnita despejada del otro lado.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty"><b style="font-weight:600">Ej. 8 — el rozamiento estático no tiene fórmula.</b> Un bloque de 5 N se aprieta contra una pared vertical con 12 N horizontales, con μ = 0,6. El rozamiento disponible llega hasta 0,6 × 12 = 7,2 N, más que los 5 N de peso que tiene que sostener, así que el bloque no se mueve y el rozamiento vale exactamente 5 N, no 7,2: μ<i>N</i> es el techo, no el valor. La fuerza total que le hace la pared —normal y rozamiento juntos— es √(12² + 5²) = 13,0 N.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty"><b style="font-weight:600">Ej. 10 — dos bloques que bajan atados.</b> Dos bloques unidos por una cuerda bajan por el mismo plano inclinado con coeficientes de rozamiento distintos. La tensión sale <i>T</i> = <i>m</i><sub>A</sub><i>m</i><sub>B</sub>(μ<sub>B</sub> − μ<sub>A</sub>)<i>g</i> cos α/(<i>m</i><sub>A</sub> + <i>m</i><sub>B</sub>): se anula cuando los dos coeficientes son iguales, y cambia de signo según cuál de los dos frene más. La cuerda sólo trabaja si, sueltos, los dos bloques bajarían a ritmos distintos.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty"><b style="font-weight:600">Ej. 13 — el círculo vertical.</b> Una esfera atada a una cuerda de largo <i>R</i> gira en un plano vertical alrededor de un punto fijo. Con θ medido desde la vertical de abajo, la ecuación radial da <i>T</i> = <i>m</i>(<i>v</i>²/<i>R</i> + <i>g</i> cos θ): máxima abajo, donde la cuerda tiene que dar la vuelta y además sostener el peso, y mínima arriba, donde el peso ayuda en vez de estorbar. Arriba la cuerda se afloja si <i>v</i>² &lt; <i>gR</i>, y ese es el límite por debajo del cual la esfera no completa la vuelta. Es el widget 3 de este ensayo con la gravedad cambiando de papel según dónde está el cuerpo.</p>
-  <p style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;text-wrap:pretty"><b style="font-weight:600">Ej. 19 — un bloque sobre otro.</b> El bloque A (40 N) está apoyado sobre B (80 N), unidos por una cuerda que pasa por una polea, con μ<sub>d</sub> = 0,25 entre los dos. El rozamiento entre A y B vale 0,25 × 40 = 10 N, y ese es también el valor de la tensión. Para arrastrar a B hacen falta 10 + 10 = 20 N si B se apoya en una mesa lisa, y 50 N si además hay rozamiento entre B y el piso, que ahí carga con los 120 N de los dos bloques juntos.</p>
+  <h2 class="titulo-seccion">Cinco variantes del mismo dibujo</h2>
+  <p class="parrafo">El práctico 2 tiene otros cinco ejercicios que caen en este mismo tema y no llegan a tener su propia simulación, porque son variantes de lo que las tres de arriba ya muestran. No por eso quedan afuera de este ensayo.</p>
+  <p class="parrafo"><b class="negrita">Ej. 6 — el límite de la cuerda.</b> Una bola de 10 kg cuelga de un hilo que aguanta hasta 500 N. Si el conjunto se acelera, la tensión crece con la aceleración; el hilo se corta cuando la aceleración llega a <i>a</i> = √(<i>T</i>² − (<i>mg</i>)²)/<i>m</i> = 49,03 m/s², y en ese instante el hilo forma 78,7° con la vertical. Es el widget 1 de este ensayo sin el plano: las mismas dos ecuaciones de siempre, con la incógnita despejada del otro lado.</p>
+  <p class="parrafo"><b class="negrita">Ej. 8 — el rozamiento estático no tiene fórmula.</b> Un bloque de 5 N se aprieta contra una pared vertical con 12 N horizontales, con μ = 0,6. El rozamiento disponible llega hasta 0,6 × 12 = 7,2 N, más que los 5 N de peso que tiene que sostener, así que el bloque no se mueve y el rozamiento vale exactamente 5 N, no 7,2: μ<i>N</i> es el techo, no el valor. La fuerza total que le hace la pared —normal y rozamiento juntos— es √(12² + 5²) = 13,0 N.</p>
+  <p class="parrafo"><b class="negrita">Ej. 10 — dos bloques que bajan atados.</b> Dos bloques unidos por una cuerda bajan por el mismo plano inclinado con coeficientes de rozamiento distintos. La tensión sale <i>T</i> = <i>m</i><sub>A</sub><i>m</i><sub>B</sub>(μ<sub>B</sub> − μ<sub>A</sub>)<i>g</i> cos α/(<i>m</i><sub>A</sub> + <i>m</i><sub>B</sub>): se anula cuando los dos coeficientes son iguales, y cambia de signo según cuál de los dos frene más. La cuerda sólo trabaja si, sueltos, los dos bloques bajarían a ritmos distintos.</p>
+  <p class="parrafo"><b class="negrita">Ej. 13 — el círculo vertical.</b> Una esfera atada a una cuerda de largo <i>R</i> gira en un plano vertical alrededor de un punto fijo. Con θ medido desde la vertical de abajo, la ecuación radial da <i>T</i> = <i>m</i>(<i>v</i>²/<i>R</i> + <i>g</i> cos θ): máxima abajo, donde la cuerda tiene que dar la vuelta y además sostener el peso, y mínima arriba, donde el peso ayuda en vez de estorbar. Arriba la cuerda se afloja si <i>v</i>² &lt; <i>gR</i>, y ese es el límite por debajo del cual la esfera no completa la vuelta. Es el widget 3 de este ensayo con la gravedad cambiando de papel según dónde está el cuerpo.</p>
+  <p class="parrafo"><b class="negrita">Ej. 19 — un bloque sobre otro.</b> El bloque A (40 N) está apoyado sobre B (80 N), unidos por una cuerda que pasa por una polea, con μ<sub>d</sub> = 0,25 entre los dos. El rozamiento entre A y B vale 0,25 × 40 = 10 N, y ese es también el valor de la tensión. Para arrastrar a B hacen falta 10 + 10 = 20 N si B se apoya en una mesa lisa, y 50 N si además hay rozamiento entre B y el piso, que ahí carga con los 120 N de los dos bloques juntos.</p>
 </div>
 
 <div class="columna columna-final">
-  <h2 style="font:600 13px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:52px 0 0">Para tener a mano</h2>
+  <h2 class="titulo-seccion">Para tener a mano</h2>
   <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
     <li>Elegí el cuerpo primero. Todo lo que no sea ese cuerpo entra al dibujo sólo como una flecha que lo toca.</li>
     <li>Las fuerzas de contacto —normal, rozamiento— no tienen valor propio: valen lo que haga falta, y eso se averigua al final, no al principio.</li>
