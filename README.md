@@ -97,7 +97,7 @@ Simulaciones para construir intuición antes de leer el apunte o la hoja resumen
 <td width="25%" align="center" valign="top">
 <a href="https://pedromvillar.github.io/Fisica/ensayos/tiro-parabolico.html"><img src="./assets/miniaturas/tiro-parabolico.png" width="100%" alt="Tiro parabólico"></a><br>
 <b>Tiro parabólico</b><br>
-<sub>Práctico 1 · ej. 9, 10 y 15</sub>
+<sub>Práctico 1 · ej. 10</sub>
 </td>
 <td width="25%" align="center" valign="top">
 <a href="https://pedromvillar.github.io/Fisica/ensayos/movimiento-circular.html"><img src="./assets/miniaturas/movimiento-circular.png" width="100%" alt="Movimiento circular"></a><br>
@@ -140,7 +140,7 @@ Simulaciones para construir intuición antes de leer el apunte o la hoja resumen
 | Ensayo | Construye | Cubre |
 |---|---|---|
 | Derivada e integral, vistas | La pendiente de una curva de posición y el área bajo una de velocidad, con los tres gráficos —posición, velocidad, aceleración— sincronizados y un modo para dibujar la curva a mano | Práctico 1, ej. 1 a 8 |
-| Tiro parabólico | Las dos componentes del movimiento por separado —caída libre en *y*, velocidad constante en *x*— sobre la misma trayectoria, con el reloj como único vínculo entre ambas | Práctico 1, ej. 9, 10 y 15 |
+| Tiro parabólico | Las dos componentes del movimiento por separado —caída libre en *y*, velocidad constante en *x*— sobre la misma trayectoria, con el reloj como único vínculo entre ambas | Práctico 1, ej. 10 |
 | Movimiento circular | Las dos aceleraciones del movimiento circular —tangencial y centrípeta— y cómo el período y la frecuencia se leen del mismo giro | Práctico 1, ej. 11 a 14 |
 | Diagrama de cuerpo aislado | El diagrama de un solo cuerpo con sus fuerzas de contacto y la resultante, variando plano, ángulo y rozamiento | Práctico 2, ej. 1, 6, 8, 9, 10, 13, 18 y 19 |
 | Sistemas acoplados | Dos cuerpos atados por una cuerda, cada uno con su propio diagrama, y la tensión que sale de resolverlos como un sistema | Práctico 2, ej. 2, 3, 4, 5 y 7 |
