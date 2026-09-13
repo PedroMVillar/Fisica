@@ -81,7 +81,7 @@ try {
 
 <div class="columna">
   <h2 class="titulo-seccion">02 · Lo que un choque no puede cambiar</h2>
-  <p class="parrafo">En un choque pasan cosas espantosas —se deforma, se calienta, hace ruido— y ninguna de ellas se puede calcular. Lo bueno es que no hace falta. Mientras las únicas fuerzas en juego sean las que los cuerpos se hacen entre sí, la cantidad de movimiento total del par es la misma antes y después, y punto. La energía cinética, en cambio, es libre: puede quedarse igual, puede caer, y —esto es lo que casi nadie espera— puede <b class="negrita">subir</b>.</p>
+  <p class="parrafo">En un choque pasan cosas espantosas —se deforma, se calienta, hace ruido— y ninguna de ellas se puede calcular. Lo bueno es que no hace falta. Mientras las únicas fuerzas en juego sean las que los cuerpos se hacen entre sí, la cantidad de movimiento total del par es la misma antes y después, y punto. La energía cinética, en cambio, es libre: puede quedarse igual, puede caer, y —esto es lo que casi nadie espera— puede <b class="negrita">subir</b>. Cuánto cae (o sube) lo fija el coeficiente de restitución <i>e</i>, el deslizador del widget: es el cociente entre la velocidad con que los cuerpos se separan después y la velocidad con que se acercaban antes. <i>e</i> = 1 es el choque <b class="negrita">elástico</b> —se separan tan rápido como se acercaron, y no se pierde nada de energía cinética—; <i>e</i> = 0 es el <b class="negrita">perfectamente inelástico</b> —no se separan en absoluto, salen pegados con la misma velocidad—. Todo lo que hay en el medio es un choque real.</p>
 </div>
 
 <section class="banda">
@@ -156,14 +156,14 @@ try {
       <span>p de la bala <b id="m3-pb" class="lectura-valor azul">3,2900 kg·m/s</b></span>
       <span>p del bloque 1 <b id="m3-p1" class="lectura-valor azul">0,0000 kg·m/s</b></span>
       <span>p del bloque 2 <b id="m3-p2" class="lectura-valor azul">0,0000 kg·m/s</b></span>
-      <span>p total − p inicial <b id="m3-chequeo" class="lectura-valor tenue">0,0000 kg·m/s</b></span>
+      <span>p total − p inicial <b id="m3-chequeo" class="lectura-valor tenue">—</b></span>
       <span>K total <b id="m3-k" class="lectura-valor azul">541,21 J</b></span>
     </div>
   </div>
 </section>
 
 <div class="columna">
-  <p class="parrafo-suelto">Mové el deslizador por los tres instantes y mirá la barra de arriba: no cambia de largo ni una vez. Lo que cambia es de quién es cada pedazo. La bala entra con los 3,29 kg·m/s enteros, le pasa 0,756 al bloque 1 al atravesarlo, y le entrega los 2,534 que le quedaban al bloque 2 al quedarse adentro. <b class="negrita">La cantidad de movimiento no se crea ni se destruye: cambia de dueño.</b></p>
+  <p class="parrafo-suelto">Mové el deslizador por los tres instantes y mirá la barra de arriba: no cambia de largo ni una vez. Lo que cambia es de quién es cada pedazo. La bala entra con los 3,29 kg·m/s enteros, le pasa 0,756 al bloque 1 al atravesarlo, y le entrega los 2,534 que le quedaban al bloque 2 al quedarse adentro. <b class="negrita">La cantidad de movimiento no se crea ni se destruye: cambia de dueño.</b> La lectura de «p total − p inicial» muestra «—» en el primer instante, antes de todo, porque ahí no hay nada que comparar todavía —sólo está la bala—; recién a partir del segundo instante hay dos caminos independientes que tienen que coincidir.</p>
   <p class="parrafo">Y mirá la barra de abajo en el mismo recorrido: de 541,2 J quedan 2,0 J. Se fue el <b class="negrita">99,6 %</b> de la energía cinética —en calor, en deformar el plomo, en hacer los dos agujeros—. Si alguien hubiera intentado resolver este ejercicio escribiendo «la energía se conserva», habría planteado una ecuación falsa y el sistema no habría tenido solución física.</p>
   <p class="parrafo">El control que cierra el ejercicio: la bala perdió 75,60 m/s al atravesar el bloque 1, lo que en cantidad de movimiento son 0,010 × 75,60 = <b class="negrita">0,7560 kg·m/s</b>. Y el bloque 1 quedó con 1,2 × 0,63 = <b class="negrita">0,7560 kg·m/s</b>. Lo que uno perdió es exactamente lo que el otro ganó, hasta el cuarto decimal, sin que haga falta saber cuánta fuerza hizo la bala ni cuánto duró el paso.</p>
 </div>
@@ -819,21 +819,49 @@ const K0_M3 = INSTANTES_M3[0].k;      // 541.205 J, el total DECLARADO de la bar
 // chequeo en el instante 2 sea cual sea su valor: aparecen igual de los dos lados de la
 // resta (en el `p` del instante 2 directo, y adentro de VI_M3 via la misma formula), asi
 // que se cancelan solos -el mismo fenomeno de "variable que alimenta las dos ramas" que
-// G/M_M1 en el widget 1-. En limpio: el instante 2 es el UNICO de los tres que verifica
-// algo (que MB_M3*VM_M3 sea igual a (MB_M3+MB2_M3)*V2_M3, la conservacion del choque 2,
-// la que da VM_M3 en primer lugar), y lo hace sin que importen MB1_M3 ni V1_M3; los
-// instantes 0 y 1 no verifican nada -son la misma ecuacion despejada dos veces-, asi que
-// el deslizador tiene que pasar por el instante 2 para que el chequeo diga algo.
+// G/M_M1 en el widget 1-.
+//
+// Revision final: el parrafo anterior (heredado) decia que los instantes 0 Y 1 "no
+// verifican nada -son la misma ecuacion despejada dos veces-". Eso es cierto para el
+// instante 0 pero DEMASIADO FUERTE para el instante 1, y quedo corregido con una
+// rotura que el parrafo anterior no probo: romper la propia formula de VI_M3 (no la de
+// VM_M3), que es donde vive la conservacion de p del choque 1. Medido contra la
+// PRODUCCION real via Playwright, multiplicando esa formula por 1,1 (`VI_M3 = (...)/
+// MB_M3 * 1.1`, un factor de escala que no aparece en ningun otro lado): el chequeo
+// queda en 0,0000 kg·m/s en el instante 0 -como siempre-, pero SALTA a 0,3290 kg·m/s
+// en el instante 1 Y en el instante 2. La razon: el instante 1 compara `MB_M3*VI_M3`
+// (que arrastra el factor roto) contra `MB_M3*VM_M3 + MB1_M3*V1_M3` (que NO lo
+// arrastra, sale de VM_M3 y V1_M3 directos) -son dos cuentas que no comparten esa
+// linea de codigo-, asi que un error que viva ESPECIFICAMENTE en como VI_M3 combina
+// esos terminos -la conservacion del choque 1 en si, no un termino que la alimenta- SI
+// se nota ahi. El instante 0 es la UNICA identidad genuina de las tres: `P0_M3` ES
+// `INSTANTES_M3[0].p[0]`, la misma referencia de los dos lados de la resta, asi que
+// ningun bug en ningun lado del archivo puede moverlo -no hace falta romper nada mas
+// para saberlo, pero se probo con las cuatro roturas de este comentario (las dos de
+// VM_M3, la de VI_M3, y una cuarta que directamente le sacaba la division por MB_M3 a
+// VI_M3 -descartada como medicion util para el instante 1 porque, al ser MB_M3 = 0,01
+// kg, dispara un "disipado" negativo mas abajo y `presupuestoPx` tira excepcion antes
+// de llegar a esta lectura: sintoma de que esa rotura en particular es demasiado
+// violenta para este widget, no de que el chequeo se salve-) y las tres que SI
+// terminaron de correr coinciden en 0,0000 exacto en el instante 0.
+//
+// En limpio: el instante 0 no compara nada -por eso muestra "—"-; el instante 1 SI
+// compara algo real (que VI_M3 este bien despejada de la conservacion del choque 1) y
+// por eso conserva su numero, aunque sea ciego a si VM_M3 mismo esta bien calculada
+// -eso lo cubre el instante 2-; y el instante 2 sigue siendo el que mas cosas vigila
+// (todo excepto MB1_M3 y V1_M3, que se cancelan solos ahi).
 //
 // El control cruzado que describe el ejercicio -la bala pierde 0,7560 kg*m/s y el
-// bloque 1 se lleva exactamente 0,7560- tiene el MISMO problema, y mas agudo: "la bala
-// perdio MB_M3*(VI_M3-VM_M3)" y "el bloque 1 se llevo MB1_M3*V1_M3" son, otra vez por la
-// definicion de VI_M3 de arriba, la MISMA cantidad escrita de dos formas (MB_M3*VI_M3 -
-// MB_M3*VM_M3 = MB1_M3*V1_M3 es la ecuacion de conservacion del choque 1, sin vuelta).
-// Por eso el parrafo de cierre lo presenta como lo que es -una lectura del modelo, una
-// forma de VER la simetria del impulso- y no como un chequeo del codigo: ese trabajo ya
-// lo hace la lectura de "p total - p inicial" de arriba, con el limite que se acaba de
-// medir.
+// bloque 1 se lleva exactamente 0,7560- NO es un chequeo en JS como los de arriba: son
+// dos numeros escritos a mano en la prosa, verificados de escritorio una sola vez. Y
+// son la MISMA cantidad algebraica que el instante 1 -"la bala perdio MB_M3*(VI_M3-
+// VM_M3)" reduce, por la definicion de VI_M3, a MB1_M3*V1_M3, exactamente lo que "el
+// bloque 1 se llevo"-, asi que tambien se moveria con la misma rotura de VI_M3 de mas
+// arriba SI fuera un chequeo en vivo. No lo es, y esa es la eleccion correcta: por eso
+// el parrafo de cierre lo presenta como lo que es -una lectura del modelo, una forma de
+// VER la simetria del impulso- y no como un chequeo del codigo. El trabajo de vigilar
+// esa misma conservacion en vivo ya lo hace la lectura de "p total - p inicial" de
+// arriba, en su instante 1.
 
 // Sufijo `_M3`, igual que las constantes fisicas de arriba. Los 96 px de abajo son las
 // dos barras (Paso 4): 22 px cada una mas el aire entre ellas y hasta el borde.
@@ -921,7 +949,13 @@ function pintarM3(ctx, l) {
   leer('m3-p1', num(inst.p[1], 4) + ' kg·m/s');
   leer('m3-p2', num(inst.p[2], 4) + ' kg·m/s');
   const sumaP = inst.p[0] + inst.p[1] + inst.p[2];
-  leer('m3-chequeo', num(P0_M3 - sumaP, 4) + ' kg·m/s');
+  // En el instante 0 no hay dos caminos que comparar todavia: `sumaP` ES `P0_M3` (la
+  // misma referencia, ver el comentario de mas arriba), asi que la resta es identidad
+  // pura -por eso "—" en vez de un cero que no verificaria nada, igual que
+  // `w4-chequeo-a` en energia.html y `m2-chequeo-k` en modo explosion mas abajo. En los
+  // instantes 1 y 2 SI hay dos caminos (verificado con rotura real, ver el comentario):
+  // se muestra el numero.
+  leer('m3-chequeo', instante_M3 === 0 ? '—' : num(P0_M3 - sumaP, 4) + ' kg·m/s');
   leer('m3-k', num(inst.k, 2) + ' J');
 }
 

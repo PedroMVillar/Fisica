@@ -94,7 +94,7 @@ try {
         <input id="w2-modo" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Resorte en vez de plano
       </label>
       <label class="control" style="flex:1 1 150px;min-width:130px">
-        <span class="rotulo-campo">μ <output id="w2-mu-out" class="valor-control">0,30</output></span>
+        <span class="rotulo-campo">rozamiento μ <output id="w2-mu-out" class="valor-control">0,30</output></span>
         <input id="w2-mu" type="range" min="0" max="0.5" step="0.01" value="0.3" style="width:100%">
       </label>
     </div>
@@ -103,7 +103,7 @@ try {
       <span>potencial <b id="w2-u" class="lectura-valor grafico">9,800 J</b></span>
       <span>disipado <b id="w2-q" class="lectura-valor roja">0,000 J</b></span>
       <span>v <b id="w2-v" class="lectura-valor">0,0000 m/s</b></span>
-      <span>suma − total <b id="w2-chequeo" class="lectura-valor tenue">0,000 J</b></span>
+      <span>suma − total <b id="w2-chequeo" class="lectura-valor tenue">—</b></span>
     </div>
   </div>
 </section>
@@ -562,12 +562,25 @@ function pintarW2(ctx, l) {
   // la frecuencia angular w = raiz(k/M), no el reparto entre K y U en cada instante).
   // Este chequeo verifica que el BALANCE cierre, no que la ESCALA sea la correcta: una
   // masa mal tipeada no es del tipo de error que esta resta puede atrapar.
+  //
+  // En t = 0 (revision final, contrastado con Playwright real contra la produccion, no
+  // solo razonado): es identidad genuina, no una zona ciega mas. Con `s` (o, en modo
+  // resorte, `x`) fijo en su valor inicial sea cual sea `a` o `w`, K, U y Q colapsan al
+  // MISMO numero con el modelo bien o mal calculado -no es que un bug puntual se
+  // cancele, es que a t=0 no hay dos caminos que comparar todavia-. Verificado con TRES
+  // roturas independientes, cada una moviendo el chequeo en t > 0 pero no en t = 0: sin
+  // el cos(ALFA_W2) en la aceleracion del plano, sin el cos(ALFA_W2) en Q, y con la
+  // frecuencia angular del resorte multiplicada por 1,5 -las tres en "0,000 J" a t=0 en
+  // los DOS modos, exactamente como con el modelo correcto. Por eso, igual que
+  // `w4-chequeo-a` en energia.html y `m2-chequeo-k` en modo explosion de
+  // cantidad-de-movimiento.html, la lectura muestra "—" en vez de un cero que no
+  // verificaria nada.
   const chequeo = (e.K + e.U + e.Q) - e.total;
   leer('w2-k', num(e.K, 3) + ' J');
   leer('w2-u', num(e.U, 3) + ' J');
   leer('w2-q', num(e.Q, 3) + ' J');
   leer('w2-v', num(e.v, 4) + ' m/s');
-  leer('w2-chequeo', num(chequeo, 3) + ' J');
+  leer('w2-chequeo', escenaW2.t === 0 ? '—' : num(chequeo, 3) + ' J');
 }
 
 const widgetW2 = crearWidget({
@@ -708,17 +721,38 @@ const K_T_W3 = 0.55 / 23.803;
 // El "tiempo" de esta animacion es de dibujo, no fisico. En vez de integrar la
 // ecuacion del pendulo -que iria mas rapido cerca de B-, el parametro que avanza
 // LINEALMENTE es el angulo, tramo por tramo, y la duracion de cada tramo es
-// proporcional a su longitud de arco (L*th_A y (L-d)*th_C): por eso alcanza con una
-// sola "velocidad" ficticia de recorrido para que el reparto salga proporcional solo.
-// Lo que el widget MIDE (v y T, en las lecturas de abajo) son los valores reales en
-// cada posicion; el RITMO con que la escena los recorre es puro dibujo. Si el dueño
-// quiere el ritmo real, es integrar dth/dt = v(th)/radio, y es un cambio acotado a
-// `posicionW3`.
-const VELOCIDAD_ANIM_W3 = 1.4;
+// proporcional a su longitud de arco (L*th_A y (L-d)*th_C): eso es lo unico que ahi
+// tiene significado, y se conserva tal cual. Lo que el widget MIDE (v y T, en las
+// lecturas de abajo) son los valores reales en cada posicion; el RITMO con que la
+// escena los recorre es puro dibujo. Si el dueño quiere el ritmo real, es integrar
+// dth/dt = v(th)/radio, y es un cambio acotado a `posicionW3`.
+//
+// Con una "velocidad" fija (version anterior: 1,4 rad/s) la duracion TOTAL queda
+// proporcional a th_A, asi que hacia el minimo del deslizador -que es ademas el valor
+// por defecto y el caso del enunciado- la escena dura casi nada: medido, 140 ms a 5
+// grados contra 1427 ms a 50. A th_A = 5 grados el lector aprieta "Reproducir" y no
+// llega a ver nada -la tesis de la seccion 03 (la cuerda engancha en el clavo, el
+// radio cambia de golpe) no es observable en el estado en que la pagina abre-.
+//
+// Por eso la duracion TOTAL se fija en 1,2 s y se reparte proporcional a las dos
+// longitudes de arco en cada th_A -no una "velocidad" fija, sino una calculada para
+// que la suma de cada th_A de exactamente eso-. El reparto entre tramos sigue siendo
+// el mismo cociente L*th_A / (L-d)*th_C que antes (varia apenas con th_A, de ~1,41 a
+// ~1,36 entre 5 y 50 grados, porque los dos arcos no crecen al mismo ritmo): lo unico
+// que cambia es que ya no se deja escalar con el largo total. Medido tras el cambio:
+// 1200,0 ms exactos a th_A = 5, 20 y 50 grados -el redondeo de rAF en pantalla puede
+// diferir un cuadro, pero la duracion PEDIDA a `crearEscena` es constante-.
+const DURACION_TOTAL_W3 = 1.2; // s -- fija, independiente de th_A (ver arriba)
 
 function tramosW3(thA) {
   const c = thC_W3(thA);
-  return { c, dur1: (L_W3 * thA) / VELOCIDAD_ANIM_W3, dur2: (R_W3 * c) / VELOCIDAD_ANIM_W3 };
+  const largo1 = L_W3 * thA, largo2 = R_W3 * c;
+  const largoTotal = largo1 + largo2;
+  return {
+    c,
+    dur1: DURACION_TOTAL_W3 * largo1 / largoTotal,
+    dur2: DURACION_TOTAL_W3 * largo2 / largoTotal,
+  };
 }
 
 // La posicion de la masa en el marco. Tramo 1 (alrededor del pivote): el angulo baja
@@ -816,8 +850,8 @@ function pintarW3(ctx, l) {
   // Por que no se construyo un segundo chequeo para la tension (decision de revision,
   // no reabrir): la candidata obvia era comparar la aceleracion centripeta CONTRA la
   // trayectoria dibujada, pero el tiempo de esta animacion es de dibujo, no fisico
-  // (`VELOCIDAD_ANIM_W3` de mas arriba: el angulo avanza LINEAL, no integra la ecuacion
-  // del pendulo) -- diferenciar el dibujo daria una aceleracion DE DIBUJO, no una fisica.
+  // (`tramosW3` de mas arriba: el angulo avanza LINEAL en cada tramo, no integra la
+  // ecuacion del pendulo) -- diferenciar el dibujo daria una aceleracion DE DIBUJO, no una fisica.
   // El camino genuino exigiria integrar la ODE del pendulo en tiempo real, cambiando
   // ademas una resta EXACTA por una comparacion con tolerancia: no vale la maquina para
   // vigilar una lectura secundaria. El guardian real es manual y vive en el Paso 6 de
