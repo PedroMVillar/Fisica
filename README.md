@@ -81,8 +81,61 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 
 - [`flashcards/fisica-1.tsv`](./flashcards) — 189 tarjetas importables en Anki (tipo de nota "Básica", separador Tab). Etiquetadas por familia — `cinematica-1d`, `cinematica-2d`, `movimiento-circular`, `movimiento-armonico-simple`, `dinamica-newtoniana`, `calculo-diferencial`, `calculo-integral` — además del examen al que pertenecen, de modo que el aparato de cálculo se puede repasar por separado.
 - [`mapas-mentales/fisica-1/parcial-i.pdf`](./mapas-mentales/fisica-1) — mapa del Parcial I en un solo panel de 67 × 76 cm, con tres niveles de jerarquía y un color por familia. Se lee en pantalla o se imprime en A1: a esa cantidad de nodos, forzarlo a un A4 bajaría la letra a 2 pt. Refleja los 54 conceptos que había al cerrar el capítulo 4; los capítulos 5 y 6 sumaron 31 más y todavía no se regeneró.
-- [Ensayos interactivos](https://pedromvillar.github.io/Fisica/) — simulaciones para construir intuición antes de leer el apunte o la hoja resumen.
 - [Decisiones del dueño](./plataforma/decisiones.md) — separador decimal en coma en todo el sitio, la excepción de color del auto y el camión, y los colores aprobados para las barras de energía.
+
+### Ensayos interactivos
+
+Simulaciones para construir intuición antes de leer el apunte o la hoja resumen. Cada una se manipula: se mueven los controles y el dibujo responde.
+
+<table>
+<tr>
+<td width="25%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ensayos/derivada-integral.html"><img src="./assets/miniaturas/derivada-integral.png" width="100%" alt="Derivada e integral"></a><br>
+<b>Derivada e integral</b><br>
+<sub>Práctico 1 · ej. 1 a 8</sub>
+</td>
+<td width="25%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ensayos/tiro-parabolico.html"><img src="./assets/miniaturas/tiro-parabolico.png" width="100%" alt="Tiro parabólico"></a><br>
+<b>Tiro parabólico</b><br>
+<sub>Práctico 1 · ej. 9, 10 y 15</sub>
+</td>
+<td width="25%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ensayos/movimiento-circular.html"><img src="./assets/miniaturas/movimiento-circular.png" width="100%" alt="Movimiento circular"></a><br>
+<b>Movimiento circular</b><br>
+<sub>Práctico 1 · ej. 11 a 14</sub>
+</td>
+<td width="25%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ensayos/cuerpo-aislado.html"><img src="./assets/miniaturas/cuerpo-aislado.png" width="100%" alt="Cuerpo aislado"></a><br>
+<b>Cuerpo aislado</b><br>
+<sub>Práctico 2 · ej. 1, 6, 8-10, 13, 18 y 19</sub>
+</td>
+</tr>
+<tr>
+<td width="25%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ensayos/sistemas-acoplados.html"><img src="./assets/miniaturas/sistemas-acoplados.png" width="100%" alt="Sistemas acoplados"></a><br>
+<b>Sistemas acoplados</b><br>
+<sub>Práctico 2 · ej. 2 a 5 y 7</sub>
+</td>
+<td width="25%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ensayos/fuerzas-de-posicion.html"><img src="./assets/miniaturas/fuerzas-de-posicion.png" width="100%" alt="Fuerzas de posición"></a><br>
+<b>Fuerzas de posición</b><br>
+<sub>Práctico 2 · ej. 11, 12, 14 a 17</sub>
+</td>
+<td width="25%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ensayos/energia.html"><img src="./assets/miniaturas/energia.png" width="100%" alt="Trabajo y energía"></a><br>
+<b>Trabajo y energía</b><br>
+<sub>Práctico 3 · ej. 1 a 8</sub>
+</td>
+<td width="25%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ensayos/cantidad-de-movimiento.html"><img src="./assets/miniaturas/cantidad-de-movimiento.png" width="100%" alt="Cantidad de movimiento"></a><br>
+<b>Cantidad de movimiento</b><br>
+<sub>Práctico 3 · ej. 9 a 12</sub>
+</td>
+</tr>
+</table>
+
+<details>
+<summary><b>Qué construye cada ensayo</b></summary>
 
 | Ensayo | Construye | Cubre |
 |---|---|---|
@@ -95,10 +148,36 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 | Trabajo y energía | El trabajo como área bajo la curva de fuerza, el mismo presupuesto repartido entre depósitos cinético, potencial y disipado, y los casos donde la conservación de energía es la única cuenta que cierra | Práctico 3, ej. 1 a 8 |
 | Cantidad de movimiento | El impulso de una fuerza constante, la cantidad de movimiento que un choque nunca cambia aunque la energía cinética sí, y los dos choques encadenados de bala y bloques | Práctico 3, ej. 9 a 12 |
 
+</details>
+
+### Ejemplos resueltos
+
+Un ejercicio concreto del práctico, resuelto y animado de punta a punta.
+
+<table>
+<tr>
+<td width="50%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ejemplos/la-tierra.html"><img src="./assets/miniaturas/la-tierra.png" width="100%" alt="La Tierra que cae"></a><br>
+<b>La Tierra que cae</b><br>
+<sub>Práctico 1 · ej. 12</sub>
+</td>
+<td width="50%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ejemplos/auto-y-camion.html"><img src="./assets/miniaturas/auto-y-camion.png" width="100%" alt="El auto y el camión"></a><br>
+<b>El auto y el camión</b><br>
+<sub>Práctico 1 · ej. 5</sub>
+</td>
+</tr>
+</table>
+
+<details>
+<summary><b>Qué construye cada ejemplo</b></summary>
+
 | Ejemplo resuelto | Construye | Cubre |
 |---|---|---|
 | La Tierra que cae | La aceleración centrípeta de la Tierra alrededor del Sol, vista como una caída continua que nunca llega a tocar | Práctico 1, ej. 12 |
 | El auto y el camión | El cruce de dos parábolas de posición como la respuesta geométrica al problema de alcance | Práctico 1, ej. 5 |
+
+</details>
 
 Ya está la Guía 3 completa —trabajo, energía y cantidad de movimiento—, en los dos ensayos de la tabla de arriba. Sigue pendiente el diseño de la portada, que lo hace el dueño del repositorio directamente.
 
