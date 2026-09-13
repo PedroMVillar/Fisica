@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script de la nota es `type="module"` y se difiere hasta despues del
+// parseo, asi que aplicar el tema desde ahi regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahi la excepcion abortaria el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>Un bloque sobre otro · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div style="max-width:680px;margin:0 auto;padding:56px 24px 0;display:flex;flex-direction:column;gap:0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ejemplo · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">Un bloque sobre otro</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Arrastrar a B cuesta el doble de lo que parece: el rozamiento de A aparece dos veces, una como fuerza y otra como tensión.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p class="parrafo-suelto">Es el ejercicio adicional 19 del práctico 2, y fue el Problema 3 del Parcial 1 de 2025. Dos bloques, un rozamiento y una cuerda con una polea alcanzan para esconder una trampa: la fuerza que hace falta no es la que pide el rozamiento entre los bloques nada más, sino el doble.</p>
+
+  <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:24px 0 0">
+    <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0">En el sistema que se muestra en la figura, el bloque A pesa 40 N y el B pesa 80 N. El coeficiente de rozamiento dinámico entre superficies es μ<sub>d</sub> = 0,25 y el estático μ<sub>e</sub> = 0,4. Se solicita calcular la fuerza <i>F</i> necesaria para arrastrar el bloque B hacia la izquierda con velocidad constante (despreciar el rozamiento en la polea), para lo cual: (a) realizar el diagrama de cuerpo aislado de cada uno de los bloques teniendo en cuenta todas las fuerzas que actúan sobre ellos; (b) calcular <i>F</i> suponiendo que sólo existe roce entre los bloques; (c) calcular <i>F</i> considerando además la existencia de roce con el suelo.</p>
+  </div>
+
+  <p class="parrafo" style="margin-top:22px">La figura es la parte que más fácil se entiende mal. La cuerda no une a B con la pared sola: sale de A, pasa por una polea sujeta a la pared, y baja hasta B. Eso quiere decir que la tensión tira de <b class="negrita">los dos</b> bloques hacia la pared al mismo tiempo, y que arrastrar a B con <i>F</i> tiene que vencer esa tensión <i>además</i> del rozamiento entre los bloques — no en lugar de él.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación</span>
+      <span class="titulo-fila">El diagrama de cada bloque</span>
+      <span class="nota-fila">— la tensión y el rozamiento entre bloques valen lo mismo: por eso F es el doble de μN_AB, no μN_AB.</span>
+    </div>
+    <canvas id="w1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <label class="rotulo-campo" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <input id="w1-piso" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Hay rozamiento con el piso
+      </label>
+      <label class="control" style="flex:1 1 200px;min-width:180px">
+        <span class="rotulo-campo">coeficiente μ <output id="w1-mu-out" class="valor-control">0,25</output></span>
+        <input id="w1-mu" type="range" min="0.05" max="0.6" step="0.05" value="0.25" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>N entre bloques <b id="w1-nab" class="lectura-valor">40,0 N</b></span>
+      <span>f entre bloques <b id="w1-fab" class="lectura-valor">10,0 N</b></span>
+      <span>tensión <b id="w1-tension" class="lectura-valor">10,0 N</b></span>
+      <span>N del piso <b id="w1-npiso" class="lectura-valor">—</b></span>
+      <span>F necesaria <b id="w1-f" class="lectura-valor roja">20,0 N</b></span>
+      <span>chequeo <b id="w1-chequeo" class="lectura-valor tenue">0,0000 m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p class="parrafo-suelto">Que la cuenta empiece por A y no por B es la clave de todo el ejercicio. A no acelera —nada acelera, la velocidad es constante—, así que la cuerda tiene que balancear exactamente su rozamiento: <i>T</i> = <i>f</i><sub>AB</sub>. Y cuando se plantea el equilibrio de B, ese mismo rozamiento vuelve a aparecer dos veces: una vez como <i>f</i><sub>AB</sub>, la reacción directa de A sobre B, y otra vez escondido adentro de <i>T</i>, que vale lo mismo. Por eso <i>F</i> = <i>T</i> + <i>f</i><sub>AB</sub> = 2<i>f</i><sub>AB</sub>, y no <i>f</i><sub>AB</sub> a secas.</p>
+  <p class="parrafo">El chequeo de abajo no suma las cuatro o siete fuerzas de cada bloque: esa cuenta da cero pase lo que pase, porque <i>F</i> se despejó de ahí mismo. Lo que hace en cambio es integrar en el tiempo las dos leyes de Newton —la de A y la de B— con la <i>F</i> ya calculada, arrancando con B a 1 m/s, y mirar si un segundo después B sigue yendo a la misma velocidad. Si la cuenta de <i>F</i> estuviera mal, B frenaría o aceleraría, y el chequeo dejaría de ser cero.</p>
+
+  <h2 class="titulo-seccion">Cómo se resuelve</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li><b class="negrita">(a)</b> El diagrama de arriba es la respuesta. Sobre A actúan cuatro fuerzas: su peso <i>P</i><sub>A</sub>, la normal que le hace B (<i>N</i><sub>AB</sub>), el rozamiento que B le opone (<i>f</i><sub>AB</sub>) y la tensión <i>T</i>. Sobre B actúan la reacción de esas mismas dos —<i>N</i><sub>AB</sub> y <i>f</i><sub>AB</sub>, con el sentido invertido—, su propio peso <i>P</i><sub>B</sub>, la normal del piso <i>N</i><sub>piso</sub>, el rozamiento del piso <i>f</i><sub>piso</sub> cuando corresponde, la misma tensión <i>T</i> y la fuerza aplicada <i>F</i>.</li>
+    <li><b class="negrita">(b)</b> Sin rozamiento con el piso: A no acelera, así que <i>N</i><sub>AB</sub> = <i>P</i><sub>A</sub> = 40 N y <i>f</i><sub>AB</sub> = μ<sub>d</sub><i>N</i><sub>AB</sub> = 0,25 × 40 = 10 N. La cuerda balancea exactamente ese rozamiento, <i>T</i> = <i>f</i><sub>AB</sub> = 10 N. B tampoco acelera: <i>F</i> = <i>T</i> + <i>f</i><sub>AB</sub> = 10 + 10 = 20 N.</li>
+    <li><b class="negrita">(c)</b> Con rozamiento en el piso, el piso carga con los dos bloques juntos: <i>N</i><sub>piso</sub> = <i>P</i><sub>A</sub> + <i>P</i><sub>B</sub> = 120 N, y <i>f</i><sub>piso</sub> = μ<sub>d</sub><i>N</i><sub>piso</sub> = 0,25 × 120 = 30 N. Se suma al mismo <i>F</i> de antes: <i>F</i> = <i>T</i> + <i>f</i><sub>AB</sub> + <i>f</i><sub>piso</sub> = 10 + 10 + 30 = 50 N.</li>
+  </ol>
+  <p class="parrafo" style="margin-top:22px">Movés μ y el mismo patrón se repite a cualquier escala: <i>F</i> crece en línea recta con μ, y la distancia entre el caso (b) y el caso (c) es siempre <i>f</i><sub>piso</sub> —30 N acá, y nada más que eso—, porque es el único término que la casilla agrega.</p>
+</div>
+
+<div class="columna columna-final">
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:flex-end;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Apunte cap. 3 · <a href="../recursos/practico_2_2026.pdf">práctico 2, ejercicio adicional 19</a> · <a href="https://github.com/PedroMVillar/Fisica">código</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget, panelesApilados } from '../motor/widget.js';
+import { bloque, suelo, arco, traza, vectorPx, texto, acotarFlecha, marcaDeTope } from '../motor/dibujo.js';
+import { colocarEtiqueta } from '../motor/etiqueta.js';
+import { deslizador, casilla } from '../motor/controles.js';
+import { conectarTema } from '../motor/tema.js';
+import { num } from '../motor/formato.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+/* ---------- la fisica: ejercicio adicional 19 del practico 2 ---------- */
+
+// Verificado contra el bloque "P3 (numerico)" de
+// parcial-1/soluciones/verificacion-parcial-1-2025.py:
+//   N_AB = 40.0 N ; f_AB = 10.0 N ; T = 10.0 N
+//   (b) solo roce entre bloques: F = 20.0 N
+//   (c) ademas roce con el piso (N = 120.0 N, f = 30.0 N): F = 50.0 N
+const W_A_W1 = 40;                  // N, peso de A
+const W_B_W1 = 80;                  // N, peso de B
+const G_W1   = 9.8;                 // m/s^2 -- el resto del sitio, no el ejercicio 15 (que fija 10)
+const M_A_W1 = W_A_W1 / G_W1;       // kg, solo hace falta para el chequeo del Paso 2
+const M_B_W1 = W_B_W1 / G_W1;       // kg
+
+let MU_W1 = 0.25;                   // se mueve con el deslizador w1-mu
+let conPiso_W1 = false;             // se mueve con la casilla w1-piso, destildada por defecto
+
+const nAB_W1  = () => W_A_W1;                       // A solo apoya su peso sobre B
+const fAB_W1  = () => MU_W1 * nAB_W1();             // rozamiento entre los bloques
+// `tension_W1` y no `t_W1`: en todo el sitio `t` es el tiempo. Y `fuerzaF_W1` y no
+// `f_W1`: `f` es el rozamiento en las otras siete paginas.
+const tension_W1  = () => fAB_W1();                 // A no acelera: la cuerda equilibra su rozamiento
+const nPiso_W1    = () => W_A_W1 + W_B_W1;          // el piso carga con los dos
+const fPiso_W1    = conPiso => conPiso ? MU_W1 * nPiso_W1() : 0;
+const fuerzaF_W1  = conPiso => tension_W1() + fAB_W1() + fPiso_W1(conPiso);
+
+// El chequeo NO es la suma de fuerzas -- esa cuenta da cero por construccion, porque
+// `fuerzaF_W1` se armo justamente para que la sumatoria de B de cero. El camino
+// distinto: integrar en el tiempo las dos segundas leyes -- a_B = (F-T-f_AB-f_piso)/m_B
+// y a_A = (T-f_AB)/m_A -- arrancando con v_B = v_A = 1 m/s, y mirar si un segundo
+// despues siguen igual. Ademas, y esto es lo que de verdad separa el chequeo del
+// modelo: T, f_AB y f_piso para esas dos ecuaciones NO se piden llamando a
+// tension_W1()/fAB_W1()/fPiso_W1() -- se recalculan aca, directo de MU_W1 y los pesos.
+// Si `nAB_W1`, `fAB_W1`, `tension_W1` o `fPiso_W1` se rompen, `fuerzaF_W1` (que si las
+// llama) se corre de esta segunda cuenta (que no las llama), y a_B deja de dar cero.
+//
+// Punto ciego conocido, no un bug: si la rotura vive en el termino del piso
+// (`fPiso_W1`/`nPiso_W1`) y la casilla esta destildada, ni `fuerzaF_W1` ni esta
+// segunda cuenta usan ese termino -- no hay nada que comparar, y el chequeo da cero
+// igual. Es lo correcto: con la casilla destildada el termino del piso no participa
+// de la fisica del ejercicio, asi que tampoco puede participar de su verificacion.
+function chequeoVelocidad_W1(conPiso) {
+  const F = fuerzaF_W1(conPiso);
+  const tReal = MU_W1 * W_A_W1;
+  const fABReal = MU_W1 * W_A_W1;
+  const fPisoReal = conPiso ? MU_W1 * (W_A_W1 + W_B_W1) : 0;
+  const DT = 1e-4, PASOS = Math.round(1 / DT);
+  let vB = 1, vA = 1;
+  for (let i = 0; i < PASOS; i++) {
+    const aB = (F - tReal - fABReal - fPisoReal) / M_B_W1;
+    const aA = (tReal - fABReal) / M_A_W1;
+    vB += aB * DT;
+    vA += aA * DT;
+  }
+  return vB - 1; // la lectura: cuanto cambio v_B. (v_A queda constante por la misma cuenta.)
+}
+
+/* ---------- la geometria de la escena (en unidades arbitrarias, no a escala real) ---------- */
+
+const ANCHO_B_W1 = 3.0, ALTO_B_W1 = 1.0;
+const ANCHO_A_W1 = 1.6, ALTO_A_W1 = 0.8;
+const A_OFFSET_X_W1 = 0.55;          // A no esta centrado en B: esta corrido hacia la pared, como en la figura oficial
+const PARED_X_W1 = 3.6, PARED_ANCHO_W1 = 0.3, PARED_ALTO_W1 = 3.0;
+const POLEA_Y_W1 = ALTO_B_W1 + ALTO_A_W1 / 2;   // a la altura de A, para que ese tramo de cuerda sea horizontal
+
+const CENTRO_B_W1 = [0, ALTO_B_W1 / 2];
+const CENTRO_A_W1 = [A_OFFSET_X_W1, ALTO_B_W1 + ALTO_A_W1 / 2];
+const CUERDA_A_W1 = [A_OFFSET_X_W1 + ANCHO_A_W1 / 2, CENTRO_A_W1[1]];   // borde derecho de A
+const POLEA_W1 = [PARED_X_W1, POLEA_Y_W1];
+const CUERDA_B_W1 = [ANCHO_B_W1 / 2, ALTO_B_W1 * 0.68];                 // borde derecho de B, mas abajo que la polea
+const F_ORIGEN_W1 = [-ANCHO_B_W1 / 2, ALTO_B_W1 * 0.5];
+const F_PUNTA_W1 = [F_ORIGEN_W1[0] - 0.9, F_ORIGEN_W1[1]];              // largo fijo: la escena no dibuja a escala de fuerza
+
+/* ---------- el widget ---------- */
+
+const MARGEN_W1 = { L: 20, R: 20, T: 14, B: 14 };
+const HUECO_W1 = 12;
+const ALTO_PANEL_MINIMO_W1 = 150;
+
+const PANELES_W1 = [
+  { xMin: -2.6, xMax: 4.4, yMin: -0.4, yMax: 2.2 },   // la escena
+  { xMin: -1.6, xMax: 1.6, yMin: -1.1, yMax: 1.1 },   // diagrama de A
+  { xMin: -3.4, xMax: 2.4, yMin: -1.1, yMax: 1.1 },   // diagrama de B
+];
+
+function pintarEscena_W1(ctx, lp) {
+  const p = pagina.paleta();
+  suelo(ctx, lp, { color: p.rule, desde: -2.4, hasta: 4.3, y: 0 });
+  bloque(ctx, lp, [PARED_X_W1 + PARED_ANCHO_W1 / 2, PARED_ALTO_W1 / 2],
+    { ancho: PARED_ANCHO_W1, alto: PARED_ALTO_W1, color: p.band, borde: p.ink });
+  bloque(ctx, lp, CENTRO_B_W1, { ancho: ANCHO_B_W1, alto: ALTO_B_W1, color: p.band, borde: p.ink });
+  bloque(ctx, lp, CENTRO_A_W1, { ancho: ANCHO_A_W1, alto: ALTO_A_W1, color: p.band, borde: p.ink });
+  arco(ctx, lp, POLEA_W1, { radio: 9, desde: 0, hasta: 2 * Math.PI, color: p.dim });
+  traza(ctx, lp, [CUERDA_A_W1, POLEA_W1, CUERDA_B_W1], { color: p.dim, grosor: 1.6 });
+
+  const [ox, oy] = lp.p(F_ORIGEN_W1);
+  const [fx, fy] = lp.p(F_PUNTA_W1);
+  vectorPx(ctx, ox, oy, fx, fy, { color: p.red, grosor: 2.2, punta: 9, rotulo: 'F' });
+
+  const [axl, ayl] = lp.p([CENTRO_A_W1[0], ALTO_B_W1 + ALTO_A_W1]);
+  colocarEtiqueta(ctx, 'A', axl, ayl, { dx: -4, dy: -8, color: p.ink, px: 11, peso: 600 });
+  const [bxl, byl] = lp.p([-ANCHO_B_W1 / 2 + 0.4, ALTO_B_W1]);
+  colocarEtiqueta(ctx, 'B', bxl, byl, { dx: -4, dy: -8, color: p.ink, px: 11, peso: 600 });
+
+  texto(ctx, 'la escena', lp.px(lp.xMin) + 2, lp.py(lp.yMax) + 12, { color: p.dim, px: 10 });
+}
+
+// Todas las fuerzas de los dos diagramas pasan por `acotarFlecha`/`marcaDeTope` --
+// el mismo mecanismo que usa el sitio cuando dos magnitudes del mismo dibujo difieren
+// mucho de escala (dibujo.js): en el diagrama de B, N_piso y F llegan a 120 N mientras
+// f_AB o T pueden valer apenas 2 N con el deslizador al minimo, y una sola escala
+// lineal sin tope dejaria a esas flechas chicas por debajo del pixel de largo minimo
+// de `vectorPx` -- invisibles, rotulo incluido.
+function flecha_W1(ctx, origenPx, dx, dy, tope, opciones) {
+  const [cx, cy, acotado] = acotarFlecha(dx, dy, tope);
+  vectorPx(ctx, origenPx[0], origenPx[1], origenPx[0] + cx, origenPx[1] + cy, opciones);
+  if (acotado) marcaDeTope(ctx, origenPx[0] + cx, origenPx[1] + cy, cx, cy, { color: opciones.color });
+}
+
+// El diagrama de A: cuatro fuerzas -- peso, normal, rozamiento y tension --, ninguna
+// mayor que W_A_W1 = 40 N en todo el rango del deslizador. La escala sale de ese
+// maximo, y por eso nunca hace falta acotar aca (se le pasa `flecha_W1` de todos
+// modos, para que las dos escenas compartan exactamente el mismo codigo de dibujo).
+function pintarFBD_A_W1(ctx, lp) {
+  const p = pagina.paleta();
+  const semialto = (lp.alto - lp.margen.T - lp.margen.B) / 2;
+  const K = (0.8 * semialto) / W_A_W1;
+  const TOPE = 0.85 * semialto;
+
+  bloque(ctx, lp, [0, 0], { ancho: 1.0, alto: 0.5, color: p.band, borde: p.ink });
+  const centro = lp.p([0, 0]);
+  // N_AB y f_AB "tocan" a A en el mismo borde inferior (el contacto con B), pero se
+  // dibujan desde dos puntos distintos de ese borde -- no del mismo punto que P_A --
+  // para que ninguna de las tres astas verticales/horizontales quede sobre la misma
+  // recta que otro rotulo tiene que ocupar. El 0.4 (no 0.25) es el que le da a f_AB
+  // aire de sobra para no cruzar el asta de P_A a 350px, medido barriendo el rango
+  // completo de mu contra el colocarEtiqueta real (cero solapamientos, cero cruces).
+  const abajoDer = lp.p([0.4, -0.25]);
+  const abajoIzq = lp.p([-0.4, -0.25]);
+  const derecha = lp.p([0.5, 0]);   // hacia la polea
+
+  flecha_W1(ctx, centro, 0, W_A_W1 * K, TOPE, { color: p.red, grosor: 2, punta: 8, rotulo: 'P_A' });
+  flecha_W1(ctx, abajoDer, 0, -nAB_W1() * K, TOPE, { color: p.red, grosor: 2, punta: 8, rotulo: 'N_AB' });
+  // f_AB apunta hacia la izquierda -- lejos del centro, donde vive el asta de P_A --
+  // asi que su rotulo se ancla a la DERECHA de la punta (rdx negativo, alineacion
+  // 'right') para que el texto siga alejandose del centro en vez de acercarse.
+  flecha_W1(ctx, abajoIzq, -fAB_W1() * K, 0, TOPE,
+    { color: p.red, grosor: 2, punta: 8, rotulo: 'f_AB', rdx: -8, rAlineacion: 'right' });
+  flecha_W1(ctx, derecha, tension_W1() * K, 0, TOPE, { color: p.red, grosor: 2, punta: 8, rotulo: 'T' });
+
+  texto(ctx, 'bloque A', lp.px(lp.xMin) + 2, lp.py(lp.yMax) + 12, { color: p.dim, px: 10 });
+}
+
+// El diagrama de B: hasta siete fuerzas -- N_piso y F llegan a 120 N (el mismo tope
+// que en el widget de aceleraciones), mientras T y f_AB pueden valer 2 N con el
+// deslizador al minimo. Misma escala de 40 N que en A (para que un newton se vea
+// igual de largo en los dos diagramas) mas `acotarFlecha`/`marcaDeTope` para lo que
+// se pasa de eso.
+function pintarFBD_B_W1(ctx, lp) {
+  const p = pagina.paleta();
+  const semialto = (lp.alto - lp.margen.T - lp.margen.B) / 2;
+  const K = (0.8 * semialto) / W_A_W1;
+  const TOPE = 0.85 * semialto;
+
+  bloque(ctx, lp, [0, 0], { ancho: 3.6, alto: 0.5, color: p.band, borde: p.ink });
+  const centro = lp.p([0, 0]);
+  const contactoA = lp.p([0.6, 0.25]);       // donde se apoya A, arriba
+  const contactoPiso = lp.p([-1.3, -0.25]);  // donde toca el piso, abajo
+  // f_piso NO sale del mismo punto que N_piso: comparten el mismo borde inferior en la
+  // fisica, pero si comparten tambien el punto de dibujo, el rotulo de f_piso queda
+  // exactamente sobre el asta vertical de N_piso apenas se lo corre para no chocar con
+  // la de P_B (medido con el barrido del Paso 4). Un punto propio, entre los dos, le da
+  // una columna libre a cada lado -- valores medidos contra el colocarEtiqueta real,
+  // no a ojo.
+  const origenFPiso = lp.p([-0.45, -0.25]);
+  const haciaPolea = lp.p([1.3, 0.1]);
+  const haciaLaMano = lp.p([-1.7, -0.1]);
+  const TOPE_FPISO = 22; // mas chico que TOPE: sin este limite, f_piso al maximo llega a cruzar el centro del bloque
+
+  flecha_W1(ctx, centro, 0, W_B_W1 * K, TOPE, { color: p.red, grosor: 2, punta: 8, rotulo: 'P_B' });
+  flecha_W1(ctx, contactoA, 0, nAB_W1() * K, TOPE, { color: p.red, grosor: 2, punta: 8, rotulo: 'N_AB' });
+  flecha_W1(ctx, contactoA, fAB_W1() * K, 0, TOPE, { color: p.red, grosor: 2, punta: 8, rotulo: 'f_AB' });
+  flecha_W1(ctx, contactoPiso, 0, -nPiso_W1() * K, TOPE, { color: p.red, grosor: 2, punta: 8, rotulo: 'N_piso' });
+  if (conPiso_W1) {
+    // f_piso apunta hacia el centro (a la derecha, desde un punto a la izquierda): el
+    // rotulo se ancla a la izquierda de la punta (rdx negativo, alineacion 'right')
+    // para que no siga de largo hacia el asta de P_B, en el centro del bloque.
+    flecha_W1(ctx, origenFPiso, fPiso_W1(true) * K, 0, TOPE_FPISO,
+      { color: p.red, grosor: 2, punta: 8, rotulo: 'f_piso', rdx: -8, rAlineacion: 'right' });
+  }
+  flecha_W1(ctx, haciaPolea, tension_W1() * K, 0, TOPE, { color: p.red, grosor: 2, punta: 8, rotulo: 'T' });
+  flecha_W1(ctx, haciaLaMano, -fuerzaF_W1(conPiso_W1) * K, 0, TOPE, { color: p.red, grosor: 2.4, punta: 9, rotulo: 'F' });
+
+  texto(ctx, 'bloque B', lp.px(lp.xMin) + 2, lp.py(lp.yMax) + 12, { color: p.dim, px: 10 });
+}
+
+function pintarW1(ctx, l) {
+  const capas = panelesApilados({
+    lienzo: l, margen: { L: MARGEN_W1.L, R: MARGEN_W1.R }, hueco: HUECO_W1, paneles: PANELES_W1,
+  });
+  pintarEscena_W1(ctx, capas[0].lp);
+  pintarFBD_A_W1(ctx, capas[1].lp);
+  pintarFBD_B_W1(ctx, capas[2].lp);
+
+  leer('w1-nab', num(nAB_W1(), 1) + ' N');
+  leer('w1-fab', num(fAB_W1(), 1) + ' N');
+  leer('w1-tension', num(tension_W1(), 1) + ' N');
+  leer('w1-npiso', conPiso_W1 ? num(nPiso_W1(), 1) + ' N' : '—');
+  leer('w1-f', num(fuerzaF_W1(conPiso_W1), 1) + ' N');
+  leer('w1-chequeo', num(chequeoVelocidad_W1(conPiso_W1), 4) + ' m/s');
+}
+
+const pagina = crearPagina({ documento: document });
+
+const widget1 = crearWidget({
+  pagina, canvas: el('w1-cv'),
+  margen: MARGEN_W1,
+  escalaUniforme: false,
+  altoMin: 3 * ALTO_PANEL_MINIMO_W1 + MARGEN_W1.T + MARGEN_W1.B,
+  altoMax: 620,
+  encuadre: () => ({ xMin: -2.6, xMax: 4.4, yMin: 0, yMax: 3 }),
+  dibujar: pintarW1,
+});
+
+casilla({
+  entrada: el('w1-piso'), pagina,
+  alCambiar: v => { conPiso_W1 = v; widget1.repintar(); },
+});
+deslizador({
+  entrada: el('w1-mu'), salida: el('w1-mu-out'), pagina,
+  formato: v => num(v, 2),
+  alCambiar: v => { MU_W1 = v; widget1.repintar(); },
+});
+
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
