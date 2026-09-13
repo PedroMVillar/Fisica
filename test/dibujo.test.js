@@ -663,6 +663,17 @@ test('presupuestoPx: total cero no dibuja nada', () => {
   assert.equal(c.ops.length, 0);
 });
 
+test('presupuestoPx: sin total tira TypeError, no se confunde con un presupuesto vacio', () => {
+  // `total` es obligatorio, igual que `colorBorde`, y vive en la misma bolsa de
+  // opciones donde es facil olvidarlo. Sin esta guarda, un `total` ausente caia en la
+  // misma rama que `total: 0` -"no dibuja nada"- y quien llama no podia distinguir un
+  // olvido de un presupuesto vacio legitimo.
+  const c = ctxFalso();
+  assert.throws(() => presupuestoPx(c, 0, 0, 200, 20, [{ valor: 0, color: '#1b4fd4' }],
+    { colorBorde: '#dcd8ce' }), TypeError);
+  assert.equal(c.ops.length, 0, 'no dibuja nada, ni siquiera el borde, antes de tirar');
+});
+
 test('presupuestoPx: si los segmentos suman mas que el total, la barra se desborda y lleva marca de tope', () => {
   const c = ctxFalso();
   presupuestoPx(c, 0, 0, 200, 20, [{ valor: 150, color: '#1b4fd4' }],

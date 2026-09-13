@@ -451,6 +451,14 @@ export function presupuestoPx(ctx, x, y, ancho, alto, segmentos,
         `presupuestoPx: el segmento "${s.etiqueta ?? ''}" vale ${s.valor}. Un presupuesto no admite valores negativos, NaN ni infinitos: partilo en dos barras.`);
     }
   }
+  // `total` es obligatorio, igual que `colorBorde`, y vive en la misma bolsa de
+  // opciones donde es facil olvidarlo. Sin esta guarda, un `total` ausente caia en la
+  // rama de abajo -"no dibuja nada"- y quedaba indistinguible de un presupuesto vacio
+  // legitimo (`total: 0`, que SI tiene que seguir sin dibujar nada).
+  if (total === undefined) {
+    throw new TypeError(
+      'presupuestoPx: falta `total`. Es obligatorio y sin default: sin el no hay escala que definir.');
+  }
   // Sin total no hay escala que definir; dividir por cero daria NaN en cada ancho.
   if (!(total > 0)) return;
   const k = ancho / total;
