@@ -180,11 +180,11 @@ try {
       </div>
       <label class="control" style="flex:1 1 220px;min-width:160px">
         <span style="font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--red)">aₓ del viento <output id="w4-ax-out" style="font-variant-numeric:tabular-nums">0,0 m/s²</output></span>
-        <input id="w4-ax" type="range" min="-2" max="8" step="0.2" value="0" style="width:100%;accent-color:var(--red)">
+        <input id="w4-ax" type="range" min="-8" max="8" step="0.2" value="0" style="width:100%;accent-color:var(--red)">
       </label>
       <label class="control" style="flex:1 1 170px;min-width:150px">
         <span class="rotulo-campo">ángulo α <output id="w4-ang-out" class="valor-control">55°</output></span>
-        <input id="w4-ang" type="range" min="15" max="65" step="1" value="55" style="width:100%">
+        <input id="w4-ang" type="range" min="15" max="80" step="1" value="55" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
@@ -635,14 +635,18 @@ function widgetTriangulo(pagina) {
 // parcial-1/soluciones/verificacion-practico-1.py. v0 queda fijo en 20 m/s: lo que se
 // mueve es el ángulo (que sí cambia el tiempo de vuelo) y aₓ (que no). Transcripción de
 // `drawW4` (Tiro parabolico.dc.html:576-608).
-// Los topes del slider de aₓ (min="-2") y del de α (max="65") no son a ojo: son el
-// mismo artefacto que el-gol-con-viento.html ya corrigió, medido acá con estos v0 y g.
-// Con y0 = 0, v0x = v0 cos α y tVuelo = 2 v0 sen α / g, así que v_x(t) = v0x + ax t se
-// anula ANTES de la caída exactamente cuando |ax| > (g/2) cot α, es decir cuando
-// tan α > g / (2|ax|) -- v0 se cancela, así que el umbral no depende del módulo del
-// tiro, sólo del ángulo y de aₓ. En la esquina más exigente del rectángulo de
-// controles, α = 65° y ax = -2 m/s², el umbral da |ax| < 4,9 · cot 65° = 2,2849 m/s²:
-// 2 m/s² queda del lado seguro con margen holgado (un 12 % por debajo), y ax positivo
+// SOBRE EL ALCANCE NEGATIVO A aₓ MUY NEGATIVO, que parece un defecto y no lo es.
+// Con y0 = 0 la velocidad horizontal se anula antes de la caida cuando |ax| > (g/2) cot α
+// -- v0 se cancela, asi que el umbral no depende del modulo del tiro. A 55 grados con
+// ax = -8 eso pasa, la pelota vuelve, y el alcance da -6,4 m.
+// En `el-gol-con-viento.html` ese mismo caso SI se acoto, porque alli el enunciado dice
+// que la aceleracion es «en sentido opuesto a su direccion de movimiento»: una pelota que
+// volvio tendria el viento a favor, y el modelo dejaria de representar el ejercicio.
+// Aca no: este widget se llama «Con viento» y su prosa habla de «un viento, un empuje».
+// Un empuje de direccion fija es constante aunque el cuerpo se de vuelta, asi que el
+// alcance negativo es la consecuencia honesta del modelo y no un artefacto. El widget
+// invita a ver «que se rompe y que no»: esto es algo que se rompe, y vale mostrarlo.
+// Por eso los topes quedan como estaban.
 // nunca invierte a v_x porque parte ya positiva y sólo la empuja más para ese lado.
 // Antes de este tope, con el ángulo por defecto (55°) y ax = -8 -- el extremo viejo del
 // slider -- v_x se anulaba en t* = 1,43 s, bastante antes de tVuelo = 3,34 s, y la
