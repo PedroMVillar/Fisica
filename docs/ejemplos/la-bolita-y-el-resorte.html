@@ -65,6 +65,7 @@ try {
       <span>v en B <b id="w1-vb" class="lectura-valor azul">6,2610 m/s</b></span>
       <span>v en C <b id="w1-vc" class="lectura-valor azul">5,4222 m/s</b></span>
       <span>compresión <b id="w1-comp" class="lectura-valor">0,2711 m</b></span>
+      <span>longitud del resorte <b id="w1-long" class="lectura-valor">0,3289 m</b></span>
       <span>trabajo del resorte <b id="w1-trabajo" class="lectura-valor roja">-7,3500 J</b></span>
       <span>chequeo <b id="w1-chequeo" class="lectura-valor tenue">-6,63 × 10⁻⁵ m/s</b></span>
     </div>
@@ -171,7 +172,46 @@ function widgetBolitaYResorte(pagina) {
     // s += v dt, arrancando en v_A hasta recorrer L_BC. El residuo que da esto es SESGO
     // del metodo (Riemann por derecha: el bucle suma v recien despues de decrementarlo,
     // asi que subcuenta la posicion en v dt/2 por paso), no ruido de punto flotante --
-    // achicar DT_CHEQUEO_W1 lo achicaria en la misma proporcion, nunca a cero.
+    // achicar DT_CHEQUEO_W1 lo achicaria en la misma proporcion, nunca a cero. Medido:
+    // -6,63e-05 m/s a mu = 0,25, y entre -5,97e-05 y -1,70e-04 en todo el rango del
+    // deslizador (0,10 a 0,40) -- el mismo orden en cualquier mu, porque es sesgo del
+    // metodo, no del dato.
+    //
+    // Donde SI muerde: rompiendo mu de forma INCONSISTENTE entre las dos ramas -la
+    // cerrada con el mu real, la integracion con 1,15 * mu, la clase de bug donde una
+    // rama se actualiza y la otra no- el chequeo salta de ~1e-4 a entre -0,087 y
+    // -0,174 m/s en todo el rango de mu: tres ordenes de magnitud, imposible de
+    // confundir con el sesgo de arriba. mu entra en las DOS ramas por caminos
+    // distintos (la formula cerrada y la aceleracion de la integracion), asi que un
+    // error que las desincronice es visible.
+    //
+    // Donde NO muerde, primera familia -- la masa: M_W1 no aparece en ninguna
+    // expresion de esta funcion que alimente el chequeo. vA = raiz(2gh),
+    // v2C = raiz(vA^2 - 2 mu g L) y el propio bucle de Euler (v -= mu g dt) se arman
+    // solo con g, mu, L y h -- la masa de un cuerpo deslizando sin friccion o con
+    // friccion cinetica no entra en su velocidad, punto. Medido variando M_W1 de 0,1 a
+    // 50 kg con mu = 0,25: vA, v2C y el chequeo salen BIT A BIT identicos para
+    // cualquier masa (no una coincidencia numerica: la formula ni siquiera menciona
+    // M_W1). Es un caso mas fuerte que el precedente de docs/ensayos/energia.html
+    // (widget 2, lineas ~549-564), donde la masa SI aparece en los cuatro terminos y
+    // se cancela en la resta -aca no llega a estar para cancelarse-. Y no es ciego a
+    // todo: xc = v2C / w SI depende de M_W1 (via w = raiz(k/M_W1)) y lo mismo la
+    // lectura de compresion -- medido, xc pasa de 0,1212 a 2,7111 m con la misma
+    // masa de 0,1 a 50 kg. Es una zona ciega real de ESTA resta puntual, no del widget.
+    //
+    // Donde NO muerde, segunda familia, DISTINTA de la masa -- L0_W1: tampoco aparece
+    // en vA, v2C ni en el bucle de Euler, asi que el chequeo tampoco se entera de un
+    // L0_W1 mal puesto (medido: L0_W1 de 0,3 a 5,0 m no mueve el chequeo ni un bit).
+    // Pero a diferencia de la masa -que sí entra en xc y en la lectura de
+    // compresion- L0_W1 no entraba en NINGUNA lectura antes de agregar la de abajo:
+    // era una constante puramente de dibujo (la posicion de la pared), invisible en
+    // todo el widget. Por eso la lectura "longitud del resorte" (l = l0 - x) existe:
+    // no arregla el chequeo -sigue sin ver L0_W1 y no tiene por que verlo, calcula
+    // otra cosa- pero hace que un L0_W1 mal tipeado deje de ser invisible DEL TODO:
+    // ahora se nota a ojo en esa lectura (un l0 equivocado corre "l" exactamente lo
+    // mismo que se corrio l0 -- medido: l0 + 0,3 da l + 0,3, uno a uno). El chequeo
+    // vigila que dos caminos de la velocidad coincidan; el lector vigila que la
+    // longitud tenga sentido. Son dos guardianes distintos, y hacia falta el segundo.
     let v = vA, s = 0;
     while (s < LBC_W1) { v -= mu * G_W1 * DT_CHEQUEO_W1; s += v * DT_CHEQUEO_W1; }
     const chequeo = v - v2C;
@@ -335,6 +375,11 @@ function widgetBolitaYResorte(pagina) {
     leer('w1-vb', num(f.vA, 4) + ' m/s');
     leer('w1-vc', num(f.v2C, 4) + ' m/s');
     leer('w1-comp', num(f.xc, 4) + ' m');
+    // El item (b) pide, textual, "la longitud del resorte en su maxima compresion":
+    // el numero tiene que estar en una lectura, no solo en la prosa. l = l0 - x es
+    // ademas la UNICA lectura de esta nota donde L0_W1 entra en algo -- ver el
+    // comentario junto al chequeo, mas abajo, sobre por que eso importa.
+    leer('w1-long', num(f.lFinal, 4) + ' m');
     leer('w1-trabajo', num(f.Wres, 4) + ' J');
     // El chequeo es chico (orden 1e-4 a 1e-5 m/s en todo el rango del deslizador) y es
     // sesgo sistematico del metodo, no ruido: por eso se muestra en notacion
