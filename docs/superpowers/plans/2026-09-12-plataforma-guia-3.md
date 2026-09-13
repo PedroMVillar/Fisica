@@ -2694,9 +2694,11 @@ la fila es falsa.
    <(... página nueva | sort)`—, y la única diferencia admisible es que a la página nueva le
    falte el inline de `tabular-nums` porque usa la clase. Y el conteo va subiendo mientras
    la página se escribe: no es un número que tenga que cerrar en cada tarea.
-7. `node --test "test/**/*.test.js"`: **247 pruebas, 0 fallas** (240 de base + 7 de
-   `presupuestoPx`: las seis que este plan dictaba más la del orden del borde, que sumó la
-   revisión de la Tarea 2 al encontrar un mutante que sobrevivía a las seis).
+7. `node --test "test/**/*.test.js"`: **248 pruebas, 0 fallas** (240 de base + 8 de
+   `presupuestoPx`: las seis que este plan dictaba, más la del orden del borde —que sumó la
+   revisión de la Tarea 2 al encontrar un mutante que sobrevivía a las seis— y más la del
+   `total` ausente, que sumó la revisión final: un `total` olvidado no dibujaba nada y era
+   indistinguible de un presupuesto vacío legítimo).
 
 - [ ] **Paso 6: commit**
 
