@@ -144,6 +144,14 @@ const fuerzaF_W1  = conPiso => tension_W1() + fAB_W1() + fPiso_W1(conPiso);
 // segunda cuenta usan ese termino -- no hay nada que comparar, y el chequeo da cero
 // igual. Es lo correcto: con la casilla destildada el termino del piso no participa
 // de la fisica del ejercicio, asi que tampoco puede participar de su verificacion.
+// TERCERA ZONA CIEGA, mas ancha que las dos documentadas arriba y encontrada al revisar:
+// `G_W1` y las masas entran SOLO como denominador de la aceleracion de este bucle. Cuando las
+// cuatro funciones del modelo estan sanas el numerador es cero por construccion, asi que un
+// error ahi divide un cero por otro numero y sigue dando cero: probado con G en 5 y en 0,5, el
+// chequeo queda en 0,0000 en los DOS estados de la casilla, no solo con el piso destildado.
+// No es grave -- esas constantes no alimentan ninguna lectura visible, porque todo el ejercicio
+// esta planteado en pesos (N) y no en masas -- pero conviene saber que este chequeo no las
+// vigila, y que si alguna vez una lectura pasa a depender de ellas van a quedar sin guardian.
 function chequeoVelocidad_W1(conPiso) {
   const F = fuerzaF_W1(conPiso);
   const tReal = MU_W1 * W_A_W1;
