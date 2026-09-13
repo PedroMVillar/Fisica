@@ -92,13 +92,15 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 | Diagrama de cuerpo aislado | El diagrama de un solo cuerpo con sus fuerzas de contacto y la resultante, variando plano, ángulo y rozamiento | Práctico 2, ej. 1, 6, 8, 9, 10, 13, 18 y 19 |
 | Sistemas acoplados | Dos cuerpos atados por una cuerda, cada uno con su propio diagrama, y la tensión que sale de resolverlos como un sistema | Práctico 2, ej. 2, 3, 4, 5 y 7 |
 | Fuerzas que dependen de la posición | La fuerza elástica y la gravitatoria como funciones de la posición, no como números fijos, y el punto de equilibrio de cada una | Práctico 2, ej. 11, 12, 14, 15, 16 y 17 |
+| Trabajo y energía | El trabajo como área bajo la curva de fuerza, el mismo presupuesto repartido entre depósitos cinético, potencial y disipado, y los casos donde la conservación de energía es la única cuenta que cierra | Práctico 3, ej. 1 a 8 |
+| Cantidad de movimiento | El impulso de una fuerza constante, la cantidad de movimiento que un choque nunca cambia aunque la energía cinética sí, y los dos choques encadenados de bala y bloques | Práctico 3, ej. 9 a 12 |
 
 | Ejemplo resuelto | Construye | Cubre |
 |---|---|---|
 | La Tierra que cae | La aceleración centrípeta de la Tierra alrededor del Sol, vista como una caída continua que nunca llega a tocar | Práctico 1, ej. 12 |
 | El auto y el camión | El cruce de dos parábolas de posición como la respuesta geométrica al problema de alcance | Práctico 1, ej. 5 |
 
-Todavía no está la Guía 3 completa —trabajo, energía y cantidad de movimiento— ni el diseño de la portada, que lo hace el dueño del repositorio directamente.
+Ya está la Guía 3 completa —trabajo, energía y cantidad de movimiento—, en los dos ensayos de la tabla de arriba.
 
 ### Hojas resumen
 
