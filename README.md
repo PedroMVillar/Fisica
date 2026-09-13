@@ -156,15 +156,32 @@ Un ejercicio concreto del práctico, resuelto y animado de punta a punta.
 
 <table>
 <tr>
-<td width="50%" align="center" valign="top">
+<td width="33%" align="center" valign="top">
 <a href="https://pedromvillar.github.io/Fisica/ejemplos/la-tierra.html"><img src="./assets/miniaturas/la-tierra.png" width="100%" alt="La Tierra que cae"></a><br>
 <b>La Tierra que cae</b><br>
 <sub>Práctico 1 · ej. 12</sub>
 </td>
-<td width="50%" align="center" valign="top">
+<td width="33%" align="center" valign="top">
 <a href="https://pedromvillar.github.io/Fisica/ejemplos/auto-y-camion.html"><img src="./assets/miniaturas/auto-y-camion.png" width="100%" alt="El auto y el camión"></a><br>
 <b>El auto y el camión</b><br>
 <sub>Práctico 1 · ej. 5</sub>
+</td>
+<td width="33%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ejemplos/el-gol-con-viento.html"><img src="./assets/miniaturas/el-gol-con-viento.png" width="100%" alt="El gol con viento"></a><br>
+<b>El gol con viento</b><br>
+<sub>Práctico 1, adicional (ej. 15) · Parcial 1 2025</sub>
+</td>
+</tr>
+<tr>
+<td width="33%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ejemplos/el-bloque-sobre-el-bloque.html"><img src="./assets/miniaturas/el-bloque-sobre-el-bloque.png" width="100%" alt="Un bloque sobre otro"></a><br>
+<b>Un bloque sobre otro</b><br>
+<sub>Práctico 2, adicional (ej. 19) · Parcial 1 2025</sub>
+</td>
+<td width="33%" align="center" valign="top">
+<a href="https://pedromvillar.github.io/Fisica/ejemplos/la-bolita-y-el-resorte.html"><img src="./assets/miniaturas/la-bolita-y-el-resorte.png" width="100%" alt="La bolita y el resorte"></a><br>
+<b>La bolita y el resorte</b><br>
+<sub>Parcial 1 2025 · no está en ningún práctico</sub>
 </td>
 </tr>
 </table>
@@ -176,6 +193,9 @@ Un ejercicio concreto del práctico, resuelto y animado de punta a punta.
 |---|---|---|
 | La Tierra que cae | La aceleración centrípeta de la Tierra alrededor del Sol, vista como una caída continua que nunca llega a tocar | Práctico 1, ej. 12 |
 | El auto y el camión | El cruce de dos parábolas de posición como la respuesta geométrica al problema de alcance | Práctico 1, ej. 5 |
+| El gol con viento | Una aceleración horizontal constante superpuesta al tiro parabólico de siempre, y cómo la independencia de ejes deja intactos el tiempo de vuelo y la altura máxima aunque el alcance cambie | Práctico 1, ejercicio adicional (ej. 15) · Parcial 1 2025, problema 1 |
+| Un bloque sobre otro | Dos diagramas de cuerpo aislado resueltos en cadena: la tensión que sale de uno entra como dato del otro, y el rozamiento entre los bloques aparece dos veces en la cuenta de la fuerza | Práctico 2, ejercicio adicional (ej. 19) · Parcial 1 2025, problema 3 |
+| La bolita y el resorte | Un choque elástico, un tramo con rozamiento y un resorte encadenados en un solo balance de energía, con la potencial y la disipada repartiéndose la misma barra | Parcial 1 2025, problema 2 (no está en ningún práctico) |
 
 </details>
 
