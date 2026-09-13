@@ -69,7 +69,7 @@ import { colocarEtiqueta } from './etiqueta.js';
 import { exigirColor } from './color.js';
 
 // La geometría sale literal del `arrow` del diseño
-// (docs/plataforma/diseno/Tiro parabolico.dc.html:402-419).
+// (plataforma/diseno/Tiro parabolico.dc.html:402-419).
 export function vectorPx(ctx, x1, y1, x2, y2, opciones = {}) {
   const { color, grosor = 2, punta = 9, guiones = [],
           rotulo, rdx = 8, rdy = -6, rAlineacion = 'left' } = opciones;
@@ -326,7 +326,7 @@ function paso(rango) {
 export const COLGADO_ROTULO_EJE = 15;
 
 // Las marcas y rótulos son el `axes()` del diseño
-// (docs/plataforma/diseno/Tiro parabolico.dc.html:376-401).
+// (plataforma/diseno/Tiro parabolico.dc.html:376-401).
 //
 // `marcasX`/`marcasY` (default true) gobiernan cada bucle de marcas -y el numero que
 // cuelga de cada una- por separado. Existen por el widget de los tres paneles de

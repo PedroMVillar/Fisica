@@ -9,7 +9,7 @@
 // requestAnimationFrame; en las pruebas (sin navegador) se llama a mano.
 
 // Tope del salto de un frame, en segundos, igual que el diseño
-// (`docs/plataforma/diseno/Tiro parabolico.dc.html`: `Math.min(0.05, ...)`).
+// (`plataforma/diseno/Tiro parabolico.dc.html`: `Math.min(0.05, ...)`).
 // Si la pestaña queda en segundo plano el navegador suspende el rAF, y sin tope
 // el primer frame de vuelta se comería de un saque todo el tiempo ausente: la
 // animación saltaría al final en vez de seguir donde estaba. El tope vive acá,

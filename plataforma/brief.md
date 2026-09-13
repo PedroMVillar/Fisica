@@ -4,12 +4,12 @@ Especificación de la plataforma: qué se construye, qué contenido lleva, de d�
 la información y con qué sistema visual se arma.
 
 El diseño está **cerrado** (sección 6) y su fuente de verdad es
-`docs/plataforma/diseno/Tiro parabolico.dc.html`. La implementación lo sigue al pie de
+`plataforma/diseno/Tiro parabolico.dc.html`. La implementación lo sigue al pie de
 la letra: no inventa colores, tamaños ni espaciados.
 
 Las decisiones del dueño que se toman después de este brief —y que no ameritan
 reabrirlo— viven, con su fecha y su porqué, en
-[`docs/plataforma/decisiones.md`](decisiones.md).
+[`plataforma/decisiones.md`](decisiones.md).
 
 Fecha: 2026-09-11 · Parcial I: 2026-09-24
 
@@ -346,7 +346,7 @@ pausado, y siendo arrastrado. Los cuatro necesitan verse distintos.
 
 ## 6. Sistema de diseño — CERRADO
 
-Definido en `docs/plataforma/diseno/Tiro parabolico.dc.html`, que es la **fuente de
+Definido en `plataforma/diseno/Tiro parabolico.dc.html`, que es la **fuente de
 verdad**. Los valores de abajo están transcriptos de ahí y **se siguen al pie de la
 letra**: ninguna implementación inventa un color, un tamaño ni un espaciado que no
 esté en esta sección.

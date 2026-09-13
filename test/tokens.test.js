@@ -17,7 +17,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const CSS = readFileSync('docs/estilos/base.css', 'utf8');
-const DISENO = readFileSync('docs/plataforma/diseno/Tiro parabolico.dc.html', 'utf8');
+const DISENO = readFileSync('plataforma/diseno/Tiro parabolico.dc.html', 'utf8');
 
 const CLARO = ':root{';
 const OSCURO = ':root[data-theme="dark"]{';

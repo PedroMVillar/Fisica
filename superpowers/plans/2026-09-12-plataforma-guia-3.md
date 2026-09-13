@@ -8,9 +8,9 @@
 
 **Stack:** ES modules vanilla, canvas 2D, `node --test` de Node 22, GitHub Pages desde `/docs`.
 
-**Spec:** `docs/plataforma/brief.md`
+**Spec:** `plataforma/brief.md`
 
-**Autoridad de diseño:** `docs/plataforma/diseno/Tiro parabolico.dc.html`
+**Autoridad de diseño:** `plataforma/diseno/Tiro parabolico.dc.html`
 
 ## Decisiones tomadas antes de escribir este plan
 
@@ -2707,7 +2707,7 @@ commit. Dejar afuera `cantidad-de-movimiento.html` —como decía este plan— h
 la portada con un enlace a una página sin commitear.
 
 ```bash
-git add docs/index.html docs/ensayos/energia.html docs/ensayos/cantidad-de-movimiento.html README.md docs/superpowers/plans/2026-09-12-plataforma-guia-3.md
+git add docs/index.html docs/ensayos/energia.html docs/ensayos/cantidad-de-movimiento.html README.md superpowers/plans/2026-09-12-plataforma-guia-3.md
 git commit -m "feat(plataforma): enlazar los ensayos de la guia 3 y cerrar la navegacion"
 ```
 

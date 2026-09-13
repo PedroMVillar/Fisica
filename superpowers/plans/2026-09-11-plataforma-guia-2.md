@@ -8,9 +8,9 @@
 
 **Stack:** ES modules vanilla, canvas 2D, `node --test` de Node 22, GitHub Pages desde `/docs`.
 
-**Spec:** `docs/plataforma/brief.md`
+**Spec:** `plataforma/brief.md`
 
-**Autoridad de diseño:** `docs/plataforma/diseno/Tiro parabolico.dc.html`
+**Autoridad de diseño:** `plataforma/diseno/Tiro parabolico.dc.html`
 
 ## Dos decisiones del dueño, tomadas antes de escribir este plan
 

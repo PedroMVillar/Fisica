@@ -30,7 +30,7 @@ export function boton({ elemento, alApretar, pagina }) {
 }
 
 // Traduccion literal del label() del diseno
-// (docs/plataforma/diseno/Tiro parabolico.dc.html:319-323):
+// (plataforma/diseno/Tiro parabolico.dc.html:319-323):
 //   s.playing ? 'Pausar' : (!s.rest && s.t > 0 ? 'Seguir' : 'Reproducir')
 // `enReposo` es el `s.rest` del diseno. No sale de la escena porque crearEscena no
 // distingue "en reposo mostrando un instante representativo" de "pausado a mitad":

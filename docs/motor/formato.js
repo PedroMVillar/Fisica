@@ -1,5 +1,5 @@
 // El unico lugar del sitio donde un numero se vuelve texto. Existe porque la
-// convencion del sitio es la COMA -- decision del dueno, ver docs/plataforma/decisiones.md
+// convencion del sitio es la COMA -- decision del dueno, ver plataforma/decisiones.md
 // -- y JS escribe punto en `toFixed`, `toExponential` y `String`. Tener 117 sitios
 // haciendo la conversion a mano garantiza que tarde o temprano uno quede en punto.
 

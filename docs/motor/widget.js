@@ -2,7 +2,7 @@ import { crearLienzo } from './lienzo.js';
 import { reiniciarEtiquetas } from './etiqueta.js';
 
 // Fabrica un widget: mide su canvas, arma el lienzo y delega el dibujo. La medicion
-// replica al literal el `view()` del archivo de diseno (docs/plataforma/diseno/Tiro
+// replica al literal el `view()` del archivo de diseno (plataforma/diseno/Tiro
 // parabolico.dc.html:357-374): alto acotado entre `altoMin` y `altoMax` (default 215 y
 // 430 px, los del archivo de diseno) y devicePixelRatio acotado a 2.
 //

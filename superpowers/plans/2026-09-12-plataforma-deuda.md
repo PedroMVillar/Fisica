@@ -8,9 +8,9 @@
 
 **Stack:** ES modules vanilla, canvas 2D, `node --test` de Node 22, GitHub Pages desde `/docs`.
 
-**Spec:** `docs/plataforma/brief.md`
+**Spec:** `plataforma/brief.md`
 
-**Autoridad de diseño:** `docs/plataforma/diseno/Tiro parabolico.dc.html`
+**Autoridad de diseño:** `plataforma/diseno/Tiro parabolico.dc.html`
 
 **Medición de partida:** `.superpowers/investigacion-deuda/medicion.md`, con los scripts que la produjeron al lado. Todo número que aparece en este plan sale de ahí.
 
@@ -62,7 +62,7 @@ Aplican a todas las tareas.
 | `docs/estilos/base.css` | recibe diez clases tipográficas |
 | las 9 páginas | adoptan las clases, y sus 117 lecturas pasan por `formato.js` |
 | `docs/ensayos/sistemas-acoplados.html` | además, la frase del ejercicio 2 |
-| `docs/plataforma/decisiones.md` | **nuevo** — las dos decisiones del dueño, por escrito |
+| `plataforma/decisiones.md` | **nuevo** — las dos decisiones del dueño, por escrito |
 
 ## Las seis tareas
 
@@ -163,7 +163,7 @@ Esperado: FALLAN todas, con `Cannot find module`.
 
 ```js
 // El unico lugar del sitio donde un numero se vuelve texto. Existe porque la
-// convencion del sitio es la COMA -- decision del dueno, ver docs/plataforma/decisiones.md
+// convencion del sitio es la COMA -- decision del dueno, ver plataforma/decisiones.md
 // -- y JS escribe punto en `toFixed`, `toExponential` y `String`. Tener 117 sitios
 // haciendo la conversion a mano garantiza que tarde o temprano uno quede en punto.
 
@@ -689,7 +689,7 @@ git commit -m "feat(motor): colocarEtiqueta, rotulos que no se salen ni se pisan
 
 **Archivos:**
 - Modificar: `docs/ensayos/sistemas-acoplados.html`, `README.md`
-- Crear: `docs/plataforma/decisiones.md`
+- Crear: `plataforma/decisiones.md`
 
 - [ ] **Paso 1: la frase del ejercicio 2**
 
@@ -708,7 +708,7 @@ esa página y su fila en el README para que digan `ej. 2, 3, 4, 5 y 7`.
 
 - [ ] **Paso 2: las decisiones del dueño, por escrito y versionadas**
 
-Creá `docs/plataforma/decisiones.md` con las dos decisiones, su fecha y su porqué:
+Creá `plataforma/decisiones.md` con las dos decisiones, su fecha y su porqué:
 
 1. **Separador decimal: coma en todo el sitio**, prosa y lecturas. El problema no era la
    elección sino la mezcla: las frases de «qué mirar» piden contrastar la lectura contra
@@ -725,7 +725,7 @@ Creá `docs/plataforma/decisiones.md` con las dos decisiones, su fecha y su porq
    entra en la excepción y qué no — una revisión futura va a encontrar cada una por
    separado y tiene que poder confirmar de un vistazo que están adentro.
 
-Enlazalo desde el README, y agregá a `docs/plataforma/brief.md` una línea que lo apunte:
+Enlazalo desde el README, y agregá a `plataforma/brief.md` una línea que lo apunte:
 el brief es la autoridad y tiene que saber dónde viven las decisiones posteriores.
 
 - [ ] **Paso 3: el recorrido completo**

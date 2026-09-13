@@ -8,9 +8,9 @@
 
 **Stack:** ES modules vanilla, canvas 2D, `node --test` de Node 22, GitHub Pages desde `/docs`.
 
-**Spec:** `docs/plataforma/brief.md`
+**Spec:** `plataforma/brief.md`
 
-**Autoridad de diseño:** `docs/plataforma/diseno/Tiro parabolico.dc.html`
+**Autoridad de diseño:** `plataforma/diseno/Tiro parabolico.dc.html`
 
 ## Supuesto que este plan hace explícito
 
@@ -522,7 +522,7 @@ Esperado: FALLAN todas las nuevas; `vectorPx`, `punteado` y `texto` no existen.
 
 En `docs/motor/dibujo.js`, agregar las tres primitivas y reescribir `vector` como
 envoltura. La geometría sale literal del `arrow` del diseño
-(`docs/plataforma/diseno/Tiro parabolico.dc.html:402-419`):
+(`plataforma/diseno/Tiro parabolico.dc.html:402-419`):
 
 ```js
 export function vectorPx(ctx, x1, y1, x2, y2, opciones = {}) {
@@ -924,7 +924,7 @@ export function crearPagina({ documento = globalThis.document } = {}) {
 - [ ] **Paso 4: implementar `docs/motor/widget.js`**
 
 La altura y la escala salen literales del `view()` del diseño
-(`docs/plataforma/diseno/Tiro parabolico.dc.html:357-374`): alto acotado entre 215 y
+(`plataforma/diseno/Tiro parabolico.dc.html:357-374`): alto acotado entre 215 y
 430 px, `devicePixelRatio` acotado a 2, y la escala como el mínimo entre lo que entra
 a lo ancho y lo que entra a lo alto, para que no se deforme.
 
@@ -1007,7 +1007,7 @@ widgets de este plan.
   - `deslizador({ entrada, salida, formato, alCambiar, pagina })` — conecta un `<input type="range">` a su `<output>` y a una función. Devuelve `{ valor() }`.
   - `casilla({ entrada, alCambiar, pagina })` — conecta un `<input type="checkbox">`. Devuelve `{ valor() }`.
   - `boton({ elemento, alApretar, pagina })` — conecta un `<button>`.
-  - `rotuloReproducir(elemento, escena, enReposo)` — pone en el botón `Reproducir`, `Pausar` o `Seguir`. Es la traducción literal del `label()` del diseño (`docs/plataforma/diseno/Tiro parabolico.dc.html:319-323`): `reproduciendo → 'Pausar'`, y si no, `'Seguir'` cuando **no** está en reposo y el reloj pasó de cero, `'Reproducir'` en cualquier otro caso. El tercer argumento hace falta porque `crearEscena` no distingue "en reposo mostrando un instante representativo" de "pausado a mitad de vuelo": las dos son `estado === 'pausado'` o `'reposo'` con `t > 0`. Esa distinción la lleva el ensayo, igual que el `s.rest` del diseño.
+  - `rotuloReproducir(elemento, escena, enReposo)` — pone en el botón `Reproducir`, `Pausar` o `Seguir`. Es la traducción literal del `label()` del diseño (`plataforma/diseno/Tiro parabolico.dc.html:319-323`): `reproduciendo → 'Pausar'`, y si no, `'Seguir'` cuando **no** está en reposo y el reloj pasó de cero, `'Reproducir'` en cualquier otro caso. El tercer argumento hace falta porque `crearEscena` no distingue "en reposo mostrando un instante representativo" de "pausado a mitad de vuelo": las dos son `estado === 'pausado'` o `'reposo'` con `t > 0`. Esa distinción la lleva el ensayo, igual que el `s.rest` del diseño.
   - `arrastrable({ canvas, lienzo, alArrastrar, acotar, pagina })` — traduce los eventos de puntero a coordenadas físicas y llama a `alArrastrar(x, y)`. `acotar(x, y)` devuelve el par ya acotado.
 
 - [ ] **Paso 1: escribir las pruebas que fallan**
@@ -1207,7 +1207,7 @@ export function boton({ elemento, alApretar, pagina }) {
 }
 
 // Traduccion literal del label() del diseno
-// (docs/plataforma/diseno/Tiro parabolico.dc.html:319-323):
+// (plataforma/diseno/Tiro parabolico.dc.html:319-323):
 //   s.playing ? 'Pausar' : (!s.rest && s.t > 0 ? 'Seguir' : 'Reproducir')
 // `enReposo` es el `s.rest` del diseno. No sale de la escena porque crearEscena no
 // distingue "en reposo mostrando un instante representativo" de "pausado a mitad":
@@ -1282,7 +1282,7 @@ git commit -m "feat(plataforma): controles declarativos y arrastre sobre el canv
 ## Fase B — terminar el ensayo de tiro parabólico
 
 Las cuatro tareas de esta fase tienen su marcado y su código de dibujo **ya escritos
-por el dueño** en `docs/plataforma/diseno/Tiro parabolico.dc.html`. No se inventa nada:
+por el dueño** en `plataforma/diseno/Tiro parabolico.dc.html`. No se inventa nada:
 se transcribe y se cablea contra los módulos.
 
 ### Tarea 6: Migrar el widget 1 a la fábrica, sin que se note
@@ -1392,7 +1392,7 @@ git commit -m "refactor(plataforma): el ensayo de tiro sobre la fabrica de widge
 
 **Archivos:**
 - Modificar: `docs/ensayos/tiro-parabolico.html`
-- Referencia obligatoria: `docs/plataforma/diseno/Tiro parabolico.dc.html:93-130` (marcado) y `:499-530` (dibujo)
+- Referencia obligatoria: `plataforma/diseno/Tiro parabolico.dc.html:93-130` (marcado) y `:499-530` (dibujo)
 
 **Interfaces:**
 - Consume: todo lo de la Tarea 6.
@@ -1521,7 +1521,7 @@ también el primero que se arrastra.
 
 **Archivos:**
 - Modificar: `docs/ensayos/tiro-parabolico.html`
-- Referencia obligatoria: `docs/plataforma/diseno/Tiro parabolico.dc.html:132-168` (marcado) y `:533-573` (dibujo)
+- Referencia obligatoria: `plataforma/diseno/Tiro parabolico.dc.html:132-168` (marcado) y `:533-573` (dibujo)
 
 **Interfaces:**
 - Consume: todo lo anterior más `arrastrable` (Tarea 5).
@@ -1663,7 +1663,7 @@ para resolver 9, 10 y 15.
 
 **Archivos:**
 - Modificar: `docs/ensayos/tiro-parabolico.html`
-- Referencia obligatoria: `docs/plataforma/diseno/Tiro parabolico.dc.html:170-216` (marcado) y `:576-608` (dibujo)
+- Referencia obligatoria: `plataforma/diseno/Tiro parabolico.dc.html:170-216` (marcado) y `:576-608` (dibujo)
 
 **Interfaces:**
 - Consume: todo lo anterior.
@@ -1846,7 +1846,7 @@ contenido donde ver la construcción vale más que leerla. Cubre los ejercicios 
 
 Este ensayo **no tiene archivo de diseño propio**. Aplica el sistema cerrado: la
 estructura de secciones, la anatomía del widget y los valores tipográficos salen de
-`docs/plataforma/diseno/Tiro parabolico.dc.html`, que es la implementación de
+`plataforma/diseno/Tiro parabolico.dc.html`, que es la implementación de
 referencia del sistema. Ningún valor visual se inventa.
 
 ### Tarea 10: Cálculo numérico
@@ -2070,7 +2070,7 @@ git commit -m "feat(plataforma): calculo numerico, contrastado con el practico 1
 
 **Archivos:**
 - Crear: `docs/ensayos/derivada-integral.html`
-- Referencia de sistema: `docs/plataforma/diseno/Tiro parabolico.dc.html`
+- Referencia de sistema: `plataforma/diseno/Tiro parabolico.dc.html`
 
 **Interfaces:**
 - Consume: `crearPagina`, `crearWidget`, `deslizador`, `eje`, `curva`, `cuerpo`,
@@ -3620,5 +3620,5 @@ git commit -m "feat(plataforma): portada y navegacion entre los ensayos de la gu
 - La línea de tiempo arrastrable que el brief lista entre los controles estándar. `ir(t)`
   de la Tarea 2 es la mitad que faltaba; queda el control.
 - Publicar en GitHub Pages, que es una acción manual del dueño en la configuración del
-  repositorio, y la decisión sobre si `docs/plataforma/` y `docs/superpowers/` deben
+  repositorio, y la decisión sobre si `plataforma/` y `superpowers/` deben
   seguir dentro de la carpeta que Pages publica.

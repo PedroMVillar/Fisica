@@ -16,8 +16,8 @@ contexto de canvas falso que registra las llamadas.
 **Stack:** HTML + CSS + JavaScript (módulos ES). Node 22 para las pruebas
 (`node --test`, sin dependencias). Python para el servidor local. GitHub Pages.
 
-**Spec:** `docs/plataforma/brief.md`
-**Fuente de verdad del diseño:** `docs/plataforma/diseno/Tiro parabolico.dc.html`
+**Spec:** `plataforma/brief.md`
+**Fuente de verdad del diseño:** `plataforma/diseno/Tiro parabolico.dc.html`
 
 ## Restricciones globales
 
@@ -643,7 +643,7 @@ Acá se ensambla todo con el marcado exacto del diseño.
 
 **Archivos:**
 - Crear: `docs/ensayos/tiro-parabolico.html`
-- Referencia obligatoria: `docs/plataforma/diseno/Tiro parabolico.dc.html`
+- Referencia obligatoria: `plataforma/diseno/Tiro parabolico.dc.html`
 
 **Interfaces:**
 - Consume: `crearLienzo` (Tarea 2); `eje`, `traza`, `cuerpo`, `huella` (Tarea 3);
@@ -652,7 +652,7 @@ Acá se ensambla todo con el marcado exacto del diseño.
 
 - [ ] **Paso 1: copiar la estructura del diseño**
 
-Abrir `docs/plataforma/diseno/Tiro parabolico.dc.html` y copiar **literalmente**: el
+Abrir `plataforma/diseno/Tiro parabolico.dc.html` y copiar **literalmente**: el
 `<head>` con el enlace a Google Fonts, el bloque `<style>` global (que ahora sale de
 `base.css`), el kicker, el `<h1>`, la bajada, el `<h2>` de `01 · Dos movimientos, un
 reloj`, y toda la `<section>` del widget con sus estilos en línea.
