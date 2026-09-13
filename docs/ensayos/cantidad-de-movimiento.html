@@ -60,7 +60,7 @@ try {
       </label>
       <label class="control" style="flex:1 1 150px;min-width:130px">
         <span class="rotulo-campo">Δt <output id="m1-dt-out" class="valor-control">1,00 s</output></span>
-        <input id="m1-dt" type="range" min="0.1" max="1.5" step="0.05" value="1" style="width:100%">
+        <input id="m1-dt" type="range" min="0.1" max="4.55" step="0.05" value="1" style="width:100%">
       </label>
     </div>
     <div class="lecturas">
@@ -135,29 +135,43 @@ const deltaP_M1 = (t1, t2) => M_M1 * (V_M1(t2) - V_M1(t1));
 
 // Hay que ser honesto sobre que prueba este chequeo y que no -- medido, no razonado.
 //
-// Los dos caminos comparten la MISMA `G` y la MISMA `M_M1`, y las dos son un factor
-// que multiplica por igual a los dos lados de la resta (F_M1 = M_M1*G es constante, y
-// el area de un rectangulo constante en [t1,t2] es M_M1*G*(t2-t1); deltaP_M1 da
-// exactamente lo mismo por la otra cuenta). Un error en CUALQUIERA de esas dos
-// constantes compartidas es invisible para este chequeo en TODO el rango de los dos
-// deslizadores -- no es una coincidencia de un punto del rango, es una identidad
-// algebraica que vale siempre. Medido cambiando `G` a 9.81 en las dos formulas (sin
-// tocar nada mas): el chequeo se queda en el ruido de punto flotante (~10⁻¹³ N·s) en
-// los seis puntos muestreados -(t1,Δt) = (0,1) (1,1) (0,1.5) (3.5,1.5) (2,0.5) y
-// (0.05,0.1)-, exactamente igual que con G = 9.8. Lo mismo pasa cambiando `M_M1` de 2 a
-// cualquier otro numero: multiplica por igual a los dos lados y se cancela en la
-// resta, en cualquier t1 y cualquier Δt -- el mismo fenomeno que M_W2 en energia.html.
+// La regla general: este chequeo es ciego a CUALQUIER VARIABLE QUE ALIMENTE POR IGUAL
+// A LAS DOS RAMAS de la resta, sea porque aparece directo en las dos formulas o porque
+// las dos leen el mismo valor ya calculado. `G` y `M_M1` son el primer caso: las dos
+// son un factor que multiplica por igual a los dos lados (F_M1 = M_M1*G es constante,
+// y el area de un rectangulo constante en [t1,t2] es M_M1*G*(t2-t1); deltaP_M1 da
+// exactamente lo mismo por la otra cuenta), asi que un error en cualquiera de las dos
+// es invisible en TODO el rango de los dos deslizadores -- no es una coincidencia de
+// un punto del rango, es una identidad algebraica que vale siempre. Medido cambiando
+// `G` a 9.81 en las dos formulas (sin tocar nada mas): el chequeo se queda en el ruido
+// de punto flotante (~10⁻¹³ N·s) en los seis puntos muestreados -(t1,Δt) = (0,1) (1,1)
+// (0,1.5) (3.5,1.5) (2,0.5) y (0.05,0.1)-, exactamente igual que con G = 9.8. Lo mismo
+// pasa cambiando `M_M1` de 2 a cualquier otro numero -- el mismo fenomeno que M_W2 en
+// energia.html.
 //
-// Lo que SI caza -y es el error real de este ejercicio, el que confunde velocidad con
-// posicion- es que `V_M1` no sea la derivada de la curva que corresponde a `F_M1`.
-// Medido rompiendo `V_M1` por `t => 0.5 * G * t * t` (posicion en vez de velocidad),
-// con `G` y `M_M1` sin tocar: el chequeo salta a 9,80 N·s en [0,1], −9,80 en [1,2],
-// 7,35 en [0,1.5], −60,01 en el rincon [3.5, 4.5175], −12,25 en [2,2.5] y 1,76 en el
-// intervalo minimo [0.05, 0.15] -Δt = 0,1 s, el minimo que deja el deslizador-: en
-// NINGUN punto del rango se queda en cero. Por eso la lectura que carga el concepto de
-// esta seccion no es la resta -que puede estar en cero por dos motivos muy distintos-:
-// es que `J` de 19,6 N·s en los dos segundos, con `v al empezar` pasando de 0,00 a
-// 9,80 m/s. Esa es la que hay que mirar, y el parrafo de cierre la nombra.
+// `H_M1` es el segundo caso, mas sutil porque no aparece en ninguna de las dos formulas
+// de mas arriba: entra SOLO via `T_CL_M1`, que recorta `t2` antes de que `areaF_M1` y
+// `deltaP_M1` lo reciban -- las dos ramas leen el mismo `t2` ya recortado, asi que un
+// `H_M1` equivocado tambien se cancela. Y acá el error no queda "escondido": produce un
+// numero absurdo que SE VE a simple vista. Medido con `H_M1 = 50` (la mitad): `T_CL_M1`
+// baja a 3,1944 s, mas chico que el tope de 3,5 s del deslizador `m1-t1`; en la esquina
+// t1 = 3,5 / Δt = 1,5, `t2` se recorta a ese `T_CL_M1` -menor que `t1`-, y `J` y `Δp` dan
+// los dos exactamente −5,99 N·s -un IMPULSO NEGATIVO en una caida libre, que no tiene
+// sentido fisico-, con el chequeo en cero exacto. El chequeo vigila que las dos cuentas
+// concuerden ENTRE SI; que el numero tenga sentido lo vigila quien lee la pantalla. Son
+// dos guardianes distintos, y ninguno reemplaza al otro: éste es el caso en que el
+// chequeo calla y el sentido comun del lector es el unico que puede llegar a frenar.
+//
+// Lo que SI caza el chequeo -y es el error real de este ejercicio, el que confunde
+// velocidad con posicion- es que `V_M1` no sea la derivada de la curva que corresponde
+// a `F_M1`. Medido rompiendo `V_M1` por `t => 0.5 * G * t * t` (posicion en vez de
+// velocidad), con `G`, `M_M1` y `H_M1` sin tocar: el chequeo salta a 9,80 N·s en [0,1],
+// −9,80 en [1,2], 7,35 en [0,1.5], −60,01 en el rincon [3.5, 4.5175], −12,25 en [2,2.5]
+// y 1,76 en el intervalo minimo [0.05, 0.15] -Δt = 0,1 s, el minimo que deja el
+// deslizador-: en NINGUN punto del rango se queda en cero. Por eso la lectura que carga
+// el concepto de esta seccion no es la resta -que puede estar en cero por motivos muy
+// distintos-: es que `J` de 19,6 N·s en los dos segundos, con `v al empezar` pasando de
+// 0,00 a 9,80 m/s. Esa es la que hay que mirar, y el parrafo de cierre la nombra.
 
 // Sufijo `_M1`, igual que las constantes fisicas de arriba.
 const MARGEN_M1 = { L: 56, R: 24, T: 18, B: 34 };
@@ -200,8 +214,74 @@ function pintarM1(ctx, l) {
   // panel (v = 0, que es justo la frontera con el panel de F de aqui abajo) podria
   // terminar empujado al panel vecino. Colgarlos hacia ARRIBA (`dy` negativo) evita el
   // problema de raiz: nunca se acercan a esa frontera.
+  //
+  // El rotulo de t1 (`opcionesRotuloT1M1`, abajo) cambia de forma segun donde caigan
+  // los dos puntos. Encontrado en la ronda de arreglo 1, al ampliar el tope de
+  // `m1-dt` de 1,5 a 4,55, y verificado barriendo TODA la grilla de (t1, Δt) de los
+  // dos deslizadores (paso 0,05 en los dos -6390 combinaciones-, mas un repaso fino a
+  // paso 0,01 cerca de las dos zonas de riesgo -31464 combinaciones-, a 880 y 350 px
+  // de ancho de canvas) llamando al `colocarEtiqueta` y al `eje` REALES con un `ctx`
+  // espia que graba donde termina escribiendo cada texto -- no una reimplementacion
+  // del motor (script en
+  // .superpowers/sdd/2026-09-12-plataforma-guia-3/barrer-rotulos-m1.mjs, gitignorado).
+  //
+  // Los `cuerpo()` que marcan los extremos NO pasan por `colocarEtiqueta` -no son
+  // rotulos-, asi que no estan en su registro de colisiones: un rotulo puede pisarle
+  // el PUNTO al otro extremo sin que el esquive se entere (el "primer limite" que
+  // documenta `etiqueta.js`). Y los NUMEROS del eje -y su titulo "v [m/s]"- tampoco
+  // pasan por ahi: los escribe `eje()` con `texto()` directo. Un solo `dx`/`dy` fijo
+  // para t1 no evita las dos cosas a la vez en todo el rango:
+  // - Colgando siempre hacia la DERECHA (hacia t2, dx: 6, como el de t2): para
+  //   cualquier Δt de hasta ~1,1 s a 350 px de ancho (~0,65 s a 880) el rotulo de t1
+  //   alcanza a pisar el PUNTO de t2 -incluido Δt = 1 s, el valor con el que arranca
+  //   la pagina-. Y en la esquina angosta (t1 = 3,5, Δt al maximo -> t2 = t_cl =
+  //   4,5175, los dos puntos a menos de 60 px a 350) pasa lo mismo.
+  // - Colgando siempre hacia la IZQUIERDA (alineacion: 'right', lejos de t2): a
+  //   t1 cerca de 0 (el margen izquierdo del panel) el rotulo -de unos 59 px de
+  //   ancho- no entra entre el borde del canvas y los NUMEROS del eje (que viven ahi
+  //   mismo), y les pisa el "10" ("0,00 m/s" queda escrito encima del "10" del eje).
+  // La solucion es elegir la forma segun la geometria real de ESE cuadro, con dos
+  // condiciones en pixeles (no en t1/Δt: lo que importa es cuanto miden las cosas en
+  // pantalla, y eso es lo que estas dos variables miden):
+  // - `cercaDeT2`: los dos puntos quedan a menos de 85 px -mas que el ancho de un
+  //   rotulo ("X,XX m/s" mide unos 59 px) mas el radio del `cuerpo()` y aire de
+  //   sobra-, asi que colgar hacia la derecha alcanzaria al punto de t2.
+  // - `cercaDelEje`: t1 esta a menos de 100 px del borde izquierdo del canvas -mas
+  //   que el ancho de un rotulo colgando a la izquierda-, asi que colgar hacia la
+  //   izquierda alcanzaria a los numeros del eje.
+  // Con eso, tres casos (el cuarto -lejos de t2 Y cerca del eje, por ejemplo t1 = 0
+  // con Δt al maximo- cae solo en la rama de "lejos de t2" de mas abajo: colgar a la
+  // derecha no depende de si el eje esta cerca, asi que no hace falta una rama propia
+  // para esa combinacion):
+  // - Lejos de t2: como estaba, colgando a la derecha (dx: 6, dy: -12).
+  // - Cerca de t2 y lejos del eje (la esquina angosta): colgando a la IZQUIERDA
+  //   (alineacion: 'right', dx: 4 -no 8: con `alineacion: 'right'` un `dx` mas
+  //   negativo que `ancho - margenIzquierdo` hace que, a t1 = 0, el rotulo se salga
+  //   por la izquierda del canvas y el espejo automatico de `colocarEtiqueta` lo
+  //   mande de vuelta hacia la DERECHA con el doble de desplazamiento -espeja sumando
+  //   el ancho completo del texto-, reintroduciendo el problema que se querian
+  //   evitar; dx: 4 es chico a proposito para que ese espejo no se dispare nunca en
+  //   el rango de `m1-t1`-.
+  // - Cerca de t2 Y cerca del eje (t1 chico con Δt chico, como [0, 0,1]): colgando a
+  //   la derecha iguales que el caso lejano, pero mas alto (dy: -30 en vez de -12).
+  //   Con los dos puntos casi superpuestos, el esquive de colisiones DEL MOTOR
+  //   entra en juego (a diferencia de los otros dos casos) porque ahi si detecta que
+  //   los rotulos de t1 y t2 se pisan entre si -y con dy: -12 elegia, de las ocho
+  //   alternativas que prueba, una que empuja el rotulo de t2 HACIA ABAJO, cruzando
+  //   la frontera con el panel de F (el hallazgo de esta misma ronda de arreglo,
+  //   antes de este cambio). Con dy: -30 el rotulo de t1 queda lo bastante lejos del
+  //   de t2 en la posicion por defecto de los dos como para que el esquive del motor
+  //   ni se active.
+  const separacionPxM1 = gv.px(t2) - gv.px(t1);
+  const cercaDeT2M1 = separacionPxM1 < 85;
+  const cercaDelEjeM1 = gv.px(t1) < 100;
+  const opcionesRotuloT1M1 = cercaDeT2M1 && !cercaDelEjeM1
+    ? { dx: 4, dy: -12, alineacion: 'right' }
+    : cercaDeT2M1 && cercaDelEjeM1
+    ? { dx: 6, dy: -30 }
+    : { dx: 6, dy: -12 };
   cuerpo(ctx, gv, [t1, V_M1(t1)], { radio: 4, color: p.blue });
-  colocarEtiqueta(ctx, num(V_M1(t1), 2) + ' m/s', gv.px(t1), gv.py(V_M1(t1)), { dx: 6, dy: -12, color: p.blue });
+  colocarEtiqueta(ctx, num(V_M1(t1), 2) + ' m/s', gv.px(t1), gv.py(V_M1(t1)), { ...opcionesRotuloT1M1, color: p.blue });
   cuerpo(ctx, gv, [t2, V_M1(t2)], { radio: 4, color: p.blue });
   colocarEtiqueta(ctx, num(V_M1(t2), 2) + ' m/s', gv.px(t2), gv.py(V_M1(t2)), { dx: 6, dy: -12, color: p.blue });
 
