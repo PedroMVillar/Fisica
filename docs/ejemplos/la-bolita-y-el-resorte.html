@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// Igual que en la portada: bloqueante, en el <head>, antes del primer pintado.
+// El script de la nota es `type="module"` y se difiere hasta despues del
+// parseo, asi que aplicar el tema desde ahi regalaba un flashazo blanco al
+// venir de la portada en modo oscuro. El try/catch es porque `localStorage`
+// tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
+// sandbox, y ahi la excepcion abortaria el script entero.
+try {
+  if (localStorage.getItem('tp-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+} catch (e) {}
+</script>
+<title>La bolita y el resorte · Física 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilos/base.css">
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:20;pointer-events:none"><div id="tp-prog" style="height:100%;width:0%;background:var(--blue)"></div></div>
+
+<div style="max-width:680px;margin:0 auto;padding:56px 24px 0;display:flex;flex-direction:column;gap:0">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+    <span style="font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Ejemplo · Física 1</span>
+    <button id="tp-theme" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--rule);border-radius:2px;padding:5px 9px;cursor:pointer">Oscuro</button>
+  </div>
+  <h1 style="font:600 52px/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.02em;margin:18px 0 0">La bolita y el resorte</h1>
+  <p style="font:400 20px/1.45 'Source Serif 4',Georgia,serif;color:var(--dim);margin:14px 0 0;max-width:36em;text-wrap:pretty">Un choque, un tramo con rozamiento y un resorte. La energía cambia de casillero tres veces y sólo una vez se pierde.</p>
+  <div style="height:1px;background:var(--rule);margin:34px 0 0"></div>
+
+  <p class="parrafo-suelto">Es el problema 2 del Parcial 1 del 25 de septiembre de 2025, y a diferencia de los otros dos ejemplos de esta serie no está calcado de ningún práctico: no hay un ejercicio adicional que lo anticipe. Hay que armarlo encadenando tres ideas que hasta acá vivían en widgets separados.</p>
+
+  <div style="border-left:2px solid var(--rule);padding:4px 0 4px 20px;margin:24px 0 0">
+    <p style="font:400 18px/1.7 'Source Serif 4',Georgia,serif;margin:0">Una bolita b₁, de masa <i>m</i>, está en reposo en lo alto de una loma, a una altura <i>h</i>. Al soltarla baja sin rozamiento hasta el punto A, donde choca en forma perfectamente elástica con una bolita b₂ idéntica, en reposo. Después del choque b₂ recorre sin rozamiento el tramo A–B y con rozamiento μ<sub>d</sub> el tramo B–C, de longitud <i>L</i><sub>BC</sub>, hasta llegar a un resorte de constante <i>k</i> y longitud natural ℓ₀ que la detiene. La pista está construida de manera que <i>h</i> = 4μ<sub>d</sub><i>L</i><sub>BC</sub>. Se pide: (a) la velocidad de b₂ en B y qué le pasa a b₁ después del choque; (b) la longitud del resorte en el instante de máxima compresión, el trabajo que hace el resorte sobre la bolita, y una interpretación de ese resultado.</p>
+  </div>
+
+  <p class="parrafo" style="margin-top:22px">Lo que hace interesante a este problema no es ninguno de sus tres tramos por separado —cada uno, solo, ya tiene su widget en el sitio—: es que hay que hacerlos hablar entre sí, pasándose la posta de la energía de un casillero al siguiente. Y hay una condición del enunciado, <i>h</i> = 4μ<sub>d</sub><i>L</i><sub>BC</sub>, que a primera vista parece un dato más y en realidad es la que hace que todo el álgebra cierre.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación</span>
+      <span class="titulo-fila">La posta de la energía</span>
+      <span class="nota-fila">— mirá a b₁ pasar de azul a gris justo cuando choca, y la barra vaciarse de gravitatoria antes de llenarse de elástica.</span>
+    </div>
+    <canvas id="w1-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end">
+      <div style="display:flex;gap:8px">
+        <button id="w1-play" class="boton-primario">Reproducir</button>
+        <button id="w1-reset" class="boton">Reiniciar</button>
+      </div>
+      <label class="control" style="flex:1 1 240px;min-width:200px">
+        <span class="rotulo-campo">rozamiento μ<sub>d</sub> <output id="w1-mu-out" class="valor-control">0,25</output></span>
+        <input id="w1-mu" type="range" min="0.1" max="0.4" step="0.05" value="0.25" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>v en B <b id="w1-vb" class="lectura-valor azul">6,2610 m/s</b></span>
+      <span>v en C <b id="w1-vc" class="lectura-valor azul">5,4222 m/s</b></span>
+      <span>compresión <b id="w1-comp" class="lectura-valor">0,2711 m</b></span>
+      <span>trabajo del resorte <b id="w1-trabajo" class="lectura-valor roja">-7,3500 J</b></span>
+      <span>chequeo <b id="w1-chequeo" class="lectura-valor tenue">-6,63 × 10⁻⁵ m/s</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <h2 class="titulo-seccion">Cómo se resuelve</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>La bajada es conservación de energía, sin nada más: <i>mgh</i> = ½<i>m</i>v<i>ₐ</i>², así que v<i>ₐ</i> = √(2<i>gh</i>). Con la atadura <i>h</i> = 4μ<sub>d</sub><i>L</i><sub>BC</sub> puesta adentro, v<i>ₐ</i> = √(8<i>g</i>μ<sub>d</sub><i>L</i><sub>BC</sub>) — la masa ya se canceló, y ni <i>h</i> ni <i>k</i> están a la vista.</li>
+    <li>El choque es elástico y las masas son iguales: eso es, exactamente, un intercambio de velocidades. b₁ queda <b class="negrita">quieta</b> en A y b₂ sale con toda la velocidad que traía b₁. v<sub>2,B</sub> = v<i>ₐ</i> = √(8<i>g</i>μ<sub>d</sub><i>L</i><sub>BC</sub>) = 6,2610 m/s. Ítem (a) resuelto.</li>
+    <li>El tramo B–C es el teorema trabajo-energía con el rozamiento como único agente: ½<i>m</i>v<sub>2,B</sub>² − μ<sub>d</sub><i>mgL</i><sub>BC</sub> = ½<i>m</i>v<sub>2,C</sub>². La masa vuelve a cancelarse y, usando otra vez la atadura, v<sub>2,C</sub> = √(6<i>g</i>μ<sub>d</sub><i>L</i><sub>BC</sub>) = 5,4222 m/s.</li>
+    <li>Contra el resorte, toda la cinética que le queda a b₂ se guarda como elástica: ½<i>m</i>v<sub>2,C</sub>² = ½<i>kx</i>², de donde <i>x</i> = v<sub>2,C</sub>√(<i>m</i>/<i>k</i>) = 0,2711 m. El resorte queda en ℓ₀ − <i>x</i> = 0,3289 m. Su trabajo es <i>W</i> = −½<i>kx</i>² = −7,3500 J: <b class="negrita">negativo</b> porque la fuerza que el resorte hace sobre la bolita apunta al revés del movimiento mientras la frena, y su módulo es exactamente la energía cinética que la bolita traía al tocarlo — el resorte no destruye esa energía, la guarda. Ítem (b) resuelto.</li>
+  </ol>
+  <p class="parrafo" style="margin-top:22px">Ninguno de los dos resultados —v<sub>2,B</sub> = √(8<i>g</i>μ<sub>d</sub><i>L</i><sub>BC</sub>), v<sub>2,C</sub> = √(6<i>g</i>μ<sub>d</sub><i>L</i><sub>BC</sub>)— lleva <i>h</i> ni <i>k</i>, y ninguno de los dos lleva la masa. Eso no es casualidad ni simplificación de último momento: es lo que produce la atadura <i>h</i> = 4μ<sub>d</sub><i>L</i><sub>BC</sub>, puesta ahí a propósito para que el álgebra cierre en símbolos. Movés el deslizador de μ<sub>d</sub> de arriba y vas a notar algo que a primera vista parece un error de la simulación: la loma cambia de altura. No lo es —es la misma atadura, dibujada—: es literalmente el enunciado diciendo que esos dos números, μ<sub>d</sub> y <i>h</i>, no son independientes.</p>
+</div>
+
+<div class="columna columna-final">
+  <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
+  <div style="display:flex;justify-content:flex-end;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
+    <a href="../index.html">Portada</a>
+  </div>
+  <p style="font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">Parcial 1, 25/09/2025 · problema 2 (no está en ningún práctico) · <a href="https://github.com/PedroMVillar/Fisica">código</a></p>
+</div>
+
+<script type="module">
+import { crearPagina } from '../motor/pagina.js';
+import { crearWidget } from '../motor/widget.js';
+import { traza, suelo, cuerpo, punteado, presupuestoPx } from '../motor/dibujo.js';
+import { colocarEtiqueta } from '../motor/etiqueta.js';
+import { deslizador, boton, rotuloReproducir } from '../motor/controles.js';
+import { crearEscena } from '../motor/escena.js';
+import { conectarTema } from '../motor/tema.js';
+import { num, exp } from '../motor/formato.js';
+
+const el = id => document.getElementById(id);
+const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
+
+/* ---------- el widget ---------- */
+
+function widgetBolitaYResorte(pagina) {
+  // Problema 2 del Parcial 1 de 2025 (no esta en ningun practico), resuelto con los
+  // valores elegidos en la Tarea 1. Constantes propias del ejercicio, sufijadas _W1
+  // (una nota, un widget, un modulo -- Global Constraint del espacio de nombres).
+  // Fuente de cada numero: bloque "P2 (numerico)" de
+  // parcial-1/soluciones/verificacion-parcial-1-2025.py, con mu_d = 0.25:
+  //   v_A = v_2B = 6.2610 m/s   v_2C = 5.4222 m/s
+  //   compresion x = 0.2711 m -> longitud l = 0.3289 m sobre l0 = 0.6 m
+  //   W_resorte = -7.3500 J    balance: K_B 9.8000 - disipado 2.4500 = K_C 7.3500
+  //   control temporal: Euler (dt=1e-4) da v = 5.4221 m/s ; diff = -6.63e-05 m/s
+  const G_W1 = 9.8;
+  const M_W1 = 0.5;              // kg
+  const K_W1 = 200;               // N/m
+  const L0_W1 = 0.6;              // m, longitud natural
+  const LBC_W1 = 2;                // m, el tramo con rozamiento -- fijo, no es un control
+  const MU_DEFECTO_W1 = 0.25;
+
+  // Geometria de la escena. Ninguno de estos dos numeros esta en el enunciado -- el
+  // enunciado no dice cuanto mide la loma en horizontal ni el tramo A-B, solo que b2 lo
+  // recorre sin rozamiento -- asi que son elecciones puramente de dibujo, iguales para
+  // cualquier mu. El "paso a distinto tipo de terreno" (loma / A-B liso / B-C rugoso /
+  // C-resorte liso) es lo unico que le importa a la fisica.
+  const DIST_TOP_W1 = 2;           // recorrido horizontal de la loma
+  const DIST_AB_W1 = 1.2;          // tramo A-B, sin rozamiento
+  const OFFSET_B1_W1 = 0.07;       // corrimiento cosmetico de b1 tras el choque, para
+                                    // que no tape a b2 en el instante exacto de A
+  const RADIO_BOLITA_PX = 6.5;
+
+  const X_A_W1 = 0;
+  const X_B_W1 = DIST_AB_W1;
+  const X_C_W1 = DIST_AB_W1 + LBC_W1;
+  const X_WALL_W1 = X_C_W1 + L0_W1;
+
+  // El paso de la Tarea 1: mismo dt que el bloque "P2 (numerico)" del script de
+  // verificacion, para que el control de mas abajo reproduzca el mismo residuo medido
+  // ahi (no uno mas chico ni mas grande por casualidad de otro paso).
+  const DT_CHEQUEO_W1 = 1e-4;
+
+  let muW1 = MU_DEFECTO_W1;
+
+  // Todo lo que depende SOLO de mu (no del instante t de la animacion): las dos
+  // velocidades pedidas, la compresion, el trabajo del resorte, los tiempos de cada
+  // tramo y el chequeo. Se recalcula en cada repintado -- es barato, ver mas abajo -- y
+  // asi no hay una segunda copia de estos numeros que se pueda desincronizar del
+  // deslizador.
+  function fisicaW1(mu) {
+    const h = 4 * mu * LBC_W1;
+    const S = Math.hypot(DIST_TOP_W1, h);           // largo de la loma
+    const sinTheta = h / S;
+    const aLoma = G_W1 * sinTheta;                   // aceleracion tangencial, sin rozamiento
+    const t1 = Math.sqrt(2 * S / aLoma);
+    const vA = Math.sqrt(2 * G_W1 * h);              // = v_2B, por el intercambio del choque
+    const t3 = DIST_AB_W1 / vA;
+    const v2C = Math.sqrt(Math.max(0, vA * vA - 2 * mu * G_W1 * LBC_W1));
+    const t4 = (vA - v2C) / (mu * G_W1);
+    const w = Math.sqrt(K_W1 / M_W1);                // frecuencia angular del resorte
+    const t5 = (Math.PI / 2) / w;                    // cuarto de periodo: de tocar el resorte a la maxima compresion
+    const xc = v2C / w;                              // = sqrt(m v_2C^2 / k), via w = sqrt(k/m)
+    const totalE = M_W1 * G_W1 * h;                  // el total declarado de la barra: mgh
+    const disipadoTotal = mu * M_W1 * G_W1 * LBC_W1;
+
+    // El chequeo, Paso 4: "v_C integrada - v_C cerrada". Reusa el patron y el paso YA
+    // corridos y validados en el bloque "P2 (numerico)": Euler explicito v -= mu g dt,
+    // s += v dt, arrancando en v_A hasta recorrer L_BC. El residuo que da esto es SESGO
+    // del metodo (Riemann por derecha: el bucle suma v recien despues de decrementarlo,
+    // asi que subcuenta la posicion en v dt/2 por paso), no ruido de punto flotante --
+    // achicar DT_CHEQUEO_W1 lo achicaria en la misma proporcion, nunca a cero.
+    let v = vA, s = 0;
+    while (s < LBC_W1) { v -= mu * G_W1 * DT_CHEQUEO_W1; s += v * DT_CHEQUEO_W1; }
+    const chequeo = v - v2C;
+
+    return { h, S, sinTheta, aLoma, t1, vA, t3, v2C, t4, w, t5, xc,
+      lFinal: L0_W1 - xc, Wres: -0.5 * K_W1 * xc * xc,
+      totalE, disipadoTotal, duracion: t1 + t3 + t4 + t5, chequeo,
+      // El instante de reposo: NO es t1 exacto. En t1 las dos bolitas estan, por
+      // definicion del choque, en el mismo punto -- cualquier reposo ahi las dibuja
+      // superpuestas, exactamente la ambiguedad que el item (a) pide evitar. Un poco
+      // despues (a mitad del tramo A-B) b2 ya se separo de A y b1 quedo atras: se ve
+      // sin ambiguedad que una esta quieta y la otra no.
+      tReposo: t1 + t3 * 0.5 };
+  }
+
+  // El estado de la escena en el instante t, para el mu ya resuelto en `f`
+  // (`fisicaW1(mu)`). Cinco tramos, en el orden del enunciado: b1 baja de la loma
+  // (fase 'loma'); el choque, instantaneo, en A; b2 de A a B sin rozamiento (fase
+  // 'AB'); b2 de B a C con rozamiento (fase 'BC'); b2 de C al resorte, comprimiendolo
+  // (fase 'resorte'). Cada fase devuelve la misma forma de objeto, para que quien
+  // pinta no tenga que saber en cual esta.
+  function estadoW1(t, mu, f) {
+    if (t <= f.t1) {
+      const s = Math.min(0.5 * f.aLoma * t * t, f.S);
+      const frac = s / f.S;
+      const v = f.aLoma * t;
+      return {
+        fase: 'loma',
+        xB1: -DIST_TOP_W1 * (1 - frac), yB1: f.h * (1 - frac), vB1: v,
+        xB2: X_A_W1, yB2: 0, vB2: 0, compresion: 0,
+        K: 0.5 * M_W1 * v * v, Ug: M_W1 * G_W1 * f.h * (1 - frac), Uel: 0, Q: 0,
+      };
+    }
+    let tr = t - f.t1;
+    if (tr <= f.t3) {
+      const x = Math.min(f.vA * tr, DIST_AB_W1);
+      return {
+        fase: 'AB',
+        xB1: X_A_W1 - OFFSET_B1_W1, yB1: 0, vB1: 0,
+        xB2: x, yB2: 0, vB2: f.vA, compresion: 0,
+        K: 0.5 * M_W1 * f.vA * f.vA, Ug: 0, Uel: 0, Q: 0,
+      };
+    }
+    tr -= f.t3;
+    if (tr <= f.t4) {
+      const v = f.vA - mu * G_W1 * tr;
+      const s = Math.min(f.vA * tr - 0.5 * mu * G_W1 * tr * tr, LBC_W1);
+      return {
+        fase: 'BC',
+        xB1: X_A_W1 - OFFSET_B1_W1, yB1: 0, vB1: 0,
+        xB2: X_B_W1 + s, yB2: 0, vB2: v, compresion: 0,
+        K: 0.5 * M_W1 * v * v, Ug: 0, Uel: 0, Q: mu * M_W1 * G_W1 * s,
+      };
+    }
+    tr -= f.t4;
+    const tr5 = Math.min(tr, f.t5);
+    const comp = f.xc * Math.sin(f.w * tr5);
+    const v = f.v2C * Math.cos(f.w * tr5);
+    return {
+      fase: 'resorte',
+      xB1: X_A_W1 - OFFSET_B1_W1, yB1: 0, vB1: 0,
+      xB2: X_C_W1 + comp, yB2: 0, vB2: v, compresion: comp,
+      K: 0.5 * M_W1 * v * v, Ug: 0, Uel: 0.5 * K_W1 * comp * comp, Q: f.disipadoTotal,
+    };
+  }
+
+  const MARGEN_W1 = { L: 28, R: 24, T: 54, B: 30 };   // T de 54: el aire de la barra, igual que energia.html
+  const canvas = el('w1-cv');
+
+  let escena = null;
+  let enReposo = true;
+
+  const widget = crearWidget({
+    pagina, canvas, margen: MARGEN_W1,
+    escalaUniforme: true, centrar: true,
+    // El encuadre es FIJO -- no depende de mu ni de t. Si se ajustara a la altura
+    // actual de la loma, la loma se veria "siempre igual de alta" (llenando el cuadro
+    // cada vez) y el efecto que el enunciado pide mostrar -la loma sube y baja con
+    // mu- quedaria invisible. Con el maximo posible (mu = 0.4 -> h = 3.2 m) mas aire,
+    // a mu = 0.1 (h = 0.8 m) la loma se ve realmente mas baja, no es una ilusion de
+    // escala.
+    encuadre: () => ({ xMin: -DIST_TOP_W1 - 0.4, xMax: X_WALL_W1 + 0.4, yMin: -0.3, yMax: 3.9 }),
+    dibujar: pintar,
+  });
+
+  function pintar(ctx, l) {
+    const p = pagina.paleta();
+    const mu = muW1;
+    const f = fisicaW1(mu);
+    const e = estadoW1(escena.t, mu, f);
+
+    // --- la barra de energia, en pixeles de canvas -- mismo patron que
+    // docs/ensayos/energia.html (widget 2): asi no cambia de largo ni de posicion al
+    // cambiar mu o el tamano del canvas.
+    const X_BARRA = 28, ALTO_BARRA = 22, Y_BARRA = 16;
+    // Las dos potenciales comparten token (--graph) y nunca conviven: Ug se agota al
+    // pie de la loma (fases 'loma' tardias) y Uel recien aparece contra el resorte
+    // (fase 'resorte'); en las fases 'AB' y 'BC' las dos valen 0. Por eso la barra
+    // tiene CUATRO segmentos aunque solo tres colores.
+    presupuestoPx(ctx, X_BARRA, Y_BARRA, l.ancho - X_BARRA - 24, ALTO_BARRA, [
+      { valor: e.K, color: p.blue, etiqueta: 'cinética' },
+      { valor: e.Ug, color: p.graph, etiqueta: 'potencial' },
+      { valor: e.Uel, color: p.graph, etiqueta: 'potencial' },
+      { valor: e.Q, color: p.red, etiqueta: 'disipado' },
+    ], { total: f.totalE, colorBorde: p.rule, colorTexto: p.paper });
+
+    // --- la escena ---
+    // La loma: una recta, del alto de la loma (que cambia con mu) al pie en A.
+    traza(ctx, l, [[-DIST_TOP_W1, f.h], [X_A_W1, 0]], { color: p.ink, grosor: 1.5 });
+    // La altura h, marcada aparte: es la atadura del enunciado, y tiene que verse que
+    // cambia con el deslizador de mu.
+    punteado(ctx, ...l.p([-DIST_TOP_W1, 0]), ...l.p([-DIST_TOP_W1, f.h]), { color: p.dim });
+    colocarEtiqueta(ctx, 'h', ...l.p([-DIST_TOP_W1, f.h / 2]), { dx: -14, dy: 4, color: p.dim, alineacion: 'right' });
+
+    // El piso: liso (sin rayado) en A-B y C-pared, rugoso (con rayado) en B-C. El
+    // contraste visual es la friccion -- la misma convencion que
+    // docs/ensayos/energia.html usa para su zona rugosa.
+    traza(ctx, l, [[X_A_W1, 0], [X_B_W1, 0]], { color: p.rule, grosor: 1 });
+    suelo(ctx, l, { color: p.rule, desde: X_B_W1, hasta: X_C_W1, y: 0 });
+    traza(ctx, l, [[X_C_W1, 0], [X_WALL_W1, 0]], { color: p.rule, grosor: 1 });
+    colocarEtiqueta(ctx, 'rozamiento μd', ...l.p([(X_B_W1 + X_C_W1) / 2, 0]), { dx: 0, dy: -22, color: p.dim, alineacion: 'center' });
+
+    // El resorte: zigzag entre la pared (fija) y su extremo libre, que solo se mueve
+    // durante la fase 'resorte' -- antes vale su longitud natural, en X_C_W1.
+    const finResorte = X_C_W1 + e.compresion;
+    const puntosResorte = [[X_WALL_W1, 0]];
+    const nSeg = 10;
+    for (let i = 1; i < nSeg; i++) {
+      const x = X_WALL_W1 + (finResorte - X_WALL_W1) * i / nSeg;
+      puntosResorte.push([x, (i % 2 === 0 ? 1 : -1) * 0.05]);
+    }
+    puntosResorte.push([finResorte, 0]);
+    traza(ctx, l, puntosResorte, { color: p.ink, grosor: 1.5 });
+    traza(ctx, l, [[X_WALL_W1, -0.12], [X_WALL_W1, 0.3]], { color: p.ink, grosor: 2.5 });
+
+    // Las dos bolitas. Azul mientras se mueven, --dim en cuanto estan quietas: asi
+    // "b1 queda quieta" se ve tambien en el color, no solo en que deja de
+    // desplazarse -- es el pedido explicito del item (a).
+    const colorB1 = e.vB1 > 1e-6 ? p.blue : p.dim;
+    const colorB2 = e.vB2 > 1e-6 ? p.blue : p.dim;
+    cuerpo(ctx, l, [e.xB1, e.yB1], { radio: RADIO_BOLITA_PX, color: colorB1 });
+    colocarEtiqueta(ctx, 'b₁', ...l.p([e.xB1, e.yB1]), { dx: 0, dy: -14, color: colorB1, alineacion: 'center' });
+    cuerpo(ctx, l, [e.xB2, e.yB2], { radio: RADIO_BOLITA_PX, color: colorB2 });
+    colocarEtiqueta(ctx, 'b₂', ...l.p([e.xB2, e.yB2]), { dx: 0, dy: -14, color: colorB2, alineacion: 'center' });
+
+    // B y C: una marca corta y su letra. SIN "A" a proposito: b2 se queda parado ahi
+    // toda la fase 'loma' y b1 se queda ahi el resto de la animacion entera (el
+    // corrimiento cosmetico de OFFSET_B1_W1 es chico), asi que una marca de "A"
+    // aparte competia todo el tiempo por el mismo lugar que la etiqueta de la bolita
+    // que la ocupa -- medido a 880px con mu = 0,10, "A" y "b₂" se solapaban. La
+    // posicion de A ya se lee sin ambiguedad: es donde las bolitas estan.
+    for (const [x, nombre] of [[X_B_W1, 'B'], [X_C_W1, 'C']]) {
+      punteado(ctx, ...l.p([x, 0]), ...l.p([x, 0.16]), { color: p.dim });
+      colocarEtiqueta(ctx, nombre, ...l.p([x, 0.16]), { dx: 0, dy: -8, color: p.dim, alineacion: 'center' });
+    }
+
+    // --- las lecturas ---
+    // v en B, v en C, la compresion y el trabajo del resorte son las respuestas de
+    // los items (a) y (b) para el mu actual -- no dependen del instante t de la
+    // animacion, solo de mu, asi que no tiemblan mientras la escena corre.
+    leer('w1-vb', num(f.vA, 4) + ' m/s');
+    leer('w1-vc', num(f.v2C, 4) + ' m/s');
+    leer('w1-comp', num(f.xc, 4) + ' m');
+    leer('w1-trabajo', num(f.Wres, 4) + ' J');
+    // El chequeo es chico (orden 1e-4 a 1e-5 m/s en todo el rango del deslizador) y es
+    // sesgo sistematico del metodo, no ruido: por eso se muestra en notacion
+    // cientifica -- redondeado a decimales fijos se veria como "0,0000" y esconderia
+    // justo el numero que el parrafo de mas abajo comenta.
+    leer('w1-chequeo', exp(f.chequeo, 2) + ' m/s');
+  }
+
+  const rotular = () => rotuloReproducir(el('w1-play'), escena, enReposo);
+
+  escena = crearEscena({
+    dibujar: () => widget.repintar(),
+    duracion: fisicaW1(muW1).duracion,
+    alCambiar: rotular,
+  });
+
+  // El instante de reposo es un poco despues de la colision (`f.tReposo`, ver el
+  // comentario en `fisicaW1`): b1 ya quieta en A y b2 ya separada, camino a B con
+  // toda la velocidad. Es, sin animar nada, el item (a) del enunciado a la vista
+  // apenas carga la pagina -- y sin la ambiguedad de las dos bolitas superpuestas
+  // que da el instante exacto del choque.
+  const alReposo = () => {
+    const f = fisicaW1(muW1);
+    escena.duracion = f.duracion;
+    if (enReposo) escena.ir(f.tReposo);
+  };
+
+  function recalcular() {
+    alReposo();
+    widget.repintar();
+    rotular();
+  }
+
+  deslizador({
+    entrada: el('w1-mu'), salida: el('w1-mu-out'), pagina,
+    formato: v => num(v, 2),
+    alCambiar: v => { muW1 = v; recalcular(); },
+  });
+
+  boton({
+    elemento: el('w1-play'), pagina,
+    alApretar: () => {
+      if (escena.estado === 'reproduciendo') {
+        escena.pausar();
+      } else {
+        if (enReposo || escena.t >= escena.duracion - 1e-6) {
+          enReposo = false;
+          escena.reiniciar();
+        }
+        escena.reproducir();
+      }
+      rotular();
+    },
+  });
+  // Sin `pagina` a proposito, igual que el reset de los widgets de tiro y del auto y
+  // el camion: el pulso del boton "Reproducir" sobrevive a un Reiniciar.
+  boton({
+    elemento: el('w1-reset'),
+    alApretar: () => { enReposo = true; escena.reiniciar(); alReposo(); rotular(); },
+  });
+
+  alReposo();
+  rotular();
+  const pulso = () => {
+    el('w1-play').style.animation = pagina.tocada() ? '' : 'tp-pulse 2.4s ease-in-out infinite';
+  };
+  pagina.alTocar(pulso);
+  pulso();
+}
+
+/* ---------- arranque ---------- */
+
+const pagina = crearPagina({ documento: document });
+widgetBolitaYResorte(pagina);
+conectarTema({ pagina, boton: el('tp-theme'), documento: document });
+pagina.observar();
+pagina.progreso(el('tp-prog'));
+pagina.repintarTodo();
+</script>
+</body>
+</html>
