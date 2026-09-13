@@ -189,7 +189,7 @@ try {
     <div class="lecturas">
       <span>v <b id="w4-v" class="lectura-valor azul">2,0000 m/s</b></span>
       <span>v marcha − v(y) <b id="w4-chequeo" class="lectura-valor tenue">0,0000 m/s</b></span>
-      <span>a medida − a cerrada <b id="w4-chequeo-a" class="lectura-valor tenue">—</b></span>
+      <span>freno integrado − L <b id="w4-chequeo-a" class="lectura-valor tenue">—</b></span>
       <span>v<sub>B</sub> <b id="w4-vb" class="lectura-valor">2,0000 m/s</b></span>
       <span>v<sub>C</sub> <b id="w4-vc" class="lectura-valor">5,7793 m/s</b></span>
       <span>a del freno <b id="w4-a" class="lectura-valor roja">6,2800 m/s²</b></span>
@@ -982,16 +982,61 @@ const energiaTotalW4 = (v0, h) => 0.5 * v0 * v0 + G * h;               // por kg
 const vCerradaW4 = (v0, h, y) => Math.sqrt(v0 * v0 + 2 * G * (h - y)); // v(y), Camino A
 const aCerradaW4 = (v0, h) => (v0 * v0 + 2 * G * h) / (2 * L_W4);      // a del papel
 
+// Chequeo del tramo de freno -- CAMINO DISTINTO del de arriba (revision de la Tarea 6:
+// la version anterior de este chequeo, "a medida - a cerrada" leida de v y s de la
+// propia animacion, resulto ser un MULTIPLO ESCALAR EXACTO de `v marcha - v(y)`
+// evaluado en D, para cualquier v0, h y cualquier rotura de `senTheta` -- no un segundo
+// camino, la misma resta con otro nombre). Este integra el frenado PASO A PASO EN EL
+// TIEMPO (Euler explicito: v -= a*dt, s += v*dt), arrancando en `vD` y con la
+// desaceleracion CERRADA del papel (`aCerradaW4`, que no pasa por la marcha ni por el
+// perfil), y compara la distancia recorrida hasta v=0 contra `L_W4` -- la longitud REAL
+// del tramo, que sale de los nodos del perfil (`X_E_W4 - X_D_W4`), no de la formula.
+// Por eso SI atrapa lo que el chequeo viejo no podia: un error aislado en la formula de
+// `aCerradaW4` (un factor 2 mal puesto) o un `L_W4` desacoplado del perfil -- con `vD`
+// perfecto, el chequeo viejo daba cero pase lo que pasara con esos dos, porque nunca los
+// tocaba; este los toca a los dos y a nada mas de la marcha que a traves de `vD`.
+// Igual que en "Ej 7 (numerico)" / "control temporal" de verificacion-practico-3.py: con
+// dt=1e-4 el residuo es SESGO del metodo (Riemann por derecha: el bucle suma `v` DESPUES
+// de decrementarlo, asi que subcuenta exactamente vD*dt/2), no ruido de punto flotante.
+// No mejora si se achica `dt` -- se achica en la misma proporcion, y eso no es arreglar
+// nada; lo que importa es que el diagnostico roto lo mueva ordenes de magnitud, no que
+// el residuo sea chico.
+function distanciaFrenoIntegradaW4(vD, a, dt = 1e-4) {
+  let v = vD, s = 0;
+  while (v > 0) {
+    v -= a * dt;
+    if (v < 0) v = 0;
+    s += v * dt;
+  }
+  return s;
+}
+
+// Medido (revision de la Tarea 6, ronda 1): con el modelo bien, el residuo por sesgo de
+// Euler es -4,1e-4 m en v0=2/h=3 (default) y -5,2e-4 m en el peor punto de todo el
+// barrido v0 en [1,5] x h en [1.5,4] -- del mismo orden en toda la superficie, sin
+// zona ciega en los deslizadores: `L_W4` no depende de v0 ni de h, asi que un error en
+// `aCerradaW4` o en su acoplamiento con `L_W4` aparece como una diferencia CONSTANTE
+// (una fraccion fija de L_W4, o L_viejo - L_nuevo), no como algo que un v0 o una h
+// particular puedan cancelar. Corrido con dos roturas: "a" calculada con v_C en vez de
+// v_D (el error que integra `verificacion-practico-3.py`) mueve el chequeo a +4,4008 m;
+// `L_W4` desacoplada de los nodos (la formula de `aCerradaW4` calculada con un L viejo
+// de 5 m mientras el perfil real mide 7) lo mueve a -2,0004 m. Las dos, cuatro ordenes
+// de magnitud arriba del residuo de fondo.
+
 // El estado derivado de (h, v0): la marcha de Newton, la velocidad y el tiempo en D
-// (donde arranca el freno), y la desaceleracion CON LA QUE FRENA LA ANIMACION -- que
-// no es `aCerradaW4`: sale de la v_D que dio la marcha y de L_W4, para que el carro
-// se detenga exactamente en E pase lo que pase con los dos deslizadores.
+// (donde arranca el freno), la desaceleracion CON LA QUE FRENA LA ANIMACION -- que no
+// es `aCerradaW4`: sale de la v_D que dio la marcha y de L_W4, para que el carro se
+// detenga exactamente en E pase lo que pase con los dos deslizadores -- y la distancia
+// integrada en el tiempo del chequeo de arriba (no depende del cuadro, se calcula una
+// sola vez por cambio de deslizador, igual que la marcha).
 function calcularCaminoW4(h, v0) {
   const tabla = marchaNewtonW4(h, v0);
   const ultimo = tabla[tabla.length - 1];
   const vD = ultimo.v;
   const aAnimacion = vD * vD / (2 * L_W4);
-  return { tabla, vD, aAnimacion, tAD: ultimo.t, duracion: ultimo.t + vD / aAnimacion };
+  const aCerrada = aCerradaW4(v0, h);
+  const distanciaFrenoIntegrada = distanciaFrenoIntegradaW4(vD, aCerrada);
+  return { tabla, vD, aAnimacion, aCerrada, distanciaFrenoIntegrada, tAD: ultimo.t, duracion: ultimo.t + vD / aAnimacion };
 }
 
 let hW4 = 3, v0W4 = 2, escenaCuadranteW4 = false;
@@ -1091,7 +1136,7 @@ function pintarW4(ctx, l) {
   }
 
   const h = hW4, v0 = v0W4;
-  const { tabla, vD, aAnimacion, tAD } = caminoW4;
+  const { tabla, vD, aAnimacion, distanciaFrenoIntegrada, tAD } = caminoW4;
   const t = escenaW4.t;
   const total = energiaTotalW4(v0, h);
   let x, y, v, K, U, Q;
@@ -1115,18 +1160,13 @@ function pintarW4(ctx, l) {
     x = X_D_W4 + s; y = 0;
     K = 0.5 * v * v; U = 0; Q = total - K;
 
-    // Chequeo del tramo de freno (Paso 4): la animacion frena con `aAnimacion` (sale de
-    // la v_D de LA MARCHA y de L_W4, no de la formula del enunciado). `aMedida` es la
-    // aceleracion que alguien leeria con un cronometro (v y s ya generados con
-    // `aAnimacion`, asi que da lo mismo salvo redondeo); `aCerrada` es la formula del
-    // papel, que no pasa por la marcha ni por el perfil. La resta vale
-    // (v_D,marcha^2 - (v0^2+2gh)) / (2L): da cero si y solo si la marcha llega a D con
-    // la v que la forma cerrada predice Y el tramo del dibujo mide L_W4 -- o sea, dice
-    // que el carro se detiene EXACTAMENTE en E.
-    const aCerrada = aCerradaW4(v0, h);
-    const aMedida = s > 1e-9 ? (vD * vD - v * v) / (2 * s) : aAnimacion;
+    // Chequeo del tramo de freno: ver el comentario junto a `distanciaFrenoIntegradaW4`,
+    // mas arriba, por que este SI es un segundo camino y el anterior no lo era. La
+    // animacion en si sigue frenando con `aAnimacion` (que arriba de este comentario:
+    // sale de la v_D de LA MARCHA y de L_W4, para que el carro se detenga EXACTAMENTE en
+    // E) -- lo que cambia es con que se lo contrasta.
     leer('w4-chequeo', '—');                              // en el freno: no aplica
-    leer('w4-chequeo-a', num(aMedida - aCerrada, 4) + ' m/s²');
+    leer('w4-chequeo-a', num(distanciaFrenoIntegrada - L_W4, 4) + ' m');
   }
 
   // La barra: cinetica de la VELOCIDAD (marcha o frenado), potencial de la ALTURA del
@@ -1153,13 +1193,16 @@ const widgetW4 = crearWidget({
   pagina, canvas: el('w4-cv'),
   margen: MARGEN_W4,
   escalaUniforme: true,
-  // `centrar: true` es lo que la escena del cuadrante necesita para que el punto de
-  // detencion quede adentro del marco a cualquier ancho (Paso 5 y Paso 8.5): sin esto
-  // el sobrante horizontal se va entero al margen derecho y el bloque en C queda mas
-  // pegado al borde de lo medido en el plan. En la escena de la montana rusa el efecto
-  // es cosmetico -solo cambia como se reparte el aire vertical a un ancho angosto,
-  // donde antes se iba todo arriba de la barra- y no mueve ninguna lectura.
-  centrar: true,
+  // SIN `centrar`: medido (revision de la Tarea 6), el sobrante horizontal en la
+  // escena del cuadrante es CERO por debajo de ~800 px de canvas -ahi manda la escala
+  // vertical, no la horizontal- asi que `centrar` no mueve un pixel en todo el rango
+  // angosto. Arriba de eso, `centrar:false` deja MAS aire real hasta el borde del
+  // canvas que `centrar:true` (a 880 px, 139 px contra 105), no menos: la cuenta
+  // ingenua ("el sobrante se va entero a la derecha, hay que repartirlo") comparaba
+  // contra el borde DEL ENCUADRE, no contra el borde DEL CANVAS, y son cosas distintas.
+  // En la escena de la montana rusa, `centrar:false` es ademas el que reproduce el
+  // Paso 3 tal como esta medido (el sobrante vertical a un ancho angosto se va entero
+  // al margen superior). Los dos motivos apuntan para el mismo lado.
   encuadre: encuadreW4,
   dibujar: pintarW4,
 });
