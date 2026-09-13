@@ -100,7 +100,7 @@ La columna *"Prácticos: Guía N"* **no indica qué guía corresponde al tema de
 | La Tierra que cae | La aceleración centrípeta de la Tierra alrededor del Sol, vista como una caída continua que nunca llega a tocar | Práctico 1, ej. 12 |
 | El auto y el camión | El cruce de dos parábolas de posición como la respuesta geométrica al problema de alcance | Práctico 1, ej. 5 |
 
-Ya está la Guía 3 completa —trabajo, energía y cantidad de movimiento—, en los dos ensayos de la tabla de arriba.
+Ya está la Guía 3 completa —trabajo, energía y cantidad de movimiento—, en los dos ensayos de la tabla de arriba. Sigue pendiente el diseño de la portada, que lo hace el dueño del repositorio directamente.
 
 ### Hojas resumen
 
