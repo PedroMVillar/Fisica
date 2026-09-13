@@ -64,7 +64,10 @@ canvas { width: 100%; aspect-ratio: 16/8; display: block; touch-action: none; }
 .parrafo { font: 400 19px/1.62 'Source Serif 4', Georgia, serif; margin: 18px 0 0; text-wrap: pretty; }
 .parrafo-suelto { font: 400 19px/1.62 'Source Serif 4', Georgia, serif; margin: 30px 0 0; text-wrap: pretty; }
 
-.titulo-seccion { font: 600 13px/1 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin: 52px 0 0; }
+/* line-height 1.35 y no 1: en pantallas angostas un rotulo largo envuelve --«TRABAJO,
+   ENERGIA Y CANTIDAD DE MOVIMIENTO» a 390 px-- y con 1 las dos lineas se tocan: la tilde
+   de ENERGIA pisa la de abajo. En un rotulo de una sola linea no cambia nada. */
+.titulo-seccion { font: 600 13px/1.35 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin: 52px 0 0; }
 
 /* .rotulo-mono titula el widget ("Simulacion 1"); .rotulo-campo etiqueta un control.
    Difieren solo en letter-spacing (.14em vs .1em) y tampoco es descuido: la distincion
