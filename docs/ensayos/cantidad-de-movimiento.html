@@ -133,7 +133,51 @@ try {
   <p class="parrafo">Marcá la casilla de explosión. Un cuerpo de 2 kg a 3 m/s se parte en dos mitades, una sale a 1 m/s y la otra a 5 m/s. La cantidad de movimiento total sigue siendo 6 kg·m/s, exactamente. Y la energía cinética pasó de 9,0 a 13,0 J: <b class="negrita">subió un 44 %</b>. No es un error de cuenta ni una violación de nada: esa energía estaba guardada en la química del explosivo y las fuerzas internas la soltaron. La conservación de <i>p</i> nunca prometió nada sobre la energía — sólo dice que <b class="negrita">nada de afuera</b> empujó.</p>
 </div>
 
+<div class="columna">
+  <h2 class="titulo-seccion">03 · La cantidad de movimiento cambia de dueño</h2>
+  <p class="parrafo">Acá hay tres cuerpos y dos choques encadenados, y el ejercicio se resuelve de atrás para adelante — lo cual es raro la primera vez. El último choque es el más simple: la bala se queda adentro del bloque 2, así que los dos terminan con la misma velocidad, y de ahí sale con qué velocidad venía la bala. Con ese número se resuelve el choque anterior. Y en ningún momento se puede escribir una ecuación de energía: los dos choques son inelásticos, la energía se fue en calor y en agujero, y <b class="negrita">nadie sabe cuánta</b>.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación 3</span>
+      <span class="titulo-fila">La bala y los dos bloques</span>
+      <span class="nota-fila">— la barra de arriba no cambia de largo; la de abajo se vacía en dos golpes.</span>
+    </div>
+    <canvas id="m3-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end">
+      <label class="control" style="flex:1 1 220px;min-width:180px">
+        <span class="rotulo-campo">Instante <output id="m3-instante-out" class="valor-control">antes de todo</output></span>
+        <input id="m3-instante" type="range" min="0" max="2" step="1" value="0" style="width:100%">
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>p de la bala <b id="m3-pb" class="lectura-valor azul">3,2900 kg·m/s</b></span>
+      <span>p del bloque 1 <b id="m3-p1" class="lectura-valor azul">0,0000 kg·m/s</b></span>
+      <span>p del bloque 2 <b id="m3-p2" class="lectura-valor azul">0,0000 kg·m/s</b></span>
+      <span>p total − p inicial <b id="m3-chequeo" class="lectura-valor tenue">0,0000 kg·m/s</b></span>
+      <span>K total <b id="m3-k" class="lectura-valor azul">541,21 J</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p class="parrafo-suelto">Mové el deslizador por los tres instantes y mirá la barra de arriba: no cambia de largo ni una vez. Lo que cambia es de quién es cada pedazo. La bala entra con los 3,29 kg·m/s enteros, le pasa 0,756 al bloque 1 al atravesarlo, y le entrega los 2,534 que le quedaban al bloque 2 al quedarse adentro. <b class="negrita">La cantidad de movimiento no se crea ni se destruye: cambia de dueño.</b></p>
+  <p class="parrafo">Y mirá la barra de abajo en el mismo recorrido: de 541,2 J quedan 2,0 J. Se fue el <b class="negrita">99,6 %</b> de la energía cinética —en calor, en deformar el plomo, en hacer los dos agujeros—. Si alguien hubiera intentado resolver este ejercicio escribiendo «la energía se conserva», habría planteado una ecuación falsa y el sistema no habría tenido solución física.</p>
+  <p class="parrafo">El control que cierra el ejercicio: la bala perdió 75,60 m/s al atravesar el bloque 1, lo que en cantidad de movimiento son 0,010 × 75,60 = <b class="negrita">0,7560 kg·m/s</b>. Y el bloque 1 quedó con 1,2 × 0,63 = <b class="negrita">0,7560 kg·m/s</b>. Lo que uno perdió es exactamente lo que el otro ganó, hasta el cuarto decimal, sin que haga falta saber cuánta fuerza hizo la bala ni cuánto duró el paso.</p>
+</div>
+
 <div class="columna columna-final">
+  <h2 class="titulo-seccion">Para tener a mano</h2>
+  <ol style="font:400 19px/1.62 'Source Serif 4',Georgia,serif;margin:18px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:10px">
+    <li>Impulso = fuerza × tiempo = Δ<i>p</i>. Depende de cuánto empuja y de cuánto dura, <b class="negrita">no</b> de a qué velocidad va el cuerpo.</li>
+    <li>La cantidad de movimiento de un sistema se conserva si no hay fuerzas <b class="negrita">externas</b>. Las internas —por más violentas que sean— no cuentan, porque vienen de a pares opuestos.</li>
+    <li>Es una magnitud con <b class="negrita">signo</b> sobre cada eje. Perder el signo es el error más caro de este tema; «de frente» significa signos opuestos.</li>
+    <li>La energía cinética es una cuenta <b class="negrita">aparte</b>: baja en un choque inelástico, se mantiene en uno elástico, y <b class="negrita">sube</b> en una explosión. Nada de eso afecta a la conservación de <i>p</i>.</li>
+    <li>Un choque perfectamente inelástico da <b class="negrita">una</b> ecuación (la de <i>p</i>) y una incógnita menos, porque los cuerpos salen juntos. Uno elástico da <b class="negrita">dos</b> (p y K), o equivalentemente la de <i>p</i> más la de restitución con e = 1.</li>
+  </ol>
+
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
     <a href="energia.html">Ensayo 7 · Trabajo y energía</a>
@@ -145,7 +189,7 @@ try {
 <script type="module">
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget, panelesApilados } from '../motor/widget.js';
-import { eje, curva, cuerpo, punteado, COLGADO_ROTULO_EJE, bloque, acotarFlecha, marcaDeTope, vectorPx } from '../motor/dibujo.js';
+import { eje, curva, cuerpo, punteado, COLGADO_ROTULO_EJE, bloque, acotarFlecha, marcaDeTope, vectorPx, presupuestoPx } from '../motor/dibujo.js';
 import { colocarEtiqueta } from '../motor/etiqueta.js';
 import { deslizador, boton, casilla } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
@@ -682,6 +726,196 @@ casilla({
     el('m2-e').disabled = v;
     widgetM2.repintar();
   },
+});
+
+/* ---------- widget 3: la bala y los dos bloques ---------- */
+
+// Practico 3, ej. 11. Verificado en el bloque "Ej 11":
+//   v_m (bala al dejar el bloque 1) = 253.40 m/s ; v_i (al entrar) = 329.00 m/s
+//   control: Dp de la bala = 0.7560 kg m/s = m1 v1 = 0.7560 kg m/s
+// Sufijo `_M3`, igual que las Tareas 8 y 9 anteriores: es el TERCER widget de este mismo
+// modulo, y sin el sufijo cualquier nombre corto (M, V1, V2...) repite uno de los dos de
+// arriba y es el SyntaxError de siempre (Global Constraint del espacio de nombres).
+const MB_M3 = 0.01, MB1_M3 = 1.2, MB2_M3 = 1.8, V1_M3 = 0.63, V2_M3 = 1.4;
+const VM_M3 = (MB_M3 + MB2_M3) * V2_M3 / MB_M3;             // 253.40 m/s
+const VI_M3 = (MB1_M3 * V1_M3 + MB_M3 * VM_M3) / MB_M3;     // 329.00 m/s
+
+// Tres instantes, cada uno con la lista de cantidades de movimiento y de velocidades de
+// los tres cuerpos (bala, bloque 1, bloque 2), mas `x` -la posicion esquematica de cada
+// uno en ESTE instante, en fracciones de ancho (Paso 3: el enunciado no da distancias) y
+// `k` -la energia cinetica total de ese instante, por su propia cuenta, no por diferencia
+// con otro instante-. Cada numero de `p`/`v`/`k` sale de multiplicar masas y velocidades
+// que ya estaban calculadas arriba -ninguno se copia de otro instante-, que es lo que
+// permite que la suma de `p` pueda no dar 3,29 y delatarlo (ver el comentario de mas
+// abajo sobre que SI y que NO cubre ese chequeo).
+const INSTANTES_M3 = [
+  {
+    nombre: 'antes de todo',
+    p: [MB_M3 * VI_M3, 0, 0], v: [VI_M3, 0, 0],
+    k: 0.5 * MB_M3 * VI_M3 * VI_M3,
+    x: [0.08, 0.40, 0.84],
+  },
+  {
+    nombre: 'la bala dejó el bloque 1',
+    p: [MB_M3 * VM_M3, MB1_M3 * V1_M3, 0], v: [VM_M3, V1_M3, 0],
+    k: 0.5 * MB_M3 * VM_M3 * VM_M3 + 0.5 * MB1_M3 * V1_M3 * V1_M3,
+    x: [0.50, 0.40, 0.84],
+  },
+  {
+    nombre: 'final',
+    p: [0, MB1_M3 * V1_M3, (MB_M3 + MB2_M3) * V2_M3], v: [0, V1_M3, V2_M3],
+    k: 0.5 * MB1_M3 * V1_M3 * V1_M3 + 0.5 * (MB_M3 + MB2_M3) * V2_M3 * V2_M3,
+    x: [0.84, 0.60, 0.84],
+  },
+];
+// Medido (node -e, antes de dibujar nada): p = [3.29,0,0] / [2.534,0.756,0] /
+// [0,0.756,2.534] -suma 3.29 en los tres, con la p INDIVIDUAL de la bala cayendo a
+// cero en el ultimo-; k = 541.205 / 321.29594 / 2.01194 J -queda el 0,37 %-.
+const P0_M3 = INSTANTES_M3[0].p[0];   // 3.29 kg*m/s, el total DECLARADO de la barra de arriba
+const K0_M3 = INSTANTES_M3[0].k;      // 541.205 J, el total DECLARADO de la barra de abajo
+
+// Que tan ciego es el chequeo de mas abajo ("p total - p inicial") -- MEDIDO rompiendo
+// VM_M3 a proposito (node -e), no razonado.
+//
+// VI_M3 esta DEFINIDA como (MB1_M3*V1_M3 + MB_M3*VM_M3) / MB_M3, que es la conservacion
+// de p del choque 1 (bala-bloque 1) despejada para VI_M3. Eso significa que
+// MB_M3*VI_M3 = MB1_M3*V1_M3 + MB_M3*VM_M3 vale SIEMPRE, sea cual sea VM_M3 -bien o mal
+// calculada-, porque es la MISMA ecuacion escrita de otra forma, no una segunda medicion.
+// Y el `p` del instante 1 es exactamente ese lado derecho. Por eso el chequeo en el
+// instante 1 (y, trivialmente, en el instante 0, donde `p` ES `MB_M3*VI_M3`) es ciego a
+// CUALQUIER error dentro de la formula de VM_M3: medido reemplazando esa formula por
+// `(MB_M3 + MB2_M3) * V2_M3 / MB2_M3` (bug plausible: dividir por la masa que no va) el
+// chequeo da exactamente 0 en los instantes 0 y 1, identico al caso sin el bug.
+//
+// Donde SI muerde ese mismo bug es en el instante 2: su `p` sale de MB1_M3*V1_M3 +
+// (MB_M3+MB2_M3)*V2_M3 -una cuenta que NO pasa por VM_M3 en absoluto-, asi que comparado
+// contra MB_M3*VI_M3 (que SI arrastra el VM_M3 roto) la resta deja de cancelarse: da
+// exactamente −2,519922 kg·m/s con el bug de arriba, y −0,014 kg·m/s con un segundo bug
+// mas sutil (`(MB_M3 + ¿MB_M3?) * V2_M3 / MB_M3`, olvidarse de sumar MB2_M3 en el choque
+// 2) -medidos los dos, no razonados-. En cambio MB1_M3 y V1_M3 SI son invisibles para el
+// chequeo en el instante 2 sea cual sea su valor: aparecen igual de los dos lados de la
+// resta (en el `p` del instante 2 directo, y adentro de VI_M3 via la misma formula), asi
+// que se cancelan solos -el mismo fenomeno de "variable que alimenta las dos ramas" que
+// G/M_M1 en el widget 1-. En limpio: el instante 2 es el UNICO de los tres que verifica
+// algo (que MB_M3*VM_M3 sea igual a (MB_M3+MB2_M3)*V2_M3, la conservacion del choque 2,
+// la que da VM_M3 en primer lugar), y lo hace sin que importen MB1_M3 ni V1_M3; los
+// instantes 0 y 1 no verifican nada -son la misma ecuacion despejada dos veces-, asi que
+// el deslizador tiene que pasar por el instante 2 para que el chequeo diga algo.
+//
+// El control cruzado que describe el ejercicio -la bala pierde 0,7560 kg*m/s y el
+// bloque 1 se lleva exactamente 0,7560- tiene el MISMO problema, y mas agudo: "la bala
+// perdio MB_M3*(VI_M3-VM_M3)" y "el bloque 1 se llevo MB1_M3*V1_M3" son, otra vez por la
+// definicion de VI_M3 de arriba, la MISMA cantidad escrita de dos formas (MB_M3*VI_M3 -
+// MB_M3*VM_M3 = MB1_M3*V1_M3 es la ecuacion de conservacion del choque 1, sin vuelta).
+// Por eso el parrafo de cierre lo presenta como lo que es -una lectura del modelo, una
+// forma de VER la simetria del impulso- y no como un chequeo del codigo: ese trabajo ya
+// lo hace la lectura de "p total - p inicial" de arriba, con el limite que se acaba de
+// medir.
+
+// Sufijo `_M3`, igual que las constantes fisicas de arriba. Los 96 px de abajo son las
+// dos barras (Paso 4): 22 px cada una mas el aire entre ellas y hasta el borde.
+const MARGEN_M3 = { L: 30, R: 24, T: 20, B: 96 };
+const FILA_M3 = 0.30;                  // altura (fraccion) de la fila de los tres cuerpos
+const ANCHO_BASE_BLOQUE_M3 = 0.12;     // ancho de referencia (1 kg), escalado por raiz(masa)
+const RADIO_BALA_M3 = 4;               // px, fijo -- la bala es un punto, no un bloque
+const X_BARRA_M3 = 28, MARGEN_BARRA_D_M3 = 24, ALTO_BARRA_M3 = 22;
+
+// Dibuja la bala como un punto -radio fijo en pixeles, como cualquier `cuerpo()` del
+// sitio- y cuelga su velocidad por ARRIBA con `colocarEtiqueta` (Paso 3: nunca con
+// flecha -las cuatro velocidades del ejercicio son inviables en la misma escala, ver el
+// comentario de la Tarea- ni con `texto()` directo, porque el punto se mueve con el
+// deslizador). Colgar siempre hacia arriba aleja el rotulo de la frontera con las dos
+// barras de abajo -el "segundo limite" de etiqueta.js que ya mordio dos veces en esta
+// pagina (widgets 1 y 2): `crearWidget` le pasa el {ancho, alto} del CANVAS ENTERO como
+// limites, y este widget no usa `panelesApilados`, pero las barras ocupan a mano el
+// margen inferior igual que si fueran un panel vecino.
+function dibujarBalaM3(ctx, l, x, v, paleta) {
+  const [px, py] = l.p([x, FILA_M3]);
+  cuerpo(ctx, l, [x, FILA_M3], { radio: RADIO_BALA_M3, color: paleta.ink });
+  colocarEtiqueta(ctx, num(v, 2) + ' m/s', px, py, {
+    dx: 0, dy: -(RADIO_BALA_M3 + 12), alineacion: 'center', color: paleta.blue,
+  });
+}
+
+// Dibuja un bloque -ancho ~ raiz(masa), mismo criterio que ANCHO_BASE_BLOQUE_M2 del
+// widget 2- con el borde del mismo color que le toca en la barra de arriba (para que la
+// escena y la barra hablen el mismo idioma de colores), y cuelga su velocidad por
+// arriba, igual que la bala.
+function dibujarBloqueM3(ctx, l, x, m, v, colorBorde, paleta) {
+  const ancho = ANCHO_BASE_BLOQUE_M3 * Math.sqrt(m);
+  const alto = ancho / 2;
+  bloque(ctx, l, [x, FILA_M3], { ancho, alto, color: paleta.band, borde: colorBorde });
+  const [px, py] = l.p([x, FILA_M3]);
+  const semiAltoPx = (alto / 2) * l.escala.y;
+  colocarEtiqueta(ctx, num(v, 2) + ' m/s', px, py, {
+    dx: 0, dy: -(semiAltoPx + 12), alineacion: 'center', color: paleta.blue,
+  });
+}
+
+let instante_M3 = 0;
+
+function pintarM3(ctx, l) {
+  const p = pagina.paleta();
+  const inst = INSTANTES_M3[instante_M3];
+
+  // --- la escena: los tres cuerpos en su posicion esquematica de este instante ---
+  // El orden de dibujo (bala, bloque 1, bloque 2) es siempre el mismo, para que el
+  // registro de colisiones de `colocarEtiqueta` sea predecible: en el instante 1 la
+  // bala y el bloque 1 quedan al lado uno del otro -justo el caso para el que el modulo
+  // existe-, y en el instante 2 la bala (p = 0, incrustada) comparte posicion con el
+  // bloque 2, asi que sus dos rotulos tambien se esquivan entre si.
+  dibujarBalaM3(ctx, l, inst.x[0], inst.v[0], p);
+  dibujarBloqueM3(ctx, l, inst.x[1], MB1_M3, inst.v[1], p.blue, p);
+  dibujarBloqueM3(ctx, l, inst.x[2], MB2_M3, inst.v[2], p.blueSoft, p);
+
+  // --- barra de arriba: cantidad de movimiento, SIEMPRE llena ---
+  // `total` es el DECLARADO (P0_M3), no la suma de los tres segmentos: son la misma
+  // cantidad solo porque el modelo cierra, y si no cerrara la barra quedaria con un
+  // tramo sin pintar o desbordada con marca de tope (comentario de `presupuestoPx`).
+  const anchoBarra = l.ancho - X_BARRA_M3 - MARGEN_BARRA_D_M3;
+  presupuestoPx(ctx, X_BARRA_M3, l.alto - 88, anchoBarra, ALTO_BARRA_M3, [
+    { valor: inst.p[0], color: p.ink, etiqueta: 'bala' },
+    { valor: inst.p[1], color: p.blue, etiqueta: 'bloque 1' },
+    { valor: inst.p[2], color: p.blueSoft, etiqueta: 'bloque 2' },
+  ], { total: P0_M3, colorBorde: p.rule, colorTexto: p.paper });
+
+  // --- barra de abajo: energia cinetica, en azul lo que QUEDA y en rojo lo DISIPADO ---
+  // Correccion del dueno sobre el brief original (que pedia un solo segmento rojo
+  // encogiendose): azul es cinetica -es cinematica-, rojo es lo que se disipo -sale de
+  // una fuerza de rozamiento/deformacion-, nunca la cinetica que queda. Con dos
+  // segmentos la barra queda SIEMPRE llena (K0_M3 = inst.k + disipado, por construccion:
+  // esta barra no es un chequeo, es una ilustracion -el chequeo real es la lectura de
+  // arriba y la de "K total"-, mismo criterio que la barra de energia del widget 4 de
+  // energia.html, donde Q tambien se calcula como `total - K`).
+  const disipado = K0_M3 - inst.k;
+  presupuestoPx(ctx, X_BARRA_M3, l.alto - 52, anchoBarra, ALTO_BARRA_M3, [
+    { valor: inst.k, color: p.blue, etiqueta: 'cinética' },
+    { valor: disipado, color: p.red, etiqueta: 'disipado' },
+  ], { total: K0_M3, colorBorde: p.rule, colorTexto: p.paper });
+
+  // --- las lecturas ---
+  leer('m3-pb', num(inst.p[0], 4) + ' kg·m/s');
+  leer('m3-p1', num(inst.p[1], 4) + ' kg·m/s');
+  leer('m3-p2', num(inst.p[2], 4) + ' kg·m/s');
+  const sumaP = inst.p[0] + inst.p[1] + inst.p[2];
+  leer('m3-chequeo', num(P0_M3 - sumaP, 4) + ' kg·m/s');
+  leer('m3-k', num(inst.k, 2) + ' J');
+}
+
+const widgetM3 = crearWidget({
+  pagina, canvas: el('m3-cv'),
+  margen: MARGEN_M3, escalaUniforme: false, altoMin: 320,
+  // La escena es esquematica -no hay distancias en el enunciado- asi que el encuadre es
+  // la unidad, y todo (`INSTANTES_M3[].x`, el ancho de los bloques) se ubica en
+  // fracciones de ancho.
+  encuadre: () => ({ xMin: 0, xMax: 1, yMin: 0, yMax: 1 }),
+  dibujar: pintarM3,
+});
+
+deslizador({
+  entrada: el('m3-instante'), salida: el('m3-instante-out'), pagina,
+  formato: v => INSTANTES_M3[v].nombre,
+  alCambiar: v => { instante_M3 = v; widgetM3.repintar(); },
 });
 
 /* ---------- arranque ---------- */
