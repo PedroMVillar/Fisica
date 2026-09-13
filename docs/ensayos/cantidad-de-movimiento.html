@@ -130,7 +130,7 @@ try {
 <div class="columna">
   <p class="parrafo-suelto">La posición por defecto <b class="negrita">es</b> el ejercicio 10: masas iguales, A viene a 3 m/s, B está quieta, y después del choque A queda clavada y B sale a 3 m/s. El choque elástico entre masas iguales es un intercambio de velocidades, siempre. Y ahí está la respuesta a la pregunta del enunciado: para que A quede quieta, B tenía que estar quieta — o sea que la premisa «chocan de frente» no se podía cumplir. Si B viniera de frente con velocidad no nula, A saldría con esa velocidad y no podría quedarse quieta.</p>
   <p class="parrafo">Poné <i>m</i><sub>1</sub> = 2, <i>m</i><sub>2</sub> = 1, <i>u</i><sub>1</sub> = 3 y <i>u</i><sub>2</sub> = −1, y después bajá el deslizador de restitución de 1 a 0 mirando las dos lecturas de abajo: «<i>p</i> antes − <i>p</i> después» no se mueve de cero ni una sola vez, en ninguna posición del deslizador. Δ<i>K</i> baja hasta −5,33 J. Ésa es la asimetría entera del tema: la cantidad de movimiento es una promesa, la energía cinética es una consecuencia.</p>
-  <p class="parrafo">Marcá la casilla de explosión. Un cuerpo de 2 kg a 3 m/s se parte en dos mitades, una sale a 1 m/s y la otra a 5 m/s. La cantidad de movimiento total sigue siendo 6 kg·m/s, exactamente. Y la energía cinética pasó de 9,0 a 13,0 J: <b class="negrita">subió un 44 %</b>. No es un error de cuenta ni una violación de nada: esa energía estaba guardada en la química del explosivo y las fuerzas internas la soltaron. La conservación de <i>p</i> nunca prometió nada sobre la energía — sólo dice que <b class="negrita">nada de afuera</b> empujó.</p>
+  <p class="parrafo">Marcá la casilla de explosión. Los cinco deslizadores se apagan solos porque en este modo no hay nada para elegir: el cuerpo, la velocidad y las dos mitades son los del enunciado, no un caso más de una familia continua. Un cuerpo de 2 kg a 3 m/s se parte en dos mitades, una sale a 1 m/s y la otra a 5 m/s. La cantidad de movimiento total sigue siendo 6 kg·m/s, exactamente. Y la energía cinética pasó de 9,0 a 13,0 J: <b class="negrita">subió un 44 %</b>. No es un error de cuenta ni una violación de nada: esa energía estaba guardada en la química del explosivo y las fuerzas internas la soltaron. La conservación de <i>p</i> nunca prometió nada sobre la energía — sólo dice que <b class="negrita">nada de afuera</b> empujó. Por eso la lectura de «ΔK por fórmula» muestra «—» en vez de un número: esa fórmula sale del coeficiente de restitución, y una explosión no tiene uno — mostrar un chequeo ahí sería inventar una comparación que no existe.</p>
 </div>
 
 <div class="columna">
@@ -498,6 +498,22 @@ const deltaKFormula_M2 = (m1, m2, u1, u2, e) =>
 // fijos de x -> x^2, no un agujero del chequeo. Con tres modos de choque, es justo el
 // modo del medio -el unico sin nombre propio- el que puede morder.
 //
+// Y esto no es una curiosidad del ejemplo numerico: en e=1 y e=0, el codigo con el
+// defecto de e^2 da v1' y v2' BIT-IDENTICOS a los del codigo correcto, para CUALQUIER
+// m1, m2, u1, u2 -no solo para m1=2,m2=1,u1=3,u2=-1-, porque en esos dos puntos
+// "e^2*(u1-u2)" y "e*(u1-u2)" son la misma expresion, no dos expresiones que coinciden
+// en valor por casualidad. Y no hay forma de armar un chequeo alternativo que si
+// distinga: las dos candidatas obvias -la velocidad de separacion invertida
+// (v2'-v1' = -(u2-u1) en el elastico) y las dos velocidades finales iguales (v1'=v2'
+// en el perfectamente inelastico)- reducen las dos, por algebra, a la MISMA ecuacion
+// que ya define a choque_M2: v2'-v1' = e*(u1-u2). Verificarlas es verificar de nuevo
+// la ecuacion con la que se construyo v1' y v2', asi que dan exactamente el mismo
+// blindaje que el chequeo de dK -- ni un chequeo mas nuevo, ni una vuelta distinta,
+// cambia nada. EN e=1 Y e=0, NINGUN CHEQUEO BASADO EN LAS SALIDAS PUEDE DISTINGUIR EL
+// CODIGO CORRECTO DEL ROTO, PORQUE LAS SALIDAS SON IGUALES. No es una debilidad de esta
+// implementacion: es imposible en principio, y no hace falta -ni conviene- salir a
+// buscarle un guardian a esos dos modos.
+//
 // Y el chequeo de dK comparte con el de p el mismo limite general que G/M_M1 en el
 // widget 1: m1, m2, u1, u2 y e alimentan por igual a choque_M2 (via dK) y a
 // deltaKFormula_M2 -son la MISMA identidad algebraica de la masa reducida para
@@ -667,9 +683,16 @@ function pintarM2(ctx, l) {
   // ~1e-13 del widget 1-, que `num()` imprime limpio como "0,00 J" pero que `dK < 0`
   // igual clasificaria como roja: un choque perfectamente elastico se veria como si
   // hubiera disipado energia. El umbral de 0,005 J es media unidad del ultimo decimal
-  // mostrado, asi que coincide exactamente con lo que el lector ve.
+  // mostrado, asi que coincide exactamente con lo que el lector ve -- y tiene que ser
+  // `<=`, no `<`: en m1=0.5, m2=1, u1=-0.2, u2=0, e=0.5 (valores exactos de deslizador)
+  // dK da -0,005 exacto, que `num()` redondea a "-0,01 J" (un negativo real, no ruido).
+  // Con `<` estricto ese punto quedaba justo afuera del umbral y se pintaba azul con un
+  // numero negativo a la vista; `<=` lo incluye sin volver a colar el ruido de e=1 (ese
+  // resto es ~1e-15, ocho ordenes de magnitud mas chico que 0,005, y el minimo dK
+  // negativo real de toda la grilla de deslizadores es -0,000238 J -- muy por debajo
+  // del umbral, asi que 0,005 sigue sin esconder nada real).
   const elDk = el('m2-dk');
-  if (elDk) { elDk.classList.toggle('roja', dK < -0.005); elDk.classList.toggle('azul', dK >= -0.005); }
+  if (elDk) { elDk.classList.toggle('roja', dK <= -0.005); elDk.classList.toggle('azul', dK > -0.005); }
   leer('m2-chequeo-k', explosion_M2 ? '—' : num(dKformula - dK, 2) + ' J');
 }
 
