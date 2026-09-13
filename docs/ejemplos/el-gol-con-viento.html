@@ -58,7 +58,7 @@ try {
       </div>
       <label class="control" style="flex:1 1 220px;min-width:190px">
         <span class="rotulo-campo">ángulo de tiro <output id="w1-ang-out" class="valor-control">30°</output></span>
-        <input id="w1-ang" type="range" min="10" max="80" step="1" value="30" style="width:100%">
+        <input id="w1-ang" type="range" min="10" max="65" step="1" value="30" style="width:100%">
       </label>
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding-bottom:4px">
         <input id="w1-viento" type="checkbox" checked style="accent-color:var(--blue);width:15px;height:15px">
@@ -70,7 +70,7 @@ try {
       <span>alcance <b id="w1-alcance" class="lectura-valor azul">44,12 m</b></span>
       <span>y en x = 45 m <b id="w1-y45" class="lectura-valor">no llega</b></span>
       <span>chequeo (posición) <b id="w1-chequeo" class="lectura-valor tenue">0,002 m</b></span>
-      <span>chequeo (apogeo/caída) <b id="w1-chequeo2" class="lectura-valor tenue">0,002 m · 0,0000 s</b></span>
+      <span>chequeo (apogeo/caída/arco) <b id="w1-chequeo2" class="lectura-valor tenue">0,002 m · 0,0000 s · 0,000 m</b></span>
       <span>¿gol? <b id="w1-gol" class="lectura-valor">no</b></span>
     </div>
   </div>
@@ -86,7 +86,7 @@ try {
     <li><b class="negrita">(e)</b> Sin viento, cuando <i>x</i> llega a 45 m (en <i>t</i> = 2,165 s) la pelota está a <i>y</i> = 2,543 m, o sea 0,103 m por encima del travesaño. Tampoco convierte, esta vez por arriba.</li>
     <li><b class="negrita">(f)</b> En el punto más alto, <i>v</i> = (18,38; 0) m/s —pura horizontal, por definición de «más alto»— y <i>a</i> = (−2, −10) m/s². El ángulo entre las dos es de unos 101°, no 90°: en el tiro parabólico común <i>v</i> y <i>a</i> son siempre perpendiculares en el vértice, porque ahí <i>a</i> es enteramente vertical. Acá no, porque <i>a</i><sub>x</sub> sigue frenando a la pelota incluso arriba.</li>
   </ol>
-  <p class="parrafo" style="margin-top:22px">El hallazgo no es «el viento le costó el gol»: es que la jugadora erra de las dos maneras posibles, con el viento puesto y con el viento sacado, y por razones que no comparten ni una línea de cuenta —una es el eje <i>x</i> quedándose corto, la otra es el eje <i>y</i> pasándose de largo. Y hay una pregunta que el enunciado no hace: manteniendo la misma <i>v</i>₀ y el mismo viento, ¿qué pasa con otro ángulo? Barriendo el control de arriba con el viento tildado no aparecen dos tramos sino cinco, alternando entre las mismas dos maneras de errar: por debajo de unos 31,45° se queda corta —el error del ítem (d), el de 30°—; entre 31,45° y 38,82° entra; entre 38,83° y 42,97° se va por encima del travesaño —el error del ítem (e), sólo que acá pasa <b class="negrita">con</b> el viento soplando, sin necesidad de apagarlo (a 40° llega a 2,587 m, a 41° a 2,630 m, contra los 2,44 del arco)—; entre 42,98° y 47,24° vuelve a entrar; y por encima de unos 47,24° se queda corta otra vez. Los 30° del enunciado caen en el primero de esos dos tramos cortos —no en ninguna franja del medio—, así que con este viento y esta <i>v</i>₀ alcanzaba con apuntar un poco más arriba, a partir de unos 31,5°, para que entrara.</p>
+  <p class="parrafo" style="margin-top:22px">El hallazgo no es «el viento le costó el gol»: es que la jugadora erra de las dos maneras posibles, con el viento puesto y con el viento sacado, y por razones que no comparten ni una línea de cuenta —una es el eje <i>x</i> quedándose corto, la otra es el eje <i>y</i> pasándose de largo. Y hay una pregunta que el enunciado no hace: manteniendo la misma <i>v</i>₀ y el mismo viento, ¿qué pasa con otro ángulo? Barriendo el control de arriba con el viento tildado no aparecen dos tramos sino cinco, alternando entre las mismas dos maneras de errar: por debajo de 31,45° se queda corta —el error del ítem (d), el de 30°—; entre 31,45° y 38,82° entra; entre 38,83° y 42,97° se va por encima del travesaño —el error del ítem (e), sólo que acá pasa <b class="negrita">con</b> el viento soplando, sin necesidad de apagarlo (a 40° llega a 2,587 m, a 41° a 2,630 m, contra los 2,44 del arco)—; entre 42,98° y 47,24° vuelve a entrar; y por encima de 47,24° se queda corta otra vez. (Las fronteras exactas están en 31,4426° y 47,2475°; 31,45° y 47,24° son, de los ángulos con dos decimales, el primero y el último que de verdad convierten —no el redondeo más cercano, que en los dos casos cae del lado que no entra.) Los 30° del enunciado caen en el primero de esos dos tramos cortos —no en ninguna franja del medio—, así que con este viento y esta <i>v</i>₀ alcanzaba con apuntar un poco más arriba, a partir de unos 31,5°, para que entrara.</p>
 </div>
 
 <div class="columna columna-final">
@@ -118,6 +118,17 @@ const leer = (id, valor) => { const e = el(id); if (e) e.textContent = valor; };
 // estos mismos v0, angulo, g y a_x.
 const G_W1 = 10;              // POR ENUNCIADO: este ejercicio fija g = 10, no 9,8
 const V0_W1 = 24, AX_W1 = -2, ARCO_X_W1 = 45, ARCO_H_W1 = 2.44;
+
+// El deslizador de angulo tope en 65 grados, no en 80: el enunciado dice que el viento
+// acelera "en sentido opuesto a su direccion de movimiento", y el modelo (aceleracion
+// horizontal CONSTANTE, siempre hacia atras) deja de representar esa frase apenas v_x
+// se hace negativa en algun momento del vuelo -- ahi la pelota "vuelve" y el viento,
+// que sigue empujando para el mismo lado, pasa a tener a favor, no en contra. v_x(t) =
+// v0 cos(ang) + AX_W1 t se anula en t* = v0 cos(ang) / 2, y eso pasa ANTES de la caida
+// (tLand_W1 = 4.8 sen(ang)) exactamente cuando tan(ang) > 12/4.8 = 2.5, o sea ang >
+// arctan(2.5) = 68,1986 grados. Con el tope en 65 el modelo nunca sale de lo que dice
+// el enunciado, y sobra margen holgado por encima de las dos ventanas de gol (que
+// terminan en 47,25 grados) y por debajo del umbral real (68,1986).
 
 // Camino 1 -- forma cerrada. Es la que DIBUJA la trayectoria.
 const posCerrada_W1 = (t, ang, ax) => ({
@@ -188,19 +199,45 @@ const hMax_W1 = ang => {
 // 5.40 como en la revision, este chequeo salta a 1.7985 m. Rompiendo `tLand_W1`
 // analogamente (multiplicandolo por 0.8) el chequeo de caida salta a 0.48 s. Las dos
 // roturas, que antes pasaban desapercibidas, ahora se ven.
+//
+// Ronda de arreglo 2: ninguno de los dos chequeos de arriba llama a `tiempoEnX_W1` --
+// la raiz de la cuadratica que alimenta `yEnArco_W1` y `esGol_W1`, o sea las lecturas
+// "y en x = 45 m" y "¿gol?", que son la respuesta al item (d) del enunciado. Medido por
+// la revision: tomando la raiz MAYOR en vez de la menor, a 35 grados "¿gol?" pasa de si
+// a no y "y en 45 m" de 1,4338 m a "no llega", y los dos chequeos de arriba quedan bit
+// a bit iguales -- no la vigilan.
+//
+// Se cierra igual que las dos anteriores, sin maquina nueva: la misma pasada de Euler
+// ya cruza x = 45 en algun momento (si es que cruza), asi que alcanza con anotar la
+// PRIMERA vez que `x` pasa de menos de `ARCO_X_W1` a `ARCO_X_W1` o mas -- la deteccion
+// del cruce por su propio muestreo, sin llamar a `tiempoEnX_W1` -- y guardar la `y` en
+// ese instante.
+//
+// Medido a 35 grados, con viento (el mismo caso que uso la revision): sano, la raiz
+// menor da y = 1,433814 m contra la version cerrada, y la integrada (el cruce real,
+// detectado sin la formula) da y = 1,427201 m -- diferencia 6,6e-3 m, del mismo orden
+// que los otros dos chequeos. Con la raiz MAYOR en vez de la menor, `yEnArco_W1` pasa a
+// devolver `null` (esa raiz cae despues de `tLand_W1`, asi que el filtro existente la
+// descarta) mientras el cruce integrado sigue detectando y = 1,427201 m sin cambiar
+// nada -- el chequeo pasa de "6,6e-3 m, todo bien" a "un lado dice que no llega y el
+// otro midio 1,4272 m", una discrepancia imposible de confundir con ruido.
 function integrarVuelo_W1(ang, ax, tSup = 6, n = 24000) {
   const dt = tSup / n;
   let x = 0, y = 0, vx = V0_W1 * Math.cos(ang), vy = V0_W1 * Math.sin(ang);
-  let hApogeo = 0, tApogeo = 0, tCaida = null, yAnterior = y;
+  let hApogeo = 0, tApogeo = 0, tCaida = null, yAnterior = y, xAnterior = x;
+  let tCruceArco = null, yCruceArco = null;
   for (let i = 1; i <= n; i++) {
     vx += ax * dt; vy -= G_W1 * dt;
     x += vx * dt;  y += vy * dt;
     const t = i * dt;
     if (y > hApogeo) { hApogeo = y; tApogeo = t; }
     if (tCaida === null && yAnterior > 0 && y <= 0) tCaida = t;
-    yAnterior = y;
+    if (tCruceArco === null && xAnterior < ARCO_X_W1 && x >= ARCO_X_W1) {
+      tCruceArco = t; yCruceArco = y;
+    }
+    yAnterior = y; xAnterior = x;
   }
-  return { tApogeo, hApogeo, tCaida };
+  return { tApogeo, hApogeo, tCaida, tCruceArco, yCruceArco };
 }
 
 // El instante (el menor positivo) en que x(t) llega a `obj`, o null si nunca llega --
@@ -328,7 +365,19 @@ function widgetGolConViento(pagina) {
     const extremos = integrarVuelo_W1(ang, axActivo);
     const chequeoApogeo = Math.abs(hMax_W1(ang) - extremos.hApogeo);
     const chequeoCaida = Math.abs(tLand - extremos.tCaida);
-    leer('w1-chequeo2', num(chequeoApogeo, 3) + ' m · ' + num(chequeoCaida, 4) + ' s');
+    // El cruce por x = 45 detectado por la propia integracion, filtrado igual que
+    // `yEnArco_W1` filtra su raiz (descartado si el cruce quedo despues de la caida).
+    // Los dos lados pueden discrepar en si HAY cruce o no (no solo en cuanto vale la
+    // y ahi), asi que "ambos null" es acuerdo genuino -- no un cero por construccion,
+    // una rotura como la de la raiz mayor puede volver null a uno solo de los dos -- y
+    // "uno null y el otro no" es la rotura misma, mostrada como texto en vez de forzar
+    // una resta sin sentido.
+    const yArcoIntegrado = (extremos.tCruceArco !== null && extremos.tCruceArco <= extremos.tCaida + 1e-9)
+      ? extremos.yCruceArco : null;
+    const chequeoArco = y45 === null && yArcoIntegrado === null ? num(0, 3) + ' m'
+      : y45 === null || yArcoIntegrado === null ? 'no coincide'
+      : num(Math.abs(y45 - yArcoIntegrado), 3) + ' m';
+    leer('w1-chequeo2', num(chequeoApogeo, 3) + ' m · ' + num(chequeoCaida, 4) + ' s · ' + chequeoArco);
     leer('w1-gol', esGol_W1(ang, axActivo) ? 'sí' : 'no');
   }
 
