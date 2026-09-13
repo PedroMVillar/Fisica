@@ -67,9 +67,10 @@ try {
     </div>
     <div class="lecturas">
       <span>altura máxima <b id="w1-hmax" class="lectura-valor azul">7,20 m</b></span>
-      <span>alcance <b id="w1-alcance" class="lectura-valor azul">23,50 m</b></span>
+      <span>alcance <b id="w1-alcance" class="lectura-valor azul">44,12 m</b></span>
       <span>y en x = 45 m <b id="w1-y45" class="lectura-valor">no llega</b></span>
-      <span>chequeo <b id="w1-chequeo" class="lectura-valor tenue">0,002 m</b></span>
+      <span>chequeo (posición) <b id="w1-chequeo" class="lectura-valor tenue">0,002 m</b></span>
+      <span>chequeo (apogeo/caída) <b id="w1-chequeo2" class="lectura-valor tenue">0,002 m · 0,0000 s</b></span>
       <span>¿gol? <b id="w1-gol" class="lectura-valor">no</b></span>
     </div>
   </div>
@@ -85,7 +86,7 @@ try {
     <li><b class="negrita">(e)</b> Sin viento, cuando <i>x</i> llega a 45 m (en <i>t</i> = 2,165 s) la pelota está a <i>y</i> = 2,543 m, o sea 0,103 m por encima del travesaño. Tampoco convierte, esta vez por arriba.</li>
     <li><b class="negrita">(f)</b> En el punto más alto, <i>v</i> = (18,38; 0) m/s —pura horizontal, por definición de «más alto»— y <i>a</i> = (−2, −10) m/s². El ángulo entre las dos es de unos 101°, no 90°: en el tiro parabólico común <i>v</i> y <i>a</i> son siempre perpendiculares en el vértice, porque ahí <i>a</i> es enteramente vertical. Acá no, porque <i>a</i><sub>x</sub> sigue frenando a la pelota incluso arriba.</li>
   </ol>
-  <p class="parrafo" style="margin-top:22px">El hallazgo no es «el viento le costó el gol»: es que la jugadora erra de las dos maneras posibles, con el viento puesto y con el viento sacado, y por razones que no comparten ni una línea de cuenta —una es el eje <i>x</i> quedándose corto, la otra es el eje <i>y</i> pasándose de largo. Y hay una tercera pregunta, que el enunciado no hace: manteniendo la misma <i>v</i>₀ y el mismo viento, ¿existe algún ángulo que sí entre? Sí —barriendo el control de arriba con el viento tildado, cualquier ángulo entre unos 32° y 39°, o entre 43° y 47°, convierte. 30° cae justo en la franja angosta del medio que no.</p>
+  <p class="parrafo" style="margin-top:22px">El hallazgo no es «el viento le costó el gol»: es que la jugadora erra de las dos maneras posibles, con el viento puesto y con el viento sacado, y por razones que no comparten ni una línea de cuenta —una es el eje <i>x</i> quedándose corto, la otra es el eje <i>y</i> pasándose de largo. Y hay una pregunta que el enunciado no hace: manteniendo la misma <i>v</i>₀ y el mismo viento, ¿qué pasa con otro ángulo? Barriendo el control de arriba con el viento tildado no aparecen dos tramos sino cinco, alternando entre las mismas dos maneras de errar: por debajo de unos 31,45° se queda corta —el error del ítem (d), el de 30°—; entre 31,45° y 38,82° entra; entre 38,83° y 42,97° se va por encima del travesaño —el error del ítem (e), sólo que acá pasa <b class="negrita">con</b> el viento soplando, sin necesidad de apagarlo (a 40° llega a 2,587 m, a 41° a 2,630 m, contra los 2,44 del arco)—; entre 42,98° y 47,24° vuelve a entrar; y por encima de unos 47,24° se queda corta otra vez. Los 30° del enunciado caen en el primero de esos dos tramos cortos —no en ninguna franja del medio—, así que con este viento y esta <i>v</i>₀ alcanzaba con apuntar un poco más arriba, a partir de unos 31,5°, para que entrara.</p>
 </div>
 
 <div class="columna columna-final">
@@ -163,6 +164,44 @@ const hMax_W1 = ang => {
   const tm = tMax_W1(ang);
   return V0_W1 * Math.sin(ang) * tm - 0.5 * G_W1 * tm * tm;
 };
+
+// El chequeo de posicion (mas arriba) NO vigila `tMax_W1`/`hMax_W1`/`tLand_W1`: compara
+// `posCerrada_W1` contra `posIntegrada_W1` en el instante `t` que ya trae la escena, y
+// esas tres funciones no participan de esa cuenta para nada -- se puede romper
+// `hMax_W1` entero (por ejemplo hacerla devolver 5.40 en vez de 7.20) y el chequeo de
+// posicion no se entera, porque nunca la llama. Hallazgo de revision, confirmado
+// corriendolo: con `h_max` roto a 5.40 el chequeo de posicion se quedo quieto en
+// ~1.8e-3 m.
+//
+// El arreglo reutiliza la MISMA integracion de `posIntegrada_W1` en vez de agregar una
+// maquina nueva: en una sola pasada de Euler (mismo orden de actualizacion: v primero,
+// posicion despues) se queda con la altura mas alta que la pelota alcanzo (el apogeo
+// detectado por el propio muestreo, no por `tMax_W1`) y el primer instante en que `y`
+// cruza a cero desde arriba (la caida detectada por el propio cruce, no por
+// `tLand_W1`). Esos dos numeros SI son independientes de `tMax_W1`/`hMax_W1`/`tLand_W1`
+// -- no las llaman en ningun lado -- asi que compararlos contra ellas cierra el hueco.
+//
+// Medido (ang = 30 grados, viento no cambia nada de esto porque ninguna de las dos
+// funciones de aca ve a `ax`): sano, el apogeo integrado da 1.5e-3 m de diferencia
+// contra `hMax_W1` y la caida integrada da (por debajo de la resolucion del paso,
+// ~1e-16 s aqui; en otros angulos, 1e-5 a 2e-4 s) contra `tLand_W1`. Con `h_max` roto a
+// 5.40 como en la revision, este chequeo salta a 1.7985 m. Rompiendo `tLand_W1`
+// analogamente (multiplicandolo por 0.8) el chequeo de caida salta a 0.48 s. Las dos
+// roturas, que antes pasaban desapercibidas, ahora se ven.
+function integrarVuelo_W1(ang, ax, tSup = 6, n = 24000) {
+  const dt = tSup / n;
+  let x = 0, y = 0, vx = V0_W1 * Math.cos(ang), vy = V0_W1 * Math.sin(ang);
+  let hApogeo = 0, tApogeo = 0, tCaida = null, yAnterior = y;
+  for (let i = 1; i <= n; i++) {
+    vx += ax * dt; vy -= G_W1 * dt;
+    x += vx * dt;  y += vy * dt;
+    const t = i * dt;
+    if (y > hApogeo) { hApogeo = y; tApogeo = t; }
+    if (tCaida === null && yAnterior > 0 && y <= 0) tCaida = t;
+    yAnterior = y;
+  }
+  return { tApogeo, hApogeo, tCaida };
+}
 
 // El instante (el menor positivo) en que x(t) llega a `obj`, o null si nunca llega --
 // con viento x(t) es una parabola invertida en t y puede no alcanzar `obj` nunca (disc
@@ -277,11 +316,19 @@ function widgetGolConViento(pagina) {
         { color: p.red, grosor: 2, punta: 8, rotulo: 'a' });
     }
 
+    // `alcance` es la x DE CAIDA, la convencion que ya fija tiro-parabolico.html -- no
+    // la posicion instantanea de la pelota (esa la sigue mostrando el punto sobre la
+    // curva y la linea punteada hasta el piso).
+    const posCaida = posCerrada_W1(tLand, ang, axActivo);
     leer('w1-hmax', num(hMax_W1(ang), 2) + ' m');
-    leer('w1-alcance', num(pos.x, 2) + ' m');
+    leer('w1-alcance', num(posCaida.x, 2) + ' m');
     const y45 = yEnArco_W1(ang, axActivo);
     leer('w1-y45', y45 === null ? 'no llega' : num(y45, 3) + ' m');
     leer('w1-chequeo', num(distancia_W1(posCerrada_W1(t, ang, axActivo), posIntegrada_W1(t, ang, axActivo)), 3) + ' m');
+    const extremos = integrarVuelo_W1(ang, axActivo);
+    const chequeoApogeo = Math.abs(hMax_W1(ang) - extremos.hApogeo);
+    const chequeoCaida = Math.abs(tLand - extremos.tCaida);
+    leer('w1-chequeo2', num(chequeoApogeo, 3) + ' m · ' + num(chequeoCaida, 4) + ' s');
     leer('w1-gol', esGol_W1(ang, axActivo) ? 'sí' : 'no');
   }
 
