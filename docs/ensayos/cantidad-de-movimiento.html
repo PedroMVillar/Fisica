@@ -79,6 +79,60 @@ try {
   <p class="parrafo">Y la advertencia que hace falta antes de la sección siguiente: nada de esto dice una palabra sobre la energía. La energía cinética en el segundo segundo crece mucho más que en el primero (va con <i>v</i>²), y al impulso no le importa. Son <b class="negrita">dos contabilidades distintas</b> sobre el mismo movimiento.</p>
 </div>
 
+<div class="columna">
+  <h2 class="titulo-seccion">02 · Lo que un choque no puede cambiar</h2>
+  <p class="parrafo">En un choque pasan cosas espantosas —se deforma, se calienta, hace ruido— y ninguna de ellas se puede calcular. Lo bueno es que no hace falta. Mientras las únicas fuerzas en juego sean las que los cuerpos se hacen entre sí, la cantidad de movimiento total del par es la misma antes y después, y punto. La energía cinética, en cambio, es libre: puede quedarse igual, puede caer, y —esto es lo que casi nadie espera— puede <b class="negrita">subir</b>.</p>
+</div>
+
+<section class="banda">
+  <div class="marco-widget">
+    <div class="encabezado-widget">
+      <span class="rotulo-mono">Simulación 2</span>
+      <span class="titulo-fila">Antes y después</span>
+      <span class="nota-fila">— la aguja de arriba nunca se mueve; la de abajo hace lo que quiera.</span>
+    </div>
+    <canvas id="m2-cv"></canvas>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end">
+      <label class="control" style="flex:1 1 90px;min-width:80px">
+        <span class="rotulo-campo">m₁ <output id="m2-m1-out" class="valor-control">1,0 kg</output></span>
+        <input id="m2-m1" type="range" min="0.5" max="3" step="0.1" value="1" style="width:100%">
+      </label>
+      <label class="control" style="flex:1 1 90px;min-width:80px">
+        <span class="rotulo-campo">m₂ <output id="m2-m2-out" class="valor-control">1,0 kg</output></span>
+        <input id="m2-m2" type="range" min="0.5" max="3" step="0.1" value="1" style="width:100%">
+      </label>
+      <label class="control" style="flex:1 1 90px;min-width:80px">
+        <span class="rotulo-campo">u₁ <output id="m2-u1-out" class="valor-control">3,0 m/s</output></span>
+        <input id="m2-u1" type="range" min="-3" max="3" step="0.1" value="3" style="width:100%">
+      </label>
+      <label class="control" style="flex:1 1 90px;min-width:80px">
+        <span class="rotulo-campo">u₂ <output id="m2-u2-out" class="valor-control">0,0 m/s</output></span>
+        <input id="m2-u2" type="range" min="-3" max="3" step="0.1" value="0" style="width:100%">
+      </label>
+      <label class="control" style="flex:1 1 90px;min-width:80px">
+        <span class="rotulo-campo">e <output id="m2-e-out" class="valor-control">1,0</output></span>
+        <input id="m2-e" type="range" min="0" max="1" step="0.1" value="1" style="width:100%">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font:500 10.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:pointer">
+        <input id="m2-explosion" type="checkbox" style="accent-color:var(--blue);width:15px;height:15px">Explosión (ej. 12)
+      </label>
+    </div>
+    <div class="lecturas">
+      <span>p antes <b id="m2-pa" class="lectura-valor azul">3,00 kg·m/s</b></span>
+      <span>p después <b id="m2-pd" class="lectura-valor azul">3,00 kg·m/s</b></span>
+      <span>p antes − p después <b id="m2-chequeo-p" class="lectura-valor tenue">0,00 kg·m/s</b></span>
+      <span>ΔK <b id="m2-dk" class="lectura-valor azul">0,00 J</b></span>
+      <span>ΔK por fórmula − ΔK <b id="m2-chequeo-k" class="lectura-valor tenue">0,00 J</b></span>
+    </div>
+  </div>
+</section>
+
+<div class="columna">
+  <p class="parrafo-suelto">La posición por defecto <b class="negrita">es</b> el ejercicio 10: masas iguales, A viene a 3 m/s, B está quieta, y después del choque A queda clavada y B sale a 3 m/s. El choque elástico entre masas iguales es un intercambio de velocidades, siempre. Y ahí está la respuesta a la pregunta del enunciado: para que A quede quieta, B tenía que estar quieta — o sea que la premisa «chocan de frente» no se podía cumplir. Si B viniera de frente con velocidad no nula, A saldría con esa velocidad y no podría quedarse quieta.</p>
+  <p class="parrafo">Poné <i>m</i><sub>1</sub> = 2, <i>m</i><sub>2</sub> = 1, <i>u</i><sub>1</sub> = 3 y <i>u</i><sub>2</sub> = −1, y después bajá el deslizador de restitución de 1 a 0 mirando las dos lecturas de abajo: «<i>p</i> antes − <i>p</i> después» no se mueve de cero ni una sola vez, en ninguna posición del deslizador. Δ<i>K</i> baja hasta −5,33 J. Ésa es la asimetría entera del tema: la cantidad de movimiento es una promesa, la energía cinética es una consecuencia.</p>
+  <p class="parrafo">Marcá la casilla de explosión. Un cuerpo de 2 kg a 3 m/s se parte en dos mitades, una sale a 1 m/s y la otra a 5 m/s. La cantidad de movimiento total sigue siendo 6 kg·m/s, exactamente. Y la energía cinética pasó de 9,0 a 13,0 J: <b class="negrita">subió un 44 %</b>. No es un error de cuenta ni una violación de nada: esa energía estaba guardada en la química del explosivo y las fuerzas internas la soltaron. La conservación de <i>p</i> nunca prometió nada sobre la energía — sólo dice que <b class="negrita">nada de afuera</b> empujó.</p>
+</div>
+
 <div class="columna columna-final">
   <div style="height:1px;background:var(--rule);margin:44px 0 0"></div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--dim);margin:18px 0 0">
@@ -91,9 +145,9 @@ try {
 <script type="module">
 import { crearPagina } from '../motor/pagina.js';
 import { crearWidget, panelesApilados } from '../motor/widget.js';
-import { eje, curva, cuerpo, punteado, COLGADO_ROTULO_EJE } from '../motor/dibujo.js';
+import { eje, curva, cuerpo, punteado, COLGADO_ROTULO_EJE, bloque, acotarFlecha, marcaDeTope, vectorPx } from '../motor/dibujo.js';
 import { colocarEtiqueta } from '../motor/etiqueta.js';
-import { deslizador, boton } from '../motor/controles.js';
+import { deslizador, boton, casilla } from '../motor/controles.js';
 import { conectarTema } from '../motor/tema.js';
 import { num } from '../motor/formato.js';
 
@@ -339,6 +393,295 @@ boton({
 boton({
   elemento: el('m1-b2'), pagina,
   alApretar: () => { fijarDeslizadorM1(el('m1-t1'), 1); fijarDeslizadorM1(el('m1-dt'), 1); },
+});
+
+/* ---------- widget 2: antes y despues ---------- */
+
+// Practico 3, ej. 10 y 12. Verificado en "Ej 10 y 12 (numerico)" y "Choque general":
+//   defecto (m1=m2=1, u1=3, u2=0, e=1) -> v1'=0, v2'=3 : el intercambio del ej. 10
+//   explosion (m=2, v=3)               -> mitades de 1 kg a 1 y a 5 m/s, K de 9 a 13 J
+//   blindaje (m1=2, m2=1, u1=3, u2=-1) -> e=1: 0.3333 y 4.3333 ; e=0.5: 1 y 3 ;
+//                                         e=0: 1.6667 y 1.6667, con dK de 0, -4 y -5.3333
+
+// Las dos ecuaciones: conservacion de p, y la definicion del coeficiente de restitucion
+// (la velocidad de separacion es e veces la de aproximacion). Con e=1 esto es
+// EQUIVALENTE a conservar la energia cinetica, pero no hace falta escribirla: sale sola.
+// Sufijo `_M2`, no `choque` a secas: la Tarea 9 declara su propia fisica en este MISMO
+// modulo con sufijo `_M3`, y dos identificadores iguales serian el SyntaxError de
+// siempre (Global Constraint del espacio de nombres).
+function choque_M2(m1, m2, u1, u2, e) {
+  const p = m1 * u1 + m2 * u2;
+  const v1 = (p - m2 * e * (u1 - u2)) / (m1 + m2);
+  const v2 = (p + m1 * e * (u1 - u2)) / (m1 + m2);
+  return { v1, v2 };
+}
+
+// El otro camino para dK, que NO pasa por las velocidades finales: la formula de la masa
+// reducida. Ojo con el factor (1 - e^2): la investigacion la propone sin el, y asi solo
+// vale para e = 0. Con el factor vale para los tres casos -- verificado en el bloque
+// "Choque general": da +0.0000, -4.0000 y -5.3333 para e = 1, 0.5 y 0, exactamente lo
+// mismo que restar las energias cineticas.
+const deltaKFormula_M2 = (m1, m2, u1, u2, e) =>
+  -0.5 * (m1 * m2 / (m1 + m2)) * (1 - e * e) * (u1 - u2) ** 2;
+
+// Comprobacion cerrada de escritorio, antes de dibujar nada (corrida con `node -e`, no
+// solo razonada): choque_M2(1,1,3,0,1) da {v1:0, v2:3} -el intercambio del ej. 10-;
+// choque_M2(2,1,3,-1,0.5) da {v1:1, v2:3}; choque_M2(2,1,3,-1,0) da las dos velocidades
+// iguales a 1,6667. Los tres coinciden con el bloque "Choque general" de
+// verificacion-practico-3.py.
+//
+// Que tan ciego es cada chequeo -- MEDIDO rompiendo choque_M2 a proposito, no razonado.
+//
+// Un defecto realista (confundir el "e" de la formula con "e al cuadrado" -las dos
+// conviven en este archivo, en deltaKFormula_M2 de arriba) es INVISIBLE para
+// "p antes - p despues" en TODO el rango de los cinco deslizadores: la identidad
+// m1*v1+m2*v2 = p sale de COMO esta construido choque_M2 (v1 resta y v2 suma el MISMO
+// termino, pesado por la masa del OTRO cuerpo), asi que cualquier expresion que se use
+// en lugar de "e*(u1-u2)" -e^2*(u1-u2), o lo que sea- sigue cancelando exacto al sumar
+// m1*v1+m2*v2. Medido con m1=2,m2=1,u1=3,u2=-1: con el defecto de e^2 el chequeo de p
+// da 0 exacto en e=1, e=0.5 y e=0 -igual que sin el defecto-, no se mueve ni un
+// femtometro.
+//
+// El chequeo de dK SI agarra ese mismo defecto, pero no en todos lados: a e=0.5 (el
+// modo de restitucion real, el unico de los tres sin nombre propio) el defecto da
+// v1'=1,3333 y v2'=2,3333 (en vez de 1 y 3), dK=-5,0000 contra una formula que sigue
+// diciendo -4,0000 -- chequeo de 1,00 J, bien visible. Pero en los dos extremos CON
+// nombre propio -e=1 (elastico) y e=0 (perfectamente inelastico)- e^2 y e valen
+// EXACTAMENTE lo mismo (1^2=1, 0^2=0), asi que ahi el defecto se vuelve invisible para
+// los DOS chequeos a la vez: no es que el chequeo de dK sea peor en los extremos, es que
+// en esos dos puntos el propio defecto deja de ser un defecto -produce el mismo numero
+// que el codigo correcto-, y eso es una coincidencia de que 0 y 1 son los dos puntos
+// fijos de x -> x^2, no un agujero del chequeo. Con tres modos de choque, es justo el
+// modo del medio -el unico sin nombre propio- el que puede morder.
+//
+// Y el chequeo de dK comparte con el de p el mismo limite general que G/M_M1 en el
+// widget 1: m1, m2, u1, u2 y e alimentan por igual a choque_M2 (via dK) y a
+// deltaKFormula_M2 -son la MISMA identidad algebraica de la masa reducida para
+// cualquier valor que tomen-, asi que un error en COMO se leen esos cinco valores del
+// DOM (una etiqueta mal cableada, un slider que lee el id de otro) es invisible para
+// los dos chequeos a la vez, en cualquier modo.
+//
+// Lo que SI agarran los dos -y es el defecto real que hay que evitar- es un error
+// DENTRO de la formula de choque_M2 que rompa la simetria de masas: con m1 y m2
+// CRUZADOS en el numerador (m1 donde va m2 y viceversa), el chequeo de p da 4,0000 en
+// e=1 y 2,0000 en e=0.5 -bien visible-, pero vuelve a 0,0000 exacto en e=0, porque ahi
+// el termino e*(u1-u2) que carga el defecto se anula por si solo. Cada chequeo tiene su
+// propio modo ciego, y ninguno de los dos es ciego en el mismo lugar que el otro -- por
+// eso hacen falta las dos lecturas, no una.
+
+// En modo explosion el coeficiente de restitucion no significa nada y la formula de
+// masa reducida no aplica: la energia que aparece la puso la explosion, no la geometria
+// del choque. Ahi la lectura de chequeo de K muestra "--", no un numero: fingir un
+// chequeo donde no hay dos caminos miente peor que no tenerlo.
+const M_EXPLOSION_M2 = 2, V_EXPLOSION_M2 = 3;
+const M_FRAGMENTO_M2 = M_EXPLOSION_M2 / 2;
+
+// Sufijo `_M2`, igual que las constantes fisicas de arriba.
+const MARGEN_M2 = { L: 30, R: 24, T: 18, B: 26 };
+
+// Fila de cada cuerpo dentro de su panel (paneles 1 y 2) y de cada cadena dentro del
+// panel 3 -mismo numero, reusado por prolijidad, no porque haga falta que coincidan.
+const FILA_M2 = 0.45;
+// Ancho del bloque de cada cuerpo, proporcional a la raiz de la masa (paneles 1 y 2).
+const ANCHO_BASE_BLOQUE_M2 = 0.6;
+// Escala de las flechas de velocidad: 1 m del marco por cada m/s (paneles 1 y 2), con
+// tope en 5,0 m del marco -344 px a 880, 123 px a 350, medido- para el caso extremo del
+// panel 2 (v2' = 7,2857 m/s en la esquina del rango de deslizadores).
+const TOPE_V_M2 = 5.0;
+// Escala y tope de las cadenas de cantidad de movimiento del panel 3: 0,9 m del marco
+// por cada kg*m/s, tope en 5,5 m del marco -el tope actua recien por encima de
+// 5.5/0.9 = 6,11 kg*m/s, mas alla de los dos casos del enunciado (p=3 y p=6)-.
+const ESC_U_M2 = 0.9, TOPE_U_M2 = 5.5;
+// El tope se acota CONTRA EL ORIGEN de la cadena (el cursor acumulado), no flecha por
+// flecha: dos flechas acotadas por separado darian una cadena de 2*5.5 = 11 u de largo
+// en un panel donde entran 12. Mismo criterio para p_total.
+const acotarCursor_M2 = v => Math.max(-TOPE_U_M2, Math.min(TOPE_U_M2, v));
+
+// Cuidado con el cero: `vectorPx` descarta en silencio cualquier flecha de menos de
+// 1 px (un cuerpo detenido, como B en el caso por defecto, o los dos cuerpos en e = 0
+// con p = 0), y eso se leeria como "no hay dato" en vez de "vale cero". Por debajo de
+// 1 px se dibuja un punto (`cuerpo`, radio 3) rotulado "0" en su lugar -- en paneles 1
+// y 2 tanto como en las cadenas del panel 3 (mismo tratamiento, dos funciones abajo).
+function flechaVelocidad_M2(ctx, lp, fila, v, color) {
+  const [x0, y0] = lp.p([0, fila]);
+  const dxCrudo = v * lp.escala.x;
+  if (Math.abs(dxCrudo) < 1) {
+    cuerpo(ctx, lp, [0, fila], { radio: 3, color });
+    colocarEtiqueta(ctx, '0', x0, y0, { dx: 8, dy: -10, color });
+    return;
+  }
+  const topePx = TOPE_V_M2 * lp.escala.x;
+  const [dx, , acotado] = acotarFlecha(dxCrudo, 0, topePx);
+  vectorPx(ctx, x0, y0, x0 + dx, y0, { color, grosor: 2 });
+  if (acotado) marcaDeTope(ctx, x0 + dx, y0, dx, 0, { color });
+}
+
+// Dibuja un cuerpo (bloque, ancho ~ raiz(masa)) y su flecha de velocidad, las dos
+// centradas en (0, fila) del panel `lp`. El origen compartido en x=0 (en vez de alguna
+// posicion "real" de cada cuerpo) es a proposito: con el tope de 5,0 u la punta de la
+// flecha mas larga posible cae en x=+-5, bien adentro del encuadre [-6,6] -- si el
+// cuerpo estuviera pegado a un borde la flecha se saldria del canvas exactamente como
+// advierte la Global Constraint del segundo limite de etiqueta.js, pero para el CANVAS
+// entero, no solo para un rotulo.
+function cuerpoYFlechaV_M2(ctx, lp, m, v, fila, paleta) {
+  const ancho = ANCHO_BASE_BLOQUE_M2 * Math.sqrt(m);
+  bloque(ctx, lp, [0, fila], { ancho, alto: ancho / 2, color: paleta.band, borde: paleta.ink });
+  flechaVelocidad_M2(ctx, lp, fila, v, paleta.blue);
+}
+
+// La cadena punta a cola de una fila del panel 3 (`filaY`, en unidades de marco): cada
+// tramo es {p, letra}. Devuelve el cursor final (en unidades de marco) para que quien
+// llama pueda dibujar la vertical de p_total con el mismo criterio de tope.
+function cadenaP_M2(ctx, lp, tramos, filaY, color) {
+  const y = lp.py(filaY);
+  let cursor = 0;
+  for (const { p, letra } of tramos) {
+    const inicio = cursor;
+    const fin = acotarCursor_M2(cursor + p * ESC_U_M2);
+    const x1 = lp.px(inicio), x2 = lp.px(fin);
+    if (Math.abs(x2 - x1) < 1) {
+      cuerpo(ctx, lp, [inicio, filaY], { radio: 3, color });
+      colocarEtiqueta(ctx, '0', x1, y, { dx: 8, dy: -8, color });
+    } else {
+      vectorPx(ctx, x1, y, x2, y, { color, grosor: 2, rotulo: letra, rdy: -8 });
+    }
+    cursor = fin;
+  }
+  if (Math.abs(cursor) >= TOPE_U_M2 - 1e-9) marcaDeTope(ctx, lp.px(cursor), y, 1, 0, { color });
+  return cursor;
+}
+
+let m1_M2 = 1, m2_M2 = 1, u1_M2 = 3, u2_M2 = 0, e_M2 = 1, explosion_M2 = false;
+
+function pintarM2(ctx, l) {
+  const p = pagina.paleta();
+  const [{ lp: lpAntes }, { lp: lpDespues }, { lp: lpP }] = panelesApilados({
+    lienzo: l, margen: { L: MARGEN_M2.L, R: MARGEN_M2.R }, hueco: 0,
+    paneles: [{ yMin: -1, yMax: 1 }, { yMin: -1, yMax: 1 }, { yMin: -1, yMax: 1 }],
+  });
+
+  let pAntes, pDespues, dK, dKformula, cuerposAntes, cuerposDespues, tramosAntes, tramosDespues;
+
+  if (explosion_M2) {
+    const vLenta = V_EXPLOSION_M2 / 3, vRapida = 5 * V_EXPLOSION_M2 / 3;
+    pAntes = M_EXPLOSION_M2 * V_EXPLOSION_M2;
+    pDespues = M_FRAGMENTO_M2 * vLenta + M_FRAGMENTO_M2 * vRapida;
+    dK = (0.5 * M_FRAGMENTO_M2 * vLenta * vLenta + 0.5 * M_FRAGMENTO_M2 * vRapida * vRapida)
+       - 0.5 * M_EXPLOSION_M2 * V_EXPLOSION_M2 * V_EXPLOSION_M2;
+    dKformula = null;
+    cuerposAntes = [{ m: M_EXPLOSION_M2, v: V_EXPLOSION_M2, fila: 0 }];
+    cuerposDespues = [{ m: M_FRAGMENTO_M2, v: vLenta, fila: FILA_M2 }, { m: M_FRAGMENTO_M2, v: vRapida, fila: -FILA_M2 }];
+    tramosAntes = [{ p: pAntes, letra: 'p' }];
+    tramosDespues = [{ p: M_FRAGMENTO_M2 * vLenta, letra: 'p₁′' }, { p: M_FRAGMENTO_M2 * vRapida, letra: 'p₂′' }];
+  } else {
+    const m1 = m1_M2, m2 = m2_M2, u1 = u1_M2, u2 = u2_M2, e = e_M2;
+    const { v1, v2 } = choque_M2(m1, m2, u1, u2, e);
+    pAntes = m1 * u1 + m2 * u2;
+    pDespues = m1 * v1 + m2 * v2;              // de las velocidades finales, no de pAntes
+    dK = (0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2) - (0.5 * m1 * u1 * u1 + 0.5 * m2 * u2 * u2);
+    dKformula = deltaKFormula_M2(m1, m2, u1, u2, e);
+    cuerposAntes = [{ m: m1, v: u1, fila: FILA_M2 }, { m: m2, v: u2, fila: -FILA_M2 }];
+    cuerposDespues = [{ m: m1, v: v1, fila: FILA_M2 }, { m: m2, v: v2, fila: -FILA_M2 }];
+    tramosAntes = [{ p: m1 * u1, letra: 'p₁' }, { p: m2 * u2, letra: 'p₂' }];
+    tramosDespues = [{ p: m1 * v1, letra: 'p₁′' }, { p: m2 * v2, letra: 'p₂′' }];
+  }
+
+  // --- panel 1: ANTES ---
+  for (const c of cuerposAntes) cuerpoYFlechaV_M2(ctx, lpAntes, c.m, c.v, c.fila, p);
+  // --- panel 2: DESPUES ---
+  for (const c of cuerposDespues) cuerpoYFlechaV_M2(ctx, lpDespues, c.m, c.v, c.fila, p);
+
+  // --- panel 3: cantidad de movimiento, las dos cadenas ---
+  cadenaP_M2(ctx, lpP, tramosAntes, FILA_M2, p.blueSoft);
+  cadenaP_M2(ctx, lpP, tramosDespues, -FILA_M2, p.blue);
+  // La vertical de p_total se calcula por su cuenta (m1*u1 + m2*u2, o el p de la
+  // explosion) -- NO sumando lo que dibujaron las cadenas: son dos caminos que tienen
+  // que coincidir, no el mismo camino escrito dos veces.
+  const finTotal = acotarCursor_M2(pAntes * ESC_U_M2);
+  const xTotal = lpP.px(finTotal);
+  // El rotulo de p_total cuelga del extremo DE ABAJO de la vertical, no del de arriba:
+  // panel 3 es el ULTIMO de los tres apilados, asi que su borde inferior no tiene un
+  // panel vecino (linda con el margen inferior del canvas, aire vacio) mientras que su
+  // borde superior linda con el panel 2 -el mismo segundo limite de etiqueta.js que
+  // amenaza a los otros cuatro rotulos de este panel. Colgarlo del de arriba (medido
+  // durante el barrido de esta tarea) empujaba el texto 2-3 px dentro del panel 2;
+  // colgarlo del de abajo lo deja siempre adentro de su propio panel.
+  punteado(ctx, xTotal, lpP.py(0.8), xTotal, lpP.py(-0.8), { color: p.dim, guiones: [2, 3] });
+  colocarEtiqueta(ctx, 'p total', xTotal, lpP.py(-0.8), { dx: 6, dy: 8, color: p.dim });
+  if (Math.abs(finTotal) >= TOPE_U_M2 - 1e-9) marcaDeTope(ctx, xTotal, lpP.py(0), 1, 0, { color: p.dim });
+
+  // --- las lecturas ---
+  leer('m2-pa', num(pAntes, 2) + ' kg·m/s');
+  leer('m2-pd', num(pDespues, 2) + ' kg·m/s');
+  leer('m2-chequeo-p', num(pAntes - pDespues, 2) + ' kg·m/s');
+  leer('m2-dk', num(dK, 2) + ' J');
+  // ΔK rojo cuando la energia cinetica cae (lo que se "disipo" en el choque, en el
+  // sentido de la Global Constraint de reparto semantico) y azul cuando no -incluido el
+  // cero exacto del choque elastico, y el caso de explosion, donde sube-. El umbral no
+  // es `dK < 0` a secas: en e=1 el resto de punto flotante de restar dos energias
+  // cineticas casi iguales da un numero como -1,8e-15 -mismo fenomeno que el ruido de
+  // ~1e-13 del widget 1-, que `num()` imprime limpio como "0,00 J" pero que `dK < 0`
+  // igual clasificaria como roja: un choque perfectamente elastico se veria como si
+  // hubiera disipado energia. El umbral de 0,005 J es media unidad del ultimo decimal
+  // mostrado, asi que coincide exactamente con lo que el lector ve.
+  const elDk = el('m2-dk');
+  if (elDk) { elDk.classList.toggle('roja', dK < -0.005); elDk.classList.toggle('azul', dK >= -0.005); }
+  leer('m2-chequeo-k', explosion_M2 ? '—' : num(dKformula - dK, 2) + ' J');
+}
+
+const widgetM2 = crearWidget({
+  pagina, canvas: el('m2-cv'),
+  margen: MARGEN_M2, escalaUniforme: false,
+  // El piso de panel es el mismo numero del widget 1 y se REUSA -- no se redeclara, que
+  // seria el SyntaxError. Medido: a 880 px el canvas sale de 430 px (el altoMax por
+  // defecto) con 68,83 px por unidad de marco; a 350 px, de 398 px (el piso de aca) con
+  // 24,67 px/u.
+  altoMin: 3 * ALTO_PANEL_MINIMO_M1 + MARGEN_M2.T + MARGEN_M2.B,
+  encuadre: () => ({ xMin: -6, xMax: 6, yMin: 0, yMax: 3 }),
+  dibujar: pintarM2,
+});
+
+deslizador({
+  entrada: el('m2-m1'), salida: el('m2-m1-out'), pagina,
+  formato: v => num(v, 1) + ' kg',
+  alCambiar: v => { m1_M2 = v; widgetM2.repintar(); },
+});
+deslizador({
+  entrada: el('m2-m2'), salida: el('m2-m2-out'), pagina,
+  formato: v => num(v, 1) + ' kg',
+  alCambiar: v => { m2_M2 = v; widgetM2.repintar(); },
+});
+deslizador({
+  entrada: el('m2-u1'), salida: el('m2-u1-out'), pagina,
+  formato: v => num(v, 1) + ' m/s',
+  alCambiar: v => { u1_M2 = v; widgetM2.repintar(); },
+});
+deslizador({
+  entrada: el('m2-u2'), salida: el('m2-u2-out'), pagina,
+  formato: v => num(v, 1) + ' m/s',
+  alCambiar: v => { u2_M2 = v; widgetM2.repintar(); },
+});
+deslizador({
+  entrada: el('m2-e'), salida: el('m2-e-out'), pagina,
+  formato: v => num(v, 1),
+  alCambiar: v => { e_M2 = v; widgetM2.repintar(); },
+});
+casilla({
+  entrada: el('m2-explosion'), pagina,
+  alCambiar: v => {
+    explosion_M2 = v;
+    // Se deshabilitan los CINCO, no solo `m2-e`: en modo explosion la escena ignora las
+    // dos masas y las dos velocidades ademas del coeficiente de restitucion -las masas
+    // son mitades por enunciado y la velocidad inicial es la del cuerpo entero (Paso 2
+    // de la Tarea 8)-, y deshabilitar solo uno sugeriria que los otros cuatro si hacen
+    // algo (Paso 5 de la Tarea 6).
+    el('m2-m1').disabled = v;
+    el('m2-m2').disabled = v;
+    el('m2-u1').disabled = v;
+    el('m2-u2').disabled = v;
+    el('m2-e').disabled = v;
+    widgetM2.repintar();
+  },
 });
 
 /* ---------- arranque ---------- */
