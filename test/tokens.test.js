@@ -48,6 +48,18 @@ test('el tema oscuro de base.css es, token a token, el del archivo de diseño', 
   assert.deepEqual(deBase(OSCURO), deDiseno(OSCURO));
 });
 
+// El oscuro esta DOS veces en base.css: una para la eleccion explicita del lector
+// (`[data-theme="dark"]`) y otra para cuando lo pide el sistema y no hubo eleccion
+// (dentro de `@media (prefers-color-scheme: dark)`). Son la misma paleta y tienen que
+// seguir siendolo: si se separan, el sitio se ve de un color cuando el lector aprieta
+// el boton y de otro cuando el mismo tema llega desde el sistema operativo, que es la
+// clase de diferencia que nadie mira hasta que ya esta publicada.
+const OSCURO_DEL_SISTEMA = ':root:not([data-theme="light"]){';
+
+test('las dos copias del tema oscuro de base.css son la misma paleta', () => {
+  assert.deepEqual(deBase(OSCURO_DEL_SISTEMA), deBase(OSCURO));
+});
+
 test('la paleta del diseño sigue siendo la que esta rama dio por buena', () => {
   assert.deepEqual(deDiseno(CLARO), {
     paper: '#fbfaf7', band: '#f2f0ea', ink: '#16151a', dim: '#6a6760',

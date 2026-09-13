@@ -7,6 +7,21 @@
   --paper:#131316; --band:#191a1e; --ink:#eceae4; --dim:#948f86; --rule:#2e2f35;
   --blue:#7aa2ff; --blue-soft:#3f5694; --red:#ef5f52; --graph:#6f6c66;
 }
+
+/* Y el mismo oscuro cuando lo pide el sistema y el lector todavia no eligio nada.
+   El `:not([data-theme="light"])` es todo el asunto: sin el, quien pidio claro
+   teniendo el sistema en oscuro veria oscuro igual, o sea le pisariamos una
+   decision consciente -- peor que no respetar el sistema. Por eso el boton escribe
+   SIEMPRE un valor explicito y nunca borra el atributo: «claro» y «no elegi nada»
+   tienen que poder distinguirse.
+   Si tocas esta paleta, toca tambien la de arriba: son la misma y hay una prueba
+   (test/tokens.test.js) que se cae si se separan. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+  --paper:#131316; --band:#191a1e; --ink:#eceae4; --dim:#948f86; --rule:#2e2f35;
+  --blue:#7aa2ff; --blue-soft:#3f5694; --red:#ef5f52; --graph:#6f6c66;
+  }
+}
 html{background:var(--paper)}
 body{margin:0;background:var(--paper);color:var(--ink);
      font-family:"Source Serif 4",Charter,Georgia,serif;-webkit-font-smoothing:antialiased}

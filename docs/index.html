@@ -5,8 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
 try {
-  if (localStorage.getItem('tp-theme') === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
+  // Se aplica el valor guardado sea cual sea: 'dark' y 'light' son elecciones del
+  // lector y mandan. Si no hay nada guardado no se toca el atributo, y ahi decide
+  // la media query de base.css, o sea el sistema operativo.
+  var tema = localStorage.getItem('tp-theme');
+  if (tema === 'dark' || tema === 'light') {
+    document.documentElement.setAttribute('data-theme', tema);
   }
 } catch (e) {}
 </script>
@@ -143,22 +147,39 @@ try {
 </div>
 
 <script>
+// Misma logica de tres estados que docs/motor/tema.js, que la portada no importa
+// porque no carga modulos. Si se toca una, tocar la otra.
+var consultaOscuro = typeof matchMedia === 'function'
+  ? matchMedia('(prefers-color-scheme: dark)') : null;
+
+function temaEsOscuro() {
+  var elegido = document.documentElement.getAttribute('data-theme');
+  if (elegido === 'dark' || elegido === 'light') return elegido === 'dark';
+  return !!(consultaOscuro && consultaOscuro.matches);   // sin eleccion, manda el sistema
+}
+
 function sincronizarTema() {
   var b = document.getElementById('tp-theme');
   if (!b) return;
-  b.textContent =
-    document.documentElement.getAttribute('data-theme') === 'dark' ? 'Claro' : 'Oscuro';
+  b.textContent = temaEsOscuro() ? 'Claro' : 'Oscuro';
 }
 
 var btnTema = document.getElementById('tp-theme');
 if (btnTema) {
   btnTema.onclick = function () {
-    var oscuro = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (oscuro) document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme', 'dark');
-    try { localStorage.setItem('tp-theme', oscuro ? 'light' : 'dark'); } catch (e) {}
+    // Siempre un valor explicito, nunca borrar el atributo: si «claro» se guardara
+    // como ausencia, la media query se lo pisaria a quien tiene el sistema en oscuro.
+    var nuevo = temaEsOscuro() ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', nuevo);
+    try { localStorage.setItem('tp-theme', nuevo); } catch (e) {}
     sincronizarTema();
   };
+}
+
+if (consultaOscuro && consultaOscuro.addEventListener) {
+  consultaOscuro.addEventListener('change', function () {
+    if (!document.documentElement.getAttribute('data-theme')) sincronizarTema();
+  });
 }
 
 sincronizarTema();

@@ -11,8 +11,12 @@
 // tira SecurityError con los datos del sitio bloqueados o dentro de un iframe
 // sandbox, y ahí la excepción abortaría el script entero.
 try {
-  if (localStorage.getItem('tp-theme') === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
+  // Se aplica el valor guardado sea cual sea: 'dark' y 'light' son elecciones del
+  // lector y mandan. Si no hay nada guardado no se toca el atributo, y ahi decide
+  // la media query de base.css, o sea el sistema operativo.
+  var tema = localStorage.getItem('tp-theme');
+  if (tema === 'dark' || tema === 'light') {
+    document.documentElement.setAttribute('data-theme', tema);
   }
 } catch (e) {}
 </script>

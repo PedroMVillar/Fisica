@@ -32,7 +32,18 @@ function conAlmacenamiento(stub, fn) {
   }
 }
 
-test('alterna el atributo data-theme en cada click', () => {
+// Un ayudante para fingir lo que dice el sistema operativo. `conectarTema` consulta
+// `matchMedia` en cada lectura, asi que alcanza con reemplazarlo mientras corre el caso.
+function conSistema(oscuro, fn) {
+  const previo = globalThis.matchMedia;
+  globalThis.matchMedia = () => ({ matches: oscuro, addEventListener() {} });
+  try { fn(); } finally {
+    if (previo === undefined) delete globalThis.matchMedia;
+    else globalThis.matchMedia = previo;
+  }
+}
+
+test('alterna el atributo data-theme en cada click, siempre con un valor explicito', () => {
   conAlmacenamiento({ setItem() {}, getItem() {} }, () => {
     const raiz = raizFalsa();
     const boton = botonFalso();
@@ -42,7 +53,64 @@ test('alterna el atributo data-theme en cada click', () => {
     boton.onclick();
     assert.equal(raiz.getAttribute('data-theme'), 'dark');
     boton.onclick();
-    assert.equal(raiz.getAttribute('data-theme'), null);
+    // 'light', y NO la ausencia del atributo: son tres estados y no dos. Si el
+    // segundo click borrara el atributo, la media query de base.css le pisaria el
+    // tema claro a quien tiene el sistema en oscuro.
+    assert.equal(raiz.getAttribute('data-theme'), 'light');
+  });
+});
+
+test('sin eleccion previa, el primer click va en contra de lo que pide el sistema', () => {
+  conAlmacenamiento({ setItem() {}, getItem() {} }, () => {
+    conSistema(true, () => {
+      const raiz = raizFalsa();
+      const boton = botonFalso();
+      conectarTema({ pagina: paginaFalsa(), boton, documento: documentoFalso(raiz) });
+      // La pagina ya se ve oscura por el sistema aunque no haya atributo: el boton
+      // tiene que ofrecer 'Claro' y llevar a claro, no a oscuro.
+      assert.equal(boton.textContent, 'Claro');
+      boton.onclick();
+      assert.equal(raiz.getAttribute('data-theme'), 'light');
+    });
+  });
+});
+
+test('una eleccion explicita le gana a lo que pide el sistema', () => {
+  conAlmacenamiento({ setItem() {}, getItem() {} }, () => {
+    conSistema(true, () => {
+      const raiz = raizFalsa({ 'data-theme': 'light' });
+      const boton = botonFalso();
+      conectarTema({ pagina: paginaFalsa(), boton, documento: documentoFalso(raiz) });
+      assert.equal(boton.textContent, 'Oscuro');   // se ve claro, ofrece oscuro
+    });
+  });
+});
+
+test('si el sistema cambia y no hubo eleccion, se repinta: los canvas no heredan CSS', () => {
+  conAlmacenamiento({ setItem() {}, getItem() {} }, () => {
+    const oyentes = [];
+    const previo = globalThis.matchMedia;
+    globalThis.matchMedia = () => ({
+      matches: false,
+      addEventListener: (_, f) => oyentes.push(f),
+    });
+    try {
+      const pagina = paginaFalsa();
+      const raiz = raizFalsa();
+      conectarTema({ pagina, boton: botonFalso(), documento: documentoFalso(raiz) });
+      pagina.llamadas.length = 0;
+      oyentes.forEach(f => f());
+      assert.deepEqual(pagina.llamadas, ['olvidarPaleta', 'repintarTodo']);
+
+      // Con una eleccion hecha, el sistema ya no manda y no se repinta nada.
+      raiz.setAttribute('data-theme', 'light');
+      pagina.llamadas.length = 0;
+      oyentes.forEach(f => f());
+      assert.deepEqual(pagina.llamadas, []);
+    } finally {
+      if (previo === undefined) delete globalThis.matchMedia;
+      else globalThis.matchMedia = previo;
+    }
   });
 });
 
