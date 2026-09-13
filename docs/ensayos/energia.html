@@ -103,7 +103,7 @@ try {
       <span>potencial <b id="w2-u" class="lectura-valor grafico">9,800 J</b></span>
       <span>disipado <b id="w2-q" class="lectura-valor roja">0,000 J</b></span>
       <span>v <b id="w2-v" class="lectura-valor">0,0000 m/s</b></span>
-      <span>suma − total <b id="w2-chequeo" class="lectura-valor tenue">—</b></span>
+      <span>suma − total <b id="w2-chequeo" class="lectura-valor tenue">0,000 J</b></span>
     </div>
   </div>
 </section>
@@ -201,7 +201,7 @@ try {
   <p class="parrafo-suelto">Los números: con v₀ = 2 m/s y h = 3 m, E = 31,4 J por kilogramo, v<sub>B</sub> = 2,0000 m/s, v<sub>C</sub> = 5,7793 m/s, v<sub>D</sub> = 7,9246 m/s, y el freno tiene que dar <i>a</i> = 6,2800 m/s². Mirá v<sub>B</sub>: es <b class="negrita">exactamente</b> v₀, aunque entre A y B el carro haya bajado a un valle y subido de nuevo pasando por 7,14 m/s. Misma altura, misma velocidad. El camino del medio no dejó rastro.</p>
   <p class="parrafo">Movés el deslizador de <i>h</i> y la barra cambia de reparto pero no de largo, en todo el recorrido. Eso es la conservación, dibujada. Recién en el tramo D-E aparece el cuarto segmento, y ahí el freno se lleva los 31,4 J enteros a lo largo de los 5 m: no es casualidad, es lo que significa «detenerse en E». Y la lectura que respalda esa frase no es la barra —una barra llena puede estar llena por definición— sino v marcha − v(y): una de las dos velocidades sale de integrar la segunda ley contra la <b class="negrita">pendiente</b> del perfil, la otra de la <b class="negrita">altura</b> y nada más. Que su resta no se despegue de cero en ningún punto del recorrido es lo que dice, con un número, que la forma del camino no entró en la cuenta.</p>
   <p class="parrafo">Marcá la casilla. Acá el mismo truco falla: en el arco no se puede escribir μ·<i>N</i>·<i>d</i> porque no se sabe <i>N</i> en cada punto —cambia con el ángulo y con la velocidad— y el enunciado ni da el μ del arco. Pero la energía sigue siendo una cuenta, y la cuenta se puede cerrar por el otro lado: arriba había 14,700 J, abajo quedan 6,480 J, así que el rozamiento del arco se llevó 8,220 J. <b class="negrita">No se integró nada.</b> Es el teorema trabajo-energía haciendo lo único que a veces se puede hacer.</p>
-  <p class="parrafo">Y en el tramo llano, donde <i>N</i> sí es constante, la cuenta vuelve a funcionar como en la sección 02: μ = v<sub>B</sub>²/(2<i>gd</i>) = 0,2449, y μ<i>mgd</i> = 6,4800 J = K<sub>B</sub>. Las dos maneras conviven en el mismo ejercicio: una para donde se puede y otra para donde no.</p>
+  <p class="parrafo">Y en el tramo llano, donde <i>N</i> sí es constante, la cuenta vuelve a funcionar como en la sección 02: μ = v<sub>B</sub>²/(2<i>gd</i>) = 0,2449, y μ<i>mgd</i> = 6,4800 J = K<sub>B</sub>. Las dos maneras conviven en el mismo ejercicio: una para donde se puede y otra para donde no. Por eso las dos lecturas de chequeo de abajo muestran «—» en toda esta escena: no hay un segundo camino independiente con el que contrastar estos números —μ despejada de v<sub>B</sub> y μ·<i>mgd</i> son la misma ecuación, no dos mediciones distintas—, y mostrar un cero ahí sería fingir una verificación que no existe.</p>
 </div>
 
 <div class="columna columna-final">
@@ -563,24 +563,27 @@ function pintarW2(ctx, l) {
   // Este chequeo verifica que el BALANCE cierre, no que la ESCALA sea la correcta: una
   // masa mal tipeada no es del tipo de error que esta resta puede atrapar.
   //
-  // En t = 0 (revision final, contrastado con Playwright real contra la produccion, no
-  // solo razonado): es identidad genuina, no una zona ciega mas. Con `s` (o, en modo
-  // resorte, `x`) fijo en su valor inicial sea cual sea `a` o `w`, K, U y Q colapsan al
-  // MISMO numero con el modelo bien o mal calculado -no es que un bug puntual se
-  // cancele, es que a t=0 no hay dos caminos que comparar todavia-. Verificado con TRES
-  // roturas independientes, cada una moviendo el chequeo en t > 0 pero no en t = 0: sin
-  // el cos(ALFA_W2) en la aceleracion del plano, sin el cos(ALFA_W2) en Q, y con la
-  // frecuencia angular del resorte multiplicada por 1,5 -las tres en "0,000 J" a t=0 en
-  // los DOS modos, exactamente como con el modelo correcto. Por eso, igual que
-  // `w4-chequeo-a` en energia.html y `m2-chequeo-k` en modo explosion de
-  // cantidad-de-movimiento.html, la lectura muestra "—" en vez de un cero que no
-  // verificaria nada.
+  // En t = 0, CORREGIDO (re-revision): NO es identidad genuina. La ronda anterior probo
+  // tres roturas -sin cos(ALFA_W2) en la aceleracion del plano, sin cos(ALFA_W2) en Q, y
+  // la frecuencia angular del resorte rota- y las tres se quedaron en "0,000 J" a t=0,
+  // pero las tres pertenecen a la MISMA familia: son terminos multiplicados por `s` (o
+  // por `v`, que tambien depende de `s`), y `s` vale 0 en t=0 sea cual sea `a` o `w` --
+  // el termino se anula solo, no porque el chequeo compare nada. Esa familia de errores
+  // es una zona ciega real (analoga a la de mu=0 de mas arriba), pero no agota los
+  // errores posibles.
+  //
+  // El termino CONSTANTE de `U` (`H_W2` en modo plano, la altura de la que se larga) NO
+  // multiplica a `s`, y un error ahi SI se nota en t=0: medido rompiendo esa referencia
+  // (`H_W2 - 0.05` en vez de `H_W2`, sin tocar nada mas), el chequeo salta a -0,49 J en
+  // t=0 -en el modelo correcto da 0,000 J en el mismo instante-. Por eso la lectura
+  // muestra el numero, no "—": es un guardian real, sordo a una familia de errores (los
+  // proporcionales a `s`) pero no a todos.
   const chequeo = (e.K + e.U + e.Q) - e.total;
   leer('w2-k', num(e.K, 3) + ' J');
   leer('w2-u', num(e.U, 3) + ' J');
   leer('w2-q', num(e.Q, 3) + ' J');
   leer('w2-v', num(e.v, 4) + ' m/s');
-  leer('w2-chequeo', escenaW2.t === 0 ? '—' : num(chequeo, 3) + ' J');
+  leer('w2-chequeo', num(chequeo, 3) + ' J');
 }
 
 const widgetW2 = crearWidget({
