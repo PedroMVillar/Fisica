@@ -29,7 +29,7 @@
     - `parcial-1-2025.pdf` — 25/09/2025 (3 problemas: pelota con viento, loma + choque elástico + resorte, bloques apilados con polea).
 - [`preparacion/`](./preparacion) — plan de estudio, formulario y material de repaso.
   - `dudas-y-consultas.pdf` — dudas puntuales que van surgiendo al estudiar, una por hoja, con su respuesta.
-  - `practica-movimiento-circular.pdf` — **sólo consignas, sin resolución**: los enunciados de cinemática circular que se tomaron en parciales viejos (2009 P2, 2017 P3, 2021 cuestionario P1 y P4, y el 2024 P2 donde el tema aparece adentro de un problema de dinámica), una por hoja, para practicar. Es el tema de los ejercicios 12, 13 y 14 del Práctico 1. Las resoluciones están en [`soluciones/`](./soluciones).
+  - `practica-movimiento-circular.pdf` — **sólo consignas, sin resolución**: los enunciados de cinemática circular que se tomaron en parciales viejos (2009 P2, 2017 P3, 2021 cuestionario P1 y P4, y el 2024 P2 donde el tema aparece adentro de un problema de dinámica), para practicar. Es el tema de los ejercicios 12, 13 y 14 del Práctico 1. Las resoluciones están en [`soluciones/`](./soluciones).
   - `tiro-parabolico.html` — **laboratorio interactivo de tiro parabólico** (abrir en el navegador, no necesita nada más). Controles de rapidez, ángulo, altura, gravedad, viento y obstáculo; animación de la trayectoria con los vectores velocidad y aceleración, gráficos sincronizados de x(t), y(t), v_y(t), las fórmulas con los números actuales, y escenarios cargados de los prácticos y parciales.
 
 ## Relación con el apunte
