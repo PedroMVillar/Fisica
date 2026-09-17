@@ -90,44 +90,44 @@ Simulaciones para construir intuición antes de leer el apunte o la hoja resumen
 <table>
 <tr>
 <td width="25%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ensayos/derivada-integral.html"><img src="./assets/miniaturas/derivada-integral.png" width="100%" alt="Derivada e integral"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ensayos/derivada-integral.html"><img src="./assets/miniaturas/derivada-integral.png" width="100%" alt="Derivada e integral"></a><br>
 <b>Derivada e integral</b><br>
 <sub>Práctico 1 · ej. 1 a 4</sub>
 </td>
 <td width="25%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ensayos/tiro-parabolico.html"><img src="./assets/miniaturas/tiro-parabolico.png" width="100%" alt="Tiro parabólico"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ensayos/tiro-parabolico.html"><img src="./assets/miniaturas/tiro-parabolico.png" width="100%" alt="Tiro parabólico"></a><br>
 <b>Tiro parabólico</b><br>
 <sub>Práctico 1 · ej. 10</sub>
 </td>
 <td width="25%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ensayos/movimiento-circular.html"><img src="./assets/miniaturas/movimiento-circular.png" width="100%" alt="Movimiento circular"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ensayos/movimiento-circular.html"><img src="./assets/miniaturas/movimiento-circular.png" width="100%" alt="Movimiento circular"></a><br>
 <b>Movimiento circular</b><br>
 <sub>Práctico 1 · ej. 11, 13 y 14</sub>
 </td>
 <td width="25%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ensayos/cuerpo-aislado.html"><img src="./assets/miniaturas/cuerpo-aislado.png" width="100%" alt="Cuerpo aislado"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ensayos/cuerpo-aislado.html"><img src="./assets/miniaturas/cuerpo-aislado.png" width="100%" alt="Cuerpo aislado"></a><br>
 <b>Cuerpo aislado</b><br>
 <sub>Práctico 2 · ej. 1, 6, 8-10, 13, 18 y 19</sub>
 </td>
 </tr>
 <tr>
 <td width="25%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ensayos/sistemas-acoplados.html"><img src="./assets/miniaturas/sistemas-acoplados.png" width="100%" alt="Sistemas acoplados"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ensayos/sistemas-acoplados.html"><img src="./assets/miniaturas/sistemas-acoplados.png" width="100%" alt="Sistemas acoplados"></a><br>
 <b>Sistemas acoplados</b><br>
 <sub>Práctico 2 · ej. 2 a 5 y 7</sub>
 </td>
 <td width="25%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ensayos/fuerzas-de-posicion.html"><img src="./assets/miniaturas/fuerzas-de-posicion.png" width="100%" alt="Fuerzas de posición"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ensayos/fuerzas-de-posicion.html"><img src="./assets/miniaturas/fuerzas-de-posicion.png" width="100%" alt="Fuerzas de posición"></a><br>
 <b>Fuerzas de posición</b><br>
 <sub>Práctico 2 · ej. 11, 12, 14 a 17</sub>
 </td>
 <td width="25%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ensayos/energia.html"><img src="./assets/miniaturas/energia.png" width="100%" alt="Trabajo y energía"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ensayos/energia.html"><img src="./assets/miniaturas/energia.png" width="100%" alt="Trabajo y energía"></a><br>
 <b>Trabajo y energía</b><br>
 <sub>Práctico 3 · ej. 1 a 8</sub>
 </td>
 <td width="25%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ensayos/cantidad-de-movimiento.html"><img src="./assets/miniaturas/cantidad-de-movimiento.png" width="100%" alt="Cantidad de movimiento"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ensayos/cantidad-de-movimiento.html"><img src="./assets/miniaturas/cantidad-de-movimiento.png" width="100%" alt="Cantidad de movimiento"></a><br>
 <b>Cantidad de movimiento</b><br>
 <sub>Práctico 3 · ej. 9 a 12</sub>
 </td>
@@ -157,31 +157,55 @@ Un ejercicio concreto del práctico —o de un parcial—, resuelto y animado de
 <table>
 <tr>
 <td width="33%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ejemplos/la-tierra.html"><img src="./assets/miniaturas/la-tierra.png" width="100%" alt="La Tierra que cae"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ejemplos/la-tierra.html"><img src="./assets/miniaturas/la-tierra.png" width="100%" alt="La Tierra que cae"></a><br>
 <b>La Tierra que cae</b><br>
 <sub>Práctico 1 · ej. 12</sub>
 </td>
 <td width="33%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ejemplos/auto-y-camion.html"><img src="./assets/miniaturas/auto-y-camion.png" width="100%" alt="El auto y el camión"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ejemplos/auto-y-camion.html"><img src="./assets/miniaturas/auto-y-camion.png" width="100%" alt="El auto y el camión"></a><br>
 <b>El auto y el camión</b><br>
 <sub>Práctico 1 · ej. 5</sub>
 </td>
 <td width="33%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ejemplos/el-gol-con-viento.html"><img src="./assets/miniaturas/el-gol-con-viento.png" width="100%" alt="El gol con viento"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ejemplos/el-gol-con-viento.html"><img src="./assets/miniaturas/el-gol-con-viento.png" width="100%" alt="El gol con viento"></a><br>
 <b>El gol con viento</b><br>
 <sub>Práctico 1, adicional (ej. 15) · Parcial 1 2025</sub>
 </td>
 </tr>
 <tr>
 <td width="33%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ejemplos/el-bloque-sobre-el-bloque.html"><img src="./assets/miniaturas/el-bloque-sobre-el-bloque.png" width="100%" alt="Un bloque sobre otro"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ejemplos/el-bloque-sobre-el-bloque.html"><img src="./assets/miniaturas/el-bloque-sobre-el-bloque.png" width="100%" alt="Un bloque sobre otro"></a><br>
 <b>Un bloque sobre otro</b><br>
 <sub>Práctico 2, adicional (ej. 19) · Parcial 1 2025</sub>
 </td>
 <td width="33%" align="center" valign="top">
-<a href="https://pedromvillar.github.io/Fisica/ejemplos/la-bolita-y-el-resorte.html"><img src="./assets/miniaturas/la-bolita-y-el-resorte.png" width="100%" alt="La bolita y el resorte"></a><br>
+<a href="https://bitacoradestudio.com/fisica/ejemplos/la-bolita-y-el-resorte.html"><img src="./assets/miniaturas/la-bolita-y-el-resorte.png" width="100%" alt="La bolita y el resorte"></a><br>
 <b>La bolita y el resorte</b><br>
 <sub>Parcial 1 2025 · no está en ningún práctico</sub>
+</td>
+</tr>
+<tr>
+<td width="33%" align="center" valign="top">
+<a href="https://bitacoradestudio.com/fisica/ejemplos/el-golfista-en-la-pendiente.html"><img src="./assets/miniaturas/el-golfista-en-la-pendiente.png" width="100%" alt="El golfista en la pendiente"></a><br>
+<b>El golfista en la pendiente</b><br>
+<sub>Parcial 1 2024, problema 1</sub>
+</td>
+<td width="33%" align="center" valign="top">
+<a href="https://bitacoradestudio.com/fisica/ejemplos/el-pendulo-balistico.html"><img src="./assets/miniaturas/el-pendulo-balistico.png" width="100%" alt="El péndulo balístico"></a><br>
+<b>El péndulo balístico</b><br>
+<sub>Parcial 1 2020 (rec.), problema 3</sub>
+</td>
+<td width="33%" align="center" valign="top">
+<a href="https://bitacoradestudio.com/fisica/ejemplos/el-loop-y-el-despegue.html"><img src="./assets/miniaturas/el-loop-y-el-despegue.png" width="100%" alt="El loop y el despegue"></a><br>
+<b>El loop y el despegue</b><br>
+<sub>Parcial 1 2024, problema 3</sub>
+</td>
+</tr>
+<tr>
+<td width="33%" align="center" valign="top">
+<a href="https://bitacoradestudio.com/fisica/ejemplos/la-mesa-y-el-peso-colgante.html"><img src="./assets/miniaturas/la-mesa-y-el-peso-colgante.png" width="100%" alt="La mesa y el peso colgante"></a><br>
+<b>La mesa y el peso colgante</b><br>
+<sub>Parcial 1 2024, problema 2</sub>
 </td>
 </tr>
 </table>
@@ -196,10 +220,18 @@ Un ejercicio concreto del práctico —o de un parcial—, resuelto y animado de
 | El gol con viento | Una aceleración horizontal constante superpuesta al tiro parabólico de siempre, y cómo la independencia de ejes deja intactos el tiempo de vuelo y la altura máxima aunque el alcance cambie | Práctico 1, ejercicio adicional (ej. 15) · Parcial 1 2025, problema 1 |
 | Un bloque sobre otro | Dos diagramas de cuerpo aislado resueltos en cadena: la tensión que sale de uno entra como dato del otro, y el rozamiento entre los bloques aparece dos veces en la cuenta de la fuerza | Práctico 2, ejercicio adicional (ej. 19) · Parcial 1 2025, problema 3 |
 | La bolita y el resorte | Un choque elástico, un tramo con rozamiento y un resorte encadenados en un solo balance de energía, con la potencial y la disipada repartiéndose la misma barra | Parcial 1 2025, problema 2 (no está en ningún práctico) |
+| El golfista en la pendiente | La condición de impacto como **geometría**: el piso es una recta inclinada y la pelota toca donde la cruza, no donde su altura se anula. Usar `y = 0` de memoria se equivoca por 33 metros | Parcial 1 2024, problema 1 |
+| El péndulo balístico | Tres etapas encadenadas con **tres modelos distintos**: energía en el vuelo, momento en el choque, energía otra vez en la subida. El 92,6% de la energía se disipa, y ese porcentaje depende sólo de las masas | Parcial 1 2020 (recuperatorio), problema 3 |
+| El loop y el despegue | El criterio de despegue no es quedarse sin velocidad: es que la **normal llegue a cero**, con el rozamiento gastando energía a lo largo del arco y no de la altura | Parcial 1 2024, problema 3 |
+| La mesa y el peso colgante | La **misma** tensión resolviendo dos ecuaciones opuestas: equilibrio para el cuerpo que cuelga quieto, fuerza centrípeta para el que gira. Y nada apunta hacia donde `m₁` se mueve | Parcial 1 2024, problema 2 |
 
 </details>
 
-Ya está la Guía 3 completa —trabajo, energía y cantidad de movimiento—, en los dos ensayos de la tabla de arriba. Sigue pendiente el diseño de la portada, que lo hace el dueño del repositorio directamente.
+Ya está la Guía 3 completa —trabajo, energía y cantidad de movimiento—, en los dos ensayos de la tabla de arriba.
+
+Los **cuatro ejemplos nuevos** no se eligieron por tema sino por evidencia: salen de relevar los ocho parciales distintos de 2009 a 2024 y de quedarse con los tipos que se repiten, priorizando **qué decisión enseñan a tomar**. El relevamiento completo, con la tabla de frecuencias por año y las trampas que se repiten en los enunciados, está en [`parcial-1/preparacion/que-ejercicios-se-repiten.md`](./parcial-1/preparacion/que-ejercicios-se-repiten.md).
+
+Son además los primeros con las **fórmulas renderizadas de verdad**, en MathML nativo — sin MathJax y sin ninguna dependencia. Sigue pendiente el diseño de la portada, que lo hace el dueño del repositorio directamente.
 
 ### Hojas resumen
 
