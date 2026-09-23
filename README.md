@@ -58,10 +58,11 @@ pdflatex fisica-1.tex && pdflatex fisica-1.tex   # dos pasadas, por el índice
 | Carpeta | Contenido |
 |---|---|
 | [`bibliografia/apunte-catedra/`](./bibliografia/apunte-catedra) | *Introducción a la Física* — Wolfenson, Trincavelli y Serra (FaMAF, 2ª ed. 2021). El texto de los propios docentes. Cubre toda la cinemática y construye el cálculo desde cero |
-| [`bibliografia/bibliografia-extra/`](./bibliografia/bibliografia-extra) | Serway & Jewett, *Física para Ciencias e Ingeniería* vol. 2. También Sears & Zemansky, *Física universitaria* vols. 1 y 2 (14.ª ed.), Alonso & Finn vol. 2 y Serway vol. 1, que por tamaño quedan solo en disco |
+| [`bibliografia/bibliografia-extra/`](./bibliografia/bibliografia-extra) | Serway & Jewett, *Física para Ciencias e Ingeniería* vol. 2. También Sears & Zemansky, *Física universitaria* vols. 1 y 2 (14.ª ed.), Alonso & Finn vol. 2, Serway vol. 1 y Halliday, Resnick & Walker, *Fundamentals of Physics*, que por tamaño quedan solo en disco |
+| [`Ejemplos resnik/`](./Ejemplos%20resnik) | Catálogo de ejemplos resueltos del Halliday/Resnick que valen la pena: una hoja por ejemplo, con la captura del libro y una ficha que dice qué muestra y con qué ejercicio de qué práctico se empareja. En el repo queda solo el PDF; las capturas y el `.tex` viven en disco |
 | [`parcial-1/practicos/`](./parcial-1/practicos) | Las cuatro guías de prácticos (0 a 3), todas en su versión 2026 |
 | [`examenes-viejos/`](./examenes-viejos) | 17 parciales (2009–2025) y 9 finales (2008–2026) |
-| [`plantillas/`](./plantillas) | Plantillas LaTeX propias: `resumen-teorico` (apunte y resoluciones, A4 vertical) y `hoja-ejercicio` (ficha A4 apaisada, un ejercicio por ficha; `ejemplo-hoja-ejercicio.pdf` es la muestra) |
+| [`plantillas/`](./plantillas) | Plantillas LaTeX propias: `resumen-teorico` (apunte y resoluciones, A4 vertical), `hoja-ejercicio` (ficha A4 apaisada, un ejercicio por ficha; `ejemplo-hoja-ejercicio.pdf` es la muestra) y `ejemplos-resnick` (catálogo de capturas de bibliografía, A4 vertical) |
 | `Cronograma Tentativo Cursado .pdf` | Cronograma oficial de la cursada |
 
 ### Un detalle del cronograma

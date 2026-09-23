@@ -38,6 +38,17 @@ plantillas/LaTeX_template_for_Wireless_Foundations_conference_posters/
 !plantillas/*.sty
 !plantillas/*.tex
 
+# --- Catalogo de ejemplos de bibliografia ---
+# Va por la politica 1: en el repo queda solo el PDF compilado. Las
+# capturas son paginas de un libro con derechos, pesan ~1 MB cada una y
+# se van a seguir sumando; el .tex y el latexmkrc quedan en disco junto
+# a ellas. Ojo: eso implica que las fichas escritas a mano viven solo
+# en la copia local del .tex.
+Ejemplos resnik/*.png
+Ejemplos resnik/*.jpg
+Ejemplos resnik/*.jpeg
+Ejemplos resnik/latexmkrc
+
 # --- Artefactos de compilación LaTeX ---
 *.aux
 *.log
@@ -45,6 +56,7 @@ plantillas/LaTeX_template_for_Wireless_Foundations_conference_posters/
 *.toc
 *.lof
 *.lot
+*.eje
 *.synctex.gz
 *.fls
 *.fdb_latexmk

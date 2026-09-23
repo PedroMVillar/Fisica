@@ -1,0 +1,227 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ejemplos-resnick}[2026/09/23 v0.1 Catalogo de ejemplos capturados de bibliografia]
+
+% ============================================================
+% Catalogo de ejemplos tomados de un libro: una hoja por
+% ejemplo, con la captura de la pagina arriba y una ficha corta
+% abajo que dice que muestra, cual es la idea que hay que
+% retener, y con que ejercicio del practico se empareja.
+%
+% Comparte la paleta y el marco azul de "hoja-ejercicio" para
+% que el catalogo no parezca de otro repositorio, pero va en A4
+% VERTICAL y no apaisado: las capturas de pagina de libro son
+% mas anchas que altas (relacion ~1.25), y a hoja vertical
+% entran a ancho completo sin achicar la tipografia del
+% escaneo, que es lo unico que decide si se puede leer o no.
+%
+% USO MINIMO:
+%   \documentclass{ejemplos-resnick}
+%   \setlibro{Halliday, Resnick y Walker --- Fundamentals of Physics}
+%   \begin{document}
+%   \indicedeejemplos
+%   \begin{ejemplo}{Tema}{Sample Problem 6.01}{128}
+%     \captura{archivo.png}
+%     \muestra{...}
+%     \clave{...}
+%     \parecidoa{...}
+%   \end{ejemplo}
+%   \end{document}
+% ============================================================
+
+% ------------------------------------------------------------
+% PAQUETES
+% ------------------------------------------------------------
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{geometry}
+\RequirePackage{xcolor}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{graphicx}
+\RequirePackage{etoolbox}
+\RequirePackage{fancyhdr}
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+\RequirePackage{hyperref}
+
+% El margen inferior tiene que dejar el pie DENTRO del marco: el
+% marco se dibuja a 1cm del borde, y el pie cae \footskip por
+% debajo del bloque de texto. Con bottom=2.3 y footskip=0.9 el
+% pie queda a 1.4cm del borde, o sea 4mm adentro del marco.
+\geometry{
+  a4paper,
+  top=1.7cm, bottom=2.3cm, left=2.0cm, right=2.0cm,
+  headheight=0pt, headsep=0pt, footskip=0.9cm
+}
+
+% ============================================================
+% PALETA --- la misma de hoja-ejercicio.
+% ============================================================
+\definecolor{ejeAzul}{rgb}{0.10,0.10,0.50}
+\definecolor{ejeGris}{gray}{0.45}
+\colorlet{ejeSuave}{ejeAzul!7}
+
+\hypersetup{
+  colorlinks=true, linkcolor=ejeAzul, urlcolor=ejeAzul,
+  bookmarksnumbered=false
+}
+
+% ============================================================
+% MARCO DE LA HOJA (el mismo de hoja-ejercicio)
+% Necesita dos pasadas de pdflatex: usa "remember picture".
+% ============================================================
+\newcommand{\ejeMargenMarco}{1cm}
+\newcommand{\ejeGrosorMarco}{2.2pt}
+\newcommand{\ejeRadioMarco}{10pt}
+
+\AddToHook{shipout/background}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \draw[draw=ejeAzul, line width=\ejeGrosorMarco,
+          rounded corners=\ejeRadioMarco]
+      ($(current page.south west)+(\ejeMargenMarco,\ejeMargenMarco)$)
+      rectangle
+      ($(current page.north east)-(\ejeMargenMarco,\ejeMargenMarco)$);
+  \end{tikzpicture}%
+}
+
+% ============================================================
+% DATOS DEL LIBRO Y PIE DE PAGINA
+% ============================================================
+\newcommand{\ejeLibro}{}
+\newcommand{\setlibro}[1]{\renewcommand{\ejeLibro}{#1}}
+\newcommand{\ejePie}{}
+\newcommand{\setpiedepagina}[1]{\renewcommand{\ejePie}{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyfoot[L]{\footnotesize\itshape\color{ejeGris}\ejePie}
+\fancyfoot[R]{\footnotesize\color{ejeGris}\thepage}
+
+% ============================================================
+% CABECERA DE CADA EJEMPLO
+% El titulo es el TEMA, no "Ejemplo N": lo que uno busca al
+% hojear el catalogo es el tema, y una numeracion correlativa
+% se rompe apenas se intercala un ejemplo nuevo en el medio.
+% ============================================================
+\newcommand{\ejeCabecera}[3]{%
+  {\centering\Large\bfseries\color{ejeAzul}#1\par}%
+  \vspace{3pt}%
+  {\color{ejeAzul}\hrule height 1.6pt}%
+  \vspace{5pt}%
+  {\centering\footnotesize\color{ejeGris}%
+    \ifx\ejeLibro\empty\else\ejeLibro\ \textperiodcentered\ \fi
+    #2\ \textperiodcentered\ p\'ag.~#3\par}%
+  \vspace{12pt}%
+}
+
+% ============================================================
+% ENTORNO "ejemplo" --- una hoja por ejemplo.
+%   #1 tema   #2 referencia en el libro   #3 pagina del libro
+% ============================================================
+\newenvironment{ejemplo}[3]{%
+  \clearpage
+  \phantomsection
+  \addcontentsline{eje}{ejemplo}{#1\protect\ejeref{#2}{#3}}%
+  \ejeCabecera{#1}{#2}{#3}%
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{4pt plus 1pt}%
+}{%
+  \par
+}
+
+% Cada hoja arranca con la ficha cerrada (ver \ejeAbrirFicha).
+\AtBeginEnvironment{ejemplo}{\ejeFichaAbiertafalse}
+
+% ============================================================
+% \captura --- la imagen del libro, a ancho de texto, con un
+% filete fino alrededor para despegarla del papel.
+% Argumento opcional: fraccion del ancho de texto (1 por
+% defecto), por si alguna captura viene mas angosta.
+% ============================================================
+% El filete del \fcolorbox se dibuja POR FUERA de la imagen, asi
+% que hay que descontarlo del ancho pedido; si no, la caja se
+% pasa 2\fboxrule del bloque de texto y TeX avisa "Overfull hbox".
+\setlength{\fboxsep}{0pt}
+\newcommand{\captura}[2][1]{%
+  \par\addvspace{2pt}%
+  \begingroup
+    \centering
+    \fcolorbox{ejeAzul!30}{white}{%
+      \includegraphics[width=\dimexpr#1\linewidth-2\fboxrule\relax]{#2}}%
+    \par
+  \endgroup
+  \addvspace{12pt}%
+}
+
+% ============================================================
+% LA FICHA
+% Renglones rotulados: el rotulo en versalitas azules en una
+% columna de ancho fijo, el texto en la que sobra.
+%
+% La ficha se abre sola en el primer renglon de cada ejemplo,
+% para no obligar a escribir un \begin{ficha} en cada hoja.
+% ============================================================
+\newlength{\ejeAnchoRotulo}
+\setlength{\ejeAnchoRotulo}{2.6cm}
+\newlength{\ejeSangriaRotulo}
+\setlength{\ejeSangriaRotulo}{0.35cm}
+
+\newcommand{\ejeFilaFicha}[2]{%
+  \par\addvspace{6pt}%
+  \noindent
+  \begin{minipage}[t]{\ejeAnchoRotulo}%
+    \raggedright\footnotesize\bfseries\color{ejeAzul}\MakeUppercase{#1}%
+  \end{minipage}%
+  \hspace{\ejeSangriaRotulo}%
+  \begin{minipage}[t]{\dimexpr\linewidth-\ejeAnchoRotulo-\ejeSangriaRotulo\relax}%
+    \raggedright #2%
+  \end{minipage}%
+  \par
+}
+
+\newif\ifejeFichaAbierta
+\ejeFichaAbiertafalse
+\newcommand{\ejeAbrirFicha}{%
+  \ifejeFichaAbierta\else
+    \par\addvspace{4pt}%
+    {\color{ejeAzul!35}\hrule height 0.8pt}%
+    \global\ejeFichaAbiertatrue
+  \fi
+}
+
+\newcommand{\muestra}[1]{\ejeAbrirFicha\ejeFilaFicha{Qu\'e muestra}{#1}}
+\newcommand{\clave}[1]{\ejeAbrirFicha\ejeFilaFicha{La clave}{#1}}
+\newcommand{\parecidoa}[1]{\ejeAbrirFicha\ejeFilaFicha{Se parece a}{#1}}
+\newcommand{\ojo}[1]{\ejeAbrirFicha\ejeFilaFicha{Ojo con}{#1}}
+
+% ============================================================
+% INDICE DEL CATALOGO
+% Lista propia (archivo .eje) en vez de \tableofcontents, que
+% arrastraria la numeracion de secciones de article.
+% ============================================================
+\newcommand{\ejeref}[2]{%
+  \nobreak\hfill{\footnotesize\color{ejeGris}#1\ \textperiodcentered\ p\'ag.~#2}%
+}
+
+\newcommand{\l@ejemplo}[2]{%
+  \par\addvspace{4pt}%
+  \noindent
+  \parbox[t]{\dimexpr\linewidth-1.3cm\relax}{\raggedright #1}%
+  \hfill\makebox[1.0cm][r]{\color{ejeGris}#2}%
+  \par
+}
+
+\newcommand{\indicedeejemplos}{%
+  \thispagestyle{fancy}%
+  {\centering\Large\bfseries\color{ejeAzul}Ejemplos del libro\par}%
+  \vspace{3pt}%
+  {\color{ejeAzul}\hrule height 1.6pt}%
+  \vspace{5pt}%
+  {\centering\footnotesize\color{ejeGris}\ejeLibro\par}%
+  \vspace{18pt}%
+  \setlength{\parindent}{0pt}%
+  \@starttoc{eje}%
+}
+
+\endinput
