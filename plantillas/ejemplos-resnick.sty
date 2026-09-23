@@ -91,12 +91,28 @@
 \newcommand{\ejePie}{}
 \newcommand{\setpiedepagina}[1]{\renewcommand{\ejePie}{#1}}
 
+% Referencia del ejemplo en curso; la fija el entorno "ejemplo" y la
+% usan las hojas de CONTINUACION, para los ejemplos cuyas capturas no
+% entran en una sola hoja junto con la ficha.
+\newcommand{\ejeRefActual}{}
+
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 \fancyfoot[L]{\footnotesize\itshape\color{ejeGris}\ejePie}
-\fancyfoot[R]{\footnotesize\color{ejeGris}\thepage}
+\fancyfoot[R]{\footnotesize\color{ejeGris}%
+  \ifx\ejeRefActual\empty\else\textit{\ejeRefActual\ (cont.)}\quad\fi\thepage}
+
+% La PRIMERA hoja de cada ejemplo no lleva el marcador de continuacion:
+% ya tiene la cabecera con el tema y la referencia.
+\fancypagestyle{ejeprimera}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+  \fancyfoot[L]{\footnotesize\itshape\color{ejeGris}\ejePie}%
+  \fancyfoot[R]{\footnotesize\color{ejeGris}\thepage}%
+}
 
 % ============================================================
 % CABECERA DE CADA EJEMPLO
@@ -123,6 +139,8 @@
   \clearpage
   \phantomsection
   \addcontentsline{eje}{ejemplo}{#1\protect\ejeref{#2}{#3}}%
+  \gdef\ejeRefActual{#2}%
+  \thispagestyle{ejeprimera}%
   \ejeCabecera{#1}{#2}{#3}%
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{4pt plus 1pt}%
